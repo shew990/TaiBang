@@ -1,0 +1,140 @@
+﻿@using BILBasic.Common;
+@using Web.WMS.Common;
+@using BILWeb.Quality;
+@model T_QualityDetailInfo
+@{
+    ViewBag.Title = "质检单";
+    Layout = "~/Views/Shared/_LayoutLayui.cshtml";
+    PageData<T_QualityDetailInfo> pageData = (PageData<T_QualityDetailInfo>)ViewData["PageData"];
+}
+<div class="box">
+    <div class="layui-card-body layui-table-body layui-table-main">
+        <form action="/QualityDetail/GetModelList" method="post">
+            <div class="layui-inline layui-show-xs-block">
+                @Html.EditorFor(model => model.ErpVoucherNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "ERP单号" } })
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                @Html.EditorFor(model => model.ErpInVoucherNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "关联单据" } })
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                @Html.EditorFor(model => model.DateFrom, new { htmlAttributes = new { @class = "form-control laydateX", @placeholder = "开始时间" } })
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                @Html.EditorFor(model => model.DateTo, new { htmlAttributes = new { @class = "form-control laydateY", @placeholder = "结束时间" } })
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <button type="submit" class="btn btn-primary" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+            </div>
+            @Html.HiddenFor(model => model.VoucherType)
+        </form>
+        @{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}
+        <table class="layui-table layui-form">
+            <thead>
+                <tr>
+                    <th>选择</th>
+                    <th>@Html.DisplayNameFor(model => model.StrongHoldCode)</th>
+                    <th>@Html.DisplayNameFor(model => model.StrongHoldName)</th>
+                    @*<th>@Html.DisplayNameFor(model => model.CompanyCode)</th>*@
+                    <th>@Html.DisplayNameFor(model => model.ErpVoucherNo)</th>
+                    <th>@Html.DisplayNameFor(model => model.ErpInVoucherNo)</th>
+                    <th>@Html.DisplayNameFor(model => model.QuanQty)</th>
+                    <th>@Html.DisplayNameFor(model => model.UnQuanQty)</th>
+                    @*<th>@Html.DisplayNameFor(model => model.DepartmentName)</th>*@
+                    @*<th>@Html.DisplayNameFor(model => model.StrCreater)</th>*@
+                    <th>@Html.DisplayNameFor(model => model.CreateTime)</th>
+                    @*<th>操作</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if (pageData.data != null && pageData.data.Count != 0)
+                    {
+                        foreach (T_QualityDetailInfo qualityDetailInfo in pageData.data)
+                        {
+                            <tr>
+                                <td><input type="checkbox" value="@qualityDetailInfo.ID" /></td>
+                                <td>@qualityDetailInfo.StrongHoldCode</td>
+                                <td>@qualityDetailInfo.StrongHoldName</td>
+                                @*<td>@t_OutStockInfo.CompanyCode</td>*@
+                                <td>@qualityDetailInfo.ErpVoucherNo</td>
+                                <td>@qualityDetailInfo.ErpInVoucherNo</td>
+                                <td>@qualityDetailInfo.QuanQty</td>
+                                <td>@qualityDetailInfo.UnQuanQty</td>
+                                @*<td>@t_OutStockInfo.DepartmentName</td>*@
+                                @*<td>@t_OutStockInfo.StrCreater</td>*@
+                                <td>@qualityDetailInfo.CreateTime</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="12" align="center"><b>无查询数据</b></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        @{Html.RenderAction("PageView", pageData);}
+    </div>
+</div>
+
+<script src="~/Content/SCG/js/Common/Operate.js"></script>
+<script type="text/javascript">
+    //$(".tongbu").click(function () {
+    //    if ($("#ErpVoucherNo").val() == "") {
+    //        alert("先输入ERP单号！");
+    //        return;
+    //    }
+    //    var index = layer.load(1);
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "Sync?ErpVoucherNo=" + $("#ErpVoucherNo").val(),
+    //        dataType: "json",
+    //        async: false,
+    //        success: function (data) {
+    //            if (data.state) {
+    //                alert("同步成功！");
+    //            } else {
+    //                alert(data.obj);
+    //            }
+    //            layer.close(index);
+    //        },
+    //        fail: function () {
+    //            alert("提交失败！");
+    //            layer.close(index);
+    //        }
+
+    //    });
+    //})
+
+    $(".guanbi").click(function () {
+        if ($('input[type=checkbox]:checked').length != 1) {
+            alert("必须选中一行");
+            return;
+        }
+        var ID = "";
+        if (confirm("确定删除这" + $('input[type=checkbox]:checked').length + "个单据?")) {
+            $.each($('input:checkbox:checked'), function () {
+                ID = $(this).val();
+            });
+            $.ajax({
+                type: "POST",
+                url: "CloseQuality?ID=" + ID,
+                date: null,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    alert(data.obj);
+                    if (data.Status) {
+                        //window.location.reload();
+                    }
+                },
+                fail: function () {
+                    alert("提交失败！")
+                }
+            });
+        }
+    })
+
+</script>

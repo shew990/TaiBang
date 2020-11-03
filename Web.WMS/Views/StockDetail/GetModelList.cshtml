@@ -1,0 +1,215 @@
+﻿@using Web.WMS.Common;
+@{
+    ViewBag.Title = "库存明细";
+    Layout = "~/Views/Shared/_LayoutLayui.cshtml";
+}
+<style type="text/css">
+    .layui-container {
+        width: 100% !important;
+    }
+
+    .marginleft {
+        margin-left: 20px;
+        font-size: 16px;
+    }
+</style>
+
+<div class="box">
+    <div class="layui-card-body layui-table-body layui-table-main">
+        <div class="layui-card-body ">
+            <div class="layui-inline layui-show-xs-block">
+                <input id="Materialno" name="Materialno" class="layui-input" placeholder="物料号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <button id="Query" class="btn btn-primary" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+            </div>
+        </div>
+        @*@{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}*@
+        <table class="layui-hide" id="demo" lay-filter="test"></table>
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="edit">打印</a>
+        </script>
+    </div>
+</div>
+
+
+<script>
+
+    layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
+        var laydate = layui.laydate //日期
+            , laypage = layui.laypage //分页
+            , layer = layui.layer //弹层
+            , table = layui.table //表格
+
+        //执行一个 table 实例
+        var renderTable = function () {
+            table.render({
+                elem: '#demo'
+                , height: 600
+                , url: '/StockDetail/GetData' //数据接口
+                , method: 'post'
+                , contentType: 'application/json'
+                , where: {
+                    model: {
+                        Materialno: $("#Materialno").val().trim()
+                    }
+                }
+                , request: {
+
+                    pageName: 'CurrentPageNumber' //页码的参数名称，默认：page
+                    , limitName: 'CurrentPageShowCounts' //每页数据量的参数名，默认：limit
+                }
+                , title: '库位'
+                , page: true //开启分页
+                , toolbar: 'false' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                , totalRow: true //开启合计行
+                , cols: [[ //表头
+                    //{ type: 'checkbox', fixed: 'left' }
+                     { type: 'numbers', title: '序号', width: 60, fixed: 'left' },//序号列
+                    { field: 'Serialno', title: '序列号', width: 120, sort: false, fixed: 'left', totalRowText: '合计汇总:' }
+                    //, { field: 'Barcode', title: '条码', width: 300, sort: false }
+                    , { field: 'Strongholdcode', title: '工厂', width: 80, sort: false }
+                    , { field: 'Materialno', title: '物料号', width: 120, sort: true }
+                    , { field: 'Materialdesc', title: '物料名称', width: 250, sort: false }
+                    , { field: 'Batchno', title: '批次', width: 150, sort: true }
+                    //, { field: 'Unit', title: '单位', width: 80, sort: false }
+                    , { field: 'Qty', title: '数量', width: 80, sort: false, totalRow: true }
+                    //, { field: 'Prodate', title: '生产日期', width: 150, sort: false }
+                    , { field: 'Towarehouseno', title: '仓库', width: 80, sort: false }
+                    , { field: 'Houseno', title: '库区', width: 80, sort: false }
+                    , { field: 'Areano', title: '库位', width: 100, sort: false }
+                    , { field: 'Strstatus', title: '状态', width: 80, sort: false }
+                    , { field: 'Specialstock', title: '是否寄售', width: 100, sort: false }
+                    , { field: 'StrIslimitstock', title: '限制状态', width: 100, sort: false }
+                    , { field: 'StrIsretention', title: '锁定状态', width: 100, sort: false }
+                    , { field: 'SeibanCode', title: '番号', width: 100, sort: false }
+                    , { field: 'VisonCode', title: '版本号', width: 100, sort: false }
+                    , { field: 'StrAmount', title: '标记', width: 100, sort: false }
+                    , { field: 'Suppliername', title: '供应商', width: 150, sort: false }
+                    , { field: 'Customername', title: '客户名', width: 150, sort: false }
+                    , { field: 'Createtime', title: '时间', width: 150, sort: false }
+                    , { field: 'Barcode', title: '条码', width: 300, sort: false }
+                    , { field: 'Erpwarehouseno', title: 'ERP仓库', width: 120, sort: false }
+                    , { fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo' }
+                ]]
+                , response: {
+                    statusCode: 1 //重新规定成功的状态码为 200，table 组件默认为 0
+                }
+                , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                    return {
+                        "code": res.Result, //解析接口状态
+                        "msg": res.ResultValue, //解析提示文本
+                        "count": res.PageData.totalCount, //解析数据长度
+                        "data": res.Data //解析数据列表
+                    };
+                }
+            });
+        }
+
+
+        //监听头工具栏事件
+        //table.on('toolbar(test)', function (obj) {
+        //    var checkStatus = table.checkStatus(obj.config.id)
+        //        , data = checkStatus.data; //获取选中的数据
+        //    switch (obj.event) {
+        //        case 'add':
+        //            layer.msg('添加');
+        //            break;
+        //        case 'update':
+        //            if (data.length === 0) {
+        //                layer.msg('请选择一行');
+        //            } else if (data.length > 1) {
+        //                layer.msg('只能同时编辑一个');
+        //            } else {
+        //                layer.alert('编辑 [id]：' + checkStatus.data[0].id);
+        //            }
+        //            break;
+        //        case 'delete':
+        //            if (data.length === 0) {
+        //                layer.msg('请选择一行');
+        //            } else {
+        //                layer.msg('删除');
+        //            }
+        //            break;
+        //    };
+        //});
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'detail') {
+                layer.msg('查看操作');
+            } else if (layEvent === 'del') {
+                @*layer.confirm('真的删除当前行么？', function (index) {
+                    alert(data);
+                //向服务端发送删除指令
+                    $.ajax({
+                        type: "Post",
+                        url: "@UrlResouce.DeleteT_WarehouseAsync",
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({
+                                    Id:data.Id
+                                }),
+                        dataType: "json",
+                    success: function (msg) {
+                        if (msg.Result=="1") {
+                            obj.del(); //删除对应行（tr）的DOM结构
+                        }
+                        else {
+                            alert(msg.ResultValue);
+                        }
+                        layer.close(index);
+                    },
+                    fail: function () {
+                        alert("提交失败！");
+                         layer.close(index);
+                    },
+
+                });
+                });*@
+            }
+            @*else if (layEvent === 'edit') {
+                if (data.BarcodeType == "1") {
+                    window.open("@UrlResouce.PrintIP" + "/Main.aspx?flag=In&parameter1=" + data.Serialno +"&parameter2=1");
+                } else {
+                    window.open("@UrlResouce.PrintIP" + "/Main.aspx?flag=Pro&parameter1=" + data.Serialno+"&parameter2=1");
+                }
+            }*@
+        });
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo' //分页容器的id
+            , count: 100 //总页数
+            , skin: '#1E9FFF' //自定义选中色值
+            //,skip: true //开启跳页
+            , jump: function (obj, first) {
+                if (!first) {
+                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
+                }
+            }
+        });
+
+        $('#Query').click(function () {
+            renderTable();
+        });
+
+        //回车事件绑定
+        $("input").bind('keyup', function (event) {
+            if (event.keyCode == "13") {
+                renderTable();
+            }
+        });
+    });
+</script>
+<script src="~/Content/SCG/js/Common/Operate.js"></script>
+
+
+
+
+
+
+
+
+
