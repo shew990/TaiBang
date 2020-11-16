@@ -52,7 +52,7 @@
       <HintPath>..\BILBasic\DLL\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="SqlSugar">
-      <HintPath>..\packages\sqlSugar.4.6.4.7\lib\SqlSugar.dll</HintPath>
+      <HintPath>..\..\ABHWMS\SCGBSWMS\packages\sqlSugar.4.6.4.7\lib\SqlSugar.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
