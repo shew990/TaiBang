@@ -418,5 +418,12 @@ namespace SCCGAndroidService
         string GetTYSDetailListByHeaderIDADF(string ModelDetailJson);
         #endregion
 
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetBarCodeFirst", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetBarCodeFirst(string ReceiveTime);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetBarCodeSerial", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetBarCodeSerialno(string Serialno);
     }
 }

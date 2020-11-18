@@ -593,5 +593,9 @@ namespace BILWeb.Print
         public string fserialno { get; set; }
         
         public string originalCode { get; set; }//预留释放标记
+
+        public string department { get; set; }//部门
+
+        public string erpwarehouseno { get; set; }//erp仓库，存放地址
     }
 }

@@ -585,6 +585,93 @@ namespace BILWeb.OutBarCode
 
         }
 
-    
+
+        public bool GetBarCodeFirst(string ReceiveTime, ref List<T_OutBarCodeInfo> list)
+        {
+            try
+            {
+                string strSql = string.Format("select a.StoreCondition,a.SpecialRequire ,a.Strongholdcode,a.Strongholdname,a.Companycode,a.Supprdbatch, a.Supprddate,a.Productdate,a.Edate,a.Barcodemtype,a.Id, a.Voucherno, a.Rowno, a.Erpvoucherno, a.Vouchertype, a.Cuscode, a.Cusname," +
+                                "a.Supcode, a.Supname, a.Outpackqty, a.Innerpackqty, a.Voucherqty, a.Qty,a.workno, a.Nopack, a.Printqty, a.Barcode, a.Barcodetype, " +
+                                "a.Serialno, a.Barcodeno, a.Outcount, a.Innercount, a.Mantissaqty, a.Isrohs, a.Outbox_Id, a.Inner_Id, a.PRODUCTBATCH, " +
+                                "a.Batchno, a.Isdel, a.Creater, a.Createtime, a.Modifyer, a.Modifytime, a.Materialnoid,a.rownodel,a.Unit,a.LABELMARK,a.EAN,a.receivetime,a.materialno,a.materialdesc,a.tracno,a.projectno,a.fserialno,b.spec,b.standardbox  " +
+                                "from t_Outbarcode a left join t_material b on a.materialnoid=b.id  where ReceiveTime ='{0}' order by Erpvoucherno", ReceiveTime);
+
+                using (IDataReader reader = dbFactory.ExecuteReader(strSql))
+                {
+                    while (reader.Read())
+                    {
+                        T_OutBarCodeInfo t_outbarcode = new T_OutBarCodeInfo();
+                        t_outbarcode.ID = dbFactory.ToModelValue(reader, "ID").ToInt32();
+                        t_outbarcode.VoucherNo = (string)dbFactory.ToModelValue(reader, "VOUCHERNO");
+                        t_outbarcode.RowNo = dbFactory.ToModelValue(reader, "ROWNO").ToDBString();
+                        t_outbarcode.ErpVoucherNo = (string)dbFactory.ToModelValue(reader, "ERPVOUCHERNO");
+                        t_outbarcode.VoucherType = dbFactory.ToModelValue(reader, "VOUCHERTYPE").ToInt32();
+                        t_outbarcode.MaterialNo = (string)dbFactory.ToModelValue(reader, "MATERIALNO");
+                        t_outbarcode.MaterialDesc = (string)dbFactory.ToModelValue(reader, "MATERIALDESC");
+                        t_outbarcode.CusCode = dbFactory.ToModelValue(reader, "CUSCODE").ToDBString();
+                        t_outbarcode.CusName = dbFactory.ToModelValue(reader, "CUSNAME").ToDBString();
+                        t_outbarcode.SupCode = dbFactory.ToModelValue(reader, "SUPCODE").ToDBString();
+                        t_outbarcode.SupName = dbFactory.ToModelValue(reader, "SUPNAME").ToDBString();
+                        t_outbarcode.OutPackQty = (decimal?)dbFactory.ToModelValue(reader, "OUTPACKQTY");
+                        t_outbarcode.InnerPackQty = (decimal?)dbFactory.ToModelValue(reader, "INNERPACKQTY");
+                        t_outbarcode.VoucherQty = (decimal?)dbFactory.ToModelValue(reader, "VOUCHERQTY");
+                        t_outbarcode.Qty = (decimal?)dbFactory.ToModelValue(reader, "QTY");
+                        t_outbarcode.NoPack = dbFactory.ToModelValue(reader, "NOPACK").ToInt32();
+                        t_outbarcode.PrintQty = (decimal?)dbFactory.ToModelValue(reader, "PRINTQTY");
+                        t_outbarcode.BarCode = dbFactory.ToModelValue(reader, "BARCODE").ToDBString();
+                        t_outbarcode.BarcodeType = dbFactory.ToModelValue(reader, "BARCODETYPE").ToInt32();
+                        t_outbarcode.SerialNo = dbFactory.ToModelValue(reader, "SERIALNO").ToDBString();
+                        t_outbarcode.BarcodeNo = dbFactory.ToModelValue(reader, "BARCODENO").ToInt32();
+                        t_outbarcode.OutCount = dbFactory.ToModelValue(reader, "OUTCOUNT").ToInt32();
+                        t_outbarcode.InnerCount = dbFactory.ToModelValue(reader, "INNERCOUNT").ToInt32();
+                        t_outbarcode.MantissaQty = (decimal?)dbFactory.ToModelValue(reader, "MANTISSAQTY");
+                        t_outbarcode.IsRohs = dbFactory.ToModelValue(reader, "ISROHS").ToInt32();
+                        t_outbarcode.OutBox_ID = dbFactory.ToModelValue(reader, "OUTBOX_ID").ToInt32();
+                        t_outbarcode.Inner_ID = dbFactory.ToModelValue(reader, "INNER_ID").ToInt32();
+                        t_outbarcode.BatchNo = (string)dbFactory.ToModelValue(reader, "BATCHNO");
+                        //t_outbarcode.ABatchQty = (decimal?)dbFactory.ToModelValue(reader, "ABATCHQTY");
+                        t_outbarcode.IsDel = dbFactory.ToModelValue(reader, "ISDEL").ToInt32();
+                        t_outbarcode.Creater = (string)dbFactory.ToModelValue(reader, "CREATER");
+                        t_outbarcode.CreateTime = (DateTime?)dbFactory.ToModelValue(reader, "CREATETIME");
+                        t_outbarcode.Modifyer = (string)dbFactory.ToModelValue(reader, "MODIFYER");
+                        t_outbarcode.ModifyTime = (DateTime?)dbFactory.ToModelValue(reader, "MODIFYTIME");
+                        t_outbarcode.MaterialNoID = dbFactory.ToModelValue(reader, "MATERIALNOID").ToInt32();
+
+                        t_outbarcode.StrongHoldCode = dbFactory.ToModelValue(reader, "StrongHoldCode").ToDBString();
+                        t_outbarcode.StrongHoldName = dbFactory.ToModelValue(reader, "StrongHoldName").ToDBString();
+                        t_outbarcode.CompanyCode = dbFactory.ToModelValue(reader, "CompanyCode").ToDBString();
+                        t_outbarcode.ProductBatch = dbFactory.ToModelValue(reader, "ProductBatch").ToDBString();
+                        t_outbarcode.SupPrdBatch = dbFactory.ToModelValue(reader, "SupPrdBatch").ToDBString();
+                        t_outbarcode.SupPrdDate = dbFactory.ToModelValue(reader, "SupPrdDate").ToDateTime();
+                        t_outbarcode.ProductDate = dbFactory.ToModelValue(reader, "ProductDate").ToDateTime();
+                        t_outbarcode.EDate = dbFactory.ToModelValue(reader, "EDate").ToDateTime();
+                        t_outbarcode.StoreCondition = dbFactory.ToModelValue(reader, "StoreconDition").ToDBString();
+                        t_outbarcode.SpecialRequire = dbFactory.ToModelValue(reader, "SpecialRequire").ToDBString();
+                        t_outbarcode.BarcodeMType = dbFactory.ToModelValue(reader, "BarcodeMType").ToDBString();
+
+                        t_outbarcode.RowNoDel = dbFactory.ToModelValue(reader, "RowNoDel").ToDBString();
+
+                        t_outbarcode.Unit = dbFactory.ToModelValue(reader, "Unit").ToDBString();
+                        t_outbarcode.LabelMark = dbFactory.ToModelValue(reader, "LABELMARK").ToDBString();
+
+                        t_outbarcode.EAN = dbFactory.ToModelValue(reader, "EAN").ToDBString();
+                        t_outbarcode.receivetime = (DateTime)dbFactory.ToModelValue(reader, "RECEIVETIME");
+                        t_outbarcode.TracNo = (string)dbFactory.ToModelValue(reader, "TracNo");
+                        t_outbarcode.ProjectNo = (string)dbFactory.ToModelValue(reader, "ProjectNo");
+                        t_outbarcode.WorkNo = (string)dbFactory.ToModelValue(reader, "WorkNo");
+                        t_outbarcode.fserialno = (string)dbFactory.ToModelValue(reader, "fserialno");
+                        list.Add(t_outbarcode);
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+
     }
 }

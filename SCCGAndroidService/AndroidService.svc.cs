@@ -872,8 +872,23 @@ namespace SCCGAndroidService
             T_YSDetail_Func tfunc = new T_YSDetail_Func();
             return tfunc.YSPost(UserJson,ModelJson);
         }
-        
+
         #endregion
 
+        #region 打印数据
+        public string GetBarCodeFirst(string ReceiveTime)
+        {
+            T_OutBarCode_Func tfunc = new T_OutBarCode_Func();
+            return tfunc.GetBarCodeFirst(ReceiveTime);
+        }
+
+        public string GetBarCodeSerialno(string Serialno)
+        {
+            T_OutBarCode_Func tfunc = new T_OutBarCode_Func();
+            return tfunc.GetBarCodeSerialno(Serialno);
+        }
+        
+
+        #endregion
     }
 }

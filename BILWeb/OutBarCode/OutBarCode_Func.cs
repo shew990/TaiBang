@@ -684,6 +684,60 @@ namespace BILWeb.OutBarCode
                 return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
             }
         }
+
+
+        public string GetBarCodeFirst(string ReceiveTime)
+        {
+            BaseMessage_Model<List<T_OutBarCodeInfo>> model = new BaseMessage_Model<List<T_OutBarCodeInfo>>();
+            try
+            {
+                T_OutBarcode_DB _db = new T_OutBarcode_DB();
+                List<T_OutBarCodeInfo> list = new List<T_OutBarCodeInfo>();
+                
+                if (!_db.GetBarCodeFirst(ReceiveTime, ref list))
+                {
+                    model.HeaderStatus = "E";
+                    model.Message = "获取数据失败！";
+                    return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                }
+                model.HeaderStatus = "S";
+                model.ModelJson = list;
+                return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+            }
+            catch (Exception ex)
+            {
+                model.HeaderStatus = "E";
+                model.Message = ex.Message;
+                return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+            }
+        }
+
+        public string GetBarCodeSerialno(string Serialno)
+        {
+            BaseMessage_Model<List<T_OutBarCodeInfo>> model = new BaseMessage_Model<List<T_OutBarCodeInfo>>();
+            try
+            {
+                List<T_OutBarCodeInfo> list = new List<T_OutBarCodeInfo>();
+                T_OutBarCodeInfo outbarcdemodel = new T_OutBarCodeInfo();
+                string strmsg = "";
+                if (!GetOutBarCodeInfoBySerialNo(Serialno, ref outbarcdemodel, ref strmsg))
+                {
+                    model.HeaderStatus = "E";
+                    model.Message = "获取数据失败！";
+                    return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                }
+                list.Add(outbarcdemodel);
+                model.HeaderStatus = "S";
+                model.ModelJson = list;
+                return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+            }
+            catch (Exception ex)
+            {
+                model.HeaderStatus = "E";
+                model.Message = ex.Message;
+                return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+            }
+        }
         
 
     }
