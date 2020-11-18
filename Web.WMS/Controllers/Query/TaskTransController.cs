@@ -1,10 +1,13 @@
 ﻿using BILBasic.Common;
 using BILWeb.Query;
+using BILWeb.Stock;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using Web.WMS.Common;
+using Web.WMS.Models;
 using WMS.Web.Filter;
 
 namespace Web.WMS.Controllers.Query
@@ -33,22 +36,6 @@ namespace Web.WMS.Controllers.Query
 
         public ActionResult GetModelList(DividPage page, TaskTrans_Model model)
         {
-            //var selectItemList = new List<SelectListItem>();
-            //SelectListItem selectListItem;
-
-            //if (string.IsNullOrEmpty(model.tasktypename))
-            //{
-            //    selectListItem = new SelectListItem() { Value = "0", Text = "全部", Selected = true };
-            //}
-            //else
-            //{
-            //    selectListItem = new SelectListItem() { Value = model.TASKTYPE.ToString(), Text = model.tasktypename, Selected = true };
-            //}
-            //selectItemList.Add(selectListItem);
-            //var selectList = new SelectList(Commom.TaskTypeList, "Id", "Name");
-            //selectItemList.AddRange(selectList);
-            //ViewBag.ComTaskType = selectItemList;
-
             List<TaskTrans_Model> modelList = new List<TaskTrans_Model>();
             string strError = "";
             queryDB.GetTaskTransInfo(model, ref page, ref modelList, ref strError);
@@ -56,8 +43,47 @@ namespace Web.WMS.Controllers.Query
             return View("GetModelList", model);
         }
 
+        /// <summary>
+        /// 获取表格数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetData()
+        {
+            Stream stream = Request.InputStream;
+            string json = string.Empty;
+            if (stream.Length != 0)
+            {
+                StreamReader streamreader = new StreamReader(stream);
+                json = streamreader.ReadToEnd();
+            }
+            var pageRequest = JsonConvert.DeserializeObject<PageRequest<TaskTrans_Model>>(json);
 
-
+            List<TaskTrans_Model> modelList = new List<TaskTrans_Model>();
+            DividPage page = new DividPage
+            {
+                CurrentPageRecordCounts = pageRequest.CurrentPageRecordCounts,
+                CurrentPageShowCounts = pageRequest.CurrentPageShowCounts,
+                PagesCount = pageRequest.PagesCount,
+                RecordCounts = pageRequest.RecordCounts
+            };
+            TaskTrans_Model model = pageRequest.model;
+            string strError = "";
+            queryDB.GetTaskTransInfo(model, ref page, ref modelList, ref strError);
+            BaseModel<List<TaskTrans_Model>> returnmodel = new BaseModel<List<TaskTrans_Model>>()
+            {
+                Result = 1,
+                ResultValue = strError,
+                Data = modelList,
+                PageData = new R_Pagedata()
+                {
+                    totalCount = page.RecordCounts,
+                    pageSize = page.CurrentPageShowCounts,
+                    currentPage = page.CurrentPageNumber,
+                    totalPages = page.PagesCount
+                }
+            };
+            return Json(returnmodel, JsonRequestBehavior.AllowGet);
+        }
 
         public FileResult Excel(TaskTrans_Model model)
         {
@@ -99,7 +125,7 @@ namespace Web.WMS.Controllers.Query
             for (int i = 0; i < list.Count; i++)
             {
                 NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
-                rowtemp.CreateCell(0).SetCellValue(list[i].XH==null?"": list[i].XH);
+                rowtemp.CreateCell(0).SetCellValue(list[i].XH == null ? "" : list[i].XH);
                 rowtemp.CreateCell(1).SetCellValue(list[i].ERPVOUCHERNO);
                 rowtemp.CreateCell(2).SetCellValue(list[i].StrongHoldCode);
                 rowtemp.CreateCell(3).SetCellValue(list[i].MATERIALNO);
