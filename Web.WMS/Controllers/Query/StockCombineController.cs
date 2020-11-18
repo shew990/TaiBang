@@ -1,12 +1,14 @@
 ﻿using BILBasic.Common;
 using BILWeb.Query;
 using BILWeb.Stock;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Web.WMS.Models;
 using WMS.Web.Filter;
 
 namespace Web.WMS.Controllers.Query
@@ -34,16 +36,60 @@ namespace Web.WMS.Controllers.Query
         /// <param name="page"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ActionResult GetModelList(DividPage page, T_StockInfoEX model) {
-          
+        public ActionResult GetModelList(DividPage page, T_StockInfoEX model)
+        {
             List<T_StockInfoEX> list = new List<T_StockInfoEX>();
             string str = "";
-            queryDB.GetStockCombineInfo(model,ref page, ref list, ref str);
+            queryDB.GetStockCombineInfo(model, ref page, ref list, ref str);
             ViewData["PageData"] = new PageData<T_StockInfoEX> { data = list, dividPage = page, link = Common.PageTag.ModelToUriParam(model, "/StockCombine/GetModelList") };
             return View("GetModelList", model);
         }
 
-        public FileResult Excel(T_StockInfoEX model) {
+        /// <summary>
+        /// 获取表格数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult GetData()
+        {
+            Stream stream = Request.InputStream;
+            string json = string.Empty;
+            if (stream.Length != 0)
+            {
+                StreamReader streamreader = new StreamReader(stream);
+                json = streamreader.ReadToEnd();
+            }
+            var pageRequest = JsonConvert.DeserializeObject<PageRequest<T_StockInfoEX>>(json);
+
+            List<T_StockInfoEX> modelList = new List<T_StockInfoEX>();
+            DividPage page = new DividPage
+            {
+                CurrentPageRecordCounts = pageRequest.CurrentPageRecordCounts,
+                CurrentPageShowCounts = pageRequest.CurrentPageShowCounts,
+                PagesCount = pageRequest.PagesCount,
+                RecordCounts = pageRequest.RecordCounts
+            };
+            T_StockInfoEX model = pageRequest.model;
+            string strError = "";
+            queryDB.GetStockCombineInfo(model, ref page, ref modelList, ref strError);
+            BaseModel<List<T_StockInfoEX>> returnmodel = new BaseModel<List<T_StockInfoEX>>()
+            {
+                Result = 1,
+                ResultValue = strError,
+                Data = modelList,
+                PageData = new R_Pagedata()
+                {
+                    totalCount = page.RecordCounts,
+                    pageSize = page.CurrentPageShowCounts,
+                    currentPage = page.CurrentPageNumber,
+                    totalPages = page.PagesCount
+                }
+            };
+            return Json(returnmodel, JsonRequestBehavior.AllowGet);
+        }
+
+        public FileResult Excel(T_StockInfoEX model)
+        {
             DividPage page = new DividPage();
             page.CurrentPageShowCounts = 1000000;
             List<T_StockInfoEX> list = new List<T_StockInfoEX>();

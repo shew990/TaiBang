@@ -1,5 +1,4 @@
-﻿@using Web.WMS.Common;
-@{
+﻿@{
     ViewBag.Title = "库存明细";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
@@ -16,82 +15,80 @@
 
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
-        <div class="layui-card-body ">
+        <div class="layui-card-body">
             <div class="layui-inline layui-show-xs-block">
-                <input id="Materialno" name="Materialno" class="layui-input" placeholder="物料号">
+                <input id="MaterialNo" class="layui-input" placeholder="物料编号">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                <button id="Query" class="btn btn-primary" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                <input id="MaterialDesc" class="layui-input" placeholder="物料名">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="SerialNo" class="layui-input" placeholder="序列号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="StrongHoldCode" class="layui-input" placeholder="据点">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="BatchNo" class="layui-input" placeholder="批次号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="WarehouseNo" class="layui-input" placeholder="仓库号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="HouseNo" class="layui-input" placeholder="库区号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="AreaNo" class="layui-input" placeholder="货位号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="PalletNo" class="layui-input" placeholder="托盘号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <button id="Query" class="btn btn-primary">
+                    查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
+                </button>
             </div>
         </div>
-        @*@{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}*@
-        <table class="layui-hide" id="demo" lay-filter="test"></table>
+        <table class="layui-hide" id="detailTable" lay-filter="init"></table>
         <script type="text/html" id="barDemo">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">打印</a>
+            <a class="layui-btn layui-btn-xs" lay-event="stamp">打印</a>
         </script>
     </div>
 </div>
 
-
 <script>
-
     layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
-        var laydate = layui.laydate //日期
+        table = layui.table //表格
             , laypage = layui.laypage //分页
             , layer = layui.layer //弹层
-            , table = layui.table //表格
 
-        //执行一个 table 实例
-        var renderTable = function () {
+        tableInit();
+
+        //表格初始化
+        function tableInit() {
             table.render({
-                elem: '#demo'
-                , height: 600
+                elem: '#detailTable'
+                , height: 520
                 , url: '/StockDetail/GetData' //数据接口
                 , method: 'post'
                 , contentType: 'application/json'
                 , where: {
                     model: {
-                        Materialno: $("#Materialno").val().trim()
+                        MaterialNo: $("#MaterialNo").val().trim(),
+                        MaterialDesc: $("#MaterialDesc").val().trim(),
+                        SerialNo: $("#SerialNo").val().trim(),
+                        StrongHoldCode: $("#StrongHoldCode").val().trim(),
+                        WarehouseNo: $("#WarehouseNo").val().trim(),
+                        HouseNo: $("#HouseNo").val().trim(),
+                        AreaNo: $("#AreaNo").val().trim(),
+                        BatchNo: $("#BatchNo").val().trim(),
+                        PalletNo: $("#PalletNo").val().trim()
                     }
                 }
                 , request: {
-
                     pageName: 'CurrentPageNumber' //页码的参数名称，默认：page
                     , limitName: 'CurrentPageShowCounts' //每页数据量的参数名，默认：limit
                 }
-                , title: '库位'
-                , page: true //开启分页
-                , toolbar: 'false' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
-                , totalRow: true //开启合计行
-                , cols: [[ //表头
-                    //{ type: 'checkbox', fixed: 'left' }
-                     { type: 'numbers', title: '序号', width: 60, fixed: 'left' },//序号列
-                    { field: 'Serialno', title: '序列号', width: 120, sort: false, fixed: 'left', totalRowText: '合计汇总:' }
-                    //, { field: 'Barcode', title: '条码', width: 300, sort: false }
-                    , { field: 'Strongholdcode', title: '工厂', width: 80, sort: false }
-                    , { field: 'Materialno', title: '物料号', width: 120, sort: true }
-                    , { field: 'Materialdesc', title: '物料名称', width: 250, sort: false }
-                    , { field: 'Batchno', title: '批次', width: 150, sort: true }
-                    //, { field: 'Unit', title: '单位', width: 80, sort: false }
-                    , { field: 'Qty', title: '数量', width: 80, sort: false, totalRow: true }
-                    //, { field: 'Prodate', title: '生产日期', width: 150, sort: false }
-                    , { field: 'Towarehouseno', title: '仓库', width: 80, sort: false }
-                    , { field: 'Houseno', title: '库区', width: 80, sort: false }
-                    , { field: 'Areano', title: '库位', width: 100, sort: false }
-                    , { field: 'Strstatus', title: '状态', width: 80, sort: false }
-                    , { field: 'Specialstock', title: '是否寄售', width: 100, sort: false }
-                    , { field: 'StrIslimitstock', title: '限制状态', width: 100, sort: false }
-                    , { field: 'StrIsretention', title: '锁定状态', width: 100, sort: false }
-                    , { field: 'SeibanCode', title: '番号', width: 100, sort: false }
-                    , { field: 'VisonCode', title: '版本号', width: 100, sort: false }
-                    , { field: 'StrAmount', title: '标记', width: 100, sort: false }
-                    , { field: 'Suppliername', title: '供应商', width: 150, sort: false }
-                    , { field: 'Customername', title: '客户名', width: 150, sort: false }
-                    , { field: 'Createtime', title: '时间', width: 150, sort: false }
-                    , { field: 'Barcode', title: '条码', width: 300, sort: false }
-                    , { field: 'Erpwarehouseno', title: 'ERP仓库', width: 120, sort: false }
-                    , { fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo' }
-                ]]
                 , response: {
                     statusCode: 1 //重新规定成功的状态码为 200，table 组件默认为 0
                 }
@@ -103,79 +100,36 @@
                         "data": res.Data //解析数据列表
                     };
                 }
+                , title: '库位'
+                , page: true //开启分页
+                , toolbar: 'false' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                //, totalRow: true //开启合计行
+                , cols: [[ //表头
+                    { type: 'numbers', title: '序号', width: 60, fixed: 'left' }//序号列
+                    , { field: 'SerialNo', title: '序列号', width: 120, fixed: 'left' }
+                    , { field: 'Barcode', title: '条码', width: 300, sort: false }
+                    , { field: 'MaterialNo', title: '物料号', width: 120, sort: true }
+                    , { field: 'MaterialDesc', title: '物料名称', width: 250, sort: false }
+                    , { field: 'BatchNo', title: '批次', width: 150, sort: true }
+                    , { field: 'Unit', title: '单位', width: 80, sort: false }
+                    , { field: 'Qty', title: '数量', width: 80, sort: false, totalRow: true }
+                    , { field: 'WarehouseNo', title: '仓库', width: 80, sort: false }
+                    , { field: 'HouseNo', title: '库区', width: 80, sort: false }
+                    , { field: 'AreaNo', title: '库位', width: 100, sort: false }
+                    , { field: 'PalletNo', title: '托盘号', width: 100, sort: false }
+                    , { field: 'StatusName', title: '状态', width: 80, sort: false }
+                    , { field: 'StrIsAmount', title: '标记', width: 100, sort: false }
+                    , { field: 'CreateTime', title: '时间', width: 150, sort: false }
+                    , { fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo' }
+                ]]
             });
         }
 
-
-        //监听头工具栏事件
-        //table.on('toolbar(test)', function (obj) {
-        //    var checkStatus = table.checkStatus(obj.config.id)
-        //        , data = checkStatus.data; //获取选中的数据
-        //    switch (obj.event) {
-        //        case 'add':
-        //            layer.msg('添加');
-        //            break;
-        //        case 'update':
-        //            if (data.length === 0) {
-        //                layer.msg('请选择一行');
-        //            } else if (data.length > 1) {
-        //                layer.msg('只能同时编辑一个');
-        //            } else {
-        //                layer.alert('编辑 [id]：' + checkStatus.data[0].id);
-        //            }
-        //            break;
-        //        case 'delete':
-        //            if (data.length === 0) {
-        //                layer.msg('请选择一行');
-        //            } else {
-        //                layer.msg('删除');
-        //            }
-        //            break;
-        //    };
-        //});
-
         //监听行工具事件
-        table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
-            var data = obj.data //获得当前行数据
-                , layEvent = obj.event; //获得 lay-event 对应的值
-            if (layEvent === 'detail') {
-                layer.msg('查看操作');
-            } else if (layEvent === 'del') {
-                @*layer.confirm('真的删除当前行么？', function (index) {
-                    alert(data);
-                //向服务端发送删除指令
-                    $.ajax({
-                        type: "Post",
-                        url: "@UrlResouce.DeleteT_WarehouseAsync",
-                        contentType: "application/json;charset=utf-8",
-                        data: JSON.stringify({
-                                    Id:data.Id
-                                }),
-                        dataType: "json",
-                    success: function (msg) {
-                        if (msg.Result=="1") {
-                            obj.del(); //删除对应行（tr）的DOM结构
-                        }
-                        else {
-                            alert(msg.ResultValue);
-                        }
-                        layer.close(index);
-                    },
-                    fail: function () {
-                        alert("提交失败！");
-                         layer.close(index);
-                    },
-
-                });
-                });*@
+        table.on('tool(init)', function (obj) { //注:tool是工具条事件名,init是table原始容器的属性lay-filter="对应的值"
+            if (obj.event === 'stamp') {
+                layer.alert('查看操作');
             }
-            @*else if (layEvent === 'edit') {
-                if (data.BarcodeType == "1") {
-                    window.open("@UrlResouce.PrintIP" + "/Main.aspx?flag=In&parameter1=" + data.Serialno +"&parameter2=1");
-                } else {
-                    window.open("@UrlResouce.PrintIP" + "/Main.aspx?flag=Pro&parameter1=" + data.Serialno+"&parameter2=1");
-                }
-            }*@
         });
 
         //分页
@@ -183,27 +137,24 @@
             elem: 'pageDemo' //分页容器的id
             , count: 100 //总页数
             , skin: '#1E9FFF' //自定义选中色值
-            //,skip: true //开启跳页
             , jump: function (obj, first) {
-                if (!first) {
+                if (!first)
                     layer.msg('第' + obj.curr + '页', { offset: 'b' });
-                }
             }
         });
 
+        //查询
         $('#Query').click(function () {
-            renderTable();
+            tableInit();
         });
 
         //回车事件绑定
         $("input").bind('keyup', function (event) {
-            if (event.keyCode == "13") {
-                renderTable();
-            }
+            if (event.keyCode == "13")
+                tableInit();
         });
     });
 </script>
-<script src="~/Content/SCG/js/Common/Operate.js"></script>
 
 
 

@@ -1382,9 +1382,6 @@
     <Folder Include="Images\" />
     <Folder Include="Upload\" />
     <Folder Include="Util\Extention\" />
-    <Folder Include="Views\Base\" />
-    <Folder Include="Views\PickCar\" />
-    <Folder Include="Views\Print\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
