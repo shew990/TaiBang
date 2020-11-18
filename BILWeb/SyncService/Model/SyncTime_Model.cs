@@ -14,6 +14,6 @@ namespace BILWeb.SyncService.Model
 
         public string WmsType { get; set; }
 
-        public string SyncServerTime { get; set; }//ymh测试
+        public string SyncServerTime { get; set; }//ymh测试  
     }
 }
