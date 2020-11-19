@@ -47,6 +47,8 @@ namespace BILWeb.Product
 
         public decimal ProductQty { get; set; }
 
+        public List<T_ProductDetail> Detail { get; set; }
+
     }
 }
 

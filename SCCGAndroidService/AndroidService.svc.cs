@@ -899,7 +899,7 @@ namespace SCCGAndroidService
         public string GetT_ProDuctListADF(string UserJson, string ModelJson)
         {
             T_Product_Func tfunc = new T_Product_Func();
-            return tfunc.GetModelListADF(UserJson, ModelJson);
+            return tfunc.GetModelList(UserJson, ModelJson);
         }
 
         //完工提交
