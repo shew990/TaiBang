@@ -425,5 +425,17 @@ namespace SCCGAndroidService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetBarCodeSerial", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string GetBarCodeSerialno(string Serialno);
+
+
+        #region 完工入库
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetT_ProDuctListADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetT_ProDuctListADF(string UserJson, string ModelJson);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "SaveT_ProDuctListADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string SaveT_ProDuctListADF(string UserJson, string ModelJson);
+        #endregion
+
     }
 }

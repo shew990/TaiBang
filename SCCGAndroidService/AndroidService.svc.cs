@@ -27,6 +27,7 @@ using BILWeb.LandMark;
 using BILWeb.Query;
 using BILWeb.Box;
 using BILWeb.YS;
+using BILWeb.Product;
 
 namespace SCCGAndroidService
 {
@@ -887,8 +888,27 @@ namespace SCCGAndroidService
             T_OutBarCode_Func tfunc = new T_OutBarCode_Func();
             return tfunc.GetBarCodeSerialno(Serialno);
         }
-        
 
+
+        #endregion
+
+
+        #region 完工入库
+
+        //获取生产订单
+        public string GetT_ProDuctListADF(string UserJson, string ModelJson)
+        {
+            T_Product_Func tfunc = new T_Product_Func();
+            return tfunc.GetModelListADF(UserJson, ModelJson);
+        }
+
+        //完工提交
+        public string SaveT_ProDuctListADF(string UserJson, string ModelJson)
+        {
+            T_Product_Func tfunc = new T_Product_Func();
+            return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson);
+
+        }
         #endregion
     }
 }
