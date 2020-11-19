@@ -21,7 +21,6 @@
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main" style="height:500px;">
         <div class="layui-card-body">
-
             <div class="layui-inline">
                 <label class="layui-form-label lab100">ERP单号:</label>
                 <div class="layui-inline layui-show-xs-block">
@@ -33,7 +32,6 @@
                 <div class="layui-inline layui-show-xs-block">
                     <input type="text" id="MaterialNo" name="MaterialNo" autocomplete="off" class="layui-input txt200">
                 </div>
-
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label lab100">规格:</label>
@@ -46,7 +44,6 @@
                 <button id="Query" class="btn btn-primary" lay-submit="" lay-filter="sreach" style="margin-top: -15px;"><i class="layui-icon">&#xe615;</i></button>
             </div>
         </div>
-        @*@{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}*@
         <table class="layui-hide" id="demo" lay-filter="test"></table>
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -70,11 +67,11 @@
                 </div>
             </div>
             @*<div class="layui-inline">
-                <label class="layui-form-label lab100">生产日期:</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="ProDate" name="ProDate" autocomplete="off" class="layui-input txt200 laydateX">
-                </div>
-            </div>*@
+                    <label class="layui-form-label lab100">生产日期:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="ProDate" name="ProDate" autocomplete="off" class="layui-input txt200 laydateX">
+                    </div>
+                </div>*@
 
         </div>
 
@@ -118,9 +115,9 @@
             var ErpVoucherNo = "";
             var spec = "";
             var MaterialNo = "";
-             if ($("#ErpVoucherNo").val().trim() != "") { ErpVoucherNo= $('#ErpVoucherNo').val().trim(); }
+            if ($("#ErpVoucherNo").val().trim() != "") { ErpVoucherNo = $('#ErpVoucherNo').val().trim(); }
             if ($("#MaterialNo").val().trim() != "") { MaterialNo = $('#MaterialNo').val().trim(); }
-            if ($("#spec").val().trim() != "") { spec= $('#spec').val().trim(); }
+            if ($("#spec").val().trim() != "") { spec = $('#spec').val().trim(); }
             table.render({
                 elem: '#demo'
                 , height: 400
@@ -185,14 +182,14 @@
             if (layEvent === 'detail') {
                 layer.msg('查看操作');
             } else if (layEvent === 'edit') {
- 
+
                 if (data.Towarehouseno == "") {
-                    alert("当前行的仓库为空，不能做打印操作！");
+                    layer.alert("当前行的仓库为空，不能做打印操作！");
                 } else {
                     $('#Materialno1').val(data.MaterialNo);
                     $('#Materialdesc1').val(data.MaterialDesc);
                     $('#Batchno1').val(data.BatchNo);
-                    
+
                     $('#Rowno1').val(data.RowNo);
                     $('#VoucherQty1').val(data.RemainQty);
                     $('#EveryQty1').val(data.RemainQty);
@@ -221,64 +218,64 @@
 
         var PurObject
         $('#Print').click(function () {
-            if ($('#Batchno1').val()=="") {
-                alert("供应商批次不能为空！");
+            if ($('#Batchno1').val() == "") {
+                layer.alert("供应商批次不能为空！");
                 return;
             }
 
             //校验数量是不是合法
             if (!isRealNum($('#EveryQty1').val())) {
-                alert("输入的装箱量必须是数字！");
+                layer.alert("输入的装箱量必须是数字！");
                 return;
             }
 
             if (!isRealNum($('#VoucherQty1').val())) {
-                alert("输入的批次数量必须是数字！");
+                layer.alert("输入的批次数量必须是数字！");
                 return;
             }
 
             PurObject.Voucherqty = Number($('#VoucherQty1').val());
             //限制打印张数不能超过200张
             if ((Number($('#VoucherQty1').val()) / Number($('#EveryQty1').val())) > 200) {
-                alert("限制打印张数不能超过200张！");
+                layer.alert("限制打印张数不能超过200张！");
             } else {
                 $.ajax({
-                type: "Post",
-                url: '/PrintIn/SaveBarcode'+'?EveryQty='+$('#EveryQty1').val()+'&Userno='+ $('#user').val() +'&BatchNo='+$('#Batchno1').val() ,
-                contentType: "application/json;charset=utf-8",
-                data: JSON.stringify(PurObject),
-                dataType: "json",
-                success: function (msg) {
-                    if (msg.Result == "1") {
-                        window.open($("#printIP").val() + "/Main.aspx?flag=In&parameter1=" + msg.Data + "&parameter2=2&parameter3=" + PurObject.Erpvoucherno);
-                    }
-                    else {
-                        alert(msg.ResultValue);
-                    }
-                    layer.close(index);
-                },
-                fail: function () {
-                    alert("提交失败！");
+                    type: "Post",
+                    url: '/PrintIn/SaveBarcode' + '?EveryQty=' + $('#EveryQty1').val() + '&Userno=' + $('#user').val() + '&num=' + $('#VoucherQty1').val() + '&BatchNo=' + $('#Batchno1').val(),
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(PurObject),
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.Result == "1") {
+                            window.open($("#printIP").val() + "/Main.aspx?flag=In&parameter1=" + msg.Data + "&parameter2=2&parameter3=" + PurObject.Erpvoucherno);
+                        }
+                        else {
+                            layer.alert(msg.ResultValue);
+                        }
                         layer.close(index);
-                },
-            });
+                    },
+                    fail: function () {
+                        layer.alert("提交失败！");
+                        layer.close(index);
+                    },
+                });
             }
 
         })
 
-         function isRealNum(val){
-　　        if(val === "" || val ==null){
+        function isRealNum(val) {
+            if (val === "" || val == null) {
                 return false;
-　　        }
-           if(!isNaN(val)){　　　　
-　　        //对于空数组和只有一个数值成员的数组或全是数字组成的字符串，isNaN返回false，例如：'123'、[]、[2]、['123'],isNaN返回false,
-           //所以如果不需要val包含这些特殊情况，则这个判断改写为if(!isNaN(val) && typeof val === 'number' )
-　　　         return true;
-　　        }
+            }
+            if (!isNaN(val)) {
+                //对于空数组和只有一个数值成员的数组或全是数字组成的字符串，isNaN返回false，例如：'123'、[]、[2]、['123'],isNaN返回false,
+                //所以如果不需要val包含这些特殊情况，则这个判断改写为if(!isNaN(val) && typeof val === 'number' )
+                return true;
+            }
 
-　        else{
-　　　　        return false;
-　　        }
+            else {
+                return false;
+            }
         }
 
         //回车事件绑定
