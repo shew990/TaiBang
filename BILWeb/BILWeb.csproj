@@ -154,7 +154,15 @@
     <Compile Include="House\IHouseService.cs" />
     <Compile Include="IBaseService.cs" />
     <Compile Include="Quality\IQualityDetailService.cs" />
+    <Compile Include="View_Product\IProductService.cs" />
+    <Compile Include="View_Product\IProductDerailService.cs" />
     <Compile Include="View_Product\IView_ProductService.cs" />
+    <Compile Include="View_Product\Product_DB.cs" />
+    <Compile Include="View_Product\ProductDerail_DB.cs" />
+    <Compile Include="View_Product\Product_Func.cs" />
+    <Compile Include="View_Product\ProductDerail_Func.cs" />
+    <Compile Include="View_Product\Product_Model.cs" />
+    <Compile Include="View_Product\ProductDetail_Model.cs" />
     <Compile Include="View_Product\View_Product_DB.cs" />
     <Compile Include="View_Product\View_Product_Func.cs" />
     <Compile Include="View_Product\View_Product_Model.cs" />
