@@ -22,6 +22,12 @@ namespace Web.WMS.Controllers.Print
         }
 
 
+        public ActionResult GetPrintList()
+        {
+            return View("GetModelList");
+        }
+
+
         public JsonResult GetEAN(string materialno) {
             try
             {

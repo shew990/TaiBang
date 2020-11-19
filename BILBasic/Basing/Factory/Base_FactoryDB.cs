@@ -998,11 +998,11 @@ namespace BILBasic.Basing.Factory
 
             public virtual bool CanQuery(TBase_Model model)
             {
-                if (model.DateFrom > model.DateTo)
-                {
-                    throw new Exception("查询时开始时间不能大于结束时间！");
-                }
-                return true;
+            if (model.DateFrom > model.DateTo)
+            {
+                throw new Exception("查询时开始时间不能大于结束时间！");
+            }
+            return true;
             }
 
             /// <summary>
