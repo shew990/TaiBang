@@ -26,6 +26,30 @@ namespace UnitTestProject1
     {
         UserModel userModel = new UserModel();
 
+        #region 打印条码ymh
+        [TestMethod]
+        public void PrintForTime()
+        {
+            try
+            {
+                T_OutBarCode_Func tfunc = new T_OutBarCode_Func();
+                string aaa = tfunc.GetBarCodeFirst("2020/11/18 13:12:25");
+            }
+            catch (Exception ex)
+            {
+                string aaa = ex.ToString();
+            }
+
+        }
+
+        [TestMethod]
+        public void PrintForSerialno()
+        {
+            T_OutBarCode_Func tfunc = new T_OutBarCode_Func();
+            tfunc.GetBarCodeSerialno("");
+        }
+        #endregion
+
         #region 库存调整ymh
         //扫描条码
         [TestMethod]
@@ -34,6 +58,8 @@ namespace UnitTestProject1
             Check_DB db = new Check_DB();
             db.GetInfoBySerial("");
         }
+        #endregion
+
         #region ymh收货
         [TestMethod]
         public void A_ReceiveScan()
@@ -202,6 +228,7 @@ namespace UnitTestProject1
             tfunc.SaveModelListSqlToDBADF(UserJson, "[{\"AreaID\":1649,\"AreaNo\":\"SHJC-10ZC01\",\"BatchNo\":\"20200514\",\"FromBatchNo\":\"20200514\",\"FromErpAreaNo\":\"SHJC-10DS01\",\"FromErpWarehouse\":\"SHJC-10\",\"HouseID\":21,\"MaterialDesc\":\"蓄电池\",\"MaterialNo\":\"22111100039\",\"PartNo\":\"\",\"QualityQty\":100.0,\"RemainQty\":100.0,\"ScanQty\":100.0,\"ShelveQty\":0.0,\"SupCusCode\":\"010618\",\"SupCusName\":\"深圳汇业\",\"TaskID\":0,\"TaskNo\":\"D20051400001\",\"TaskQty\":100.0,\"TaskQty1\":100.0,\"TaskType\":0,\"ToBatchNo\":\"\",\"ToErpAreaNo\":\"SHJC-10ZC01\",\"ToErpWarehouse\":\"SHJC-10\",\"TracNo\":\"00000066\",\"Unit\":\"件\",\"UnitName\":\"\",\"VoucherNo\":\"20051400002\",\"WareHouseNo\":\"SHJC-10\",\"WarehouseID\":21,\"iarrsid\":\"1000051370\",\"lstArea\":[],\"lstStockInfo\":[{\"AmountQty\":0.0,\"AreaID\":1648,\"AreaNo\":\"SHJC-10DS01\",\"AreaType\":2,\"BarCodeType\":1,\"Barcode\":\"1@SHJC@22111100039@20200514@100@2005141413181132756201\",\"BatchNo\":\"20200514\",\"CheckID\":0,\"EAN\":\"\",\"FromAreaID\":0,\"FromAreaNo\":\"SHJC-10DS01\",\"FromBatchNo\":\"20200514\",\"FromErpAreaNo\":\"SHJC-10DS01\",\"FromErpWarehouse\":\"SHJC-10\",\"FromHouseID\":0,\"FromWareHouseID\":0,\"FromWareHouseNo\":\"SHJC-10\",\"HouseID\":20,\"HouseNo\":\"SHJC-10DS\",\"HouseProp\":1,\"IsAmount\":1,\"IsDel\":1,\"IsLimitStock\":1,\"IsPalletOrBox\":1,\"MaterialDesc\":\"蓄电池\",\"MaterialNo\":\"22111100039\",\"OKSelect\":false,\"OldStockID\":0,\"OutstockDetailID\":0,\"OutstockHeaderID\":0,\"PalletQty\":100.0,\"PickModel\":0,\"ProductDate\":\"Jan 1, 3939 8:00:00 AM\",\"Qty\":100.0,\"ReceiveStatus\":1,\"ReturnType\":0,\"ScanType\":0,\"SerialNo\":\"2005141413181132756201\",\"Spec\":\"14.8V/30AH\",\"StockBarCodeStatus\":0,\"SupPrdBatch\":\"\",\"SupPrdDate\":\"Jan 1, 3939 8:00:00 AM\",\"TaskDetailesID\":0,\"TaskNo\":\"D20051400001\",\"TracNo\":\"00000066\",\"TransferDetailsID\":0,\"Unit\":\"件\",\"UnitName\":\"\",\"WareHouseID\":21,\"WarehouseNo\":\"SHJC-10\",\"CompanyCode\":\"\",\"Creater\":\"demo\",\"EDate\":\"Jan 1, 3939 8:00:00 AM\",\"ErpLineStatus\":0,\"HeaderID\":0,\"ID\":22028,\"LineStatus\":0,\"MaterialNoID\":42728,\"Status\":3,\"StockType\":0,\"StrEDate\":\"3939/01/01\",\"StrongHoldCode\":\"SHJC\",\"StrongHoldName\":\"\",\"TerminateReasonID\":0,\"VoucherType\":0}],\"CompanyCode\":\"\",\"Creater\":\"demo\",\"EDate\":\"Jan 1, 3939 8:00:00 AM\",\"ERPVoucherType\":\"03\",\"ErpLineStatus\":0,\"ErpVoucherNo\":\"SHJC030000004326\",\"HeaderID\":327,\"ID\":3536,\"LineStatus\":1,\"MaterialNoID\":42728,\"Status\":0,\"StockType\":0,\"StrVoucherType\":\"到货单\",\"StrongHoldCode\":\"SHJC\",\"StrongHoldName\":\"上海嘉成\",\"TerminateReasonID\":0,\"VoucherType\":390},{\"AreaID\":1649,\"AreaNo\":\"SHJC-10ZC01\",\"BatchNo\":\"\",\"FromBatchNo\":\"\",\"FromErpAreaNo\":\"SHJC-10DS01\",\"FromErpWarehouse\":\"SHJC-10\",\"HouseID\":21,\"MaterialDesc\":\"蓄电池\",\"MaterialNo\":\"22111100039\",\"PartNo\":\"\",\"QualityQty\":100.0,\"RemainQty\":100.0,\"ScanQty\":100.0,\"ShelveQty\":0.0,\"SupCusCode\":\"010618\",\"SupCusName\":\"深圳汇业\",\"TaskID\":0,\"TaskNo\":\"D20051400001\",\"TaskQty\":100.0,\"TaskQty1\":100.0,\"TaskType\":0,\"ToBatchNo\":\"\",\"ToErpAreaNo\":\"SHJC-10ZC01\",\"ToErpWarehouse\":\"SHJC-10\",\"TracNo\":\"\",\"Unit\":\"件\",\"UnitName\":\"\",\"VoucherNo\":\"20051400002\",\"WareHouseNo\":\"SHJC-10\",\"WarehouseID\":21,\"iarrsid\":\"1000051372\",\"lstArea\":[],\"lstStockInfo\":[],\"CompanyCode\":\"\",\"Creater\":\"demo\",\"EDate\":\"Jan 1, 3939 8:00:00 AM\",\"ERPVoucherType\":\"03\",\"ErpLineStatus\":0,\"ErpVoucherNo\":\"SHJC030000004326\",\"HeaderID\":327,\"ID\":3538,\"LineStatus\":1,\"MaterialNoID\":42728,\"Status\":0,\"StockType\":0,\"StrVoucherType\":\"到货单\",\"StrongHoldCode\":\"SHJC\",\"StrongHoldName\":\"上海嘉成\",\"TerminateReasonID\":0,\"VoucherType\":390},{\"AreaID\":1649,\"AreaNo\":\"SHJC-10ZC01\",\"BatchNo\":\"\",\"FromBatchNo\":\"\",\"FromErpAreaNo\":\"SHJC-10DS01\",\"FromErpWarehouse\":\"SHJC-10\",\"HouseID\":21,\"MaterialDesc\":\"蓄电池\",\"MaterialNo\":\"22111100039\",\"PartNo\":\"\",\"QualityQty\":50.0,\"RemainQty\":50.0,\"ScanQty\":50.0,\"ShelveQty\":0.0,\"SupCusCode\":\"010618\",\"SupCusName\":\"深圳汇业\",\"TaskID\":0,\"TaskNo\":\"D20051400001\",\"TaskQty\":50.0,\"TaskQty1\":50.0,\"TaskType\":0,\"ToBatchNo\":\"\",\"ToErpAreaNo\":\"SHJC-10ZC01\",\"ToErpWarehouse\":\"SHJC-10\",\"TracNo\":\"\",\"Unit\":\"件\",\"UnitName\":\"\",\"VoucherNo\":\"20051400002\",\"WareHouseNo\":\"SHJC-10\",\"WarehouseID\":21,\"iarrsid\":\"1000051371\",\"lstArea\":[],\"lstStockInfo\":[{\"AmountQty\":0.0,\"AreaID\":1648,\"AreaNo\":\"SHJC-10DS01\",\"AreaType\":2,\"BarCodeType\":1,\"Barcode\":\"1@SHJC@22111100039@20200514@150@2005141412532968241301\",\"BatchNo\":\"20200514\",\"CheckID\":0,\"EAN\":\"\",\"FromAreaID\":0,\"FromAreaNo\":\"SHJC-10DS01\",\"FromBatchNo\":\"20200514\",\"FromErpAreaNo\":\"SHJC-10DS01\",\"FromErpWarehouse\":\"SHJC-10\",\"FromHouseID\":0,\"FromWareHouseID\":0,\"FromWareHouseNo\":\"SHJC-10\",\"HouseID\":20,\"HouseNo\":\"SHJC-10DS\",\"HouseProp\":1,\"IsAmount\":1,\"IsDel\":1,\"IsLimitStock\":1,\"IsPalletOrBox\":1,\"MaterialDesc\":\"蓄电池\",\"MaterialNo\":\"22111100039\",\"OKSelect\":false,\"OldStockID\":0,\"OutstockDetailID\":0,\"OutstockHeaderID\":0,\"PalletQty\":150.0,\"PickModel\":0,\"ProductDate\":\"Jan 1, 3939 8:00:00 AM\",\"Qty\":150.0,\"ReceiveStatus\":1,\"ReturnType\":0,\"ScanType\":0,\"SerialNo\":\"2005141412532968241301\",\"Spec\":\"14.8V/30AH\",\"StockBarCodeStatus\":0,\"SupPrdBatch\":\"\",\"SupPrdDate\":\"Jan 1, 3939 8:00:00 AM\",\"TaskDetailesID\":0,\"TaskNo\":\"D20051400001\",\"TracNo\":\"\",\"TransferDetailsID\":0,\"Unit\":\"件\",\"UnitName\":\"\",\"WareHouseID\":21,\"WarehouseNo\":\"SHJC-10\",\"CompanyCode\":\"\",\"Creater\":\"demo\",\"EDate\":\"Jan 1, 3939 8:00:00 AM\",\"ErpLineStatus\":0,\"HeaderID\":0,\"ID\":22029,\"LineStatus\":0,\"MaterialNoID\":42728,\"Status\":3,\"StockType\":0,\"StrEDate\":\"3939/01/01\",\"StrongHoldCode\":\"SHJC\",\"StrongHoldName\":\"\",\"TerminateReasonID\":0,\"VoucherType\":0}],\"CompanyCode\":\"\",\"Creater\":\"demo\",\"EDate\":\"Jan 1, 3939 8:00:00 AM\",\"ERPVoucherType\":\"03\",\"ErpLineStatus\":0,\"ErpVoucherNo\":\"SHJC030000004326\",\"HeaderID\":327,\"ID\":3537,\"LineStatus\":1,\"MaterialNoID\":42728,\"Status\":0,\"StockType\":0,\"StrVoucherType\":\"到货单\",\"StrongHoldCode\":\"SHJC\",\"StrongHoldName\":\"上海嘉成\",\"TerminateReasonID\":0,\"VoucherType\":390}]");
         }
         #endregion
+
         [TestMethod]
         public void A_ajscan()
         {
@@ -215,7 +242,7 @@ namespace UnitTestProject1
         }
 
 
-        #endregion
+   
 
         #region ymh预留释放
 

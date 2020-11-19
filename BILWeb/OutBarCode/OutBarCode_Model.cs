@@ -510,7 +510,11 @@ namespace BILWeb.OutBarCode
         public string originalCode { get; set; }
         public string HouseNo { get; set; }
 
-        
+        public string department { get; set; }
+        public string erpwarehouseno { get; set; }
+        public string dimension { get; set; }
+
+
     }
 }
 

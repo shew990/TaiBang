@@ -16,7 +16,8 @@ namespace BILBasic.DBA
     {
 
         //获取数据库连接字符串，其属于静态变量且只读，项目中所有文档可以直接使用，但不能修改
-        public static readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = 10.1.254.71)(PORT = 1521))(CONNECT_DATA =(SERVER = DEDICATED)(SERVICE_NAME =  masawms)));Persist Security Info=True;User ID=mzwmsbarcode;Password=123456;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ConnectionString;//防止空引用异常 modify by gzw 181227
+        public static readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=192.168.250.37;Initial Catalog=WMSDB;Persist Security Info=True;User ID=sa;Password=chinetek;Persist Security Info=True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ConnectionString;//
+        //public static readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = 10.1.254.71)(PORT = 1521))(CONNECT_DATA =(SERVER = DEDICATED)(SERVICE_NAME =  masawms)));Persist Security Info=True;User ID=mzwmsbarcode;Password=123456;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ConnectionString;//防止空引用异常 modify by gzw 181227
         //public static readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracle"].ConnectionString;
         //public static readonly string ConnectionStringLocalTransaction = "Password=123456;User ID=jxbarcode;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=jingxinwms)));";
         // 哈希表用来存储缓存的参数信息，哈希表可以存储任意类型的参数。
