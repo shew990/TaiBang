@@ -12,13 +12,7 @@ namespace BILWeb.View_Product
         //无参构造函数
         public View_Product_Model() : base() { }
 
-        public Int32? id { get; set; }
-
         public Int32? headerid { get; set; }
-
-        public String StrongHoldCode { get; set; }
-
-        public String StrongHoldName { get; set; }
 
         public String ErpVoucherTypeCode { get; set; }
 
@@ -31,10 +25,6 @@ namespace BILWeb.View_Product
         public String BatchNo { get; set; }
 
         public String Unit { get; set; }
-
-        public String DepartmentCode { get; set; }
-
-        public String DepartmentName { get; set; }
 
         public String PubDescSeg10_Code { get; set; }
 
@@ -78,6 +68,5 @@ namespace BILWeb.View_Product
 
         public String MaterialNo { get; set; }
 
-        public String ErpVoucherNo { get; set; }
     }
 }
