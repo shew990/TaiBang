@@ -44,12 +44,24 @@ namespace BILWeb.View_Product
 
         public String ErpWarehouseName { get; set; }
 
+        /// <summary>
+        /// 外箱物料编号
+        /// </summary>
         public String HeadMaterialNo { get; set; }
 
+        /// <summary>
+        /// 外箱物料说明
+        /// </summary>
         public String HeadMaterialDesc { get; set; }
 
+        /// <summary>
+        /// 外箱物料名称
+        /// </summary>
         public String HeadMaterialName { get; set; }
 
+        /// <summary>
+        /// 外箱规格
+        /// </summary>
         public String HeadSpec { get; set; }
 
         public String CustomerCode { get; set; }

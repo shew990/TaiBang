@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "内盒明细";
+    Layout = "~/Views/Shared/_LayoutLayui.cshtml";
+}
+<style type="text/css">
+    .layui-container {
+        width: 100% !important;
+    }
+
+    .marginleft {
+        margin-left: 20px;
+        font-size: 16px;
+    }
+</style>
+
+<div class="box">
+    <div class="layui-card-body layui-table-body layui-table-main">
+        <div class="layui-card-body">
+            <div class="layui-inline layui-show-xs-block">
+                <input id="MaterialNo" class="layui-input" placeholder="物料编号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="MaterialName" class="layui-input" placeholder="物料名称">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="HeadMaterialNo" class="layui-input" placeholder="外箱物料编号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="HeadMaterialName" class="layui-input" placeholder="外箱物料名称">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <button id="Query" class="btn btn-primary">
+                    查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
+                </button>
+            </div>
+        </div>
+        <table class="layui-hide" id="productOrderTable" lay-filter="init"></table>
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="stamp">打印</a>
+        </script>
+    </div>
+</div>
+
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
+        table = layui.table
+            , laypage = layui.laypage
+            , layer = layui.layer
+
+        tableInit();
+
+        //表格初始化
+        function tableInit() {
+            table.render({
+                elem: '#productOrderTable'
+                , height: 520
+                , url: '/ProductOrders/GetData'
+                , method: 'post'
+                , contentType: 'application/json'
+                , where: {
+                    model: {
+                        MaterialNo: $("#MaterialNo").val().trim(),
+                        MaterialName: $("#MaterialName").val().trim(),
+                        HeadMaterialNo: $("#HeadMaterialNo").val().trim(),
+                        HeadMaterialName: $("#HeadMaterialName").val().trim()
+                    }
+                }
+                , request: {
+                    pageName: 'CurrentPageNumber'
+                    , limitName: 'CurrentPageShowCounts'
+                }
+                , response: {
+                    statusCode: 1
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.Result,
+                        "msg": res.ResultValue,
+                        "count": res.PageData.totalCount,
+                        "data": res.Data
+                    };
+                }
+                , title: '库位'
+                , page: true
+                , toolbar: 'false'
+                //, totalRow: true //开启合计行
+                , cols: [
+                    [
+                        { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
+                        , { field: 'HeadMaterialNo', title: '外箱物料编号', width: 120, fixed: 'left' }
+                        , { field: 'HeadMaterialName', title: '外箱物料名称', width: 200 }
+                        , { field: 'HeadSpec', title: '外箱物料规格', width: 150 }
+                        , { field: 'MaterialNo', title: '物料号', width: 120, sort: true }
+                        , { field: 'MaterialName', title: '物料名称', width: 200 }
+                        , { field: 'Spec', title: '物料规格', width: 80 }
+                        , { field: 'Qty', title: '物料数量', width: 80 }
+                        , { fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo' }
+                    ]
+                ]
+            });
+        }
+
+        //监听行工具事件
+        table.on('tool(init)', function (obj) {
+            if (obj.event === 'stamp') {
+                layer.alert('查看操作');
+            }
+        });
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo'
+            , count: 100
+            , skin: '#1E9FFF'
+            , jump: function (obj, first) {
+                if (!first)
+                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
+            }
+        });
+
+        //查询
+        $('#Query').click(function () {
+            tableInit();
+        });
+
+        //回车事件绑定
+        $("input").bind('keyup', function (event) {
+            if (event.keyCode == "13")
+                tableInit();
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
