@@ -29,7 +29,7 @@ namespace BILWeb.View_Product
 
         protected override string GetViewName()
         {
-            return "v_palletdetail";
+            return "View_Product";
         }
 
         protected override string GetTableName()
@@ -39,14 +39,15 @@ namespace BILWeb.View_Product
 
         protected override string GetFilterSql(UserModel user, View_Product_Model model)
         {
-            string strSql = base.GetFilterSql(user, model);
+            //string strSql = base.GetFilterSql(user, model);
+            string strSql = "";
             string strAnd = " and ";
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {
                 strSql += strAnd;
                 strSql += " erpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
             }
-            return strSql + " order by id desc";
+            return strSql;
         }
 
         protected override View_Product_Model ToModel(IDataReader reader)
@@ -86,8 +87,8 @@ namespace BILWeb.View_Product
             model.MaterialName = (string)dbFactory.ToModelValue(reader, "MaterialName");
             model.MaterialNo = (string)dbFactory.ToModelValue(reader, "MaterialNo");
             model.ErpVoucherNo = (string)dbFactory.ToModelValue(reader, "ErpVoucherNo");
-        
+
             return model;
         }
-}
+    }
 }
