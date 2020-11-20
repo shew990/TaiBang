@@ -279,6 +279,7 @@
     <Compile Include="Controllers\DepInterface\DepInterfaceController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\Fastmail\FastmailController.cs" />
+    <Compile Include="Controllers\ProductOrders\ProductOrdersController.cs" />
     <Compile Include="Controllers\QualityDetail\QualityDetailController.cs" />
     <Compile Include="Controllers\Print\PrintInstockController.cs" />
     <Compile Include="Controllers\YS\YSController.cs" />
@@ -1376,6 +1377,7 @@
     <Content Include="Views\YS\GetModelList.cshtml" />
     <Content Include="Views\PrintYS\GetModelList.cshtml" />
     <Content Include="Views\QualityDetail\GetModelList.cshtml" />
+    <Content Include="Views\ProductOrders\GetModelList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
