@@ -23,7 +23,7 @@ namespace BILWeb.Product
                 strError = "客户端传来的实体类不能为空！";
                 return false;
             }
-            
+
             return true;
         }
 
@@ -37,7 +37,7 @@ namespace BILWeb.Product
             throw new NotImplementedException();
         }
 
-        
+
         public string GetModelList(string UserJson, string ModelJson)
         {
 
@@ -70,7 +70,7 @@ namespace BILWeb.Product
                     modellistdetail = dbdetail.GetModelListADF(user, detail);
                     item.Detail = modellistdetail;
                 });
-                if (modellist == null|| modellist.Count==0)
+                if (modellist == null || modellist.Count == 0)
                 {
                     messageModel.HeaderStatus = "E";
                     messageModel.Message = "生产订单查询为空！";
@@ -82,15 +82,65 @@ namespace BILWeb.Product
                 messageModel.HeaderStatus = "S";
                 return JsonConvert.SerializeObject(messageModel);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 messageModel.HeaderStatus = "E";
                 messageModel.Message = ex.ToString();
                 return JsonConvert.SerializeObject(messageModel);
             }
-            
+
         }
 
+        public string SaveT_ProDuctBarcodeADF(string user, string modelList)
+        {
 
+            BaseMessage_Model<List<T_Product>> messageModel = new BaseMessage_Model<List<T_Product>>();
+            try
+            {
+                if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(modelList))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "传入参数不能为空！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+
+                UserModel userModel = JSONHelper.JsonToObject<UserModel>(user);
+                T_Product product = JSONHelper.JsonToObject<T_Product>(modelList);
+
+                string ipport = "";
+                string ErrMsg = "";
+                T_Product_DB ProductDB = new T_Product_DB();
+                if (ProductDB.SaveProDuctBarcode(userModel, product))
+                {
+                    //bool res = PrintLable(list, ipport, ref ErrMsg);//调用打印标签
+                    if (true)
+                    {
+                        messageModel.HeaderStatus = "S";
+                        messageModel.Message = "打印成功";
+                        return JsonConvert.SerializeObject(messageModel);
+                    }
+                    else
+                    {
+                        messageModel.HeaderStatus = "E";
+                        messageModel.Message = ErrMsg;
+                        return JsonConvert.SerializeObject(messageModel);
+                    }
+                }
+                else
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "数据插入失败！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.ToString();
+                return JsonConvert.SerializeObject(messageModel);
+            }
+
+        }
 
     }
 }

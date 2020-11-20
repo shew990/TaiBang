@@ -82,6 +82,7 @@ namespace BILWeb.Product
             return strSql + " order by id desc";
         }
 
+        
 
     }
 }

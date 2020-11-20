@@ -893,13 +893,20 @@ namespace SCCGAndroidService
         #endregion
 
 
-        #region 完工入库
+        #region 生产订单
 
         //获取生产订单
         public string GetT_ProDuctListADF(string UserJson, string ModelJson)
         {
             T_Product_Func tfunc = new T_Product_Func();
             return tfunc.GetModelList(UserJson, ModelJson);
+        }
+
+        //关联提交
+        public string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson)
+        {
+            T_Product_Func tfunc = new T_Product_Func();
+            return tfunc.SaveT_ProDuctBarcodeADF(UserJson, ModelJson);
         }
 
         //完工提交
