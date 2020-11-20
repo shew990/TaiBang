@@ -15,8 +15,7 @@ namespace BILWeb.InStock
         //无参构造函数
         public T_InStockDetailInfo() : base() { }
 
-
-        //私有变量       
+        //私有变量
         private int instockid;
         private string rowno;
         private string materialno;
@@ -34,210 +33,119 @@ namespace BILWeb.InStock
         private DateTime? qualitydate;
         private string unitname;
 
-
-
-
+        //传递参数
+        public String EveryQty { get; set; }
+        public String num { get; set; }
+        public String Userno { get; set; }
 
         //公开属性
-       
-
         public int InStockID
         {
-            get
-            {
-                return instockid;
-            }
-            set
-            {
-                instockid = value;
-            }
+            get { return instockid; }
+            set { instockid = value; }
         }
 
         public string RowNo
         {
-            get
-            {
-                return rowno;
-            }
-            set
-            {
-                rowno = value;
-            }
+            get { return rowno; }
+            set { rowno = value; }
         }
+
         [Display(Name = "物料编号")]
         public string MaterialNo
         {
-            get
-            {
-                return materialno;
-            }
-            set
-            {
-                materialno = value;
-            }
+            get { return materialno; }
+            set { materialno = value; }
         }
+
         [Display(Name = "物料描述")]
         public string MaterialDesc
         {
-            get
-            {
-                return materialdesc;
-            }
-            set
-            {
-                materialdesc = value;
-            }
+            get { return materialdesc; }
+            set { materialdesc = value; }
         }
+
         [Display(Name = "入库数量")]
         /// <summary>
         /// 入库数量，ERP单据同步过来的订单数量
         /// </summary>
         public decimal InStockQty
         {
-            get
-            {
-                return instockqty;
-            }
-            set
-            {
-                instockqty = value;
-            }
+            get { return instockqty; }
+            set { instockqty = value; }
         }
+
         [Display(Name = "收货数量")]
         /// <summary>
         ///实际收货数量，多次收货数量累加
         /// </summary>
         public decimal ReceiveQty
         {
-            get
-            {
-                return receiveqty;
-            }
-            set
-            {
-                receiveqty = value;
-            }
+            get { return receiveqty; }
+            set { receiveqty = value; }
         }
+
         [Display(Name = "单位")]
         public string Unit
         {
-            get
-            {
-                return unit;
-            }
-            set
-            {
-                unit = value;
-            }
+            get { return unit; }
+            set { unit = value; }
         }
 
         public string StorageLoc
         {
-            get
-            {
-                return storageloc;
-            }
-            set
-            {
-                storageloc = value;
-            }
+            get { return storageloc; }
+            set { storageloc = value; }
         }
 
         public string Plant
         {
-            get
-            {
-                return plant;
-            }
-            set
-            {
-                plant = value;
-            }
+            get { return plant; }
+            set { plant = value; }
         }
 
         public string PlantName
         {
-            get
-            {
-                return plantname;
-            }
-            set
-            {
-                plantname = value;
-            }
+            get { return plantname; }
+            set { plantname = value; }
         }
 
         public decimal QualityQty
         {
-            get
-            {
-                return qualityqty;
-            }
-            set
-            {
-                qualityqty = value;
-            }
+            get { return qualityqty; }
+            set { qualityqty = value; }
         }
 
         public decimal UnQualityQty
         {
-            get
-            {
-                return unqualityqty;
-            }
-            set
-            {
-                unqualityqty = value;
-            }
+            get { return unqualityqty; }
+            set { unqualityqty = value; }
         }
 
         public string QualityType
         {
-            get
-            {
-                return qualitytype;
-            }
-            set
-            {
-                qualitytype = value;
-            }
+            get { return qualitytype; }
+            set { qualitytype = value; }
         }
 
         public string QualityUserNo
         {
-            get
-            {
-                return qualityuserno;
-            }
-            set
-            {
-                qualityuserno = value;
-            }
+            get { return qualityuserno; }
+            set { qualityuserno = value; }
         }
 
         public DateTime? QualityDate
         {
-            get
-            {
-                return qualitydate;
-            }
-            set
-            {
-                qualitydate = value;
-            }
+            get { return qualitydate; }
+            set { qualitydate = value; }
         }
 
         public string UnitName
         {
-            get
-            {
-                return unitname;
-            }
-            set
-            {
-                unitname = value;
-            }
+            get { return unitname; }
+            set { unitname = value; }
         }
+
         [Display(Name = "剩余收货数量")]
         /// <summary>
         /// 剩余收货数量
@@ -254,7 +162,7 @@ namespace BILWeb.InStock
 
         public DateTime? ArrivalDate { get; set; }
 
-        public List<T_PalletInfo> lstPallet { get; set; }        
+        public List<T_PalletInfo> lstPallet { get; set; }
 
         public string SaleCode { get; set; }
 
@@ -263,8 +171,6 @@ namespace BILWeb.InStock
         public string SupplierName { get; set; }
 
         public string BatchNo { get; set; }
-
-       
 
         /// <summary>
         /// 1-批次 2-序列号
@@ -286,10 +192,10 @@ namespace BILWeb.InStock
         //已经打印数量
         public decimal Hasprint { get; set; }
 
-
         public decimal OutPackNum { get; set; }
 
         public decimal CenterPackNum { get; set; }
+
         public decimal InnerPackNum { get; set; }
 
         //存储条件
@@ -331,7 +237,7 @@ namespace BILWeb.InStock
         /// <summary>
         /// 收货人
         /// </summary>
-        public string ReceiveUserNo { get; set; }        
+        public string ReceiveUserNo { get; set; }
 
         public DateTime ProductDate { get; set; }
 
@@ -356,15 +262,17 @@ namespace BILWeb.InStock
         public string ToErpWarehouse { get; set; }
 
         public string QcCode { get; set; }
+
         public string QcDesc { get; set; }
 
         public string PostUser { get; set; }
 
         public string productno { get; set; }
 
-        public string ProRowNo{ get; set; }
+        public string ProRowNo { get; set; }
 
         public string ProRowNoDel { get; set; }
+
         /// <summary>
         /// 预收货数量
         /// </summary>
@@ -373,14 +281,19 @@ namespace BILWeb.InStock
         public bool ischeck { get; set; }
 
         public string InvoiceNo { get; set; }
+
         [Display(Name = "需求号")]
         public string TracNo { get; set; }
+
         [Display(Name = "项目号")]
         public string ProjectNo { get; set; }
+
         public string iarrsid { get; set; }
 
         public string WareHouseNo { get; set; }
+
         public string PassWord { get; set; }
+
         [Display(Name = "规格")]
         public string spec { get; set; }
 
