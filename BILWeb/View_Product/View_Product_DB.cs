@@ -39,7 +39,14 @@ namespace BILWeb.View_Product
 
         protected override string GetFilterSql(UserModel user, View_Product_Model model)
         {
-            return "";
+            string strSql = base.GetFilterSql(user, model);
+            string strAnd = " and ";
+            if (!string.IsNullOrEmpty(model.ErpVoucherNo))
+            {
+                strSql += strAnd;
+                strSql += " erpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
+            }
+            return strSql + " order by id desc";
         }
 
         protected override View_Product_Model ToModel(IDataReader reader)

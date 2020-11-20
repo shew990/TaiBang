@@ -32,12 +32,6 @@ namespace BILWeb.Product
             throw new NotImplementedException();
         }
 
-        protected override string GetFilterSql(UserModel user, T_ProductDetail model)
-        {
-            return "";
-        }
-
-
         /// <summary>
         /// 将获取的单条数据转封装成对象返回
         /// </summary>
