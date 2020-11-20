@@ -32,7 +32,10 @@ namespace BILWeb.Product
             throw new NotImplementedException();
         }
 
-
+        protected override string GetFilterSql(UserModel user, T_ProductDetail model)
+        {
+            return "";
+        }
 
 
         /// <summary>

@@ -27,6 +27,11 @@ namespace BILWeb.Product
 
         }
 
+        protected override string GetFilterSql(UserModel user, T_Product model)
+        {
+            return "";
+        }
+
         protected override List<string> GetSaveSql(UserModel user, ref T_Product T_Product)
         {
             throw new NotImplementedException();

@@ -9,11 +9,6 @@ using System.Threading.Tasks;
 
 namespace BILWeb.Product
 {
-    /// <summary>
-    /// t_Productwithtask的实体类
-    /// 作者:方颖
-    /// 日期：2019/9/5 16:37:49
-    /// </summary>
 
     public class T_Product : BILBasic.Basing.Factory.Base_Model
     {
