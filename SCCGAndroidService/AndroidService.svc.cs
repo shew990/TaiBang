@@ -898,6 +898,9 @@ namespace SCCGAndroidService
         //获取生产订单
         public string GetT_ProDuctListADF(string UserJson, string ModelJson)
         {
+            LogNet.LogInfo("获取生产订单UserJson:" + UserJson);
+            LogNet.LogInfo("获取生产订单ModelJson:" + ModelJson);
+            LogNet.LogInfo("-----------------------------------------------------");
             T_Product_Func tfunc = new T_Product_Func();
             return tfunc.GetModelList(UserJson, ModelJson);
         }
@@ -905,6 +908,9 @@ namespace SCCGAndroidService
         //关联提交
         public string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson)
         {
+            LogNet.LogInfo("关联提交UserJson:" + UserJson);
+            LogNet.LogInfo("关联提交ModelJson:" + ModelJson);
+            LogNet.LogInfo("-----------------------------------------------------");
             T_Product_Func tfunc = new T_Product_Func();
             return tfunc.SaveT_ProDuctBarcodeADF(UserJson, ModelJson);
         }
@@ -912,6 +918,9 @@ namespace SCCGAndroidService
         //完工提交
         public string SaveT_ProDuctListADF(string UserJson, string ModelJson)
         {
+            LogNet.LogInfo("完工提交UserJson:" + UserJson);
+            LogNet.LogInfo("完工提交ModelJson:" + ModelJson);
+            LogNet.LogInfo("-----------------------------------------------------");
             T_Product_Func tfunc = new T_Product_Func();
             return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson);
 

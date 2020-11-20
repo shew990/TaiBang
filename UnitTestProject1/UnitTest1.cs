@@ -18,6 +18,7 @@ using BILWeb.Box;
 using BILWeb.Query;
 using BILWeb.OutBarCode;
 using BILWeb.YS;
+using BILWeb.Product;
 
 namespace UnitTestProject1
 {
@@ -25,6 +26,27 @@ namespace UnitTestProject1
     public class UnitTest1
     {
         UserModel userModel = new UserModel();
+
+        #region 完工入库
+        [TestMethod]
+        public void 获取生产订单()
+        {
+            try
+            {
+                string UserJson = "{\"BIsAdmin\":true,\"BIsOnline\":false,\"ISVWAREHOUSE\":0,\"IsOnline\":1,\"PickAreaNo\":\"SHJC-13DF001\",\"PickHouseNo\":\"SHJC-13DF\",\"PickWareHouseName\":\"上海嘉成溧阳材料仓\",\"PickWareHouseNo\":\"SHJC-13\",\"QuanUserName\":\"\",\"QuanUserNo\":\"\",\"ReceiveAreaNo\":\"SHJC-13DS001\",\"ReceiveHouseNo\":\"SHJC-13DS\",\"ReceiveWareHouseName\":\"上海嘉成溧阳材料仓\",\"ReceiveWareHouseNo\":\"SHJC-13\",\"StrIsAdmin\":\"管理员\",\"StrSex\":\"男\",\"StrUserStatus\":\"正常\",\"StrUserType\":\"管理员\",\"StrongHoldCode\":\"SHJC\",\"WarehouseName\":\"上海嘉成溧阳材料仓\",\"lstMenu\":[{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"SH\",\"MenuStatus\":1,\"MenuStyle\":2.0,\"MenuType\":4,\"NodeUrl\":\"base\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"Description\":\"\",\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"101\",\"ProjectName\":\"完工扫描\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"Description\":\"预留释放\",\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"40\",\"ProjectName\":\"预留释放\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"Description\":\"\",\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"100\",\"ProjectName\":\"关联扫描\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"SH\",\"MenuStatus\":1,\"MenuStyle\":2.0,\"MenuType\":4,\"NodeUrl\":\"2\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"SH\",\"MenuStatus\":1,\"MenuStyle\":2.0,\"MenuType\":4,\"NodeUrl\":\"3\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"XJ\",\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"4\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"7\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"14\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"8\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"YK\",\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"6\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"9\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"10\",\"SafeLevel\":1.0}],\"lstUserGroup\":[{\"BIsChecked\":true,\"IsDel\":1.0,\"UserGroupName\":\"条码仓管员\",\"UserGroupNo\":\"001\",\"UserGroupStatus\":1,\"UserGroupType\":2}],\"lstWarehouse\":[{\"AreaCount\":0,\"AreaRate\":0.0,\"AreaUsingCount\":0,\"BIsChecked\":true,\"BIsLock\":false,\"HouseCount\":1,\"HouseRate\":0.0,\"HouseUsingCount\":0,\"ID\":23,\"ISVWAREHOUSE\":0,\"IsDel\":1.0,\"LocationDesc\":\"上海嘉成溧阳材料仓\",\"PickRule\":0,\"WareHouseName\":\"上海嘉成溧阳材料仓\",\"WareHouseNo\":\"SHJC-13\",\"WareHouseStatus\":1,\"WareHouseType\":0},{\"AreaCount\":0,\"AreaRate\":0.0,\"AreaUsingCount\":0,\"BIsChecked\":true,\"BIsLock\":false,\"HouseCount\":1,\"HouseRate\":0.0,\"HouseUsingCount\":0,\"ID\":24,\"ISVWAREHOUSE\":0,\"IsDel\":1.0,\"PickRule\":0,\"WareHouseName\":\"上海嘉成溧阳供应商代管仓\",\"WareHouseNo\":\"SHJC-16\",\"WareHouseStatus\":1,\"WareHouseType\":0},{\"AreaCount\":0,\"AreaRate\":0.0,\"AreaUsingCount\":0,\"BIsChecked\":true,\"BIsLock\":false,\"HouseCount\":1,\"HouseRate\":0.0,\"HouseUsingCount\":0,\"ID\":25,\"ISVWAREHOUSE\":1,\"IsDel\":1.0,\"PickRule\":0,\"WareHouseName\":\"上海嘉成嘉定维保备件仓\",\"WareHouseNo\":\"SHJC-70\",\"WareHouseStatus\":1,\"WareHouseType\":0},{\"AreaCount\":0,\"AreaRate\":0.0,\"AreaUsingCount\":0,\"BIsChecked\":true,\"BIsLock\":false,\"HouseCount\":1,\"HouseRate\":0.0,\"HouseUsingCount\":0,\"ID\":26,\"ISVWAREHOUSE\":0,\"IsDel\":1.0,\"PickRule\":0,\"WareHouseName\":\"上海嘉成嘉定供应商代管仓\",\"WareHouseNo\":\"SHJC-15\",\"WareHouseStatus\":1,\"WareHouseType\":0},{\"AreaCount\":0,\"AreaRate\":0.0,\"AreaUsingCount\":0,\"BIsChecked\":true,\"BIsLock\":false,\"HouseCount\":1,\"HouseRate\":0.0,\"HouseUsingCount\":0,\"ID\":28,\"ISVWAREHOUSE\":1,\"IsDel\":1.0,\"PickRule\":0,\"WareHouseName\":\"上海嘉成溧阳运营仓\",\"WareHouseNo\":\"SHJC-06\",\"WareHouseStatus\":1,\"WareHouseType\":0}],\"GroupCode\":\"13\",\"GroupName\":\"条码仓管员\",\"ID\":1216985,\"IsDel\":1.0,\"IsPick\":0,\"IsPickLeader\":0,\"IsQuality\":0,\"IsReceive\":0,\"PDAPrintIP\":\"1.1.1.1\",\"PassWord\":\"1\",\"PickAreaID\":3557,\"PickHouseID\":23,\"PickLeader\":false,\"PickWareHouseID\":23,\"ReceiveAreaID\":3556,\"ReceiveHouseID\":24,\"Sex\":1,\"StrIsPick\":\"不拣货\",\"StrIsPickLeader\":\"否\",\"StrIsReceive\":\"不收货\",\"UserName\":\"樊威\",\"UserNo\":\"60514\",\"UserStatus\":1,\"UserType\":1,\"WarehouseCode\":\"SHJC-13\",\"WarehouseID\":23}";
+                string ModelJson = "{\"ErpLineStatus\":0,\"ErpVoucherNo\":\"MO04012007290152\",\"MaterialNoID\":0,\"StockType\":0}";
+                T_Product_Func tfunc = new T_Product_Func();
+                string aaa= tfunc.GetModelList(UserJson, ModelJson);
+            }
+            catch (Exception ex)
+            {
+                string aaa = ex.ToString();
+            }
+
+        }
+
+        #endregion
+
 
         #region 打印条码ymh
         [TestMethod]

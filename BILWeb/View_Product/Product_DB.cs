@@ -206,19 +206,19 @@ namespace BILWeb.Product
 
         protected override string GetSaveProcedureName()
         {
-            return "";
+            return ""; 
         }
 
         protected override string GetFilterSql(UserModel user, T_Product model)
         {
-            string strSql = base.GetFilterSql(user, model);
+            string strSql = " where 1=1 ";
             string strAnd = " and ";
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {
                 strSql += strAnd;
                 strSql += " erpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
             }
-            return strSql + " order by id desc";
+            return strSql;
         }
 
 
