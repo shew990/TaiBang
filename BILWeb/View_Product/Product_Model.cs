@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BILWeb.OutBarCode;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -42,13 +43,16 @@ namespace BILWeb.Product
         public string CustomerCode { get; set; }
         public string CustomerName { get; set; }
         public string CustomerShortName { get; set; }
-        public decimal QulityQty { get; set; }
-        public decimal LinkQty { get; set; }
-
-        public decimal ProductQty { get; set; }
+        public decimal QulityQty { get; set; }//质检合格数量
+        public decimal LinkQty { get; set; }//关联数量
+        public decimal PostQty { get; set; }//提交数量
+        //public decimal RemainQty { get; set; }//剩余数量
+        public decimal ProductQty { get; set; }//生产订单数量
+        public decimal ScanQty { get; set; }//扫描数量
+        public decimal Receiveqty { get; set; }//完工数量
 
         public List<T_ProductDetail> Detail { get; set; }
-
+        public List<T_OutBarCodeInfo> lstBarCode { get; set; }
     }
 }
 
