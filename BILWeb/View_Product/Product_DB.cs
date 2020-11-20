@@ -271,7 +271,8 @@ namespace BILWeb.Product
             try
             {
                 List<string> sqls = new List<string>();
-                string sqlhead = "SET IDENTITY_INSERT t_batch on ;insert into t_batch(batch,ProductBatch,CREATETIME) VALUES ('" + batch + "','" + ProductBatch + "',getdate()) SET IDENTITY_INSERT t_batch off ";
+                int ID = base.GetTableIDBySqlServer("t_batch");
+                string sqlhead = "SET IDENTITY_INSERT t_batch on ;insert into t_batch(id,batchno,ProductBatch,CREATETIME) VALUES ("+ ID + ",'" + batch + "','" + ProductBatch + "',getdate()) SET IDENTITY_INSERT t_batch off ";
                 sqls.Add(sqlhead);
                 int i = dbFactory.ExecuteNonQueryList(sqls);
                 if (i == -2)
