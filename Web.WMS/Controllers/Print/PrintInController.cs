@@ -111,25 +111,19 @@ namespace Web.WMS.Controllers.Print
         /// <param name="everynum"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult SaveBarcode(string BatchNo, string EveryQty, string num, string Userno)
+        public ActionResult SaveBarcode(string data)
         {
-            Stream stream = Request.InputStream;
-            string json = string.Empty;
-            if (stream.Length != 0)
-            {
-                StreamReader streamreader = new StreamReader(stream);
-                json = streamreader.ReadToEnd();
-            }
-            T_InStockDetailInfo objT_InStockDetailInfo = JsonConvert.DeserializeObject<T_InStockDetailInfo>(json);
+            var objT_InStockDetailInfo = JsonConvert.DeserializeObject<T_InStockDetailInfo>(data);
 
-            string erpvoucherno = objT_InStockDetailInfo.ErpVoucherNo, materialno = objT_InStockDetailInfo.MaterialNo,
+            string EveryQty = objT_InStockDetailInfo.EveryQty, num = objT_InStockDetailInfo.num,
+                Userno = objT_InStockDetailInfo.Userno, erpvoucherno = objT_InStockDetailInfo.ErpVoucherNo,
+                materialno = objT_InStockDetailInfo.MaterialNo,
                 materialdesc = objT_InStockDetailInfo.MaterialDesc, RowNO = objT_InStockDetailInfo.RowNo,
-                /*ean = pageRequest*/ /*receivetime = objT_InStockDetailInfo*/
                 RowNODel = objT_InStockDetailInfo.RowNoDel, MaterialNoID = objT_InStockDetailInfo.MaterialNoID.ToString(),
                 StrongHoldCode = objT_InStockDetailInfo.StrongHoldCode, CompanyCode = objT_InStockDetailInfo.CompanyCode,
                 Createname = objT_InStockDetailInfo.Creater, WarehouseName = objT_InStockDetailInfo.WareHouseNo,
-                TracNo = objT_InStockDetailInfo.TracNo, ProjectNo = objT_InStockDetailInfo.ProjectNo;
-            //var edate = objT_InStockDetailInfo.EDate;
+                TracNo = objT_InStockDetailInfo.TracNo, ProjectNo = objT_InStockDetailInfo.ProjectNo,
+                BatchNo = objT_InStockDetailInfo.BatchNo;
             //查物料
             T_Material_Func funM = new T_Material_Func();
             string strErrMsg = "";
@@ -155,10 +149,9 @@ namespace Web.WMS.Controllers.Print
                 List<string> squence = GetSerialnos((outboxnum + inboxnum).ToString(), "外", ref err);//外箱码序列号
                 List<string> squenceforin = GetSerialnos(num, "内", ref err);//本体序列号
                 List<Barcode_Model> listbarcode = new List<Barcode_Model>();//存放打印条码内容
+
                 int k = 0;
-                int kIn = 0;
-                //执行打印外箱命令
-                for (int i = 0; i < outboxnum; i++)
+                for (int i = 0; i < outboxnum; i++)//执行打印外箱命令
                 {
                     Barcode_Model model = new Barcode_Model();
                     model.CompanyCode = CompanyCode;
@@ -212,38 +205,17 @@ namespace Web.WMS.Controllers.Print
                 }
                 if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
                 {
-                    string serialnosB = "";
                     string serialnosS = "";
                     for (int i = 0; i < listbarcode.Count; i++)
                     {
-                        if (listbarcode[i].BarcodeType == 1)
-                            serialnosB += listbarcode[i].SerialNo + ",";
-                        else
+                        if (listbarcode[i].BarcodeType != 1)
                             serialnosS += listbarcode[i].SerialNo + ",";
                     }
                     if (serialnosS == "")
-                    {
-                        return Json(new
-                        {
-                            state = true,
-                            obj = time1.ToString("yyyy/MM/dd HH:mm:ss")
-                        }, JsonRequestBehavior.AllowGet);
-                    }
-                    else
-                    {
-                        return Json(
-                            new
-                            {
-                                state = true,
-                                obj = time1.ToString("yyyy/MM/dd HH:mm:ss"),
-                                objS = time2.ToString("yyyy/MM/dd HH:mm:ss")
-                            }, JsonRequestBehavior.AllowGet);
-                    }
+                        return Json(new { state = true, obj = time1.ToString("yyyy/MM/dd HH:mm:ss") }, JsonRequestBehavior.AllowGet);
+                    return Json(new { state = true, obj = time1.ToString("yyyy/MM/dd HH:mm:ss"), objS = time2.ToString("yyyy/MM/dd HH:mm:ss") }, JsonRequestBehavior.AllowGet);
                 }
-                else
-                {
-                    return Json(new { state = false, obj = err }, JsonRequestBehavior.AllowGet);
-                }
+                return Json(new { state = false, obj = err }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

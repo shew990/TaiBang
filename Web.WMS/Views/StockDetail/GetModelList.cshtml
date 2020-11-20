@@ -126,7 +126,7 @@
         }
 
         //监听行工具事件
-        table.on('tool(init)', function (obj) { //注:tool是工具条事件名,init是table原始容器的属性lay-filter="对应的值"
+        table.on('tool(init)', function (obj) {
             if (obj.event === 'stamp') {
                 layer.alert('查看操作');
             }

@@ -15,26 +15,33 @@
         margin-left: 20px;
         font-size: 16px;
     }
+
+    .lab100 {
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 5px;
+        margin-right: 10px;
+    }
 </style>
 <input type="hidden" id="printIP" value="@printIP" />
 <input type="hidden" id="user" name="user" value="@HttpContext.Current.Request.Cookies["userinfo"]["UserNo"].ToString()" />
 <div class="box">
-    <div class="layui-card-body layui-table-body layui-table-main" style="height:500px;">
+    <div class="layui-card-body layui-table-body layui-table-main">
         <div class="layui-card-body">
             <div class="layui-inline">
-                <label class="layui-form-label lab100">ERP单号:</label>
+                <label class="layui-form-label lab100">ERP单号</label>
                 <div class="layui-inline layui-show-xs-block">
                     <input type="text" id="ErpVoucherNo" name="ErpVoucherNo" autocomplete="off" class="layui-input txt200">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label lab100">物料编码:</label>
+                <label class="layui-form-label lab100">物料编码</label>
                 <div class="layui-inline layui-show-xs-block">
                     <input type="text" id="MaterialNo" name="MaterialNo" autocomplete="off" class="layui-input txt200">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label lab100">规格:</label>
+                <label class="layui-form-label lab100">规格</label>
                 <div class="layui-inline layui-show-xs-block">
                     <input type="text" id="spec" name="spec" autocomplete="off" class="layui-input txt200">
                 </div>
@@ -53,49 +60,40 @@
     <div class="layui-card-body layui-table-body layui-table-main">
         <div class="layui-card-body" style="padding:2px 2px;">
             <input type="hidden" id="Rowno" name="Rowno" />
-
             <div class="layui-inline">
-                <label class="layui-form-label lab100">物料编码:</label>
+                <label class="layui-form-label lab100">物料编码</label>
                 <div class="layui-input-inline">
                     <input type="text" id="Materialno1" name="Materialno1" autocomplete="off" class="layui-input txt200" readonly="readonly">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label lab100">物料描述:</label>
+                <label class="layui-form-label lab100">物料描述</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="Materialdesc1" name="Materialdesc1" autocomplete="off" class="layui-input txt200" readonly="readonly">
+                    <input type="text" id="Materialdesc1" autocomplete="off" class="layui-input txt200" readonly="readonly">
                 </div>
             </div>
-            @*<div class="layui-inline">
-                    <label class="layui-form-label lab100">生产日期:</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="ProDate" name="ProDate" autocomplete="off" class="layui-input txt200 laydateX">
-                    </div>
-                </div>*@
-
+            <div class="layui-inline">
+                <label class="layui-form-label lab100">番号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Batchno1" autocomplete="off" class="layui-input txt200" readonly="readonly">
+                </div>
+            </div>
         </div>
-
         <div class="layui-card-body" style="padding:2px 2px;">
             <div class="layui-inline">
-                <label class="layui-form-label lab100">番号:</label>
+                <label class="layui-form-label lab100">本批次数量</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="Batchno1" name="Batchno1" autocomplete="off" class="layui-input txt200">
+                    <input type="number" id="VoucherQty1" autocomplete="off" class="layui-input txt200">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label lab100">本批次数量:</label>
+                <label class="layui-form-label lab100">装箱量</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="VoucherQty1" name="VoucherQty1" autocomplete="off" class="layui-input txt200">
+                    <input type="number" id="EveryQty1" autocomplete="off" class="layui-input txt200">
                 </div>
             </div>
-            <div class="layui-inline">
-                <label class="layui-form-label lab100">装箱量:</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="EveryQty1" name="EveryQty1" autocomplete="off" class="layui-input txt200">
-                </div>
-            </div>
-            <div class="layui-inline layui-show-xs-block">
-                <button id="Print" class="btn btn-primary" lay-submit="" style="margin-top: -15px;">打 印</button>
+            <div class="layui-inline" style="margin-left:60px;">
+                <button id="Print" class="btn btn-primary" style="margin-top: -15px;">打 印</button>
             </div>
         </div>
     </div>
@@ -103,99 +101,86 @@
 
 <script>
     layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
-        var laydate = layui.laydate //日期
-            , laypage = layui.laypage //分页
+        laypage = layui.laypage //分页
             , layer = layui.layer //弹层
             , table = layui.table //表格
 
-        //执行一个 table 实例
-        var renderTable = function () {
-            var objTo = [];
-            //if ($("#Erpvoucherno").val().trim() != "") { objTo.push({ Field: 'Erpvoucherno', Value: $('#Erpvoucherno').val().trim(), Operate: 3 }); }
-            var ErpVoucherNo = "";
-            var spec = "";
-            var MaterialNo = "";
-            if ($("#ErpVoucherNo").val().trim() != "") { ErpVoucherNo = $('#ErpVoucherNo').val().trim(); }
-            if ($("#MaterialNo").val().trim() != "") { MaterialNo = $('#MaterialNo').val().trim(); }
-            if ($("#spec").val().trim() != "") { spec = $('#spec').val().trim(); }
+        renderTable();
+
+        //表格初始化
+        function renderTable() {
             table.render({
                 elem: '#demo'
-                , height: 400
+                , height: 435
                 , url: '/printInstock/GetData' //数据接口
                 , method: 'post'
                 , contentType: 'application/json'
                 , where: {
                     model: {
-                        ErpVoucherNo: ErpVoucherNo,
-                        spec: spec,
-                        MaterialNo: MaterialNo
+                        ErpVoucherNo: $('#ErpVoucherNo').val().trim(),
+                        spec: $('#spec').val().trim(),
+                        MaterialNo: $('#MaterialNo').val().trim()
                     }
                 }
                 , request: {
-
-                    pageName: 'PageNumber' //页码的参数名称，默认：page
-                    , limitName: 'PageSize' //每页数据量的参数名，默认：limit
+                    pageName: 'PageNumber'
+                    , limitName: 'PageSize'
                 }
                 , title: '打印'
                 , page: false //开启分页
-                , toolbar: false //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
-                , totalRow: false //开启合计行
-                , cols: [[ //表头
-                    //{ type: 'checkbox', fixed: 'left' }
-                    { field: 'RowNo', title: '行号', width: 70, sort: false, fixed: 'left' }
-                    , { field: 'ErpVoucherNo', title: 'ERP单号', width: 160, sort: false }
-                    , { field: 'MaterialNo', title: '物料号', width: 100, sort: false }
-                    , { field: 'MaterialDesc', title: '物料描述', width: 170, sort: false }
-                    , { field: 'Unit', title: '单位', width: 100, sort: false }
-                    , { field: 'InStockQty', title: '单据数', width: 80, sort: false }
-                    , { field: 'ReceiveQty', title: '收货数', width: 80, sort: false }
-                    , { field: 'RemainQty', title: '剩余数', width: 80, sort: false }
-                    , { field: 'spec', title: '规格', width: 80, sort: false }
-                    , { field: 'BatchNo', title: '番号', width: 80, sort: false }
-
-                    , { fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo' }
+                , toolbar: false
+                , totalRow: false
+                , cols: [[
+                    { field: 'RowNo', title: '行号', width: 70, fixed: 'left' }
+                    , { field: 'ErpVoucherNo', title: 'ERP单号', width: 160 }
+                    , { field: 'MaterialNo', title: '物料号', width: 100 }
+                    , { field: 'MaterialDesc', title: '物料描述', width: 170 }
+                    , { field: 'Unit', title: '单位', width: 100 }
+                    , { field: 'InStockQty', title: '单据数', width: 80 }
+                    , { field: 'ReceiveQty', title: '收货数', width: 80 }
+                    , { field: 'RemainQty', title: '剩余数', width: 80 }
+                    , { field: 'spec', title: '规格', width: 200 }
+                    , { field: 'BatchNo', title: '番号', width: 100 }
+                    , { fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barDemo' }
                 ]]
                 , request: {
-                    pageName: 'CurrentPageNumber' //页码的参数名称，默认：page
-                    , limitName: 'CurrentPageShowCounts' //每页数据量的参数名，默认：limit
+                    pageName: 'CurrentPageNumber'
+                    , limitName: 'CurrentPageShowCounts'
                 }
                 , response: {
-                    statusCode: 1 //重新规定成功的状态码为 200，table 组件默认为 0
+                    statusCode: 1
                 }
-                , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                , parseData: function (res) {
                     return {
-                        "code": res.Result, //解析接口状态
-                        "msg": res.ResultValue, //解析提示文本
-                        "count": res.PageData.totalCount, //解析数据长度
-                        "data": res.Data //解析数据列表
+                        "code": res.Result,
+                        "msg": res.ResultValue,
+                        "count": res.PageData.totalCount,
+                        "data": res.Data
                     };
                 }
             });
         }
 
-
         //监听行工具事件
-        table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        table.on('tool(test)', function (obj) {
             PurObject = obj.data;
             var data = obj.data //获得当前行数据
                 , layEvent = obj.event; //获得 lay-event 对应的值
             if (layEvent === 'detail') {
                 layer.msg('查看操作');
-            } else if (layEvent === 'edit') {
-
+                return false;
+            }
+            if (layEvent === 'edit') {
                 if (data.Towarehouseno == "") {
                     layer.alert("当前行的仓库为空，不能做打印操作！");
-                } else {
-                    $('#Materialno1').val(data.MaterialNo);
-                    $('#Materialdesc1').val(data.MaterialDesc);
-                    $('#Batchno1').val(data.BatchNo);
-
-                    $('#Rowno1').val(data.RowNo);
-                    $('#VoucherQty1').val(data.RemainQty);
-                    $('#EveryQty1').val(data.RemainQty);
+                    return false;
                 }
-
-            } else if (layEvent === 'del') {
+                $('#Materialno1').val(data.MaterialNo);
+                $('#Materialdesc1').val(data.MaterialDesc);
+                $('#Batchno1').val(data.BatchNo);
+                $('#Rowno1').val(data.RowNo);
+                $('#VoucherQty1').val(data.RemainQty);
+                $('#EveryQty1').val(data.RemainQty);
             }
         });
 
@@ -212,71 +197,30 @@
             }
         });
 
+        //查询
         $('#Query').click(function () {
             renderTable();
         });
 
+        //打印
         var PurObject
         $('#Print').click(function () {
-            if ($('#Batchno1').val() == "") {
-                layer.alert("供应商批次不能为空！");
-                return;
-            }
-
-            //校验数量是不是合法
-            if (!isRealNum($('#EveryQty1').val())) {
-                layer.alert("输入的装箱量必须是数字！");
-                return;
-            }
-
-            if (!isRealNum($('#VoucherQty1').val())) {
-                layer.alert("输入的批次数量必须是数字！");
-                return;
-            }
-
-            PurObject.Voucherqty = Number($('#VoucherQty1').val());
-            //限制打印张数不能超过200张
-            if ((Number($('#VoucherQty1').val()) / Number($('#EveryQty1').val())) > 200) {
+            if ((Number($('#VoucherQty1').val()) / Number($('#EveryQty1').val())) > 200) {//限制打印张数不能超过200张
                 layer.alert("限制打印张数不能超过200张！");
-            } else {
-                $.ajax({
-                    type: "Post",
-                    url: '/PrintIn/SaveBarcode' + '?EveryQty=' + $('#EveryQty1').val() + '&Userno=' + $('#user').val() + '&num=' + $('#VoucherQty1').val() + '&BatchNo=' + $('#Batchno1').val(),
-                    contentType: "application/json;charset=utf-8",
-                    data: JSON.stringify(PurObject),
-                    dataType: "json",
-                    success: function (msg) {
-                        if (msg.Result == "1") {
-                            window.open($("#printIP").val() + "/Main.aspx?flag=In&parameter1=" + msg.Data + "&parameter2=2&parameter3=" + PurObject.Erpvoucherno);
-                        }
-                        else {
-                            layer.alert(msg.ResultValue);
-                        }
-                        layer.close(index);
-                    },
-                    fail: function () {
-                        layer.alert("提交失败！");
-                        layer.close(index);
-                    },
-                });
+                return false;
             }
-
+            PurObject.Voucherqty = Number($('#VoucherQty1').val());
+            PurObject.EveryQty = $('#EveryQty1').val();
+            PurObject.Userno = $('#user').val();
+            PurObject.num = $('#VoucherQty1').val();
+            $.post("/PrintIn/SaveBarcode", { data: JSON.stringify(PurObject) }, function (msg) {
+                if (msg.state) {
+                    window.open($("#printIP").val() + "/Main.aspx?parameter1=" + msg.obj + "");
+                    return false;
+                }
+                layer.alert(msg.ResultValue);
+            });
         })
-
-        function isRealNum(val) {
-            if (val === "" || val == null) {
-                return false;
-            }
-            if (!isNaN(val)) {
-                //对于空数组和只有一个数值成员的数组或全是数字组成的字符串，isNaN返回false，例如：'123'、[]、[2]、['123'],isNaN返回false,
-                //所以如果不需要val包含这些特殊情况，则这个判断改写为if(!isNaN(val) && typeof val === 'number' )
-                return true;
-            }
-
-            else {
-                return false;
-            }
-        }
 
         //回车事件绑定
         $("input").bind('keyup', function (event) {
