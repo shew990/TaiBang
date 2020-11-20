@@ -1,5 +1,4 @@
 ﻿@using BILBasic.Common;
-@using Web.WMS.Common;
 @using BILWeb.Quality;
 @model T_QualityDetailInfo
 @{
@@ -9,132 +8,154 @@
 }
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
-        <form action="/QualityDetail/GetModelList" method="post">
+        <div class="layui-card-body">
             <div class="layui-inline layui-show-xs-block">
-                @Html.EditorFor(model => model.ErpVoucherNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "ERP单号" } })
+                <input id="ErpVoucherNo" class="layui-input" placeholder="ERP单号">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                @Html.EditorFor(model => model.ErpInVoucherNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "关联单据" } })
+                <input id="ErpInVoucherNo" class="layui-input" placeholder="关联单据">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                @Html.EditorFor(model => model.DateFrom, new { htmlAttributes = new { @class = "form-control laydateX", @placeholder = "开始时间" } })
+                <input id="DateFrom" class="layui-input" placeholder="开始时间">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                @Html.EditorFor(model => model.DateTo, new { htmlAttributes = new { @class = "form-control laydateY", @placeholder = "结束时间" } })
+                <input id="DateTo" class="layui-input" placeholder="结束时间">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                <button type="submit" class="btn btn-primary" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                <button id="Query" class="btn btn-primary">
+                    查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
+                </button>
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <button id="Close" class="btn btn-primary">
+                    关闭<i class="layui-icon layui-icon-close" style="padding-left:5px;"></i>
+                </button>
             </div>
             @Html.HiddenFor(model => model.VoucherType)
-        </form>
-        @{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}
-        <table class="layui-table layui-form">
-            <thead>
-                <tr>
-                    <th>选择</th>
-                    <th>@Html.DisplayNameFor(model => model.StrongHoldCode)</th>
-                    <th>@Html.DisplayNameFor(model => model.StrongHoldName)</th>
-                    @*<th>@Html.DisplayNameFor(model => model.CompanyCode)</th>*@
-                    <th>@Html.DisplayNameFor(model => model.ErpVoucherNo)</th>
-                    <th>@Html.DisplayNameFor(model => model.ErpInVoucherNo)</th>
-                    <th>@Html.DisplayNameFor(model => model.QuanQty)</th>
-                    <th>@Html.DisplayNameFor(model => model.UnQuanQty)</th>
-                    @*<th>@Html.DisplayNameFor(model => model.DepartmentName)</th>*@
-                    @*<th>@Html.DisplayNameFor(model => model.StrCreater)</th>*@
-                    <th>@Html.DisplayNameFor(model => model.CreateTime)</th>
-                    @*<th>操作</th>*@
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    if (pageData.data != null && pageData.data.Count != 0)
-                    {
-                        foreach (T_QualityDetailInfo qualityDetailInfo in pageData.data)
-                        {
-                            <tr>
-                                <td><input type="checkbox" value="@qualityDetailInfo.ID" /></td>
-                                <td>@qualityDetailInfo.StrongHoldCode</td>
-                                <td>@qualityDetailInfo.StrongHoldName</td>
-                                @*<td>@t_OutStockInfo.CompanyCode</td>*@
-                                <td>@qualityDetailInfo.ErpVoucherNo</td>
-                                <td>@qualityDetailInfo.ErpInVoucherNo</td>
-                                <td>@qualityDetailInfo.QuanQty</td>
-                                <td>@qualityDetailInfo.UnQuanQty</td>
-                                @*<td>@t_OutStockInfo.DepartmentName</td>*@
-                                @*<td>@t_OutStockInfo.StrCreater</td>*@
-                                <td>@qualityDetailInfo.CreateTime</td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="12" align="center"><b>无查询数据</b></td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-        @{Html.RenderAction("PageView", pageData);}
+        </div>
+        <table class="layui-table layui-form" id="qualityTable"></table>
     </div>
 </div>
 
 <script src="~/Content/SCG/js/Common/Operate.js"></script>
 <script type="text/javascript">
-    //$(".tongbu").click(function () {
-    //    if ($("#ErpVoucherNo").val() == "") {
-    //        alert("先输入ERP单号！");
-    //        return;
-    //    }
-    //    var index = layer.load(1);
-    //    $.ajax({
-    //        type: "GET",
-    //        url: "Sync?ErpVoucherNo=" + $("#ErpVoucherNo").val(),
-    //        dataType: "json",
-    //        async: false,
-    //        success: function (data) {
-    //            if (data.state) {
-    //                alert("同步成功！");
-    //            } else {
-    //                alert(data.obj);
-    //            }
-    //            layer.close(index);
-    //        },
-    //        fail: function () {
-    //            alert("提交失败！");
-    //            layer.close(index);
-    //        }
 
-    //    });
-    //})
+    layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
+        table = layui.table
+            , laydate = layui.laydate
+            , laypage = layui.laypage
+            , layer = layui.layer
 
-    $(".guanbi").click(function () {
-        if ($('input[type=checkbox]:checked').length != 1) {
-            alert("必须选中一行");
-            return;
-        }
-        var ID = "";
-        if (confirm("确定删除这" + $('input[type=checkbox]:checked').length + "个单据?")) {
-            $.each($('input:checkbox:checked'), function () {
-                ID = $(this).val();
-            });
-            $.ajax({
-                type: "POST",
-                url: "CloseQuality?ID=" + ID,
-                date: null,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    alert(data.obj);
-                    if (data.Status) {
-                        //window.location.reload();
+        //初始化日期控件
+        laydate.render({
+            elem: '#DateFrom'
+        });
+
+        laydate.render({
+            elem: '#DateTo'
+        });
+
+        tableInit();
+
+        //表格初始化
+        function tableInit() {
+            table.render({
+                elem: '#qualityTable'
+                , height: 520
+                , url: '/QualityDetail/GetData'
+                , method: 'post'
+                , contentType: 'application/json'
+                , where: {
+                    model: {
+                        ErpVoucherNo: $("#ErpVoucherNo").val().trim(),
+                        ErpInVoucherNo: $("#ErpInVoucherNo").val().trim(),
+                        DateFrom: $("#DateFrom").val().trim(),
+                        DateTo: $("#DateTo").val().trim()
                     }
-                },
-                fail: function () {
-                    alert("提交失败！")
                 }
+                , request: {
+                    pageName: 'CurrentPageNumber'
+                    , limitName: 'CurrentPageShowCounts'
+                }
+                , response: {
+                    statusCode: 1
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.Result,
+                        "msg": res.ResultValue,
+                        "count": res.PageData.totalCount,
+                        "data": res.Data
+                    };
+                }
+                , title: '库位'
+                , page: true
+                , toolbar: 'false'
+                //, totalRow: true //开启合计行
+                , cols: [[
+                    { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
+                    , { type: 'checkbox', title: '选择', width: 60, fixed: 'left' }
+                    , { field: 'StrongHoldCode', title: '', width: 120, fixed: 'left' }
+                    , { field: 'StrongHoldName', title: '', width: 200 }
+                    , { field: 'ErpVoucherNo', title: 'Erp单号', width: 220 }
+                    , { field: 'QuanQty', title: '', width: 100 }
+                    , { field: 'UnQuanQty', title: '', width: 100 }
+                    , { field: 'CreateTime', title: '创建时间', width: 200 }
+                ]]
             });
         }
-    })
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo'
+            , count: 100
+            , skin: '#1E9FFF'
+            , jump: function (obj, first) {
+                if (!first)
+                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
+            }
+        });
+
+        //查询
+        $('#Query').click(function () {
+            tableInit();
+        });
+
+        //关闭
+        $("#Close").click(function () {
+            if ($('input[type=checkbox]:checked').length != 1) {
+                layer.alert("必须选中一行");
+                return false;
+            }
+            if (confirm("确定删除这" + $('input[type=checkbox]:checked').length + "个单据?")) {
+                var ID = "";
+                $.each($('input:checkbox:checked'), function () {
+                    ID = $(this).val();
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "CloseQuality?ID=" + ID,
+                    date: null,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        layer.alert(data.obj);
+                        if (data.Status) {
+                            //window.location.reload();
+                        }
+                    },
+                    fail: function () {
+                        layer.alert("提交失败！")
+                    }
+                });
+            }
+        })
+
+        //回车事件绑定
+        $("input").bind('keyup', function (event) {
+            if (event.keyCode == "13")
+                tableInit();
+        });
+    });
 
 </script>

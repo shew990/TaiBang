@@ -61,8 +61,13 @@
 
     layui.use(['laypage', 'layer', 'table'], function () {
         table = layui.table
+            , laydate = layui.laydate
             , laypage = layui.laypage
             , layer = layui.layer
+
+        laydate.render({
+            elem: '#begintime'
+        });
 
         tableInit();
 
