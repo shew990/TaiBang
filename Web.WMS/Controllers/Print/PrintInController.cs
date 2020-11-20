@@ -233,7 +233,7 @@ namespace Web.WMS.Controllers.Print
             for (int i = 0; i < VZ; i++)
             {
                 var seed = Guid.NewGuid().GetHashCode();
-                string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 99999999).ToString().PadLeft(8, '0') + (flag == "外" ? "01" : "02");
+                string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 999999).ToString().PadLeft(6, '0');
                 if (serialnos.Find(t => t == code) == null)
                 {
                     serialnos.Add(code);

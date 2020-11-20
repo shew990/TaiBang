@@ -10,6 +10,7 @@ using Oracle.ManagedDataAccess.Client;
 using BILBasic.Common;
 using BILBasic.User;
 using System.Data;
+using BILWeb.Print;
 
 namespace BILWeb.Product
 {
@@ -103,7 +104,50 @@ namespace BILWeb.Product
             return lstSql;
         }
 
+        public bool SaveProDuctBarcode(UserModel user, T_Product modelList)
+        {
+            try
+            {
+                Print_DB print_DB = new Print_DB();
+                List<Barcode_Model> listbarcode = new List<Barcode_Model>();
+                Barcode_Model model = new Barcode_Model();
+                model.CompanyCode = "";
+                model.StrongHoldCode = modelList.StrongHoldCode;
+                model.MaterialNoID = modelList.MaterialNoID;
+                model.MaterialNo = modelList.MaterialNo;
+                model.MaterialDesc = modelList.MaterialDesc;
+                //model.BatchNo = DateTime.Now.ToString("yyyyMMdd");
+                model.BatchNo = modelList.BatchNo;
+                //model.ProductBatch = batchNo;//给批号加密成8位
+                model.ErpVoucherNo = modelList.ErpVoucherNo;
+                model.Qty = Convert.ToDecimal(modelList.ScanQty);
 
+                var seed = Guid.NewGuid().GetHashCode();
+                string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 999999).ToString().PadLeft(6, '0');
+
+                model.SerialNo = code;
+                model.Creater = user.UserNo;
+                model.ReceiveTime = DateTime.Now;
+                model.BarCode = "2@" + model.StrongHoldCode + "@" + model.MaterialNo + "@" + model.ProductBatch + "@" + model.Qty + "@" + model.SerialNo;
+                model.RowNo = "1";
+                model.RowNoDel = "1";
+                model.BarcodeType = 1;
+                listbarcode.Add(model);
+                string err = "";
+                if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err)){
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
 
 
         /// <summary>
@@ -162,19 +206,19 @@ namespace BILWeb.Product
 
         protected override string GetSaveProcedureName()
         {
-            return "";
+            return ""; 
         }
 
         protected override string GetFilterSql(UserModel user, T_Product model)
         {
-            string strSql = base.GetFilterSql(user, model);
+            string strSql = " where 1=1 ";
             string strAnd = " and ";
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {
                 strSql += strAnd;
                 strSql += " erpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
             }
-            return strSql + " order by id desc";
+            return strSql;
         }
 
 
