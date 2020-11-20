@@ -65,7 +65,7 @@ namespace BILWeb.Product
                             "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo)" +
                             "values ('" + itemBarCode.SerialNo + "','" + itemBarCode.MaterialNo + "','" + itemBarCode.MaterialDesc + "','" + itemBarCode.Qty + "','3','1'" +
                             ",'" + user.UserNo + "',getdate(),'" + itemBarCode.BatchNo + "','" + item.Unit + "','" + item.Unit + "'" +
-                            ",'"+ PalletNo + "','1','" + itemBarCode.MaterialNoID + "'" +
+                            ",'" + PalletNo + "','1','" + itemBarCode.MaterialNoID + "'" +
                             ", '" + user.WarehouseID + "','" + user.ReceiveHouseID + "','" + user.ReceiveAreaID + "','1','" + itemBarCode.BarCode + "','" + item.StrongHoldCode + "', " +
                             "  '" + itemBarCode.StrongHoldName + "','" + itemBarCode.CompanyCode + "','" + itemBarCode.EDate + "','',''," +
                             "'" + itemBarCode.SupPrdBatch + "','3' ,'1','" + itemBarCode.EAN + "','" + itemBarCode.BarcodeType + "','" + (itemBarCode.ProjectNo == null ? "" : itemBarCode.ProjectNo) + "','" + (itemBarCode.TracNo == null ? "" : itemBarCode.TracNo) + "' )";
@@ -83,7 +83,7 @@ namespace BILWeb.Product
                             "'" + item.StrongHoldCode + "','" + item.StrongHoldName + "','" + item.CompanyCode + "','" + itemBarCode.SupPrdBatch + "'" +
                             " ,'" + itemBarCode.EDate + "','','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') SET IDENTITY_INSERT t_tasktrans off";
                     lstSql.Add(strSql3);
-                    
+
                     //插入托盘表
                     var detailID = base.GetTableIDBySqlServerTaskTrans("t_Palletdetail");
                     string strSql5 = string.Format("SET IDENTITY_INSERT t_Palletdetail on ;insert into t_Palletdetail(Id, Headerid, Palletno, Materialno, Materialdesc, Serialno,Creater," +
@@ -100,7 +100,7 @@ namespace BILWeb.Product
                 }
 
             }
-            
+
             return lstSql;
         }
 
@@ -116,14 +116,13 @@ namespace BILWeb.Product
                 model.MaterialNoID = modelList.MaterialNoID;
                 model.MaterialNo = modelList.MaterialNo;
                 model.MaterialDesc = modelList.MaterialDesc;
-                //model.BatchNo = DateTime.Now.ToString("yyyyMMdd");
                 model.BatchNo = modelList.BatchNo;
-                //model.ProductBatch = batchNo;//给批号加密成8位
+                model.ProductBatch = GetBatchno(model.BatchNo);//给批号加密成8位
                 model.ErpVoucherNo = modelList.ErpVoucherNo;
                 model.Qty = Convert.ToDecimal(modelList.ScanQty);
 
                 var seed = Guid.NewGuid().GetHashCode();
-                string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 999999).ToString().PadLeft(6, '0');
+                string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
 
                 model.SerialNo = code;
                 model.Creater = user.UserNo;
@@ -134,7 +133,8 @@ namespace BILWeb.Product
                 model.BarcodeType = 1;
                 listbarcode.Add(model);
                 string err = "";
-                if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err)){
+                if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
+                {
                     return true;
                 }
                 else
@@ -158,6 +158,7 @@ namespace BILWeb.Product
             T_Product T_Product = new T_Product();
 
             T_Product.ID = dbFactory.ToModelValue(reader, "ID").ToInt32();
+            T_Product.ErpVoucherNo = (string)dbFactory.ToModelValue(reader, "ErpVoucherNo");
             T_Product.StrongHoldCode = (string)dbFactory.ToModelValue(reader, "StrongHoldCode");
             T_Product.StrongHoldName = (string)dbFactory.ToModelValue(reader, "StrongHoldName");
             T_Product.DepartmentCode = (string)dbFactory.ToModelValue(reader, "DepartmentCode");
@@ -190,7 +191,7 @@ namespace BILWeb.Product
             T_Product.QulityQty = (decimal)dbFactory.ToModelValue(reader, "QulityQty");
             T_Product.LinkQty = (decimal)dbFactory.ToModelValue(reader, "LinkQty");
             T_Product.ProductQty = (decimal)dbFactory.ToModelValue(reader, "ProductQty");
-            
+
             return T_Product;
         }
 
@@ -206,7 +207,7 @@ namespace BILWeb.Product
 
         protected override string GetSaveProcedureName()
         {
-            return ""; 
+            return "";
         }
 
         protected override string GetFilterSql(UserModel user, T_Product model)
@@ -221,6 +222,83 @@ namespace BILWeb.Product
             return strSql;
         }
 
+        #region 生成加密批次
+        public string GetBatchno(string batch)
+        {
+            string NewProductBatch = getSqu(Guid.NewGuid().ToString("N"));
+            try
+            {
+                //检查批次是否已经存在
+                string ProductBatch = GetProductBatch(batch);
+                if (string.IsNullOrEmpty(ProductBatch))
+                {
+                    //插入新的加密批次
+                    if (InsertBatch(batch, NewProductBatch))
+                    {
+                        return NewProductBatch;
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+                else
+                {
+                    return ProductBatch;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+        }
+
+        public string GetProductBatch(string batch)
+        {
+            string strSql = "select ProductBatch from  t_batch where batchno='" + batch + "'";
+            return base.GetScalarBySql(strSql).ToDBString();
+        }
+
+        public string GetBatch(string ProductBatch)
+        {
+            string strSql = "select batchno from  t_batch where ProductBatch='" + ProductBatch + "'";
+            return base.GetScalarBySql(strSql).ToDBString();
+        }
+
+        public bool InsertBatch(string batch, string ProductBatch)
+        {
+            try
+            {
+                List<string> sqls = new List<string>();
+                string sqlhead = "SET IDENTITY_INSERT t_batch on ;insert into t_batch(batch,ProductBatch,CREATETIME) VALUES ('" + batch + "','" + ProductBatch + "',getdate()) SET IDENTITY_INSERT t_batch off ";
+                sqls.Add(sqlhead);
+                int i = dbFactory.ExecuteNonQueryList(sqls);
+                if (i == -2)
+                    return false;
+                else
+                    return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+        
+        public string getSqu(string ss)
+        {
+            if (ss.Length >= 8)
+                ss = ss.Substring(ss.Length - 8, 8);
+            else
+            {
+                ss = "00000000" + ss;
+                ss = ss.Substring(ss.Length - 8, 8);
+            }
+            return ss;
+        }
+
+        #endregion
 
     }
 }
