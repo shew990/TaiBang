@@ -29,6 +29,12 @@
                 <input id="HeadMaterialName" class="layui-input" placeholder="外箱物料名称">
             </div>
             <div class="layui-inline layui-show-xs-block">
+                <select id="stampType" lay-verify="required">
+                    <option value="0">内盒打印</option>
+                    <option value="1">本地打印</option>
+                </select>
+            </div>
+            <div class="layui-inline layui-show-xs-block">
                 <button id="Query" class="btn btn-primary">
                     查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
                 </button>
@@ -36,8 +42,35 @@
         </div>
         <table class="layui-hide" id="productOrderTable" lay-filter="init"></table>
         <script type="text/html" id="barDemo">
-            <a class="layui-btn layui-btn-xs" lay-event="stamp">打印</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         </script>
+    </div>
+
+    <div class="layui-card-body layui-table-body layui-table-main">
+        <div class="layui-card-body" style="padding:2px 2px;">
+            <input type="hidden" id="Rowno" name="Rowno" />
+            <div class="layui-inline">
+                <label class="layui-form-label lab100">物料编码</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Materialno1" name="Materialno1" autocomplete="off" class="layui-input txt200" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label lab100">物料描述</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="MaterialName1" autocomplete="off" class="layui-input txt200" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label lab100">数量</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="qty" autocomplete="off" class="layui-input txt200">
+                </div>
+            </div>
+            <div class="layui-inline" style="margin-left:60px;">
+                <button id="Print" class="btn btn-primary" style="margin-top: -15px;">打 印</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -53,7 +86,7 @@
         function tableInit() {
             table.render({
                 elem: '#productOrderTable'
-                , height: 520
+                , height: 450
                 , url: '/ProductOrders/GetData'
                 , method: 'post'
                 , contentType: 'application/json'
@@ -82,8 +115,8 @@
                 }
                 , title: '库位'
                 , page: true
-                , toolbar: 'false'
-                //, totalRow: true //开启合计行
+                , toolbar: false
+                , totalRow: false //开启合计行
                 , cols: [
                     [
                         { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
@@ -100,10 +133,20 @@
             });
         }
 
+        var PurObject;
         //监听行工具事件
         table.on('tool(init)', function (obj) {
-            if (obj.event === 'stamp') {
-                layer.alert('查看操作');
+            PurObject = obj.data;
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'edit') {
+                if ($("#stampType").val() == "0") {
+                    $('#Materialno1').val(data.HeadMaterialNo);
+                    $('#MaterialName1').val(data.HeadMaterialName);
+                    return false;
+                }
+                $('#Materialno1').val(data.MaterialNo);
+                $('#MaterialName1').val(data.MaterialName);
             }
         });
 
@@ -122,6 +165,19 @@
         $('#Query').click(function () {
             tableInit();
         });
+
+        //打印
+        $('#Print').click(function () {
+            if (PurObject == null) {
+                layer.alert("请先编辑行,再进行打印!");
+                return false;
+            }
+            if ($('#qty').val() == "") {
+                layer.alert("打印张数不能为空!");
+                return false;
+            }
+            window.open($("#printIP").val() + "/Main.aspx?parameter1=" + msg.obj + "");
+        })
 
         //回车事件绑定
         $("input").bind('keyup', function (event) {
