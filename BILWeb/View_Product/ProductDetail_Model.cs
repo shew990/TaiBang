@@ -18,10 +18,10 @@ namespace BILWeb.Product
         //无参构造函数
         public T_ProductDetail() : base() { }
 
-        /// <summary>
-        /// 表头id
-        /// </summary>
-        public int headerid { get; set; }
+        ///// <summary>
+        ///// 表头id
+        ///// </summary>
+        //public int headerid { get; set; }
 
         /// <summary>
         /// 物料编号
@@ -67,6 +67,16 @@ namespace BILWeb.Product
         /// 外箱物料说明
         /// </summary>
         public string ProMaterialDesc { get; set; }
+
+        //PDA字段
+        public string Barcode { get; set; }//PDA上传的扫描条码
+
+        public bool IsScan { get; set; }
+
+        public bool Isbox { get; set; }
+
+        public decimal PrintQty { get; set; }
+
     }
 }
 

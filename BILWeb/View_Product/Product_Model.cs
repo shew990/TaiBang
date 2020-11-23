@@ -46,8 +46,18 @@ namespace BILWeb.Product
         public decimal ScanQty { get; set; }//扫描数量
         public decimal Receiveqty { get; set; }//完工数量
 
+        public decimal PackQty { get; set; }//标准装箱量
+
+        public string Strstatus { get; set; }//生产订单状态
+
         public List<T_ProductDetail> Detail { get; set; }
         public List<T_OutBarCodeInfo> lstBarCode { get; set; }
+
+
+ 
+
+
+
     }
 }
 

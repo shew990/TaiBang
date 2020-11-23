@@ -925,6 +925,14 @@ namespace SCCGAndroidService
             return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson);
 
         }
-        #endregion
-    }
+
+        //关闭单子
+        public string CloseProduct(string ErpVoucherno)
+        {
+            T_Product_Func tfunc = new T_Product_Func();
+            return tfunc.CloseProduct(ErpVoucherno);
+        }
+
+            #endregion
+        }
 }

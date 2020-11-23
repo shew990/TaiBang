@@ -135,7 +135,14 @@ namespace BILWeb.Product
                 string err = "";
                 if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
                 {
-                    return true;
+                    //修改关联量，插入记录表
+                    if (updateproduct(modelList, model.BarCode)) {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
@@ -148,6 +155,34 @@ namespace BILWeb.Product
             }
 
         }
+
+
+        public bool updateproduct(T_Product product,string fserialno)
+        {
+            try
+            {
+                List<string> sqls = new List<string>();
+                string strsql1 = "update T_Product set LinkQty=LinkQty+"+ product.ScanQty + " where erpvoucherno='" + product.ErpVoucherNo + "';";
+                sqls.Add(strsql1);
+                product.Detail.ForEach(item =>
+                {
+                    string insertsql = "insert into t_linkserialno(fserialno,serialno,CREATETIME) VALUES ('" + fserialno + "','" + item.Barcode + "',getdate()); ";
+                    sqls.Add(insertsql);
+                });
+
+                int i = dbFactory.ExecuteNonQueryList(sqls);
+                if (i == -2)
+                    return false;
+                else
+                    return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
 
 
         /// <summary>
@@ -190,7 +225,12 @@ namespace BILWeb.Product
             T_Product.CustomerShortName = (string)dbFactory.ToModelValue(reader, "CustomerShortName");
             T_Product.QulityQty = (decimal)dbFactory.ToModelValue(reader, "QulityQty");
             T_Product.LinkQty = (decimal)dbFactory.ToModelValue(reader, "LinkQty");
+            T_Product.LinkQty = (decimal)dbFactory.ToModelValue(reader, "LinkQty");
             T_Product.ProductQty = (decimal)dbFactory.ToModelValue(reader, "ProductQty");
+
+            T_Product.PackQty = (decimal)dbFactory.ToModelValue(reader, "PackQty");
+            T_Product.Strstatus = (string)dbFactory.ToModelValue(reader, "Strstatus");
+
 
             return T_Product;
         }
@@ -299,6 +339,26 @@ namespace BILWeb.Product
             return ss;
         }
 
+        //关闭生产订单
+        public bool CloseProduct(string ErpVoucherno)
+        {
+            try
+            {
+                List<string> sqls = new List<string>();
+                string strsql = "update T_Product set Strstatue='关闭' where erpvoucherno='"+ ErpVoucherno + "'";
+                sqls.Add(strsql);
+                int i = dbFactory.ExecuteNonQueryList(sqls);
+                if (i == -2)
+                    return false;
+                else
+                    return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
         #endregion
 
     }

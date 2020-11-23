@@ -66,7 +66,7 @@ namespace BILWeb.Product
                 {
                     T_ProductDetail_DB dbdetail = new T_ProductDetail_DB();
                     List<T_ProductDetail> modellistdetail = new List<T_ProductDetail>();
-                    T_ProductDetail detail = new T_ProductDetail() { headerid = item.ID };
+                    T_ProductDetail detail = new T_ProductDetail() { HeaderID = item.ID };
                     modellistdetail = dbdetail.GetModelListADF(user, detail);
                     item.Detail = modellistdetail;
                 });
@@ -110,7 +110,10 @@ namespace BILWeb.Product
                 string ipport = "";
                 string ErrMsg = "";
                 T_Product_DB ProductDB = new T_Product_DB();
-                if (ProductDB.SaveProDuctBarcode(userModel, product))
+                T_Product Newproduct = ProductDB.GetModelListADF(userModel, product)[0];
+                Newproduct.ScanQty = product.ScanQty;
+                Newproduct.Detail = product.Detail;
+                if (ProductDB.SaveProDuctBarcode(userModel, Newproduct))
                 {
                     //bool res = PrintLable(list, ipport, ref ErrMsg);//调用打印标签
                     if (true)
@@ -142,5 +145,29 @@ namespace BILWeb.Product
 
         }
 
+
+        public string CloseProduct(string ErpVoucherno) {
+            BaseMessage_Model<string> messageModel = new BaseMessage_Model<string>();
+            try
+            {
+                T_Product_DB ProD = new T_Product_DB();
+                if (ProD.CloseProduct(ErpVoucherno))
+                {
+                    messageModel.HeaderStatus = "S";
+                    messageModel.Message = "成功！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = "传入参数不能为空！";
+                return JsonConvert.SerializeObject(messageModel);
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.ToString();
+                return JsonConvert.SerializeObject(messageModel);
+            }
+        }
     }
 }

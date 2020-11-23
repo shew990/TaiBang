@@ -40,7 +40,7 @@ namespace BILWeb.Product
             T_ProductDetail t_ProductDetail = new T_ProductDetail();
 
             t_ProductDetail.ID = dbFactory.ToModelValue(reader, "ID").ToInt32();
-            t_ProductDetail.headerid = dbFactory.ToModelValue(reader, "headerid").ToInt32(); 
+            t_ProductDetail.HeaderID = dbFactory.ToModelValue(reader, "headerid").ToInt32(); 
             t_ProductDetail.MaterialNo = (string)dbFactory.ToModelValue(reader, "MaterialNo");
             t_ProductDetail.MaterialName = (string)dbFactory.ToModelValue(reader, "MaterialName");
             t_ProductDetail.ErpVoucherNo = (string)dbFactory.ToModelValue(reader, "ErpVoucherNo");
