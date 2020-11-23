@@ -1,6 +1,4 @@
-﻿
-@using Web.WMS.Common;
-@{
+﻿@{
     ViewBag.Title = "打印ERP单据";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
     var printIP = System.Web.HttpContext.Current.Session["printIP"];
@@ -23,6 +21,7 @@
         margin-right: 10px;
     }
 </style>
+
 <input type="hidden" id="printIP" value="@printIP" />
 <input type="hidden" id="user" name="user" value="@HttpContext.Current.Request.Cookies["userinfo"]["UserNo"].ToString()" />
 <div class="box">
@@ -127,22 +126,24 @@
                     , limitName: 'PageSize'
                 }
                 , title: '打印'
-                , page: false //开启分页
+                , page: true //开启分页
                 , toolbar: false
                 , totalRow: false
-                , cols: [[
-                    { field: 'RowNo', title: '行号', width: 70, fixed: 'left' }
-                    , { field: 'ErpVoucherNo', title: 'ERP单号', width: 160 }
-                    , { field: 'MaterialNo', title: '物料号', width: 100 }
-                    , { field: 'MaterialDesc', title: '物料描述', width: 170 }
-                    , { field: 'Unit', title: '单位', width: 100 }
-                    , { field: 'InStockQty', title: '单据数', width: 80 }
-                    , { field: 'ReceiveQty', title: '收货数', width: 80 }
-                    , { field: 'RemainQty', title: '剩余数', width: 80 }
-                    , { field: 'spec', title: '规格', width: 200 }
-                    , { field: 'BatchNo', title: '番号', width: 100 }
-                    , { fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barDemo' }
-                ]]
+                , cols: [
+                    [
+                        { field: 'RowNo', title: '行号', width: 70, fixed: 'left' }
+                        , { field: 'ErpVoucherNo', title: 'ERP单号', width: 160 }
+                        , { field: 'MaterialNo', title: '物料号', width: 100 }
+                        , { field: 'MaterialDesc', title: '物料描述', width: 170 }
+                        , { field: 'Unit', title: '单位', width: 100 }
+                        , { field: 'InStockQty', title: '单据数', width: 80 }
+                        , { field: 'ReceiveQty', title: '收货数', width: 80 }
+                        , { field: 'RemainQty', title: '剩余数', width: 80 }
+                        , { field: 'spec', title: '规格', width: 200 }
+                        , { field: 'BatchNo', title: '番号', width: 100 }
+                        , { fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barDemo' }
+                    ]
+                ]
                 , request: {
                     pageName: 'CurrentPageNumber'
                     , limitName: 'CurrentPageShowCounts'
@@ -166,10 +167,6 @@
             PurObject = obj.data;
             var data = obj.data //获得当前行数据
                 , layEvent = obj.event; //获得 lay-event 对应的值
-            if (layEvent === 'detail') {
-                layer.msg('查看操作');
-                return false;
-            }
             if (layEvent === 'edit') {
                 if (data.Towarehouseno == "") {
                     layer.alert("当前行的仓库为空，不能做打印操作！");
