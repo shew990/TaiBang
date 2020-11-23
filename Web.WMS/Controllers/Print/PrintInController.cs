@@ -4,6 +4,7 @@ using BILWeb.Login.User;
 using BILWeb.Material;
 using BILWeb.OutBarCode;
 using BILWeb.Print;
+using BILWeb.Product;
 using BILWeb.Stock;
 using Newtonsoft.Json;
 using System;
@@ -149,7 +150,7 @@ namespace Web.WMS.Controllers.Print
                 List<string> squence = GetSerialnos((outboxnum + inboxnum).ToString(), "外", ref err);//外箱码序列号
                 List<string> squenceforin = GetSerialnos(num, "内", ref err);//本体序列号
                 List<Barcode_Model> listbarcode = new List<Barcode_Model>();//存放打印条码内容
-
+                T_Product_DB proDB = new T_Product_DB();
                 int k = 0;
                 for (int i = 0; i < outboxnum; i++)//执行打印外箱命令
                 {
@@ -161,7 +162,7 @@ namespace Web.WMS.Controllers.Print
                     model.MaterialDesc = materialdesc;
                     //model.BatchNo = DateTime.Now.ToString("yyyyMMdd");
                     model.BatchNo = BatchNo;
-                    //model.ProductBatch = batchNo;//给批号加密成8位
+                    model.ProductBatch = proDB.GetBatchno("123");//给批号加密成8位
                     model.ErpVoucherNo = erpvoucherno;
                     model.Qty = Convert.ToDecimal(EveryQty);
                     model.SerialNo = squence[k++];
@@ -187,7 +188,7 @@ namespace Web.WMS.Controllers.Print
                     model.MaterialDesc = materialdesc;
                     //model.BatchNo = DateTime.Now.ToString("yyyyMMdd");
                     model.BatchNo = BatchNo;
-                    //model.ProductBatch = batchNo;//给批号加密成8位
+                    model.ProductBatch = proDB.GetBatchno(model.BatchNo);//给批号加密成8位
                     model.ErpVoucherNo = erpvoucherno;
                     model.Qty = Convert.ToDecimal(tailnum);
                     model.SerialNo = squence[k++];
@@ -232,8 +233,10 @@ namespace Web.WMS.Controllers.Print
             List<string> serialnos = new List<string>();
             for (int i = 0; i < VZ; i++)
             {
-                var seed = Guid.NewGuid().GetHashCode();
-                string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 999999).ToString().PadLeft(6, '0');
+                //var seed = Guid.NewGuid().GetHashCode();
+                //string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 999999).ToString().PadLeft(6, '0');
+                string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+
                 if (serialnos.Find(t => t == code) == null)
                 {
                     serialnos.Add(code);
@@ -245,8 +248,7 @@ namespace Web.WMS.Controllers.Print
             }
             if (VL != 0)
             {
-                var seed = Guid.NewGuid().GetHashCode();
-                string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 99999999).ToString().PadLeft(8, '0') + (flag == "外" ? "01" : "02");
+                string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
                 if (serialnos.Find(t => t == code) == null)
                 {
                     serialnos.Add(code);
@@ -259,25 +261,17 @@ namespace Web.WMS.Controllers.Print
             return serialnos;
         }
 
-
-        //public List<string> GetSerialnos(int v, string flag, ref string err)
-        //{
-        //    List<string> serialnos = new List<string>();
-        //    for (int i = 0; i < v; i++)
-        //    {
-        //        var seed = Guid.NewGuid().GetHashCode();
-        //        string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 99999999).ToString().PadLeft(8, '0') + (flag == "外" ? "01" : "02");
-        //        if (serialnos.Find(t => t == code) == null)
-        //        {
-        //            serialnos.Add(code);
-        //        }
-        //        else
-        //        {
-        //            i--;
-        //        }
-        //    }
-        //    return serialnos;
-        //}
+        public string getSqu(string ss)
+        {
+            if (ss.Length >= 8)
+                ss = ss.Substring(ss.Length - 8, 8);
+            else
+            {
+                ss = "00000000" + ss;
+                ss = ss.Substring(ss.Length - 8, 8);
+            }
+            return ss;
+        }
 
         private void GetBoxInfo(ref int outboxnum, ref decimal tailnum, ref int inboxnum, string num, string everynum)
         {
@@ -296,8 +290,7 @@ namespace Web.WMS.Controllers.Print
 
         }
 
-
-
+        
         public JsonResult DeleteForAdv(string ID)
         {
             try
