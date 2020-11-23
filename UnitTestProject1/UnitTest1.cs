@@ -67,8 +67,7 @@ namespace UnitTestProject1
         
 
         #endregion
-
-
+        
         #region 打印条码ymh
         [TestMethod]
         public void PrintForTime()
