@@ -40,7 +40,6 @@ namespace Web.WMS.Controllers
             {
                 return Json(new { state = false, obj = ErrorMsg }, JsonRequestBehavior.AllowGet);
             }
-           
         }
 
         //关闭单据
