@@ -144,18 +144,34 @@ namespace BILWeb.OutBarCode
         /// <returns></returns>
         public bool CheckSerialNo(string SerialNo, ref string strError)
         {
-            int i = 0;
-
-            string strSql = string.Empty;
-
-            strSql = string.Format("SELECT COUNT(1) FROM T_STOCK WHERE SERIALNO = '{0}' or Palletno = '{1}'", SerialNo, SerialNo);
-            i = GetScalarBySql(strSql).ToInt32();
-
-            if (i > 0)
+            string strSql = string.Format("select WAREHOUSENo from  v_stock where SERIALNO = '{0}' or Palletno = '{1}'", SerialNo, SerialNo);
+            using (IDataReader reader = dbFactory.ExecuteReader(strSql))
             {
-                strError = "该外箱条码或者托盘条码已经收货！";
-                return false;
+                while (reader.Read())
+                {
+                    string warehouseno = reader["WAREHOUSENo"].ToDBString();
+                    if (warehouseno.Contains("C301") || warehouseno.Contains("C202") || warehouseno.Contains("C201") || warehouseno.Contains("C105") || warehouseno.Contains("C101")) {
+                        return true;
+                    }
+                    else
+                    {
+                        strError = "该外箱条码或者托盘条码已经收货！";
+                        return false;
+                    }
+                }
+                return true;
             }
+
+            
+            //int i = 0;
+            //string strSql = string.Empty;
+            //strSql = string.Format("SELECT COUNT(1) FROM T_STOCK WHERE SERIALNO = '{0}' or Palletno = '{1}'", SerialNo, SerialNo);
+            //i = GetScalarBySql(strSql).ToInt32();
+            //if (i > 0)
+            //{
+            //    strError = "该外箱条码或者托盘条码已经收货！";
+            //    return false;
+            //}
 
             //strSql = string.Format("SELECT COUNT(1) FROM t_Palletdetail WHERE SERIALNO = '{0}'", SerialNo);
             //i = GetScalarBySql(strSql).ToInt32();
@@ -166,7 +182,7 @@ namespace BILWeb.OutBarCode
             //    return false;
             //}
 
-            return true;
+            //return true;
         }
 
         /// <summary>

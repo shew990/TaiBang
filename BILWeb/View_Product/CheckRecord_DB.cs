@@ -10,6 +10,7 @@ using Oracle.ManagedDataAccess.Client;
 using BILBasic.Common;
 using BILBasic.User;
 using System.Data;
+using BILWeb.DAL;
 
 namespace BILWeb.Product
 {
@@ -82,7 +83,36 @@ namespace BILWeb.Product
             return strSql;
         }
 
-        
+        public bool AddData(List<T_CheckRecord> list,ref string ErrMsg)
+        {
+            ErrMsg = "";
+            try
+            {
+                List<string> lstSql = new List<string>();
+                foreach (var item in list)
+                {
+                    if (item.CreateTime == DateTime.MinValue)
+                        item.CreateTime = DateTime.Now;
+                    string strSql1 = Common_DB2.GetInertSqlCache(item, "t_CheckRecord", "");
+                    lstSql.Add(strSql1);
+                }
+                int i = dbFactory.ExecuteNonQueryList(lstSql, ref ErrMsg);
+                if (i > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+                return false;
+            }
+            return true;
+        }
 
     }
 }

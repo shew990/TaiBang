@@ -408,9 +408,7 @@ namespace BILWeb.OutBarCode
             try
             {
                 bool bSucc = false;
-
                 //string strError = string.Empty;
-
                 T_OutBarcode_DB _db = new T_OutBarcode_DB();
                 bSucc = _db.CheckSerialNo(SerialNo, ref strErrMsg);
 

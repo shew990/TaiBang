@@ -27,7 +27,7 @@ namespace BILWeb.InStock
 
         }
 
-        protected override List<string> GetSaveSql(UserModel user, ref  T_InStockDetailInfo model)
+        protected override List<string> GetSaveSql(UserModel user, ref T_InStockDetailInfo model)
         {
             string strSql = string.Empty;
             List<string> lstSql = new List<string>();
@@ -110,15 +110,25 @@ namespace BILWeb.InStock
                 foreach (var itemBarCode in item.lstBarCode)
                 {
                     item.IsQuality = 3;//库存状态改为合格
-                    strSql8 = "insert into t_stock(serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
-                             "islimitstock,materialnoid,warehouseid,houseid,areaid,Receivestatus,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,EDATE,SUPCODE,SUPNAME," +
-                            "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo)" +
-                            "values ('" + itemBarCode.SerialNo + "','" + itemBarCode.MaterialNo + "','" + itemBarCode.MaterialDesc + "','" + itemBarCode.Qty + "','" + item.IsQuality + "','1'" +
-                            ",'" + user.UserNo + "',getdate(),'" + itemBarCode.BatchNo + "','" + item.Unit + "','" + item.UnitName + "'" +
-                            ",(select palletno from t_Palletdetail where serialno = '" + itemBarCode.SerialNo + "'),'1','" + itemBarCode.MaterialNoID + "'" +
-                            ", '" + user.WarehouseID + "','" + user.ReceiveHouseID + "','" + user.ReceiveAreaID + "','1','" + itemBarCode.BarCode + "','" + item.StrongHoldCode + "', " +
-                            "  '" + itemBarCode.StrongHoldName + "','" + itemBarCode.CompanyCode + "','" + itemBarCode.EDate + "','" + item.SupplierNo + "','" + item.SupplierName + "'," +
-                            "'" + itemBarCode.SupPrdBatch + "','3' ,'1','" + itemBarCode.EAN + "','"+itemBarCode.BarcodeType+"','"+ (itemBarCode.ProjectNo==null?"": itemBarCode.ProjectNo) + "','" + (itemBarCode.TracNo==null?"": itemBarCode.TracNo) + "' )";
+                    //成品入库单做一个调拨的操作
+                    if (modelList[0].VoucherType == 50)
+                    {
+                        strSql8 = "update t_stock set status='" + item.IsQuality + "', warehouseid= '" + user.WarehouseID + "',houseid='" + user.ReceiveHouseID + "',areaid='" + user.ReceiveAreaID + "',STRONGHOLDCODE='0300',STRONGHOLDNAME='营销中心' where serialno='" + itemBarCode.SerialNo + "'";
+                    }
+                    else
+                    {
+                        strSql8 = "insert into t_stock(serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
+                         "islimitstock,materialnoid,warehouseid,houseid,areaid,Receivestatus,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,EDATE,SUPCODE,SUPNAME," +
+                        "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo)" +
+                        "values ('" + itemBarCode.SerialNo + "','" + itemBarCode.MaterialNo + "','" + itemBarCode.MaterialDesc + "','" + itemBarCode.Qty + "','" + item.IsQuality + "','1'" +
+                        ",'" + user.UserNo + "',getdate(),'" + itemBarCode.BatchNo + "','" + item.Unit + "','" + item.UnitName + "'" +
+                        ",(select palletno from t_Palletdetail where serialno = '" + itemBarCode.SerialNo + "'),'1','" + itemBarCode.MaterialNoID + "'" +
+                        ", '" + user.WarehouseID + "','" + user.ReceiveHouseID + "','" + user.ReceiveAreaID + "','1','" + itemBarCode.BarCode + "','" + item.StrongHoldCode + "', " +
+                        "  '" + itemBarCode.StrongHoldName + "','" + itemBarCode.CompanyCode + "','" + itemBarCode.EDate + "','" + item.SupplierNo + "','" + item.SupplierName + "'," +
+                        "'" + itemBarCode.SupPrdBatch + "','3' ,'1','" + itemBarCode.EAN + "','" + itemBarCode.BarcodeType + "','" + (itemBarCode.ProjectNo == null ? "" : itemBarCode.ProjectNo) + "','" + (itemBarCode.TracNo == null ? "" : itemBarCode.TracNo) + "' )";
+
+                    }
+
 
                     lstSql.Add(strSql8);
 
@@ -154,10 +164,11 @@ namespace BILWeb.InStock
             T_InStock_Func func = new T_InStock_Func();
             T_InStockInfo InStockInfoModel = new T_InStockInfo() { ID = modelList[0].HeaderID };
             string strmsg = "";
-            func.GetModelByID(ref InStockInfoModel,ref strmsg);
+            func.GetModelByID(ref InStockInfoModel, ref strmsg);
 
             //是否生成上架任务的配置
-            if (!(user.ISVWAREHOUSE == 0 && InStockInfoModel.VoucherType != 39)) {
+            if (!(user.ISVWAREHOUSE == 0 && InStockInfoModel.VoucherType != 39))
+            {
                 //汇总生成上架任务不汇总收货数据
                 foreach (var item in NewModelList)
                 {
@@ -168,7 +179,7 @@ namespace BILWeb.InStock
                        "'1','" + user.UserNo + "',getdate(),'" + item.Unit + "','" + item.UnitName + "','" + item.ErpVoucherNo + "','" + item.MaterialNoID + "','" + user.ReceiveAreaID + "','" + item.VoucherNo + "'," +
                        "'" + item.StrongHoldCode + "','" + item.StrongHoldName + "','" + item.CompanyCode + "','" + item.BatchNo + "'," +
                     "'" + item.ProductBatch + "','" + item.SupPrdBatch + "'," +
-                    "'" + item.BatchNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseNo + "','1','" + item.iarrsid + "','" + item.TracNo + "','"+item.ErpId+"')";
+                    "'" + item.BatchNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseNo + "','1','" + item.iarrsid + "','" + item.TracNo + "','" + item.ErpId + "')";
 
                     lstSql.Add(strSql6);
                 }
@@ -195,7 +206,7 @@ namespace BILWeb.InStock
         private List<T_InStockDetailInfo> GroupInstockDetailList(List<T_InStockDetailInfo> modelList)
         {
             var newModelList = from t in modelList
-                               group t by new { t1 = t.MaterialNo} into m//, t2 = t.BatchNo 
+                               group t by new { t1 = t.MaterialNo } into m//, t2 = t.BatchNo 
                                select new T_InStockDetailInfo
                                {
                                    MaterialNo = m.Key.t1,
@@ -284,7 +295,7 @@ namespace BILWeb.InStock
             t_instockdetail.FromErpWarehouse = string.IsNullOrEmpty(FromErpWarehouse) ? "" : (FromErpWarehouse.Contains("-") ? FromErpWarehouse : (t_instockdetail.StrongHoldCode + "-" + FromErpWarehouse));
 
             string ToErpWarehouse = dbFactory.ToModelValue(reader, "ToErpWarehouse").ToDBString();
-            t_instockdetail.ToErpWarehouse = string.IsNullOrEmpty(ToErpWarehouse)?"":(ToErpWarehouse.Contains("-") ? ToErpWarehouse : (t_instockdetail.StrongHoldCode + "-" + ToErpWarehouse));
+            t_instockdetail.ToErpWarehouse = string.IsNullOrEmpty(ToErpWarehouse) ? "" : (ToErpWarehouse.Contains("-") ? ToErpWarehouse : (t_instockdetail.StrongHoldCode + "-" + ToErpWarehouse));
             t_instockdetail.IsSpcBatch = dbFactory.ToModelValue(reader, "IsSpcBatch").ToDBString();
             t_instockdetail.ToBatchNo = dbFactory.ToModelValue(reader, "ToBatchNo").ToDBString();
             t_instockdetail.ToErpAreaNo = dbFactory.ToModelValue(reader, "ToErpAreaNo").ToDBString();
@@ -383,9 +394,9 @@ namespace BILWeb.InStock
             {
                 int iResult = 0;
 
-                OracleParameter[] cmdParms = new OracleParameter[] 
+                OracleParameter[] cmdParms = new OracleParameter[]
             {
-                new OracleParameter("strSerialXml", OracleDbType.NClob),                
+                new OracleParameter("strSerialXml", OracleDbType.NClob),
                 new OracleParameter("bResult", OracleDbType.Int32,ParameterDirection.Output),
                 new OracleParameter("strErrMsg", OracleDbType.NVarchar2,200,strErrMsg,ParameterDirection.Output)
             };
@@ -423,7 +434,7 @@ namespace BILWeb.InStock
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {
                 strSql += strAnd;
-                strSql += " erpvoucherno like '%" + model.ErpVoucherNo+ "%' ";
+                strSql += " erpvoucherno like '%" + model.ErpVoucherNo + "%' ";
             }
             if (!string.IsNullOrEmpty(model.MaterialNo))
             {
@@ -457,5 +468,5 @@ namespace BILWeb.InStock
         }
 
 
-        }
+    }
 }
