@@ -100,8 +100,9 @@ namespace BILWeb.OutStockTask
                                 //扫描到的是外箱，需要拆托盘
                                 if (itemStock.IsPalletOrBox == 1)
                                 {
-                                    //拣货到待发 lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',palletno = '' where Serialno = '" + itemStock.SerialNo + "'");
-                                    lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");//拣货直接出库
+                                    //拣货到待发 
+                                    lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',palletno = '' where Serialno = '" + itemStock.SerialNo + "'");
+                                    //lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");//拣货直接出库
 
                                     if (!string.IsNullOrEmpty(itemStock.PalletNo))
                                     {
@@ -114,39 +115,40 @@ namespace BILWeb.OutStockTask
                                 }
                                 else //扫描到的是托盘，不需要拆托
                                 {
-                                    //拣货到待发 lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "' where Serialno = '" + itemStock.SerialNo + "'");
-                                    lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");//拣货直接出库
+                                    //拣货到待发 
+                                    lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "' where Serialno = '" + itemStock.SerialNo + "'");
+                                    //lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");//拣货直接出库
                                 }
                             }
                             else if (itemStock.IsAmount == 2)//拆零
                             {
-                                strSql1 = "delete from t_stock where serialno = '" + itemStock.SerialNo + "'";
-                                lstSql.Add(strSql1);
-                                //lstSql.Add("update t_stock a set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',houseprop='" + item.HouseProp + "' where Serialno = '" + itemStock.SerialNo + "'");
+                                //strSql1 = "delete from t_stock where serialno = '" + itemStock.SerialNo + "'";
+                                //lstSql.Add(strSql1);
+                                lstSql.Add("update t_stock a set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',houseprop='" + item.HouseProp + "' where Serialno = '" + itemStock.SerialNo + "'");
 
-                                //strSql1 = "select count(1) from t_stock a where  Taskdetailesid='" + item.ID + "' and " +
-                                //       "  Materialnoid='" + itemStock.MaterialNoID + "' and  Ean='" + itemStock.EAN + "' and  batchno = '" + itemStock.BatchNo + "' and  Warehouseid='" + user.PickWareHouseID + "' " +
-                                //       " and  Houseid='" + user.PickHouseID + "' and  Areaid='" + user.PickAreaID + "' " +
-                                //       " and  Strongholdcode='" + itemStock.StrongHoldCode + "' and     CONVERT(varchar(100),edate, 111) ='" + itemStock.StrEDate + "' and isnull(IsAmount,0)=2";
-                                //Count = base.GetScalarBySql(strSql1).ToInt32();
+                                strSql1 = "select count(1) from t_stock a where  Taskdetailesid='" + item.ID + "' and " +
+                                       "  Materialnoid='" + itemStock.MaterialNoID + "' and  Ean='" + itemStock.EAN + "' and  batchno = '" + itemStock.BatchNo + "' and  Warehouseid='" + user.PickWareHouseID + "' " +
+                                       " and  Houseid='" + user.PickHouseID + "' and  Areaid='" + user.PickAreaID + "' " +
+                                       " and  Strongholdcode='" + itemStock.StrongHoldCode + "' and     CONVERT(varchar(100),edate, 111) ='" + itemStock.StrEDate + "' and isnull(IsAmount,0)=2";
+                                Count = base.GetScalarBySql(strSql1).ToInt32();
 
-                                //if (Count == 0)
-                                //{
-                                //    lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',IsAmount=2 where Serialno = '" + itemStock.SerialNo + "'");
+                                if (Count == 0)
+                                {
+                                    lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',IsAmount=2 where Serialno = '" + itemStock.SerialNo + "'");
 
-                                //}
-                                //else
-                                //{
-                                //    strSql1 = "update t_stock  set qty = qty + '" + itemStock.Qty + "'  where  Taskdetailesid='" + item.ID + "' and " +
-                                //           "  Materialnoid='" + item.MaterialNoID + "' and  Ean='" + itemStock.EAN + "' and  batchno = '" + itemStock.BatchNo + "' and  Warehouseid='" + user.PickWareHouseID + "' " +
-                                //           " and  Houseid='" + user.PickHouseID + "' and  Areaid='" + user.PickAreaID + "'" +
-                                //           " and  Strongholdcode='" + itemStock.StrongHoldCode + "'  and  CONVERT(varchar(100),edate, 111) = '" + itemStock.StrEDate + "'and isnull(IsAmount,0)=2";
-                                //    lstSql.Add(strSql1);
+                                }
+                                else
+                                {
+                                    strSql1 = "update t_stock  set qty = qty + '" + itemStock.Qty + "'  where  Taskdetailesid='" + item.ID + "' and " +
+                                           "  Materialnoid='" + item.MaterialNoID + "' and  Ean='" + itemStock.EAN + "' and  batchno = '" + itemStock.BatchNo + "' and  Warehouseid='" + user.PickWareHouseID + "' " +
+                                           " and  Houseid='" + user.PickHouseID + "' and  Areaid='" + user.PickAreaID + "'" +
+                                           " and  Strongholdcode='" + itemStock.StrongHoldCode + "'  and  CONVERT(varchar(100),edate, 111) = '" + itemStock.StrEDate + "'and isnull(IsAmount,0)=2";
+                                    lstSql.Add(strSql1);
 
-                                //    strSql1 = "delete t_stock where serialno = '" + itemStock.SerialNo + "'  and Areaid !='" + user.PickAreaID + "' ";
+                                    strSql1 = "delete t_stock where serialno = '" + itemStock.SerialNo + "'  and Areaid !='" + user.PickAreaID + "' ";
 
-                                //    lstSql.Add(strSql1);
-                                //} 
+                                    lstSql.Add(strSql1);
+                                }
                             }
                         }
 
