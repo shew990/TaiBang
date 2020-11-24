@@ -1,4 +1,5 @@
 ﻿using BILBasic.Basing.Factory;
+using BILWeb.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,6 +80,27 @@ namespace BILWeb.View_Product
         public String MaterialName { get; set; }
 
         public String MaterialNo { get; set; }
+
+        /// <summary>
+        /// 加密番号
+        /// </summary>
+        public String ProductBatch
+        {
+            get
+            {
+                return new T_Product_DB().GetBatchno(this.BatchNo);
+            }
+        }
+
+        /// <summary>
+        /// 打印类型(0:内盒，1：本体)
+        /// </summary>
+        public Int32 PrintType { get; set; }
+
+        /// <summary>
+        /// 尺寸类型（0：尺寸1，1：尺寸2）
+        /// </summary>
+        public Int32 SizeType { get; set; }
 
     }
 }

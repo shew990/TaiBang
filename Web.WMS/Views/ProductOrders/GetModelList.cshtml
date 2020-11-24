@@ -29,9 +29,15 @@
                 <input id="HeadMaterialName" class="layui-input" placeholder="外箱物料名称">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                <select id="stampType" lay-verify="required">
+                <select id="PrintType" lay-verify="required">
                     <option value="0">内盒打印</option>
-                    <option value="1">本地打印</option>
+                    <option value="1">本体打印</option>
+                </select>
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <select id="sizeType" lay-verify="required">
+                    <option value="0">尺寸1</option>
+                    <option value="1">尺寸2</option>
                 </select>
             </div>
             <div class="layui-inline layui-show-xs-block">
@@ -176,7 +182,9 @@
                 layer.alert("打印张数不能为空!");
                 return false;
             }
-            window.open($("#printIP").val() + "/Main.aspx?parameter1=" + msg.obj + "");
+            PurObject.PrintType = $("#printType").val();
+            PurObject.SizeType = $("#sizeType").val();
+            window.open($("#printIP").val() + "/Main.aspx?parameter2=" + JSON.stringify(PurObject) + "");
         })
 
         //回车事件绑定
