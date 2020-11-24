@@ -199,7 +199,7 @@
         var formStr = '<form style="visibility:hidden;" method="POST" action="' + url + '">' +
             '<input type="hidden" name="' + name + '" value="' + encodeURI(data) + '" />' +
             '</form>';
-        var win = window.open("");
+        var win = window.open();
         win.document.body.innerHTML = formStr;
         win.document.forms[0].submit();
     };
