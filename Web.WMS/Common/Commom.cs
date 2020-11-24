@@ -61,7 +61,7 @@ namespace Web.WMS.Common
                 new SelectListItem(){Value="204",Text="盘点下架"},
                 new SelectListItem(){Value="205",Text="预留上架"},
                 new SelectListItem(){Value="206",Text="预留下架"},
-                //new SelectListItem(){Value="5",Text="完工入库"},
+                new SelectListItem(){Value="5",Text="完工入库"},
                 //new SelectListItem(){Value="6",Text="退料入库"},
                 //new SelectListItem(){Value="7",Text="交接入库"},
                 //new SelectListItem(){Value="8",Text="齐套"},
@@ -191,9 +191,10 @@ namespace Web.WMS.Common
 
         public static List<SelectListItem> GetStrongHoldcodeList = new List<SelectListItem>
         {
-            new SelectListItem { Text = "上海嘉成", Value = "SHJC" },
-            new SelectListItem { Text = "江苏嘉成", Value = "JSJC" },
-            new SelectListItem { Text = "上海三意", Value = "SHSY" }
+            new SelectListItem { Text = "事业一部", Value = "0401" },
+            new SelectListItem { Text = "事业二部", Value = "0402" },
+            new SelectListItem { Text = "事业三部", Value = "0403" },
+            new SelectListItem { Text = "营销中心", Value = "0300" }
         };
 
         public static UserInfo ReadUserInfo()

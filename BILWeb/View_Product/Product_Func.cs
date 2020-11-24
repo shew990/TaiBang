@@ -89,6 +89,13 @@ namespace BILWeb.Product
                     return JsonConvert.SerializeObject(messageModel);
                 }
 
+                if (modellist[0].StrongHoldCode!=user.StrongHoldCode)
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = " 该生产订单【"+ modellist[0].StrongHoldCode + "】不属于该当前用户所属的事业部【"+ user.StrongHoldCode + "】！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+
                 //获取成功
                 messageModel.ModelJson = modellist;
                 messageModel.HeaderStatus = "S";

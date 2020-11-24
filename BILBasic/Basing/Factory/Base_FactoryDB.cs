@@ -1338,6 +1338,18 @@ namespace BILBasic.Basing.Factory
         }
         #endregion
 
+
+        public string GetStrDateTime(DateTime dt)
+        {
+            if (dt==null|| dt.ToString().Contains("0001"))
+            {
+                return "";
+            }
+            else
+            {
+                return dt.ToString();
+            }
+        }
     }
 }
 
