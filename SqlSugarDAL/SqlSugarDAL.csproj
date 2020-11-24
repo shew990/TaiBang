@@ -49,6 +49,8 @@
     <Compile Include="checkrecord\CheckRecord.cs" />
     <Compile Include="checkrecord\CheckRecordService.cs" />
     <Compile Include="DBHelper\DbContext.cs" />
+    <Compile Include="product\Product.cs" />
+    <Compile Include="product\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="remark\Remark.cs" />
     <Compile Include="remark\RemarkService.cs" />

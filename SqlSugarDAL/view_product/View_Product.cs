@@ -82,11 +82,5 @@ namespace SqlSugarDAL.view_product
         public String MaterialName { get; set; }
 
         public String MaterialNo { get; set; }
-
-        /// <summary>
-        /// 未质检数量
-        /// </summary>
-        [SugarColumn(IsIgnore = true)]
-        public Decimal NoQualityQty { get { return this.ProductQty - this.QulityQty; } }
     }
 }

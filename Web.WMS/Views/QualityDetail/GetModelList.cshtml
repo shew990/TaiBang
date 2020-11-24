@@ -262,7 +262,7 @@
             if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
                 $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
                     objOrder = data;
-                    $("#orderNo").val(data.HeadErpVoucherNo);
+                    $("#orderNo").val(data.ErpVoucherNo);
                     $("#batchNo").val(data.BatchNo);
                     $("#moudle").val("");
                     $("#materialNo").val(data.MaterialNo);
@@ -292,12 +292,20 @@
                 layer.alert("请先输入查询订单获取订单数据,再提交!");
                 return false;
             }
+            if (Number($("#QualityQty").val()) > objOrder.ProductQty) {
+                layer.alert("合格数量不能大于订单数量!");
+                return false;
+            }
             var formData = {};
             var t = $('#formRecord').serializeArray();
             $.each(t, function () {
                 formData[this.name] = this.value;
             });
-            $.post("/QualityDetail/Submit", { formJson: JSON.stringify(formData), orderId: objOrder.headerid },
+            $.post("/QualityDetail/Submit",
+                {
+                    formJson: JSON.stringify(formData), orderId: objOrder.id,
+                    qualityQty: $("#QualityQty").val(), remark: $("#remark").val()
+                },
                 function (data) {
                     layer.alert(data.Msg);
                 })

@@ -6,6 +6,7 @@ using BILWeb.Quality;
 using BILWeb.View_Product;
 using Newtonsoft.Json;
 using SqlSugarDAL.checkrecord;
+using SqlSugarDAL.product;
 using SqlSugarDAL.remark;
 using SqlSugarDAL.Until;
 using SqlSugarDAL.view_product;
@@ -49,7 +50,7 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetModel(string orderNo)
         {
-            var model = new View_ProductService().GetList(x => x.HeadErpVoucherNo == orderNo).FirstOrDefault();
+            var model = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
             return Json(model);
         }
 
@@ -57,42 +58,71 @@ namespace Web.WMS.Controllers
         /// 提交
         /// </summary>
         /// <returns></returns>
-        public ActionResult Submit(string formJson, string orderId)
+        public ActionResult Submit(string formJson, string orderId, string qualityQty, string remark)
         {
             SuccessResult successResult = new SuccessResult();
             successResult.Success = false;
             try
             {
                 CheckRecordService checkRecordService = new CheckRecordService();
+                ProductService productService = new ProductService();
                 var checkRecord = JsonConvert.DeserializeObject<T_CheckRecord>(formJson);
                 var queryData = checkRecordService
                     .GetList(x => x.ProductOrderId == Convert.ToInt32(orderId)).FirstOrDefault();
                 if (queryData == null)
+                {
+                    queryData = new T_CheckRecord();
+                    queryData.Sensei = checkRecord.Sensei;
+                    queryData.Scratch = checkRecord.Scratch;
+                    queryData.Bruise = checkRecord.Bruise;
+                    queryData.Speckle = checkRecord.Speckle;
+                    queryData.DownEdge = checkRecord.DownEdge;
+                    queryData.Rust = checkRecord.Rust;
+                    queryData.MissedProcess = checkRecord.MissedProcess;
+                    queryData.Decibel = checkRecord.Decibel;
+                    queryData.Dot = checkRecord.Dot;
+                    queryData.Disaccord = checkRecord.Disaccord;
+                    queryData.Noise = checkRecord.Noise;
+                    queryData.CardPoint = checkRecord.CardPoint;
+                    queryData.ShaftTight = checkRecord.ShaftTight;
+                    queryData.Shake = checkRecord.Shake;
+                    queryData.OutputSize = checkRecord.OutputSize;
+                    queryData.InPutSize = checkRecord.InPutSize;
+                    queryData.NeglectedLoading = checkRecord.NeglectedLoading;
+                    queryData.NotInPlace = checkRecord.NotInPlace;
+                    queryData.Others = checkRecord.Others;
+                    queryData.Minute = checkRecord.Minute;
                     checkRecordService.Insert(checkRecord);
+                }
                 else
                 {
                     queryData.Sensei = checkRecord.Sensei;
-                    queryData.Sensei = checkRecord.Scratch;
+                    queryData.Scratch = checkRecord.Scratch;
                     queryData.Bruise = checkRecord.Bruise;
-                    queryData.Sensei = checkRecord.Speckle;
-                    queryData.Bruise = checkRecord.DownEdge;
-                    queryData.Sensei = checkRecord.Rust;
-                    queryData.Bruise = checkRecord.MissedProcess;
-                    queryData.Sensei = checkRecord.Decibel;
-                    queryData.Bruise = checkRecord.Dot;
-                    queryData.Sensei = checkRecord.Disaccord;
-                    queryData.Bruise = checkRecord.Noise;
-                    queryData.Bruise = checkRecord.CardPoint;
-                    queryData.Sensei = checkRecord.ShaftTight;
-                    queryData.Bruise = checkRecord.Shake;
-                    queryData.Sensei = checkRecord.OutputSize;
-                    queryData.Bruise = checkRecord.InPutSize;
-                    queryData.Sensei = checkRecord.NeglectedLoading;
-                    queryData.Bruise = checkRecord.NotInPlace;
-                    queryData.Sensei = checkRecord.Others;
-                    queryData.Bruise = checkRecord.Minute;
+                    queryData.Speckle = checkRecord.Speckle;
+                    queryData.DownEdge = checkRecord.DownEdge;
+                    queryData.Rust = checkRecord.Rust;
+                    queryData.MissedProcess = checkRecord.MissedProcess;
+                    queryData.Decibel = checkRecord.Decibel;
+                    queryData.Dot = checkRecord.Dot;
+                    queryData.Disaccord = checkRecord.Disaccord;
+                    queryData.Noise = checkRecord.Noise;
+                    queryData.CardPoint = checkRecord.CardPoint;
+                    queryData.ShaftTight = checkRecord.ShaftTight;
+                    queryData.Shake = checkRecord.Shake;
+                    queryData.OutputSize = checkRecord.OutputSize;
+                    queryData.InPutSize = checkRecord.InPutSize;
+                    queryData.NeglectedLoading = checkRecord.NeglectedLoading;
+                    queryData.NotInPlace = checkRecord.NotInPlace;
+                    queryData.Others = checkRecord.Others;
+                    queryData.Minute = checkRecord.Minute;
                     checkRecordService.Update(checkRecord);
                 }
+                var product = productService.GetById(orderId);
+                product.QulityQty = Convert.ToDecimal(qualityQty);
+                product.Remark = remark;
+                productService.Update(product);
+
                 successResult.Msg = "保存成功!";
                 successResult.Success = true;
             }
