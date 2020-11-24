@@ -218,9 +218,9 @@ namespace BILWeb.OutStockTask
                 model.StrongHoldCode = item.StrongHoldCode;
                 model.MaterialNo = item.MaterialNo;
                 model.FromBatchNo = NewLstStock[0].FromBatchNo;//
-                model.FromErpWarehouse = NewLstStock[0].FromErpWarehouse.Replace("SHJC-", "").Replace("JSJC-", "").Replace("SHSY-", "");//
+                model.FromErpWarehouse = NewLstStock[0].FromErpWarehouse;//
                 model.FromErpAreaNo = NewLstStock[0].FromErpAreaNo;//
-                model.WareHouseNo = NewLstStock[0].FromErpWarehouse.Replace("SHJC-", "").Replace("JSJC-", "").Replace("SHSY-", "");//
+                model.WareHouseNo = NewLstStock[0].FromErpWarehouse;//
                 model.ToErpWarehouse = user.PickWareHouseNo;//
                 model.ToErpAreaNo = user.PickAreaNo; //
                 model.PostUser = user.UserNo;// /

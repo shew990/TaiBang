@@ -34,8 +34,20 @@ namespace BILWeb.Product
 
         protected override T_Product GetModelByJson(string strJson)
         {
-            throw new NotImplementedException();
+            return null;
         }
+
+
+        protected override List<T_Product> GetModelListByJson(string UserJson, string ModelListJson)
+        {
+            List<T_Product> modelList = new List<T_Product>();
+            modelList = JSONHelper.JsonToObject<List<T_Product>>(ModelListJson);
+            modelList = modelList.Where(t => t.ScanQty > 0).ToList();
+            return modelList;
+        }
+        
+
+
 
 
         public string GetModelList(string UserJson, string ModelJson)
@@ -74,6 +86,13 @@ namespace BILWeb.Product
                 {
                     messageModel.HeaderStatus = "E";
                     messageModel.Message = "生产订单查询为空！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+
+                if (modellist[0].StrongHoldCode!=user.StrongHoldCode)
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = " 该生产订单【"+ modellist[0].StrongHoldCode + "】不属于该当前用户所属的事业部【"+ user.StrongHoldCode + "】！";
                     return JsonConvert.SerializeObject(messageModel);
                 }
 

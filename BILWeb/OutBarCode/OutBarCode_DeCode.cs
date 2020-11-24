@@ -8,7 +8,7 @@ namespace BILWeb.OutBarCode
     public class OutBarCode_DeCode
     {
         private static int BarcodeType = 0;
-        private static int SerialNo =5;
+        private static int SerialNo =3;
         private static int MaterialNo = 2;
         private static int EAN = 3;
         
@@ -23,7 +23,7 @@ namespace BILWeb.OutBarCode
         {
             string[] strSplit = strBarcode.Split('@');
 
-            if (strSplit.Length == 6) return true;
+            if (strSplit.Length == 4) return true;
             else return false;
         }
 
@@ -36,7 +36,7 @@ namespace BILWeb.OutBarCode
         {
             string[] strSplit = strBarcode.Split('@');
 
-            if (strSplit.Length == 2) return true;//二维码
+            if (strSplit.Length == 4) return true;//二维码
             else return false;
         }
 

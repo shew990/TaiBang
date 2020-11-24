@@ -67,7 +67,7 @@ namespace BILWeb.Product
                             ",'" + user.UserNo + "',getdate(),'" + itemBarCode.BatchNo + "','" + item.Unit + "','" + item.Unit + "'" +
                             ",'" + PalletNo + "','1','" + itemBarCode.MaterialNoID + "'" +
                             ", '" + user.WarehouseID + "','" + user.ReceiveHouseID + "','" + user.ReceiveAreaID + "','1','" + itemBarCode.BarCode + "','" + item.StrongHoldCode + "', " +
-                            "  '" + itemBarCode.StrongHoldName + "','" + itemBarCode.CompanyCode + "','" + itemBarCode.EDate + "','',''," +
+                            "  '" + itemBarCode.StrongHoldName + "','" + itemBarCode.CompanyCode + "','" + GetStrDateTime(itemBarCode.EDate) + "','',''," +
                             "'" + itemBarCode.SupPrdBatch + "','3' ,'1','" + itemBarCode.EAN + "','" + itemBarCode.BarcodeType + "','" + (itemBarCode.ProjectNo == null ? "" : itemBarCode.ProjectNo) + "','" + (itemBarCode.TracNo == null ? "" : itemBarCode.TracNo) + "' )";
 
                     lstSql.Add(strSql2);
@@ -78,10 +78,10 @@ namespace BILWeb.Product
                                 "erpvoucherno,voucherno,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,SUPPRDBATCH,EDATE,TASKNO,batchno,ToWarehouseNo,ToHouseNo,ToAreaNo,ToWarehouseName)" +
                             " values ('" + TaskTransID + "','" + itemBarCode.SerialNo + "','" + user.WarehouseID + "','" + user.ReceiveHouseID + "'," +
                             "'" + user.ReceiveAreaID + "','" + itemBarCode.MaterialNo + "','" + itemBarCode.MaterialDesc + "','',''," +
-                            " '" + itemBarCode.Qty + "','4','','" + user.UserName + "',getdate(),'" + item.ID + "'," +
+                            " '" + itemBarCode.Qty + "','5','','" + user.UserName + "',getdate(),'" + item.ID + "'," +
                             "'" + item.Unit + "','" + item.Unit + "','" + itemBarCode.MaterialNoID + "','" + item.ErpVoucherNo + "','','" + itemBarCode.BarCode + "'," +
                             "'" + item.StrongHoldCode + "','" + item.StrongHoldName + "','" + item.CompanyCode + "','" + itemBarCode.SupPrdBatch + "'" +
-                            " ,'" + itemBarCode.EDate + "','','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') SET IDENTITY_INSERT t_tasktrans off";
+                            " ,'" + GetStrDateTime(itemBarCode.EDate) + "','','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') SET IDENTITY_INSERT t_tasktrans off";
                     lstSql.Add(strSql3);
 
                     //插入托盘表
@@ -93,7 +93,7 @@ namespace BILWeb.Product
                     "'{16}','{17}',null,'{19}',null,'null','{22}','{23}','{24}','{25}');SET IDENTITY_INSERT t_Palletdetail off ;", detailID, ID, PalletNo, itemBarCode.MaterialNo, itemBarCode.MaterialDesc, itemBarCode.SerialNo, user.UserNo,
                     itemBarCode.RowNo, itemBarCode.VoucherNo, itemBarCode.ErpVoucherNo, itemBarCode.MaterialNoID, itemBarCode.Qty, itemBarCode.BarCode,
                     itemBarCode.StrongHoldCode, itemBarCode.StrongHoldName, itemBarCode.CompanyCode, itemBarCode.BatchNo, itemBarCode.RowNoDel,
-                    itemBarCode.ProductDate, itemBarCode.SupPrdBatch, itemBarCode.SupPrdDate, itemBarCode.ProductBatch, itemBarCode.EDate, itemBarCode.SupCode, itemBarCode.SupName, itemBarCode.Unit);
+                    itemBarCode.ProductDate, itemBarCode.SupPrdBatch, itemBarCode.SupPrdDate, itemBarCode.ProductBatch, GetStrDateTime(itemBarCode.EDate), itemBarCode.SupCode, itemBarCode.SupName, itemBarCode.Unit);
 
                     lstSql.Add(strSql5);
 
@@ -127,7 +127,7 @@ namespace BILWeb.Product
                 model.SerialNo = code;
                 model.Creater = user.UserNo;
                 model.ReceiveTime = DateTime.Now;
-                model.BarCode = "2@" + model.StrongHoldCode + "@" + model.MaterialNo + "@" + model.ProductBatch + "@" + model.Qty + "@" + model.SerialNo;
+                model.BarCode = "2@" + model.MaterialNo+ "@" + model.Qty + "@" + model.SerialNo;
                 model.RowNo = "1";
                 model.RowNoDel = "1";
                 model.BarcodeType = 1;
