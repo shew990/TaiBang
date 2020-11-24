@@ -184,7 +184,8 @@
             }
             PurObject.PrintType = $("#printType").val();
             PurObject.SizeType = $("#sizeType").val();
-            window.open($("#printIP").val() + "/Main.aspx?parameter2=" + JSON.stringify(PurObject) + "");
+            console.log(JSON.stringify(PurObject));
+            openPostWindow($("#printIP").val() + "/Main.aspx", "quality", JSON.stringify(PurObject));
         })
 
         //回车事件绑定
@@ -193,6 +194,15 @@
                 tableInit();
         });
     });
+
+    function openPostWindow(url, data, name) {
+        var formStr = '<form style="visibility:hidden;" method="POST" action="' + url + '">' +
+            '<input type="hidden" name="' + name + '" value="' + encodeURI(data) + '" />' +
+            '</form>';
+        var win = window.open("");
+        win.document.body.innerHTML = formStr;
+        win.document.forms[0].submit();
+    };
 </script>
 
 
