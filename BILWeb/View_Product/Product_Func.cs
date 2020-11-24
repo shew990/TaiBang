@@ -34,8 +34,20 @@ namespace BILWeb.Product
 
         protected override T_Product GetModelByJson(string strJson)
         {
-            throw new NotImplementedException();
+            return null;
         }
+
+
+        protected override List<T_Product> GetModelListByJson(string UserJson, string ModelListJson)
+        {
+            List<T_Product> modelList = new List<T_Product>();
+            modelList = JSONHelper.JsonToObject<List<T_Product>>(ModelListJson);
+            modelList = modelList.Where(t => t.ScanQty > 0).ToList();
+            return modelList;
+        }
+        
+
+
 
 
         public string GetModelList(string UserJson, string ModelJson)

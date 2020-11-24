@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -1175,9 +1176,7 @@ namespace BILBasic.Basing.Factory
             /// <returns></returns>
             protected abstract string GetViewName();
 
-
-
-
+        
             /// <summary>
             /// 得到表名
             /// </summary>
@@ -1196,8 +1195,149 @@ namespace BILBasic.Basing.Factory
 
             protected abstract List<string> GetSaveSql(User.UserModel user, ref TBase_Model model);
 
-            #endregion
+        #endregion
 
+
+        #region 根据实体类得到insert语句 执行操作
+        public bool AddDataORM(List<TBase_Model> list,string tablename,  ref string ErrMsg)
+        {
+            ErrMsg = "";
+            try
+            {
+                List<string> lstSql = new List<string>();
+                foreach (var item in list)
+                {
+                    if (item.CreateTime == DateTime.MinValue)
+                        item.CreateTime = DateTime.Now;
+                    string strSql1 = GetInertSqlCache(item, tablename, "");
+                    lstSql.Add(strSql1);
+                }
+                int i = dbFactory.ExecuteNonQueryList(lstSql, ref ErrMsg);
+                if (i > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+                return false;
+            }
+            return true;
         }
+
+        public static string GetInertSqlCache<T>(T t, string tablename, string seq)
+        {
+            tablename = tablename.ToLower();
+            StringBuilder sb = null;
+            PropertyInfo[] propertys = t.GetType().GetProperties();
+            lock ("object")
+            {
+
+                sb = new StringBuilder();
+                sb.Append("INSERT INTO  ");
+                sb.Append(tablename);
+                sb.Append("(");
+
+                foreach (PropertyInfo pi in propertys)
+                {
+                    if (NotDBField(pi))
+                        continue;
+
+                    sb.Append(pi.Name);
+                    sb.Append(",");
+
+                }
+                sb.Remove(sb.Length - 1, 1);
+                sb.Append(")");
+                sb.Append("values");
+                //sb.Append("("+seq+".nextval,");
+                sb.Append("( ");
+                int i = 0;
+                foreach (PropertyInfo pi in propertys)
+                {
+                    string name = pi.Name;
+                    if (NotDBField(pi))
+                        continue;
+                    object obj = pi.GetValue(t, null) == null ? "" : pi.GetValue(t, null);
+
+                    switch (obj.GetType().Name.ToLower())
+                    {
+                        case "int32":
+                            sb.Append((pi.GetValue(t, null) == null ? "100" : pi.GetValue(t, null)).ToString());
+                            //sb.Append("{" + i.ToString() + "}");
+                            sb.Append(",");
+                            break;
+                        case "decimal":
+                            sb.Append((pi.GetValue(t, null) == null ? "0" : pi.GetValue(t, null)).ToString());
+                            //sb.Append("{" + i.ToString() + "}");
+                            sb.Append(",");
+                            break;
+                        case "decimal?":
+                            sb.Append((pi.GetValue(t, null) == null ? "0" : pi.GetValue(t, null)).ToString());
+                            //sb.Append("{" + i.ToString() + "}");
+                            sb.Append(",");
+                            break;
+                        case "datetime":
+                            //sb.Append(" TO_DATE('");
+                            sb.Append(pi.GetValue(t, null).ToString().Contains("0001") ? "null" : ("'" + pi.GetValue(t, null).ToString() + "'"));
+                            //sb.Append("{" + i.ToString() + "}");
+                            //sb.Append("','yyyy/mm/dd hh24:mi:ss')");
+                            sb.Append(",");
+                            break;
+
+                        default:
+                            sb.Append("'");
+                            //sb.Append(pi.GetValue(t, null) == null ? "" : pi.GetValue(t, null).ToString());
+                            sb.Append("{" + i.ToString() + "}");
+                            sb.Append("'");
+                            sb.Append(",");
+                            break;
+                    }
+                    i++;
+
+                }
+                sb.Remove(sb.Length - 1, 1);
+                sb.Append(")");
+
+            }
+            
+            List<object> olist = new List<object>();
+            foreach (PropertyInfo pi in propertys)
+            {
+
+                if (NotDBField(pi))
+                    continue;
+
+
+                string obj = pi.GetValue(t, null) == null ? "" : pi.GetValue(t, null).ToString();
+
+                obj = obj.Replace("\'", "");
+                olist.Add(obj);
+
+
+            }
+            return string.Format(sb.ToString(), olist.ToArray());
+            
+        }
+
+        public static bool NotDBField(PropertyInfo info)
+        {
+            System.Attribute[] at = System.Attribute.GetCustomAttributes(info);
+            if (at.Length == 0) return false;
+            foreach (var item in at)
+            {
+                if (item is DBAttribute)
+                    return ((DBAttribute)item).NotDBField;
+            }
+            return false;
+        }
+        #endregion
+
     }
+}
 

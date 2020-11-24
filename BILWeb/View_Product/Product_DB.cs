@@ -127,7 +127,7 @@ namespace BILWeb.Product
                 model.SerialNo = code;
                 model.Creater = user.UserNo;
                 model.ReceiveTime = DateTime.Now;
-                model.BarCode = "2@" + model.StrongHoldCode + "@" + model.MaterialNo + "@" + model.ProductBatch + "@" + model.Qty + "@" + model.SerialNo;
+                model.BarCode = "2@" + model.MaterialNo+ "@" + model.Qty + "@" + model.SerialNo;
                 model.RowNo = "1";
                 model.RowNoDel = "1";
                 model.BarcodeType = 1;

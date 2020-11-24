@@ -191,7 +191,7 @@ namespace BILWeb.OutBarCode
             if (OutBarCode_DeCode.InvalidBarcode(BarCode))
             {
                 BarCodeType = OutBarCode_DeCode.GetSubBarcodeType(BarCode);
-                if (BarCodeType == "1")
+                if (BarCodeType == "1"|| BarCodeType == "2" )
                 {
                     BarCodeType = "1";
                     SerialNo = OutBarCode_DeCode.GetSubBarcodeSerialNo(BarCode);
