@@ -39,7 +39,8 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetRemarks()
         {
-            return Json(new RemarkService().GetList());
+            var remarks = new RemarkService().GetList().Select(x => x.RemarkDesc);
+            return Json(remarks);
         }
 
         /// <summary>
@@ -48,14 +49,15 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetModel(string orderNo)
         {
-            return Json(new View_ProductService().GetList(x => x.HeadErpVoucherNo == orderNo));
+            var model = new View_ProductService().GetList(x => x.HeadErpVoucherNo == orderNo).FirstOrDefault();
+            return Json(model);
         }
 
         /// <summary>
         /// 提交
         /// </summary>
         /// <returns></returns>
-        public ActionResult Submit(string formJson)
+        public ActionResult Submit(string formJson, string orderId)
         {
             SuccessResult successResult = new SuccessResult();
             successResult.Success = false;
@@ -64,7 +66,7 @@ namespace Web.WMS.Controllers
                 CheckRecordService checkRecordService = new CheckRecordService();
                 var checkRecord = JsonConvert.DeserializeObject<T_CheckRecord>(formJson);
                 var queryData = checkRecordService
-                    .GetList(x => x.ProductOrderId == checkRecord.ProductOrderId).FirstOrDefault();
+                    .GetList(x => x.ProductOrderId == Convert.ToInt32(orderId)).FirstOrDefault();
                 if (queryData == null)
                     checkRecordService.Insert(checkRecord);
                 else
