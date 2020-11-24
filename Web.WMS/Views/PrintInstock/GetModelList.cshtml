@@ -212,7 +212,7 @@
             PurObject.num = $('#VoucherQty1').val();
             $.post("/PrintIn/SaveBarcode", { data: JSON.stringify(PurObject) }, function (msg) {
                 if (msg.state) {
-                    window.open($("#printIP").val() + "/Main.aspx?parameter1=" + msg.obj + "");
+                    openPostWindow($("#printIP").val() + "/Main.aspx", "stock", msg.obj);
                     return false;
                 }
                 layer.alert(msg.ResultValue);
@@ -226,6 +226,15 @@
             }
         });
     });
+
+    function openPostWindow(url, data, name) {
+        var formStr = '<form style="visibility:hidden;" method="POST" action="' + url + '">' +
+            '<input type="hidden" name="' + name + '" value="' + encodeURI(data) + '" />' +
+            '</form>';
+        var win = window.open("");
+        win.document.body.innerHTML = formStr;
+        win.document.forms[0].submit();
+    };
 </script>
 <script src="~/Content/SCG/js/Common/Operate.js"></script>
 
