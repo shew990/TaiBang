@@ -262,7 +262,7 @@
             if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
                 $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
                     objOrder = data;
-                    $("#orderNo").val(data.ErpVoucherNo);
+                    $("#orderNo").val(data.HeadErpVoucherNo);
                     $("#batchNo").val(data.BatchNo);
                     $("#moudle").val("");
                     $("#materialNo").val(data.MaterialNo);
