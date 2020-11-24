@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlSugarDAL.remark
 {
-    public class RemarkService : DbContext<Remark>
+    public class RemarkService : DbContext<T_Remark>
     {
     }
 }

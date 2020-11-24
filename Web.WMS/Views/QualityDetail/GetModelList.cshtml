@@ -277,8 +277,20 @@
                 layer.alert("生产订单号不能为空!");
                 return false;
             }
-            $.post("/QualityDetail/Submit",
-                { formJosn: $("#formRecord").serialize(), orderNo: $("#ErpVoucherNo").val() },
+            if ($("#QualityQty").val() == "") {
+                layer.alert("合格数量不能为空!");
+                return false;
+            }
+            if ($("#remark").val() == "") {
+                layer.alert("备注不能为空!");
+                return false;
+            }
+            var formData = {};
+            var t = $('#formRecord').serializeArray();
+            $.each(t, function () {
+                formData[this.name] = this.value;
+            });
+            $.post("/QualityDetail/Submit", { formJosn: JSON.stringify(formData), orderNo: $("#ErpVoucherNo").val() },
                 function (data) {
                     layer.alert(data.Msg);
                 })

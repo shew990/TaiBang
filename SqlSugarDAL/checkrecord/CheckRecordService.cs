@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlSugarDAL.checkrecord
 {
-    public class CheckRecordService:DbContext<CheckRecord>
+    public class CheckRecordService : DbContext<T_CheckRecord>
     {
     }
 }

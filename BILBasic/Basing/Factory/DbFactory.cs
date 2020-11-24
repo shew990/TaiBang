@@ -932,7 +932,6 @@ namespace BILBasic.Basing
                 {
                     tx.Rollback();
                     throw new Exception(ex.Message);
-                    return 0;
                 }
             }
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlSugarDAL.remark
 {
-    public class Remark
+    public class T_Remark
     {
         /// <summary>
         /// 表头id
