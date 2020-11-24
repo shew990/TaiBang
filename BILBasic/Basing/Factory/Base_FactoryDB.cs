@@ -1227,7 +1227,6 @@ namespace BILBasic.Basing.Factory
                 ErrMsg = ex.Message;
                 return false;
             }
-            return true;
         }
 
         public static string GetInertSqlCache<T>(T t, string tablename, string seq)

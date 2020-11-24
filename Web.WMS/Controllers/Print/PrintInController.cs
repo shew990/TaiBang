@@ -162,7 +162,7 @@ namespace Web.WMS.Controllers.Print
                     model.MaterialDesc = materialdesc;
                     //model.BatchNo = DateTime.Now.ToString("yyyyMMdd");
                     model.BatchNo = BatchNo;
-                    model.ProductBatch = proDB.GetBatchno("123");//给批号加密成8位
+                    model.ProductBatch = proDB.GetBatchno(model.BatchNo);//给批号加密成8位
                     model.ErpVoucherNo = erpvoucherno;
                     model.Qty = Convert.ToDecimal(EveryQty);
                     model.SerialNo = squence[k++];

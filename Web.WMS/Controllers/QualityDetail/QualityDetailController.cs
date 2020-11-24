@@ -1,70 +1,136 @@
 ﻿using BILBasic.Common;
 using BILWeb.InStock;
+using BILWeb.Login.User;
+using BILWeb.Product;
 using BILWeb.Quality;
+using BILWeb.View_Product;
+using Newtonsoft.Json;
+using SqlSugarDAL.checkrecord;
+using SqlSugarDAL.product;
+using SqlSugarDAL.remark;
+using SqlSugarDAL.Until;
+using SqlSugarDAL.view_product;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Web.WMS.Common;
 using WMS.Factory;
 using WMS.Web.Filter;
 
 namespace Web.WMS.Controllers
 {
     [RoleActionFilter(Message = "QualityDetail/QualityDetail")]
-    public class QualityDetailController : BaseController<T_QualityDetailInfo>
+    public class QualityDetailController : Controller
     {
-
-        private IQualityDetailService qualityDetailService;
-        public QualityDetailController()
+        /// <summary>
+        /// 跳转主视图
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetModelList()
         {
-            qualityDetailService = (IQualityDetailService)ServiceFactory.CreateObject("Quality.T_QualityDetail_Func");
-            baseservice = qualityDetailService;
+            return View();
         }
 
-        T_InStockDetail_Func tfunc_detail = new T_InStockDetail_Func();
-
-
-        public JsonResult Sync(string ErpVoucherNo)
+        /// <summary>
+        /// 获取备注数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetRemarks()
         {
-            string ErrorMsg = ""; int WmsVoucherType = -1; string syncType = "ERP"; int syncExcelVouType = -1; DataSet excelds = null;
-            BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
-            //10:入库单据
-            if (PFunc.Sync(10, string.Empty, ErpVoucherNo, WmsVoucherType, ref ErrorMsg, syncType, syncExcelVouType, excelds))
-            {
-
-                return Json(new { state = true }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(new { state = false, obj = ErrorMsg }, JsonRequestBehavior.AllowGet);
-            }
-           
+            var remarks = new RemarkService().GetList().Select(x => x.RemarkDesc);
+            return Json(remarks);
         }
 
-        //关闭单据
-        [HttpPost]
-        public JsonResult CloseQuality(string ID)
+        /// <summary>
+        /// 根据生产单号获取订单数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetModel(string orderNo)
         {
+            var model = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
+            return Json(model);
+        }
+
+        /// <summary>
+        /// 提交
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Submit(string formJson, string orderId, string qualityQty, string remark)
+        {
+            SuccessResult successResult = new SuccessResult();
+            successResult.Success = false;
             try
             {
-                string strError = "";
-                T_QualityDetail_Func tfunc = new T_QualityDetail_Func();
-                if (tfunc.CloseQualityDetailVoucherNo(Convert.ToInt32(ID), currentUser, ref strError))
+                CheckRecordService checkRecordService = new CheckRecordService();
+                ProductService productService = new ProductService();
+                var checkRecord = JsonConvert.DeserializeObject<T_CheckRecord>(formJson);
+                var queryData = checkRecordService
+                    .GetList(x => x.ProductOrderId == Convert.ToInt32(orderId)).FirstOrDefault();
+                if (queryData == null)
                 {
-                    return Json(new { state = true, obj = strError }, JsonRequestBehavior.AllowGet);
+                    queryData = new T_CheckRecord();
+                    queryData.Sensei = checkRecord.Sensei;
+                    queryData.Scratch = checkRecord.Scratch;
+                    queryData.Bruise = checkRecord.Bruise;
+                    queryData.Speckle = checkRecord.Speckle;
+                    queryData.DownEdge = checkRecord.DownEdge;
+                    queryData.Rust = checkRecord.Rust;
+                    queryData.MissedProcess = checkRecord.MissedProcess;
+                    queryData.Decibel = checkRecord.Decibel;
+                    queryData.Dot = checkRecord.Dot;
+                    queryData.Disaccord = checkRecord.Disaccord;
+                    queryData.Noise = checkRecord.Noise;
+                    queryData.CardPoint = checkRecord.CardPoint;
+                    queryData.ShaftTight = checkRecord.ShaftTight;
+                    queryData.Shake = checkRecord.Shake;
+                    queryData.OutputSize = checkRecord.OutputSize;
+                    queryData.InPutSize = checkRecord.InPutSize;
+                    queryData.NeglectedLoading = checkRecord.NeglectedLoading;
+                    queryData.NotInPlace = checkRecord.NotInPlace;
+                    queryData.Others = checkRecord.Others;
+                    queryData.Minute = checkRecord.Minute;
+                    checkRecordService.Insert(checkRecord);
                 }
                 else
                 {
-                    return Json(new { state = false, obj = strError }, JsonRequestBehavior.AllowGet);
+                    queryData.Sensei = checkRecord.Sensei;
+                    queryData.Scratch = checkRecord.Scratch;
+                    queryData.Bruise = checkRecord.Bruise;
+                    queryData.Speckle = checkRecord.Speckle;
+                    queryData.DownEdge = checkRecord.DownEdge;
+                    queryData.Rust = checkRecord.Rust;
+                    queryData.MissedProcess = checkRecord.MissedProcess;
+                    queryData.Decibel = checkRecord.Decibel;
+                    queryData.Dot = checkRecord.Dot;
+                    queryData.Disaccord = checkRecord.Disaccord;
+                    queryData.Noise = checkRecord.Noise;
+                    queryData.CardPoint = checkRecord.CardPoint;
+                    queryData.ShaftTight = checkRecord.ShaftTight;
+                    queryData.Shake = checkRecord.Shake;
+                    queryData.OutputSize = checkRecord.OutputSize;
+                    queryData.InPutSize = checkRecord.InPutSize;
+                    queryData.NeglectedLoading = checkRecord.NeglectedLoading;
+                    queryData.NotInPlace = checkRecord.NotInPlace;
+                    queryData.Others = checkRecord.Others;
+                    queryData.Minute = checkRecord.Minute;
+                    checkRecordService.Update(checkRecord);
                 }
+                var product = productService.GetById(orderId);
+                product.QulityQty = Convert.ToDecimal(qualityQty);
+                product.Remark = remark;
+                productService.Update(product);
+
+                successResult.Msg = "保存成功!";
+                successResult.Success = true;
             }
             catch (Exception ex)
             {
-                return Json(new { state = false, obj = ex.ToString() }, JsonRequestBehavior.AllowGet);
+                successResult.Msg = ex.Message;
             }
-
+            return Json(successResult);
         }
 
     }

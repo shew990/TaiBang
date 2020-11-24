@@ -1,161 +1,314 @@
-﻿@using BILBasic.Common;
-@using BILWeb.Quality;
-@model T_QualityDetailInfo
-@{
+﻿@{
     ViewBag.Title = "质检单";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
-    PageData<T_QualityDetailInfo> pageData = (PageData<T_QualityDetailInfo>)ViewData["PageData"];
 }
+
+<style type="text/css">
+    .layui-input-block {
+        padding-left: 0px;
+    }
+
+    .layui-form-label {
+        padding-right: 0px;
+    }
+
+    .layui-form-item {
+        margin-bottom: 0px;
+    }
+</style>
+
 <div class="box">
-    <div class="layui-card-body layui-table-body layui-table-main">
-        <div class="layui-card-body">
-            <div class="layui-inline layui-show-xs-block">
-                <input id="ErpVoucherNo" class="layui-input" placeholder="ERP单号">
+    <div style="border-bottom:1px solid black;padding:20px;">
+        <span style="font-size:15px;padding-right:10px;">生产订单</span>
+        <input id="ErpVoucherNo" placeholder="请输入生产单号" style="padding-left: 5px;height:30px;">
+    </div>
+    <div style="border-bottom:1px solid black;padding:10px;">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="orderNo" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">番号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="batchNo" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">数据模板</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="moudle" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">物料号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="materialNo" readonly class="layui-input">
+                    </div>
+                </div>
             </div>
-            <div class="layui-inline layui-show-xs-block">
-                <input id="ErpInVoucherNo" class="layui-input" placeholder="关联单据">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">产线</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="line" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单数量</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="qty" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">已检合格数</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="alreadyQulaityQty" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">未检合格数</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="noQulaityQty" readonly class="layui-input">
+                    </div>
+                </div>
             </div>
-            <div class="layui-inline layui-show-xs-block">
-                <input id="DateFrom" class="layui-input" placeholder="开始时间">
+        </form>
+    </div>
+    <div style="border-bottom:1px solid black;padding:20px;">
+        <form class="layui-form" id="formRecord">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">外观掉漆</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Sensei" placeholder="请输入外观掉漆" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">外观划伤</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Scratch" placeholder="请输入外观划伤" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">外观磕碰伤</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Bruise" placeholder="请输入外观磕碰伤" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">外观污迹</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Speckle" placeholder="请输入外观污迹" class="layui-input">
+                    </div>
+                </div>
             </div>
-            <div class="layui-inline layui-show-xs-block">
-                <input id="DateTo" class="layui-input" placeholder="结束时间">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">外观塌边</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="DownEdge" placeholder="请输入外观塌边" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">外观锈迹</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Rust" placeholder="请输入外观锈迹" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">外观漏工序</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="MissedProcess" placeholder="请输入外观漏工序" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">噪音分贝</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Decibel" placeholder="请输入噪音分贝" class="layui-input">
+                    </div>
+                </div>
             </div>
-            <div class="layui-inline layui-show-xs-block">
-                <button id="Query" class="btn btn-primary">
-                    查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
-                </button>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">噪音打点</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Dot" placeholder="请输入噪音打点" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">噪音不一致</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Disaccord" placeholder="请输入噪音不一致" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">噪音杂音</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Noise" placeholder="请输入噪音杂音" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">卡点卡顿</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="CardPoint" placeholder="请输入卡点卡顿" class="layui-input">
+                    </div>
+                </div>
             </div>
-            <div class="layui-inline layui-show-xs-block">
-                <button id="Close" class="btn btn-primary">
-                    关闭<i class="layui-icon layui-icon-close" style="padding-left:5px;"></i>
-                </button>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">运转轴紧</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ShaftTight" placeholder="请输入运转轴紧" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">运转抖动</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Shake" placeholder="请输入运转抖动" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">输出尺寸</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="OutputSize" placeholder="请输入输出尺寸" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">输入尺寸</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="InPutSize" placeholder="请输入输入尺寸" class="layui-input">
+                    </div>
+                </div>
             </div>
-            @Html.HiddenFor(model => model.VoucherType)
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">装配漏装</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="NeglectedLoading" placeholder="请输入装配漏装" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">装配不到位</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="NotInPlace" placeholder="请输入装配不到位" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">其他原因</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Others" placeholder="请输入其他原因" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">精度弧分</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Minute" placeholder="请输入精度弧分" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div style="padding:10px;">
+        <div style="padding-bottom:10px;">
+            <span style="padding-right:20px;">合格数量</span>
+            <input id="QualityQty" type="number" style="height:30px;padding-left:5px;" placeholder="请输入合格数量">
         </div>
-        <table class="layui-table layui-form" id="qualityTable"></table>
+        <div>
+            <div class="layui-row">
+                <div class="layui-col-md4">
+                    <div div class="layui-row">
+                        <div class="layui-col-md2" style="padding-top:6px;">备注</div>
+                        <div class="layui-col-md10">
+                            <input type="text" id="remark" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4" style="padding-left:10px;">
+                    <button class="btn btn-primary" id="ok">确定</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="~/Content/SCG/js/Common/Operate.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
 <script type="text/javascript">
+    $(function () {
 
-    layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
-        table = layui.table
-            , laydate = layui.laydate
-            , laypage = layui.laypage
-            , layer = layui.layer
-
-        //初始化日期控件
-        laydate.render({
-            elem: '#DateFrom'
-        });
-
-        laydate.render({
-            elem: '#DateTo'
-        });
-
-        tableInit();
-
-        //表格初始化
-        function tableInit() {
-            table.render({
-                elem: '#qualityTable'
-                , height: 520
-                , url: '/QualityDetail/GetData'
-                , method: 'post'
-                , contentType: 'application/json'
-                , where: {
-                    model: {
-                        ErpVoucherNo: $("#ErpVoucherNo").val().trim(),
-                        ErpInVoucherNo: $("#ErpInVoucherNo").val().trim(),
-                        DateFrom: $("#DateFrom").val().trim(),
-                        DateTo: $("#DateTo").val().trim()
-                    }
+        //初始化input下拉选项
+        var availableTags;
+        $.post("/QualityDetail/GetRemarks", function (data) {
+            if (data != null) {
+                availableTags = new Array(data.length);
+                for (var i = 0; i < data.length; i++) {
+                    availableTags[i] = data[i];
                 }
-                , request: {
-                    pageName: 'CurrentPageNumber'
-                    , limitName: 'CurrentPageShowCounts'
-                }
-                , response: {
-                    statusCode: 1
-                }
-                , parseData: function (res) {
-                    return {
-                        "code": res.Result,
-                        "msg": res.ResultValue,
-                        "count": res.PageData.totalCount,
-                        "data": res.Data
-                    };
-                }
-                , title: '库位'
-                , page: true
-                , toolbar: 'false'
-                //, totalRow: true //开启合计行
-                , cols: [[
-                    { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
-                    , { type: 'checkbox', title: '选择', width: 60, fixed: 'left' }
-                    , { field: 'StrongHoldCode', title: '', width: 120, fixed: 'left' }
-                    , { field: 'StrongHoldName', title: '', width: 200 }
-                    , { field: 'ErpVoucherNo', title: 'Erp单号', width: 220 }
-                    , { field: 'QuanQty', title: '', width: 100 }
-                    , { field: 'UnQuanQty', title: '', width: 100 }
-                    , { field: 'CreateTime', title: '创建时间', width: 200 }
-                ]]
+            }
+            else {
+                availableTags = null;
+            }
+            $("#remark").autocomplete({
+                source: availableTags
             });
-        }
+        });
 
-        //分页
-        laypage.render({
-            elem: 'pageDemo'
-            , count: 100
-            , skin: '#1E9FFF'
-            , jump: function (obj, first) {
-                if (!first)
-                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
+        //生产单号回车监听事件
+        var objOrder;
+        $("#ErpVoucherNo").keypress(function (even) {
+            if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
+                $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
+                    objOrder = data;
+                    $("#orderNo").val(data.ErpVoucherNo);
+                    $("#batchNo").val(data.BatchNo);
+                    $("#moudle").val("");
+                    $("#materialNo").val(data.MaterialNo);
+                    $("#line").val(data.LineName);
+                    $("#qty").val(data.ProductQty);
+                    $("#alreadyQulaityQty").val(data.QulityQty);
+                    $("#noQulaityQty").val(data.NoQualityQty);
+                });
             }
         });
 
-        //查询
-        $('#Query').click(function () {
-            tableInit();
-        });
-
-        //关闭
-        $("#Close").click(function () {
-            if ($('input[type=checkbox]:checked').length != 1) {
-                layer.alert("必须选中一行");
+        //确定
+        $("#ok").click(function () {
+            if ($("#ErpVoucherNo").val() == "") {
+                layer.alert("生产订单号不能为空!");
                 return false;
             }
-            if (confirm("确定删除这" + $('input[type=checkbox]:checked').length + "个单据?")) {
-                var ID = "";
-                $.each($('input:checkbox:checked'), function () {
-                    ID = $(this).val();
-                });
-                $.ajax({
-                    type: "POST",
-                    url: "CloseQuality?ID=" + ID,
-                    date: null,
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        layer.alert(data.obj);
-                        if (data.Status) {
-                            //window.location.reload();
-                        }
-                    },
-                    fail: function () {
-                        layer.alert("提交失败！")
-                    }
-                });
+            if ($("#QualityQty").val() == "") {
+                layer.alert("合格数量不能为空!");
+                return false;
             }
-        })
-
-        //回车事件绑定
-        $("input").bind('keyup', function (event) {
-            if (event.keyCode == "13")
-                tableInit();
+            if ($("#remark").val() == "") {
+                layer.alert("备注不能为空!");
+                return false;
+            }
+            if (objOrder == null || objOrder == "") {
+                layer.alert("请先输入查询订单获取订单数据,再提交!");
+                return false;
+            }
+            if (Number($("#QualityQty").val()) > objOrder.ProductQty) {
+                layer.alert("合格数量不能大于订单数量!");
+                return false;
+            }
+            var formData = {};
+            var t = $('#formRecord').serializeArray();
+            $.each(t, function () {
+                formData[this.name] = this.value;
+            });
+            $.post("/QualityDetail/Submit",
+                {
+                    formJson: JSON.stringify(formData), orderId: objOrder.id,
+                    qualityQty: $("#QualityQty").val(), remark: $("#remark").val()
+                },
+                function (data) {
+                    layer.alert(data.Msg);
+                })
         });
-    });
-
+    })
 </script>

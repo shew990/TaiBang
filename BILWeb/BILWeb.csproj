@@ -51,9 +51,8 @@
     <Reference Include="Oracle.ManagedDataAccess">
       <HintPath>..\BILBasic\DLL\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
-    <Reference Include="SqlSugar, Version=4.6.4.7, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ExcelToDatabase\ORMDemo\ORMDemo\bin\Debug\SqlSugar.dll</HintPath>
+    <Reference Include="SqlSugar, Version=5.0.1.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\sqlSugar.5.0.1.3\lib\SqlSugar.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -154,13 +153,9 @@
     <Compile Include="House\IHouseService.cs" />
     <Compile Include="IBaseService.cs" />
     <Compile Include="Quality\IQualityDetailService.cs" />
-    <Compile Include="View_Product\ICheckRecord.cs" />
     <Compile Include="View_Product\IProductService.cs" />
     <Compile Include="View_Product\IProductDerailService.cs" />
     <Compile Include="View_Product\IView_ProductService.cs" />
-    <Compile Include="View_Product\CheckRecord_DB.cs" />
-    <Compile Include="View_Product\CheckRecord_Func.cs" />
-    <Compile Include="View_Product\CheckRecord_Model.cs" />
     <Compile Include="View_Product\Product_DB.cs" />
     <Compile Include="View_Product\ProductDerail_DB.cs" />
     <Compile Include="View_Product\Product_Func.cs" />

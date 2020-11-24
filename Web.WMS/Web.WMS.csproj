@@ -1243,6 +1243,7 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
+    <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -1407,6 +1408,10 @@
     <ProjectReference Include="..\Factory\Factory.csproj">
       <Project>{f21b8328-ec47-43a5-b28d-462a66b6a686}</Project>
       <Name>Factory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SqlSugarDAL\SqlSugarDAL.csproj">
+      <Project>{9ff74a45-9515-4da5-8e2e-913a05e6ba94}</Project>
+      <Name>SqlSugarDAL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
