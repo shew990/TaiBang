@@ -4,51 +4,82 @@
 }
 
 <style type="text/css">
-    input {
-        margin-left: 5px;
+    .layui-input-block {
+        padding-left: 0px;
+    }
+
+    .layui-form-label {
+        padding-right: 0px;
+    }
+
+    .layui-form-item {
+        margin-bottom: 0px;
     }
 </style>
 
 <div class="box">
     <div style="border-bottom:1px solid black;padding:20px;">
-        <span style="font-size:15px;">生产订单</span>
-        <input id="ErpVoucherNo" placeholder="生产单号">
+        <span style="font-size:15px;padding-right:10px;">生产订单</span>
+        <input id="ErpVoucherNo" placeholder="请输入生产单号" style="padding-left: 5px;height:30px;">
     </div>
-    <div style="border-bottom:1px solid black;padding:20px;">
-        <div class="layui-row">
-            <div class="layui-col-md4">
-                订单号<input id="orderNo" readonly="readonly">
-            </div>
-            <div class="layui-col-md4">
-                番号<input id="batchNo" readonly="readonly">
-            </div>
-            <div class="layui-col-md4">
-                检验数据模板<input id="moudle" readonly="readonly">
-            </div>
-        </div>
-        <div class="layui-row">
-            <div class="layui-col-md4">
-                物料号<input id="materialNo" readonly="readonly">
-            </div>
-            <div class="layui-col-md4">
-                产线<input id="line" readonly="readonly">
-            </div>
-            <div class="layui-col-md4">
-                订单数量<input id="qty" readonly="readonly">
-            </div>
-        </div>
-        <div class="layui-row">
-            <div class="layui-col-md4">
-                已检合格数<input id="alreadyQulaityQty" readonly="readonly">
-            </div>
-            <div class="layui-col-md4">
-                未检合格数<input id="noQulaityQty" readonly="readonly">
-            </div>
-        </div>
-    </div>
-    <div style="border-bottom:1px solid black;padding:20px;">
-
+    <div style="border-bottom:1px solid black;padding:10px;">
         <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="orderNo" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">番号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="batchNo" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">数据模板</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="moudle" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">物料号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="materialNo" readonly class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">产线</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="line" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单数量</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="qty" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">已检合格数</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="alreadyQulaityQty" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">未检合格数</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="noQulaityQty" readonly class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div style="border-bottom:1px solid black;padding:20px;">
+        <form class="layui-form" id="formRecord">
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">外观掉漆</label>
@@ -121,7 +152,7 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">运转卡点卡顿</label>
+                    <label class="layui-form-label">卡点卡顿</label>
                     <div class="layui-input-block">
                         <input type="text" name="title" required lay-verify="required" placeholder="请输入外观污迹" autocomplete="off" class="layui-input">
                     </div>
@@ -141,13 +172,13 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">安装输出尺寸</label>
+                    <label class="layui-form-label">输出尺寸</label>
                     <div class="layui-input-block">
                         <input type="text" name="title" required lay-verify="required" placeholder="请输入外观磕碰伤" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">安装输入尺寸</label>
+                    <label class="layui-form-label">输入尺寸</label>
                     <div class="layui-input-block">
                         <input type="text" name="title" required lay-verify="required" placeholder="请输入外观污迹" autocomplete="off" class="layui-input">
                     </div>
@@ -181,9 +212,10 @@
             </div>
         </form>
     </div>
-    <div style="padding:20px;">
+    <div style="padding:10px;">
         <div style="padding-bottom:10px;">
-            检验合格数量<input id="QualityQty" type="number" style="height:30px;" placeholder="检验合格数量">
+            <span style="padding-right:20px;">合格数量</span>
+            <input id="QualityQty" type="number" style="height:30px;padding-left:5px;" placeholder="请输入合格数量">
         </div>
         <div>
             <div class="layui-row">
@@ -191,10 +223,7 @@
                     <div div class="layui-row">
                         <div class="layui-col-md2" style="padding-top:6px;">备注</div>
                         <div class="layui-col-md10">
-                            <select>
-                                <option value="0">北京</option>
-                                <option value="1">上海</option>
-                            </select>
+                            <input type="text" id="remark" required lay-verify="required" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -208,27 +237,51 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#ErpVoucherNo").keypress(function (even) {
-            if (even.which == 13) {
-                if ($("#ErpVoucherNo").val() == "") {
-                    layer.alert("输入框不能为空!");
-                    return false;
-                }
-                $.post("", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
-                    //赋值
 
-                })
+        //初始化input下拉选项
+        var availableTags;
+        $.post("/QualityDetail/GetRemarks", function (data) {
+            if (data != null) {
+                availableTags = new Array(data.length);
+                for (var i = 0; i < data.length; i++) {
+                    availableTags[i] = data[i];
+                }
+            }
+            else {
+                availableTags = null;
+            }
+            $("#remark").autocomplete({
+                source: availableTags
+            });
+        });
+
+        //生产单号回车监听事件
+        $("#ErpVoucherNo").keypress(function (even) {
+            if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
+                $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
+                    $("#orderNo").val(data.ErpVoucherNo);
+                    $("#batchNo").val(data.BatchNo);
+                    $("#moudle").val("");
+                    $("#materialNo").val(data.MaterialNo);
+                    $("#line").val(data.LineName);
+                    $("#qty").val(data.ProductQty);
+                    $("#alreadyQulaityQty").val(data.QulityQty);
+                    $("#noQulaityQty").val(data.NoQualityQty);
+                });
             }
         });
 
+        //确定
         $("#ok").click(function () {
             if ($("#ErpVoucherNo").val() == "") {
-                layer.alert("输入框不能为空!");
+                layer.alert("生产订单号不能为空!");
                 return false;
             }
-            $.post("", { formJosn: $("#articleForm").serialize() }, function (data) {
-
-            })
+            $.post("/QualityDetail/Submit",
+                { formJosn: $("#formRecord").serialize(), orderNo: $("#ErpVoucherNo").val() },
+                function (data) {
+                    layer.alert(data.Msg);
+                })
         });
     })
 </script>
