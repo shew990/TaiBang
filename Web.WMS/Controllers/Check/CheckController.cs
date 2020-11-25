@@ -194,6 +194,7 @@ namespace Web.WMS.Controllers
             tfun.GetCheckAnalyze(model, ref page, ref modelList, ref strError);
             ViewData["PageData"] = new PageData<CheckAnalyze> { data = modelList, dividPage = page, link = Common.PageTag.ModelToUriParam(model, "/Check/CheckAnalyze") };
             return View("CheckAnalyze", model);
+
         }
         public ActionResult PageView1(PageData<CheckAnalyze> model)
         {
