@@ -77,6 +77,8 @@ namespace BILWeb.Product
 
         public decimal PrintQty { get; set; }
 
+        public String ProductBatch { get; set; }
+
     }
 }
 

@@ -127,7 +127,7 @@ namespace BILWeb.Product
                 model.SerialNo = code;
                 model.Creater = user.UserNo;
                 model.ReceiveTime = DateTime.Now;
-                model.BarCode = "2@" + model.MaterialNo+ "@" + model.Qty + "@" + model.SerialNo;
+                model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
                 model.RowNo = "1";
                 model.RowNoDel = "1";
                 model.BarcodeType = 1;
@@ -136,7 +136,8 @@ namespace BILWeb.Product
                 if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
                 {
                     //修改关联量，插入记录表
-                    if (updateproduct(modelList, model.BarCode)) {
+                    if (updateproduct(modelList, model.BarCode))
+                    {
                         return true;
                     }
                     else
@@ -157,12 +158,12 @@ namespace BILWeb.Product
         }
 
 
-        public bool updateproduct(T_Product product,string fserialno)
+        public bool updateproduct(T_Product product, string fserialno)
         {
             try
             {
                 List<string> sqls = new List<string>();
-                string strsql1 = "update T_Product set LinkQty=LinkQty+"+ product.ScanQty + " where erpvoucherno='" + product.ErpVoucherNo + "';";
+                string strsql1 = "update T_Product set LinkQty=LinkQty+" + product.ScanQty + " where erpvoucherno='" + product.ErpVoucherNo + "';";
                 sqls.Add(strsql1);
                 product.Detail.ForEach(item =>
                 {
@@ -230,7 +231,7 @@ namespace BILWeb.Product
 
             T_Product.PackQty = (decimal)dbFactory.ToModelValue(reader, "PackQty");
             T_Product.Strstatus = (string)dbFactory.ToModelValue(reader, "Strstatus");
-
+            T_Product.ProductBatch = (string)dbFactory.ToModelValue(reader, "ProductBatch");
 
             return T_Product;
         }
@@ -312,7 +313,7 @@ namespace BILWeb.Product
             {
                 List<string> sqls = new List<string>();
                 int ID = base.GetTableIDBySqlServer("t_batch");
-                string sqlhead = "SET IDENTITY_INSERT t_batch on ;insert into t_batch(id,batchno,ProductBatch,CREATETIME) VALUES ("+ ID + ",'" + batch + "','" + ProductBatch + "',getdate()) SET IDENTITY_INSERT t_batch off ";
+                string sqlhead = "SET IDENTITY_INSERT t_batch on ;insert into t_batch(id,batchno,ProductBatch,CREATETIME) VALUES (" + ID + ",'" + batch + "','" + ProductBatch + "',getdate()) SET IDENTITY_INSERT t_batch off ";
                 sqls.Add(sqlhead);
                 int i = dbFactory.ExecuteNonQueryList(sqls);
                 if (i == -2)
@@ -326,7 +327,7 @@ namespace BILWeb.Product
             }
 
         }
-        
+
         public string getSqu(string ss)
         {
             if (ss.Length >= 8)
@@ -345,7 +346,7 @@ namespace BILWeb.Product
             try
             {
                 List<string> sqls = new List<string>();
-                string strsql = "update T_Product set Strstatue='关闭' where erpvoucherno='"+ ErpVoucherno + "'";
+                string strsql = "update T_Product set Strstatue='关闭' where erpvoucherno='" + ErpVoucherno + "'";
                 sqls.Add(strsql);
                 int i = dbFactory.ExecuteNonQueryList(sqls);
                 if (i == -2)

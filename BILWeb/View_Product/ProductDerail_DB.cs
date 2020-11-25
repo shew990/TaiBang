@@ -52,6 +52,7 @@ namespace BILWeb.Product
             t_ProductDetail.ProMaterialName = (string)dbFactory.ToModelValue(reader, "ProMaterialName");
             t_ProductDetail.ProSpec = (string)dbFactory.ToModelValue(reader, "ProSpec");
             t_ProductDetail.ProMaterialDesc = (string)dbFactory.ToModelValue(reader, "ProMaterialDesc");
+            t_ProductDetail.ProductBatch = (string)dbFactory.ToModelValue(reader, "ProductBatch");
             return t_ProductDetail;
         }
 
