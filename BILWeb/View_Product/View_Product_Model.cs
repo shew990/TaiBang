@@ -84,23 +84,12 @@ namespace BILWeb.View_Product
         /// <summary>
         /// 加密番号
         /// </summary>
-        public String ProductBatch
-        {
-            get
-            {
-                return new T_Product_DB().GetBatchno(this.BatchNo);
-            }
-        }
+        public String ProductBatch { get; set; }
 
         /// <summary>
-        /// 打印类型(0:内盒，1：本体)
+        /// 打印张数
         /// </summary>
-        public Int32 PrintType { get; set; }
-
-        /// <summary>
-        /// 尺寸类型（0：尺寸1，1：尺寸2）
-        /// </summary>
-        public Int32 SizeType { get; set; }
+        public Int32 PrintQty { get; set; }
 
     }
 }

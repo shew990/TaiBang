@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "内盒明细";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
+    var printIP = System.Web.HttpContext.Current.Session["printIP"];
 }
 <style type="text/css">
     .layui-container {
@@ -12,7 +13,7 @@
         font-size: 16px;
     }
 </style>
-
+<input type="hidden" id="printIP" value="@printIP" />
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
         <div class="layui-card-body">
@@ -27,18 +28,6 @@
             </div>
             <div class="layui-inline layui-show-xs-block">
                 <input id="HeadMaterialName" class="layui-input" placeholder="外箱物料名称">
-            </div>
-            <div class="layui-inline layui-show-xs-block">
-                <select id="PrintType" lay-verify="required">
-                    <option value="0">内盒打印</option>
-                    <option value="1">本体打印</option>
-                </select>
-            </div>
-            <div class="layui-inline layui-show-xs-block">
-                <select id="sizeType" lay-verify="required">
-                    <option value="0">尺寸1</option>
-                    <option value="1">尺寸2</option>
-                </select>
             </div>
             <div class="layui-inline layui-show-xs-block">
                 <button id="Query" class="btn btn-primary">
@@ -182,11 +171,9 @@
                 layer.alert("打印张数不能为空!");
                 return false;
             }
-            PurObject.PrintType = $("#printType").val();
-            PurObject.SizeType = $("#sizeType").val();
-            console.log(JSON.stringify(PurObject));
-            openPostWindow($("#printIP").val() + "/Main.aspx", "quality", JSON.stringify(PurObject));
-        })
+            PurObject.PrintQty = $('#qty').val();
+            openPostWindow($("#printIP").val() + "Main.aspx", "quality", JSON.stringify(PurObject));
+        });
 
         //回车事件绑定
         $("input").bind('keyup', function (event) {
@@ -195,13 +182,19 @@
         });
     });
 
-    function openPostWindow(url, data, name) {
-        var formStr = '<form style="visibility:hidden;" method="POST" action="' + url + '">' +
-            '<input type="hidden" name="' + name + '" value="' + encodeURI(data) + '" />' +
-            '</form>';
-        var win = window.open("");
-        win.document.body.innerHTML = formStr;
-        win.document.forms[0].submit();
+    function openPostWindow(url, keys, values) {
+        var newWindow = window.open(url, name);
+        if (!newWindow)
+            return false;
+        var html = "";
+        html += "<html><head></head><body><form id='formid' method='post' action='" + url + "'>";
+        if (keys && values) {
+            html += "<input type='hidden' name='" + keys + "' value='" + values + "'/>";
+        }
+        html += "</form><script type='text/javascript'>document.getElementById('formid').submit();";
+        html += "<\/script></body></html>".toString().replace(/^.+?\*|\\(?=\/)|\*.+?$/gi, "");
+        newWindow.document.write(html);
+        return newWindow;
     };
 </script>
 
