@@ -53,8 +53,8 @@ namespace BILWeb.Product
         public List<T_ProductDetail> Detail { get; set; }
         public List<T_OutBarCodeInfo> lstBarCode { get; set; }
 
+        public String ProductBatch { get; set; }
 
- 
 
 
 
