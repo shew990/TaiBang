@@ -19,6 +19,7 @@ namespace BILWeb.Area
     public partial class T_Area_DB : BILBasic.Basing.Factory.Base_DB<T_AreaInfo>
     {
 
+
         /// <summary>
         /// 添加T_AREA
         /// </summary>
