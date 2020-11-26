@@ -226,6 +226,14 @@ namespace UnitTestProject1
         #endregion
 
         #region 下架
+        [TestMethod]
+        public void 下架获取库存()
+        {
+            T_Stock_Func tfunc = new T_Stock_Func();
+            tfunc.GetStockModelBySql("{\"AreaID\":0,\"AreaType\":0,\"BarCodeType\":0,\"Barcode\":\"2@JMF1903-0558@10.0@1123782189db\",\"CheckID\":0,\"FromAreaID\":0,\"FromHouseID\":0,\"FromWareHouseID\":0,\"HouseID\":0,\"HouseProp\":0,\"IsAmount\":0,\"IsDel\":0,\"IsLimitStock\":0,\"IsPalletOrBox\":0,\"OldStockID\":0,\"OutstockDetailID\":0,\"OutstockHeaderID\":0,\"PickModel\":0,\"ReceiveStatus\":0,\"ReturnType\":0,\"ScanType\":2,\"StockBarCodeStatus\":0,\"TaskDetailesID\":0,\"TransferDetailsID\":0,\"WareHouseID\":0,\"ErpLineStatus\":0,\"HeaderID\":0,\"ID\":0,\"LineStatus\":0,\"MaterialNoID\":0,\"Status\":0,\"StockType\":0,\"TerminateReasonID\":0,\"VoucherType\":0}");
+        }
+
+
 
         //下架提交
         [TestMethod]
@@ -448,28 +456,7 @@ namespace UnitTestProject1
         }
 
 
-        [TestMethod]
-        public void GetStockModelADF()
-        {
-            //string strError = "";
-            //T_StockInfo model = new T_StockInfo();
-            //model.Barcode = "30000000000AAAOAF00000000J5U19112503002529";
-            //model.JBarCode = "";
-            //model.ScanType = 2;
-            //model.AreaID = 7;
-            //model.WareHouseID = 8;
-            //model.HouseProp = 1;
 
-            //string strBarcode =  BILBasic.JSONUtil.JSONHelper.ObjectToJson<T_StockInfo>(model);
-            T_Stock_Func tfunc = new T_Stock_Func();
-            tfunc.GetStockModelBySql("{\"AreaID\":0,\"AreaType\":0,\"BarCodeType\":0,\"Barcode\":\"2005231347011317213801\",\"CheckID\":0,\"FromAreaID\":0,\"FromHouseID\":0,\"FromWareHouseID\":0,\"HouseID\":0,\"HouseProp\":0,\"IsAmount\":0,\"IsDel\":0,\"IsLimitStock\":0,\"IsPalletOrBox\":0,\"OldStockID\":0,\"OutstockDetailID\":0,\"OutstockHeaderID\":0,\"PickModel\":0,\"ReceiveStatus\":0,\"ReturnType\":0,\"ScanType\":2,\"StockBarCodeStatus\":0,\"TaskDetailesID\":0,\"TransferDetailsID\":0,\"WareHouseID\":0,\"ErpLineStatus\":0,\"HeaderID\":0,\"ID\":0,\"LineStatus\":0,\"MaterialNoID\":0,\"Status\":0,\"StockType\":0,\"TerminateReasonID\":0,\"VoucherType\":0}");
-
-
-            //T_Stock_Func tfunc = new T_Stock_Func();
-            //string strResult = tfunc.GetStockModelBySql("{\"AreaID\":0,\"AreaType\":0,\"BarCodeType\":0,\"Barcode\":\"2004281736151906067801\",\"CheckID\":0,\"FromAreaID\":0,\"FromHouseID\":0,\"FromWareHouseID\":0,\"HouseID\":0,\"HouseProp\":0,\"IsAmount\":0,\"IsDel\":0,\"IsLimitStock\":0,\"IsPalletOrBox\":0,\"OldStockID\":0,\"OutstockDetailID\":0,\"OutstockHeaderID\":0,\"PickModel\":0,\"ReceiveStatus\":0,\"ReturnType\":0,\"ScanType\":2,\"StockBarCodeStatus\":0,\"TaskDetailesID\":0,\"TransferDetailsID\":0,\"WareHouseID\":0,\"ErpLineStatus\":0,\"HeaderID\":0,\"ID\":0,\"LineStatus\":0,\"MaterialNoID\":0,\"Status\":0,\"StockType\":0,\"TerminateReasonID\":0,\"VoucherType\":0}");
-
-
-        }
 
         [TestMethod]
         public void SaveT_StockADF()
