@@ -121,16 +121,15 @@ namespace Web.WMS.Controllers.Print
                 DateTime time = DateTime.Now;
                 foreach (var item in barcodes)
                 {
-                    var serialnos = GetSerialnos((item.Qty / item.InnerPackQty + 1).ToString());
+                    int count = item.Qty % item.InnerPackQty == 0 ?
+                     Convert.ToInt32(item.Qty / item.InnerPackQty) : Convert.ToInt32(item.Qty / item.InnerPackQty) + 1;
+                    var serialnos = GetSerialnos(count.ToString());//多条序列号
                     var material = new MaterialService()
                         .GetList(x => x.MATERIALNO == item.MaterialNo && x.STRONGHOLDCODE == item.StrongHoldCode)
                         .FirstOrDefault();
                     if (material == null)
-                        throw new Exception("没有物料编号为" + item.MaterialNo + "的数据");
+                        throw new Exception("没有物料编号为" + item.MaterialNo + "的物料!");
 
-                    int count = item.Qty % item.InnerPackQty == 0
-                        ? Convert.ToInt32(item.Qty / item.InnerPackQty)
-                        : Convert.ToInt32(item.Qty / item.InnerPackQty) + 1;
                     for (int i = 0; i < count; i++)
                     {
                         T_OutBarcode barcode = new T_OutBarcode();
@@ -176,7 +175,6 @@ namespace Web.WMS.Controllers.Print
             decimal Vnum = Convert.ToDecimal(v);
             int VZ = (int)Vnum / 1;
             decimal VL = Vnum % 1;
-
             List<string> serialnos = new List<string>();
             for (int i = 0; i < VZ; i++)
             {
