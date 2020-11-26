@@ -104,10 +104,25 @@
                         layer.alert(msg.Msg);
                         return false;
                     }
-                    window.open($("#printIP").val() + "Main.aspx?flag=First&parameter1=" + msg.Data);
+                    openPostWindow($("#printIP").val() + "Main.aspx", "stock", msg.Data);
                 });
             };
         });
     });
+
+    function openPostWindow(url, keys, values) {
+        var newWindow = window.open(url, name);
+        if (!newWindow)
+            return false;
+        var html = "";
+        html += "<html><head></head><body><form id='formid' method='post' action='" + url + "'>";
+        if (keys && values) {
+            html += "<input type='hidden' name='" + keys + "' value='" + values + "'/>";
+        }
+        html += "</form><script type='text/javascript'>document.getElementById('formid').submit();";
+        html += "<\/script></body></html>".toString().replace(/^.+?\*|\\(?=\/)|\*.+?$/gi, "");
+        newWindow.document.write(html);
+        return newWindow;
+    };
 
 </script>

@@ -17,7 +17,7 @@ namespace Web.WMS.Controllers
     [RoleActionFilter(Message = "Check/Check")]
     public class CheckController : Controller
     {
-         UserInfo currentUser = Common.Commom.ReadUserInfo();
+        UserInfo currentUser = Common.Commom.ReadUserInfo();
         Check_DB tfun = new Check_DB();
 
         public ActionResult PageView(PageData<Check_Model> model)
@@ -95,8 +95,8 @@ namespace Web.WMS.Controllers
                 rowtemp.CreateCell(15).SetCellValue(lstExport[i].YQTY == null ? "" : lstExport[i].YQTY.ToString());
                 rowtemp.CreateCell(16).SetCellValue(lstExport[i].KQTY == null ? "" : lstExport[i].KQTY.ToString());
                 rowtemp.CreateCell(17).SetCellValue(lstExport[i].Creater == null ? "" : lstExport[i].Creater.ToString());
-                
-                
+
+
             }
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
@@ -108,7 +108,7 @@ namespace Web.WMS.Controllers
 
 
         [HttpPost]
-        public ActionResult Add(Check_Model model,string strAll)
+        public ActionResult Add(Check_Model model, string strAll)
         {
             model.CHECKSTATUS = "新建";
             model.CHECKTYPE = "货位";
@@ -122,7 +122,7 @@ namespace Web.WMS.Controllers
                     CheckArea_Model m = new CheckArea_Model();
                     string[] strsp2 = item.Split(',');
                     m.AREANO = strsp2[1];
-                    m.ID =Convert.ToInt32(strsp2[0]);
+                    m.ID = Convert.ToInt32(strsp2[0]);
                     list.Add(m);
                 }
             }
@@ -130,7 +130,7 @@ namespace Web.WMS.Controllers
             bool bSucc = tfun.SaveCheck(model, list, ref ErrMsg);
             if (!bSucc)
             {
-                ErrMsg="保存失败！" + ErrMsg;
+                ErrMsg = "保存失败！" + ErrMsg;
             }
             else
             {
@@ -158,11 +158,11 @@ namespace Web.WMS.Controllers
             string ErrMsg = "";
             if (tfun.DelCloCheck(CHECKNO, 1, ref ErrMsg, ""))
             {
-                ErrMsg="终止成功！";
+                ErrMsg = "终止成功！";
             }
             else
             {
-                ErrMsg = "终止失败！"+ErrMsg;
+                ErrMsg = "终止失败！" + ErrMsg;
             }
             return Json(ErrMsg, JsonRequestBehavior.AllowGet);
         }
@@ -173,15 +173,16 @@ namespace Web.WMS.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetModel (Check_Model model)
+        public ActionResult GetModel(Check_Model model)
         {
             Check_Func db = new Check_Func();
             ViewData["Taskno"] = db.GetTableID("SEQ_CHECK_NO").ToString();
             return View();
         }
 
-        
-        public JsonResult GetDetail(int Svalue,string areano,string houseno,string warehouseno) {
+
+        public JsonResult GetDetail(int Svalue, string areano, string houseno, string warehouseno)
+        {
             Thread.Sleep(5000);
             List<CheckArea_Model> lsttask = new List<CheckArea_Model>();
             tfun.GetCheckArea(Svalue, areano, houseno, warehouseno, ref lsttask);
@@ -204,10 +205,11 @@ namespace Web.WMS.Controllers
             return View("_ViewPage");
         }
 
-        public JsonResult tiaozheng(string CHECKNO) {
+        public JsonResult tiaozheng(string CHECKNO)
+        {
             if (currentUser == null)
             {
-                return Json("Cookie失效，重新登陆！" , JsonRequestBehavior.AllowGet);
+                return Json("Cookie失效，重新登陆！", JsonRequestBehavior.AllowGet);
             }
             string ErrMsg = "";
             Check_DB db = new Check_DB();
@@ -220,7 +222,7 @@ namespace Web.WMS.Controllers
                 return Json(ErrMsg, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
         public JsonResult tiaozheng_ms(string CHECKNO)
         {
             if (currentUser == null)
@@ -231,7 +233,7 @@ namespace Web.WMS.Controllers
             Check_DB db = new Check_DB();
             if (db.DelCloCheck_MsTest(CHECKNO, 2, ref ErrMsg, currentUser.UserNo))
             {
-                return Json("调整成功！"+ ErrMsg, JsonRequestBehavior.AllowGet);
+                return Json("调整成功！" + ErrMsg, JsonRequestBehavior.AllowGet);
             }
             else
             {
@@ -242,24 +244,32 @@ namespace Web.WMS.Controllers
 
 
         #region 物料盘点
-        //获取盘点库存信息
+
+        /// <summary>
+        /// 跳转新建明盘单
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetModelMing()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 获取盘点库存信息
+        /// </summary>
+        /// <param name="tm"></param>
+        /// <returns></returns>
         private JsonResult GetCheckStock(T_StockInfoEX tm)
         {
-            //参数//tm.MaterialNo //tm.StrongHoldCode  //tm.HouseNo //tm.AreaNo //tm.WarehouseNo //tm.BatchNo
+            //参数=>tm.MaterialNo //tm.StrongHoldCode  //tm.HouseNo //tm.AreaNo //tm.WarehouseNo //tm.BatchNo
             try
             {
                 string strErrMsg = string.Empty;
                 List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
                 if (db.GetStockCombineInfo2(tm, ref lsttask, ref strErrMsg))
-                {
-                    return Json(new { state = true,data= lsttask }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new { state = false, Msg = strErrMsg }, JsonRequestBehavior.AllowGet);
-                }
-        
+                    return Json(new { state = true, data = lsttask }, JsonRequestBehavior.AllowGet);
+                return Json(new { state = false, Msg = strErrMsg }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -280,19 +290,13 @@ namespace Web.WMS.Controllers
                 string ErrMsg = "";
                 Check_DB db = new Check_DB();
                 if (db.SaveCheck2(cm, list, ref ErrMsg))
-                {
                     return Json(new { state = true }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new { state = false }, JsonRequestBehavior.AllowGet);
-                }
+                return Json(new { state = false }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 return Json(new { state = false, Msg = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
-
         }
 
         #endregion
