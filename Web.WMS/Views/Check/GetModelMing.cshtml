@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "GetModelMing";
+    Layout = "~/Views/Shared/_LayoutLayui.cshtml";
+}
+
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">据点编号</label>
+            <div class="layui-input-block">
+                <input type="text" id="StrongHoldCode" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">产品编号</label>
+            <div class="layui-input-block">
+                <input type="text" id="MaterialNo" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">仓库编号</label>
+            <div class="layui-input-block">
+                <input type="text" id="WarehouseNo" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">库区编号</label>
+            <div class="layui-input-block">
+                <input type="text" id="HouseNo" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">库位编号</label>
+            <div class="layui-input-block">
+                <input type="text" id="AreaNo" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">场内批号</label>
+            <div class="layui-input-block">
+                <input type="text" id="BatchNo" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <input type="button" class="btn btn-primary" value="查 询">
+        </div>
+    </div>
+</form>
+<table class="layui-hide" id="checkTable" lay-filter="init"></table>
+
+<script>
+    layui.use(['laypage', 'layer', 'table'], function () {
+        table = layui.table
+            , laypage = layui.laypage
+            , layer = layui.layer
+
+        tableInit();
+
+        //表格初始化
+        function tableInit() {
+            table.render({
+                elem: '#checkTable'
+                , height: 520
+                , url: '/StockDetail/GetCheckStock'
+                , method: 'post'
+                , contentType: 'application/json'
+                , where: {
+                    model: {
+                        MaterialNo: $("#MaterialNo").val().trim(),
+                        StrongHoldCode: $("#StrongHoldCode").val().trim(),
+                        WarehouseNo: $("#WarehouseNo").val().trim(),
+                        HouseNo: $("#HouseNo").val().trim(),
+                        AreaNo: $("#AreaNo").val().trim(),
+                        BatchNo: $("#BatchNo").val().trim()
+                    }
+                }
+                , request: {
+                    pageName: 'CurrentPageNumber'
+                    , limitName: 'CurrentPageShowCounts'
+                }
+                , response: {
+                    statusCode: 1
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.Result,
+                        "msg": res.ResultValue,
+                        "count": res.PageData.totalCount,
+                        "data": res.Data
+                    };
+                }
+                , title: '库位'
+                , page: true
+                , toolbar: 'false'
+                , cols: [
+                    [
+                        { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
+                        , { type: 'checkbox', width: 60, fixed: 'left' }
+                        , { field: 'StrongHoldCode', title: '据点编号', width: 120, fixed: 'left' }
+                        , { field: 'MaterialNo', title: '产品编号', width: 120 }
+                        , { field: 'MaterialName', title: '产品名称', width: 120 }
+                        , { field: 'BatchNo', title: '场内批号', width: 120 }
+                        , { field: '', title: '到期时间', width:200 }
+                        , { field: 'Qty', title: '数量', width: 120 }
+                        , { field: '', title: '序列号数', width: 80 }
+                        , { field: '', title: '检验状态', width: 80 }
+                        , { field: 'AreaNo', title: '库位', width: 120 }
+                        , { field: 'HouseNo', title: '库区', width: 120 }
+                        , { field: 'WarehouseNo', title: '仓库', width: 120 }
+                    ]
+                ]
+            });
+        }
+
+        //监听行工具事件
+        table.on('tool(init)', function (obj) {
+            if (obj.event === 'stamp') {
+                layer.alert('查看操作');
+            }
+        });
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo'
+            , count: 100
+            , skin: '#1E9FFF'
+            , jump: function (obj, first) {
+                if (!first)
+                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
+            }
+        });
+
+        //查询
+        $('#Query').click(function () {
+            tableInit();
+        });
+
+        //回车事件绑定
+        $("input").bind('keyup', function (event) {
+            if (event.keyCode == "13")
+                tableInit();
+        });
+    });
+</script>
+

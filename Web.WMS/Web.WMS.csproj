@@ -1368,6 +1368,7 @@
     <Content Include="Views\PrintYS\GetModelList.cshtml" />
     <Content Include="Views\QualityDetail\GetModelList.cshtml" />
     <Content Include="Views\ProductOrders\GetModelList.cshtml" />
+    <Content Include="Views\Check\GetModelMing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

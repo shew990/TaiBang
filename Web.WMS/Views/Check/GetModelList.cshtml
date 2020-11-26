@@ -25,14 +25,10 @@
                 </div>
             </form>
             <P>
-                @Html.ActionLink("新 建", "getmodel", null, new { @class = "btn bg-olive margin xinzen" })
+                @Html.ActionLink("新建暗盘单", "getmodel", null, new { @class = "btn bg-olive margin xinzen" })
+                @Html.ActionLink("新建明盘单", "getmodelming", null, new { @class = "btn bg-olive margin xinzen" })
                 <button class="btn bg-blue margin shuaxin">刷新</button>
-                @*<button class="btn bg-olive margin chakan" onclick="chakan()">查看结果</button>*@
-                @*<button class="btn bg-olive margin fupan" onclick="fupan()">复盘</button>*@
-                @*@Html.ActionLink("盈亏分析", "CheckAnalyze", null, new { @class = "btn bg-olive margin fenxi" })*@
                 <button class="btn bg-olive margin fenxi" onclick="fenxi()">盈亏分析</button>
-                @*<button class="btn bg-olive margin yiju" onclick="yiju()">盘点依据</button>*@
-                @*<button class="btn bg-olive margin daochu" onclick="daochu()">导出盘点单</button>*@
                 <button class="btn bg-red margin shanchu" onclick="shanchu()">删除</button>
                 <button class="btn bg-red margin zhongzhi" onclick="zhongzhi()">终止</button>
             </P>
@@ -66,8 +62,6 @@
                                     <td>@Row.CREATETIME</td>
                                     <td>@Row.CDONETIME</td>
                                     <td>@Row.REMARKS</td>
-                                    @*<td>@Html.ActionLink("编辑", "getmodel", "area", new { ID = Row.ID }, null) </td>*@
-
                                 </tr>
                             }
                         }
