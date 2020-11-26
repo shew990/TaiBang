@@ -27,7 +27,7 @@ namespace BILWeb.OutStockTask
             throw new NotImplementedException();
         }
 
-        protected override List<string> GetSaveSql(UserModel user,ref  T_OutStockTaskDetailsInfo model)
+        protected override List<string> GetSaveSql(UserModel user, ref T_OutStockTaskDetailsInfo model)
         {
             string strSql = string.Empty;
             List<string> lstSql = new List<string>();
@@ -38,8 +38,8 @@ namespace BILWeb.OutStockTask
             }
             else
             {
-                strSql = "update t_Taskdetails  set  Taskqty = '" + model.TaskQty + "' ,  Remainqty = '" + model.TaskQty + "' - isnull( Unshelveqty,0), Outstockqty = '"+model.TaskQty+"', " +
-                        "  Modifyer = '"+user.UserNo+"' , Modifytime = getdate() where id = '"+model.ID+"'";
+                strSql = "update t_Taskdetails  set  Taskqty = '" + model.TaskQty + "' ,  Remainqty = '" + model.TaskQty + "' - isnull( Unshelveqty,0), Outstockqty = '" + model.TaskQty + "', " +
+                        "  Modifyer = '" + user.UserNo + "' , Modifytime = getdate() where id = '" + model.ID + "'";
 
                 lstSql.Add(strSql);
             }
@@ -56,28 +56,32 @@ namespace BILWeb.OutStockTask
             int Count = 0;
             List<string> lstSql = new List<string>();
 
-            foreach (var item in modelList) 
+            foreach (var item in modelList)
             {
-                strSql1 = string.Format("update t_taskdetails  set  remainqty = (case when isnull( remainqty,0) >= ('{0}') then (isnull( remainqty,0) - '{1}')" +
-                                "else 0 end ), unshelveqty = isnull( unshelveqty,0) + '{2}', operatoruserno = '{3}', operatordatetime = getdate() where id  = '{4}'",
-                                item.ScanQty,item.ScanQty,item.ScanQty,user.UserNo,item.ID);
-                lstSql.Add(strSql1);
+                //杂出没有单据来源直接出库
+                if (item.VoucherType != 50)
+                {
+                    strSql1 = string.Format("update t_taskdetails  set  remainqty = (case when isnull( remainqty,0) >= ('{0}') then (isnull( remainqty,0) - '{1}')" +
+                "else 0 end ), unshelveqty = isnull( unshelveqty,0) + '{2}', operatoruserno = '{3}', operatordatetime = getdate() where id  = '{4}'",
+                item.ScanQty, item.ScanQty, item.ScanQty, user.UserNo, item.ID);
+                    lstSql.Add(strSql1);
 
-                strSql1 = string.Format("update t_Outstockdetail set pickqty = isnull(pickqty,0) + '{0}' where erpvoucherno = '{1}' and materialnoid = '{2}' and rowno = '{3}' and VOUCHERNO='{4}'",
-                                item.ScanQty, item.ErpVoucherNo, item.MaterialNoID,item.RowNo,item.VoucherNo);
-                lstSql.Add(strSql1);
+                    strSql1 = string.Format("update t_Outstockdetail set pickqty = isnull(pickqty,0) + '{0}' where erpvoucherno = '{1}' and materialnoid = '{2}' and rowno = '{3}' and VOUCHERNO='{4}'",
+                                    item.ScanQty, item.ErpVoucherNo, item.MaterialNoID, item.RowNo, item.VoucherNo);
+                    lstSql.Add(strSql1);
 
-                strSql2 = string.Format("update t_taskdetails  set  Linestatus =(case when isnull( remainqty,0)< isnull( taskqty,0) and isnull( remainqty,0)<>0 then 2 when isnull( remainqty,0)  = 0  then 3 end )" +
-                        "where id ={0}",item.ID);
-                lstSql.Add(strSql2);
+                    strSql2 = string.Format("update t_taskdetails  set  Linestatus =(case when isnull( remainqty,0)< isnull( taskqty,0) and isnull( remainqty,0)<>0 then 2 when isnull( remainqty,0)  = 0  then 3 end )" +
+                            "where id ={0}", item.ID);
+                    lstSql.Add(strSql2);
 
-                strSql3 = "update t_task  set  Status = 2 where id = '" + item.HeaderID + "'";
-                lstSql.Add(strSql3);
+                    strSql3 = "update t_task  set  Status = 2 where id = '" + item.HeaderID + "'";
+                    lstSql.Add(strSql3);
 
-                strSql4 = string.Format(" update t_task set status = 3 where id in(select HeaderID from t_taskdetails group by HeaderID having(max(isnull(linestatus,1)) = 3 and min(isnull(linestatus,1))=3) and HeaderID = '{0}')" +
-                                        "and id = '{1}'", item.HeaderID, item.HeaderID);
+                    strSql4 = string.Format(" update t_task set status = 3 where id in(select HeaderID from t_taskdetails group by HeaderID having(max(isnull(linestatus,1)) = 3 and min(isnull(linestatus,1))=3) and HeaderID = '{0}')" +
+                                            "and id = '{1}'", item.HeaderID, item.HeaderID);
 
-                lstSql.Add(strSql4);
+                    lstSql.Add(strSql4);
+                }
 
                 if (item.lstStockInfo != null && item.lstStockInfo.Count > 0)
                 {
@@ -85,76 +89,85 @@ namespace BILWeb.OutStockTask
                     {
                         lstSql.Add(GetStockTransSql(user, itemStock));
 
-                        //如果是补货单，需要转移到仓库对应的补货库位
-                        if (item.VoucherType == 3)
+                        //杂出没有单据来源直接出库
+                        if (item.VoucherType == 50)
                         {
-                            strSql1 = "update t_stock  set  Areaid = (select id from v_area b where b.warehouseno = '" + item.FromErpWarehouse + "' and b.AREATYPE = '5')," +
-                                   "  Houseid = (select c.HOUSEID from v_area c where c.warehouseno = '" + item.FromErpWarehouse + "' and c.AREATYPE = '5'), " +
-                                   "   Warehouseid = (select id from t_Warehouse d where d.Warehouseno = '" + item.FromErpWarehouse + "'), TASKDETAILESID=0  where  Serialno = '" + itemStock.SerialNo + "'";
-                            lstSql.Add(strSql1);
+                            lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");
+                            lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 207));
                         }
-                        else
-                        {
-                            if (itemStock.IsAmount == 1)//不拆零
+                        else {
+                            //如果是补货单，需要转移到仓库对应的补货库位
+                            if (item.VoucherType == 3)
                             {
-                                //扫描到的是外箱，需要拆托盘
-                                if (itemStock.IsPalletOrBox == 1)
+                                strSql1 = "update t_stock  set  Areaid = (select id from v_area b where b.warehouseno = '" + item.FromErpWarehouse + "' and b.AREATYPE = '5')," +
+                                       "  Houseid = (select c.HOUSEID from v_area c where c.warehouseno = '" + item.FromErpWarehouse + "' and c.AREATYPE = '5'), " +
+                                       "   Warehouseid = (select id from t_Warehouse d where d.Warehouseno = '" + item.FromErpWarehouse + "'), TASKDETAILESID=0  where  Serialno = '" + itemStock.SerialNo + "'";
+                                lstSql.Add(strSql1);
+                            }
+                            else
+                            {
+                                if (itemStock.IsAmount == 1)//不拆零
                                 {
-                                    //拣货到待发 
-                                    lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',palletno = '' where Serialno = '" + itemStock.SerialNo + "'");
-                                    //lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");//拣货直接出库
-
-                                    if (!string.IsNullOrEmpty(itemStock.PalletNo))
+                                    //扫描到的是外箱，需要拆托盘
+                                    if (itemStock.IsPalletOrBox == 1)
                                     {
-                                        strSql1 = "delete t_Palletdetail where BARCODE = '" + itemStock.Barcode + "'";
+                                        //拣货到待发 
+                                        lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',palletno = '' where Serialno = '" + itemStock.SerialNo + "'");
+                                        //lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");//拣货直接出库
+
+                                        if (!string.IsNullOrEmpty(itemStock.PalletNo))
+                                        {
+                                            strSql1 = "delete t_Palletdetail where BARCODE = '" + itemStock.Barcode + "'";
+                                            lstSql.Add(strSql1);
+
+                                            strSql1 = "delete t_Pallet where palletno = '" + itemStock.PalletNo + "' and (select count(1) from t_Palletdetail where palletno = '" + itemStock.PalletNo + "')=0";
+                                            lstSql.Add(strSql1);
+                                        }
+                                    }
+                                    else //扫描到的是托盘，不需要拆托
+                                    {
+                                        //拣货到待发 
+                                        lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "' where Serialno = '" + itemStock.SerialNo + "'");
+                                        //lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");//拣货直接出库
+                                    }
+                                }
+                                else if (itemStock.IsAmount == 2)//拆零
+                                {
+                                    //strSql1 = "delete from t_stock where serialno = '" + itemStock.SerialNo + "'";
+                                    //lstSql.Add(strSql1);
+                                    lstSql.Add("update t_stock a set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',houseprop='" + item.HouseProp + "' where Serialno = '" + itemStock.SerialNo + "'");
+
+                                    strSql1 = "select count(1) from t_stock a where  Taskdetailesid='" + item.ID + "' and " +
+                                           "  Materialnoid='" + itemStock.MaterialNoID + "' and  Ean='" + itemStock.EAN + "' and  batchno = '" + itemStock.BatchNo + "' and  Warehouseid='" + user.PickWareHouseID + "' " +
+                                           " and  Houseid='" + user.PickHouseID + "' and  Areaid='" + user.PickAreaID + "' " +
+                                           " and  Strongholdcode='" + itemStock.StrongHoldCode + "' and     CONVERT(varchar(100),edate, 111) ='" + itemStock.StrEDate + "' and isnull(IsAmount,0)=2";
+                                    Count = base.GetScalarBySql(strSql1).ToInt32();
+
+                                    if (Count == 0)
+                                    {
+                                        lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',IsAmount=2 where Serialno = '" + itemStock.SerialNo + "'");
+
+                                    }
+                                    else
+                                    {
+                                        strSql1 = "update t_stock  set qty = qty + '" + itemStock.Qty + "'  where  Taskdetailesid='" + item.ID + "' and " +
+                                               "  Materialnoid='" + item.MaterialNoID + "' and  Ean='" + itemStock.EAN + "' and  batchno = '" + itemStock.BatchNo + "' and  Warehouseid='" + user.PickWareHouseID + "' " +
+                                               " and  Houseid='" + user.PickHouseID + "' and  Areaid='" + user.PickAreaID + "'" +
+                                               " and  Strongholdcode='" + itemStock.StrongHoldCode + "'  and  CONVERT(varchar(100),edate, 111) = '" + itemStock.StrEDate + "'and isnull(IsAmount,0)=2";
                                         lstSql.Add(strSql1);
 
-                                        strSql1 = "delete t_Pallet where palletno = '" + itemStock.PalletNo + "' and (select count(1) from t_Palletdetail where palletno = '" + itemStock.PalletNo + "')=0";
+                                        strSql1 = "delete t_stock where serialno = '" + itemStock.SerialNo + "'  and Areaid !='" + user.PickAreaID + "' ";
+
                                         lstSql.Add(strSql1);
                                     }
                                 }
-                                else //扫描到的是托盘，不需要拆托
-                                {
-                                    //拣货到待发 
-                                    lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "' where Serialno = '" + itemStock.SerialNo + "'");
-                                    //lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");//拣货直接出库
-                                }
                             }
-                            else if (itemStock.IsAmount == 2)//拆零
-                            {
-                                //strSql1 = "delete from t_stock where serialno = '" + itemStock.SerialNo + "'";
-                                //lstSql.Add(strSql1);
-                                lstSql.Add("update t_stock a set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',houseprop='" + item.HouseProp + "' where Serialno = '" + itemStock.SerialNo + "'");
-
-                                strSql1 = "select count(1) from t_stock a where  Taskdetailesid='" + item.ID + "' and " +
-                                       "  Materialnoid='" + itemStock.MaterialNoID + "' and  Ean='" + itemStock.EAN + "' and  batchno = '" + itemStock.BatchNo + "' and  Warehouseid='" + user.PickWareHouseID + "' " +
-                                       " and  Houseid='" + user.PickHouseID + "' and  Areaid='" + user.PickAreaID + "' " +
-                                       " and  Strongholdcode='" + itemStock.StrongHoldCode + "' and     CONVERT(varchar(100),edate, 111) ='" + itemStock.StrEDate + "' and isnull(IsAmount,0)=2";
-                                Count = base.GetScalarBySql(strSql1).ToInt32();
-
-                                if (Count == 0)
-                                {
-                                    lstSql.Add("update t_stock  set Taskdetailesid = '" + item.ID + "', Areaid = '" + user.PickAreaID + "', Houseid = '" + user.PickHouseID + "', Warehouseid = '" + user.PickWareHouseID + "',IsAmount=2 where Serialno = '" + itemStock.SerialNo + "'");
-
-                                }
-                                else
-                                {
-                                    strSql1 = "update t_stock  set qty = qty + '" + itemStock.Qty + "'  where  Taskdetailesid='" + item.ID + "' and " +
-                                           "  Materialnoid='" + item.MaterialNoID + "' and  Ean='" + itemStock.EAN + "' and  batchno = '" + itemStock.BatchNo + "' and  Warehouseid='" + user.PickWareHouseID + "' " +
-                                           " and  Houseid='" + user.PickHouseID + "' and  Areaid='" + user.PickAreaID + "'" +
-                                           " and  Strongholdcode='" + itemStock.StrongHoldCode + "'  and  CONVERT(varchar(100),edate, 111) = '" + itemStock.StrEDate + "'and isnull(IsAmount,0)=2";
-                                    lstSql.Add(strSql1);
-
-                                    strSql1 = "delete t_stock where serialno = '" + itemStock.SerialNo + "'  and Areaid !='" + user.PickAreaID + "' ";
-
-                                    lstSql.Add(strSql1);
-                                }
-                            }
+                            lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item,2));
                         }
 
-                        //lstSql.Add(GetTaskTransSql(user, itemStock, item));
-                        lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item));
+                        
 
+                        //lstSql.Add(GetTaskTransSql(user, itemStock, item));
                         //if (!string.IsNullOrEmpty(itemStock.PalletNo))
                         //{
                         //    //strSql = _db.GetAmountQtyInsertPalletSql(model, userModel, NewSerialNo, model.PalletNo);
@@ -179,83 +192,83 @@ namespace BILWeb.OutStockTask
                     }
 
                 }
-                
+
             }
 
             return lstSql;
         }
 
-        private string GetStockTransSql(UserModel user,T_StockInfo model) 
-        {            
+        private string GetStockTransSql(UserModel user, T_StockInfo model)
+        {
             string strSql = "INSERT INTO t_Stocktrans ( Barcode, Serialno, Materialno, Materialdesc, Warehouseid, Houseid, Areaid, Qty,  Status, Isdel, Creater, Createtime, " +
                              "Batchno, Sn,  Oldstockid, Taskdetailesid, Checkid, Transferdetailsid,  Unit, Unitname, Palletno, Receivestatus,  Islimitstock,  " +
                              "Materialnoid, Strongholdcode, Strongholdname, Companycode, Supcode, Supname, Productdate, Supprdbatch, Supprddate, Isquality,ean)" +
                             "SELECT  Barcode, Serialno, Materialno, Materialdesc, Warehouseid, Houseid, Areaid, Qty, " +
                             " Status, Isdel,'" + user.UserName + "', Createtime, Batchno, Sn, Oldstockid, Taskdetailesid, Checkid, Transferdetailsid, Unit, Unitname, Palletno, Receivestatus," +
                             " Islimitstock, Materialnoid, Strongholdcode, Strongholdname, Companycode, Supcode, Supname, Productdate, Supprdbatch," +
-                            " Supprddate, Isquality, ean FROM T_STOCK A WHERE  Serialno = '"+model.SerialNo+"'";
+                            " Supprddate, Isquality, ean FROM T_STOCK A WHERE  Serialno = '" + model.SerialNo + "'";
             return strSql;
         }
 
-        private string GetTaskTransSql(UserModel user, T_StockInfo model,T_OutStockTaskDetailsInfo detailModel) 
-       {
-           int id = base.GetTableIDBySqlServer("T_TASKTRANSDETAIL");
-            string strSql = "insert into t_tasktrans( Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, "+
-            "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno,"+
+        private string GetTaskTransSql(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel)
+        {
+            int id = base.GetTableIDBySqlServer("T_TASKTRANSDETAIL");
+            string strSql = "insert into t_tasktrans( Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
+            "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
             "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,barcode,status,materialdoc,houseprop,ean)" +
             " values ('" + model.SerialNo + "',(select id from t_Warehouse a  where  Warehouseno = '" + model.ToErpWarehouse + "'),(select  HOUSEID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "')," +
-            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty+ "','2'," +
+            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty + "','2'," +
             " (select vouchertype from t_task where id = '" + detailModel.HeaderID + "') ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
             "'" + detailModel.Unit + "','" + detailModel.UnitName + "','" + detailModel.PartNo + "','" + detailModel.MaterialNoID + "','" + detailModel.ErpVoucherNo + "'," +
-            "  '" + detailModel.VoucherNo + "','" + detailModel.StrongHoldCode + "','" + detailModel.StrongHoldName + "','" + detailModel.CompanyCode + "',"+
+            "  '" + detailModel.VoucherNo + "','" + detailModel.StrongHoldCode + "','" + detailModel.StrongHoldName + "','" + detailModel.CompanyCode + "'," +
             "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + detailModel.TaskNo + "'," +
-            " '"+model.BatchNo+"', '"+model.AreaID+"','"+model.WareHouseID+"','"+model.HouseID+"' ,'"+model.Barcode+"','"+model.Status+"','"+detailModel.MaterialDoc+"','"+detailModel.HouseProp+"','"+model.EAN+"') ";
+            " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + model.Barcode + "','" + model.Status + "','" + detailModel.MaterialDoc + "','" + detailModel.HouseProp + "','" + model.EAN + "') ";
 
             return strSql;
         }
 
-        private List<string> GetTaskTransSqlList(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel)
+        private List<string> GetTaskTransSqlList(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel,int Tasktype )
         {
             int id = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
             List<string> lstSql = new List<string>();
             string strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
             "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
             "Strongholdcode,Strongholdname,Companycode,Supprdbatch,taskno,batchno,barcode,status,materialdoc,houseprop,ean,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo,IsPalletOrBox)" +
-            " values ('"+id+"' , '" + model.SerialNo + "'," +
-            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty + "','2'," +
+            " values ('" + id + "' , '" + model.SerialNo + "'," +
+            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty + "','"+ Tasktype + "'," +
             " (select vouchertype from t_task where id = '" + detailModel.HeaderID + "') ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
             "'" + detailModel.Unit + "','" + detailModel.UnitName + "','" + detailModel.PartNo + "','" + detailModel.MaterialNoID + "','" + detailModel.ErpVoucherNo + "'," +
             "  '" + detailModel.VoucherNo + "','" + detailModel.StrongHoldCode + "','" + detailModel.StrongHoldName + "','" + detailModel.CompanyCode + "'," +
             "  '" + model.SupPrdBatch + "','" + detailModel.TaskNo + "'," +
-            " '" + model.BatchNo + "' ,'" + model.Barcode + "','" + model.Status + "','" + detailModel.MaterialDoc + "','" + detailModel.HouseProp + "','" + model.EAN + "',"+
-            "  (select WAREHOUSENO from T_WAREHOUSE where id ='"+model.WareHouseID+"'),"+
-            " (select WAREHOUSENAME from T_WAREHOUSE where id ='"+model.WareHouseID+"'), "+
-            " (select HOUSENO from T_HOUSE where id='"+model.HouseID+"'),"+
-            " (select AREANO from T_AREA where id ='"+model.AreaID+"'),"+
+            " '" + model.BatchNo + "' ,'" + model.Barcode + "','" + model.Status + "','" + detailModel.MaterialDoc + "','" + detailModel.HouseProp + "','" + model.EAN + "'," +
+            "  (select WAREHOUSENO from T_WAREHOUSE where id ='" + model.WareHouseID + "')," +
+            " (select WAREHOUSENAME from T_WAREHOUSE where id ='" + model.WareHouseID + "'), " +
+            " (select HOUSENO from T_HOUSE where id='" + model.HouseID + "')," +
+            " (select AREANO from T_AREA where id ='" + model.AreaID + "')," +
             " '',''," +
             " ''," +
-            " '','" + model.PalletNo+"','"+model.IsPalletOrBox+"' ) SET IDENTITY_INSERT t_tasktrans off ";//,(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),'" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "'
+            " '','" + model.PalletNo + "','" + model.IsPalletOrBox + "' ) SET IDENTITY_INSERT t_tasktrans off ";//,(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),'" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "'
 
             lstSql.Add(strSql);
 
 
-//            string strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
-//"Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
-//"Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,barcode,status,materialdoc,houseprop,ean,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo,IsPalletOrBox)" +
-//" values ('" + id + "' , '" + model.SerialNo + "'," +
-//" '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty + "','2'," +
-//" (select vouchertype from t_task where id = '" + detailModel.HeaderID + "') ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
-//"'" + detailModel.Unit + "','" + detailModel.UnitName + "','" + detailModel.PartNo + "','" + detailModel.MaterialNoID + "','" + detailModel.ErpVoucherNo + "'," +
-//"  '" + detailModel.VoucherNo + "','" + detailModel.StrongHoldCode + "','" + detailModel.StrongHoldName + "','" + detailModel.CompanyCode + "'," +
-//"  '" + model.SupPrdBatch + "','" + model.StrEDate + "' ,'" + detailModel.TaskNo + "'," +
-//" '" + model.BatchNo + "' ,'" + model.Barcode + "','" + model.Status + "','" + detailModel.MaterialDoc + "','" + detailModel.HouseProp + "','" + model.EAN + "'," +
-//"  (select WAREHOUSENO from T_WAREHOUSE where id ='" + model.WareHouseID + "')," +
-//" (select WAREHOUSENAME from T_WAREHOUSE where id ='" + model.WareHouseID + "'), " +
-//" (select HOUSENO from T_HOUSE where id='" + model.HouseID + "')," +
-//" (select AREANO from T_AREA where id ='" + model.AreaID + "')," +
-//" (select WAREHOUSENO from T_WAREHOUSE where id ='" + user.PickWareHouseID + "'),(select WAREHOUSENAME from T_WAREHOUSE where warehouseno ='" + user.PickWareHouseID + "')," +
-//" (select HOUSENO from T_HOUSE where id='" + user.PickHouseID + "')," +
-//" (select AREANO from T_AREA where id ='" + user.PickAreaID + "'),'" + model.PalletNo + "','" + model.IsPalletOrBox + "' ) SET IDENTITY_INSERT t_tasktrans off ";//,(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),'" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "'
+            //            string strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
+            //"Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
+            //"Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,barcode,status,materialdoc,houseprop,ean,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo,IsPalletOrBox)" +
+            //" values ('" + id + "' , '" + model.SerialNo + "'," +
+            //" '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty + "','2'," +
+            //" (select vouchertype from t_task where id = '" + detailModel.HeaderID + "') ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
+            //"'" + detailModel.Unit + "','" + detailModel.UnitName + "','" + detailModel.PartNo + "','" + detailModel.MaterialNoID + "','" + detailModel.ErpVoucherNo + "'," +
+            //"  '" + detailModel.VoucherNo + "','" + detailModel.StrongHoldCode + "','" + detailModel.StrongHoldName + "','" + detailModel.CompanyCode + "'," +
+            //"  '" + model.SupPrdBatch + "','" + model.StrEDate + "' ,'" + detailModel.TaskNo + "'," +
+            //" '" + model.BatchNo + "' ,'" + model.Barcode + "','" + model.Status + "','" + detailModel.MaterialDoc + "','" + detailModel.HouseProp + "','" + model.EAN + "'," +
+            //"  (select WAREHOUSENO from T_WAREHOUSE where id ='" + model.WareHouseID + "')," +
+            //" (select WAREHOUSENAME from T_WAREHOUSE where id ='" + model.WareHouseID + "'), " +
+            //" (select HOUSENO from T_HOUSE where id='" + model.HouseID + "')," +
+            //" (select AREANO from T_AREA where id ='" + model.AreaID + "')," +
+            //" (select WAREHOUSENO from T_WAREHOUSE where id ='" + user.PickWareHouseID + "'),(select WAREHOUSENAME from T_WAREHOUSE where warehouseno ='" + user.PickWareHouseID + "')," +
+            //" (select HOUSENO from T_HOUSE where id='" + user.PickHouseID + "')," +
+            //" (select AREANO from T_AREA where id ='" + user.PickAreaID + "'),'" + model.PalletNo + "','" + model.IsPalletOrBox + "' ) SET IDENTITY_INSERT t_tasktrans off ";//,(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),'" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "'
 
 
 
@@ -309,7 +322,7 @@ namespace BILWeb.OutStockTask
             t_taskdetails.PackCount = dbFactory.ToModelValue(reader, "PACKCOUNT").ToDecimal();
             t_taskdetails.ShelvePackCount = dbFactory.ToModelValue(reader, "SHELVEPACKCOUNT").ToDecimal();
             t_taskdetails.VoucherNo = (string)dbFactory.ToModelValue(reader, "VOUCHERNO");
-            t_taskdetails.RowNo = string.IsNullOrEmpty(dbFactory.ToModelValue(reader, "ROWNO").ToDBString())==true ? "0" : dbFactory.ToModelValue(reader, "ROWNO").ToDBString();
+            t_taskdetails.RowNo = string.IsNullOrEmpty(dbFactory.ToModelValue(reader, "ROWNO").ToDBString()) == true ? "0" : dbFactory.ToModelValue(reader, "ROWNO").ToDBString();
             t_taskdetails.CreateTime = (DateTime?)dbFactory.ToModelValue(reader, "CREATETIME");
             t_taskdetails.TrackNo = (string)dbFactory.ToModelValue(reader, "TRACKNO");
             t_taskdetails.Unit = (string)dbFactory.ToModelValue(reader, "UNIT");
@@ -380,7 +393,7 @@ namespace BILWeb.OutStockTask
             t_taskdetails.StrHouseProp = dbFactory.ToModelValue(reader, "StrHouseProp").ToDBString();
             t_taskdetails.UnReviewQty = t_taskdetails.TaskQty.ToDecimal() - t_taskdetails.ReviewQty.ToDecimal();
             T_OutStockDetail_DB tdb = new T_OutStockDetail_DB();
-            t_taskdetails.EAN =  tdb.GetMaterialEAN(t_taskdetails.MaterialNo);
+            t_taskdetails.EAN = tdb.GetMaterialEAN(t_taskdetails.MaterialNo);
 
             t_taskdetails.FromErpWareHouseName = dbFactory.ToModelValue(reader, "FromErpWareHouseName").ToDBString();
             t_taskdetails.ToErpWareHouseName = dbFactory.ToModelValue(reader, "ToErpWareHouseName").ToDBString();
@@ -415,7 +428,7 @@ namespace BILWeb.OutStockTask
             return "";
         }
 
-        
+
 
         //public override List<T_OutStockTaskDetailsInfo> GetModelListByHeaderID(int headerID)
         //{
@@ -442,29 +455,29 @@ namespace BILWeb.OutStockTask
         //        //}
 
         //       return  CreateNewListByPickRuleAreaNo(list, lstStock);
-               
+
         //    }
         //    catch (Exception ex) 
         //    {
         //        throw new Exception(ex.Message);
         //    }
 
-            
+
         //}
 
 
-        public bool GetPickRuleAreaNo(List<T_OutStockTaskDetailsInfo> modelList,ref List<T_StockInfo> stockList, ref string strError) 
+        public bool GetPickRuleAreaNo(List<T_OutStockTaskDetailsInfo> modelList, ref List<T_StockInfo> stockList, ref string strError)
         {
             try
             {
-                int iResult = 0;                
+                int iResult = 0;
                 DataSet ds;
 
                 string strOutStockTaskXml = XmlUtil.Serializer(typeof(List<T_OutStockTaskDetailsInfo>), modelList);
                 LogNet.LogInfo("GetPickRuleAreaNo:" + strOutStockTaskXml);
-                OracleParameter[] cmdParms = new OracleParameter[] 
+                OracleParameter[] cmdParms = new OracleParameter[]
                 {
-                    new OracleParameter("strOutStockTaskXml", OracleDbType.NClob),    
+                    new OracleParameter("strOutStockTaskXml", OracleDbType.NClob),
                     new OracleParameter("PickAreaCur", OracleDbType.RefCursor,ParameterDirection.Output),
                     new OracleParameter("bResult", OracleDbType.Int32,ParameterDirection.Output),
                     new OracleParameter("ErrString", OracleDbType.NVarchar2,200,strError,ParameterDirection.Output)
@@ -493,7 +506,7 @@ namespace BILWeb.OutStockTask
             }
         }
 
-        public  List<T_OutStockTaskDetailsInfo> CreateNewListByPickRuleAreaNo( List<T_OutStockTaskDetailsInfo> modelList,  List<T_StockInfo> stockList) 
+        public List<T_OutStockTaskDetailsInfo> CreateNewListByPickRuleAreaNo(List<T_OutStockTaskDetailsInfo> modelList, List<T_StockInfo> stockList)
         {
             List<T_OutStockTaskDetailsInfo> NewModelList = new List<T_OutStockTaskDetailsInfo>();
 
@@ -545,16 +558,16 @@ namespace BILWeb.OutStockTask
             //    }               
             //}
 
-            #endregion            
+            #endregion
 
-            
 
-            foreach (var item in modelList) 
+
+            foreach (var item in modelList)
             {
                 List<T_StockInfo> stockModelList = new List<T_StockInfo>();
                 //查找物料可分配库存
-                stockModelList = stockList.FindAll(t => t.MaterialNo == item.MaterialNo && t.IsSpcBatch == item.IsSpcBatch && t.Qty>0);
-                foreach (var stockModel in stockModelList) 
+                stockModelList = stockList.FindAll(t => t.MaterialNo == item.MaterialNo && t.IsSpcBatch == item.IsSpcBatch && t.Qty > 0);
+                foreach (var stockModel in stockModelList)
                 {
                     if (item.RemainQty < stockModel.Qty)
                     {
@@ -607,7 +620,7 @@ namespace BILWeb.OutStockTask
             //            stockList[i].Qty = 0;
             //            NewModelList.Add(CreateNewOutStockModelToADF(stockList[i], itemModel));
             //        }
-                    
+
             //    }
             //}
 
@@ -676,12 +689,12 @@ namespace BILWeb.OutStockTask
             //    }
             //}
             #endregion
-           
-            return NewModelList.OrderBy(t=>t.SortArea).ToList();
+
+            return NewModelList.OrderBy(t => t.SortArea).ToList();
 
         }
 
-        private T_OutStockTaskDetailsInfo CreateNewOutStockModelToADF(T_StockInfo stockModel,  T_OutStockTaskDetailsInfo itemModel)
+        private T_OutStockTaskDetailsInfo CreateNewOutStockModelToADF(T_StockInfo stockModel, T_OutStockTaskDetailsInfo itemModel)
         {
             T_OutStockTaskDetailsInfo model = new T_OutStockTaskDetailsInfo();
             model.ID = itemModel.ID;
@@ -706,9 +719,9 @@ namespace BILWeb.OutStockTask
             model.FromBatchNo = itemModel.FromBatchNo;
             model.FromErpAreaNo = itemModel.FromErpAreaNo;
             model.FromErpWarehouse = itemModel.FromErpWarehouse;
-            model.ToBatchNo =stockModel.BatchNo ;//itemModel.ToBatchNo
+            model.ToBatchNo = stockModel.BatchNo;//itemModel.ToBatchNo
             model.ToErpAreaNo = itemModel.ToErpAreaNo;
-            model.ToErpWarehouse = itemModel.ToErpWarehouse;            
+            model.ToErpWarehouse = itemModel.ToErpWarehouse;
             model.TaskType = itemModel.TaskType;
             model.DepartmentCode = itemModel.DepartmentCode;
             model.DepartmentName = itemModel.DepartmentName;
@@ -753,10 +766,10 @@ namespace BILWeb.OutStockTask
             strSql += strAnd;
             strSql += "TaskType = 2 ";
 
-            if (model.ID > 0) 
+            if (model.ID > 0)
             {
                 strSql += strAnd;
-                strSql += " id = '"+model.ID+"'";
+                strSql += " id = '" + model.ID + "'";
             }
 
             if (!string.IsNullOrEmpty(model.SupcusCode))
@@ -795,11 +808,11 @@ namespace BILWeb.OutStockTask
                 strSql += " TaskNo ='" + model.TaskNo + "'  ";
             }
 
-           
+
 
             return strSql;
-        } 
-        
+        }
+
 
         public List<T_OutStockTaskDetailsInfo> GetOutTaskDetailListByHeaderIDADF(List<T_OutStockTaskInfo> lstModel)
         {
@@ -808,26 +821,26 @@ namespace BILWeb.OutStockTask
                 string strSql = string.Empty;
                 string headerID = string.Empty;
 
-                foreach (var item in lstModel) 
+                foreach (var item in lstModel)
                 {
                     headerID += item.ID + ",";
                 }
 
                 headerID = headerID.TrimEnd(',');
 
-                strSql = "select * from v_Outtaskdetail where headerid in ("+headerID+")";
+                strSql = "select * from v_Outtaskdetail where headerid in (" + headerID + ")";
 
                 return base.GetModelListBySql(strSql);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
-        public string GetDBVoucherNo(string strSerialNo) 
+        public string GetDBVoucherNo(string strSerialNo)
         {
-            string strSql = "select materialdoc from (select materialdoc from t_Tasktrans where serialno  = '"+strSerialNo+"' and tasktype = 2  order by id desc) where rownum = 1";
+            string strSql = "select materialdoc from (select materialdoc from t_Tasktrans where serialno  = '" + strSerialNo + "' and tasktype = 2  order by id desc) where rownum = 1";
             return base.GetScalarBySql(strSql).ToDBString();
         }
 
@@ -836,7 +849,7 @@ namespace BILWeb.OutStockTask
         public int GetCarNo(string strCarNo)
         {
             string strSql = "select count(1) from t_pickcar where carno = '" + strCarNo + "'";
-            return base.GetScalarBySql(strSql).ToInt32();            
+            return base.GetScalarBySql(strSql).ToInt32();
         }
 
         public string PostScanCar(string strCarNo)
@@ -885,7 +898,7 @@ namespace BILWeb.OutStockTask
 
         #region 根据ERP订单号获取拣货任务
 
-        public bool GetOutTaskDetailByErpVoucherNo(string strErpVoucherNo, ref List<T_OutStockTaskDetailsInfo> modelListTaskDetail, ref string strError) 
+        public bool GetOutTaskDetailByErpVoucherNo(string strErpVoucherNo, ref List<T_OutStockTaskDetailsInfo> modelListTaskDetail, ref string strError)
         {
             //获取拣货单表体数据            
             string taskFilter = " erpvoucherno = '" + strErpVoucherNo + "' ";

@@ -994,6 +994,10 @@ namespace BILWeb.Query
                 {
                     TMM.tasktypename = "预留下架";
                 }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 207)
+                {
+                    TMM.tasktypename = "杂出";
+                }
             }
             qtyall += (decimal)TMM.QTY;
             return TMM;

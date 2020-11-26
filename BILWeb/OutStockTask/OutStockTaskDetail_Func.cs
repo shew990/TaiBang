@@ -89,33 +89,39 @@ namespace BILWeb.OutStockTask
             {
                 return false;
             }
-
-            var model = lstTaskDetail.Find(t => t.ID == modelList[0].ID);
-            if (model == null)
+            //杂出单校验
+            if (modelList[0].VoucherType!=50)
             {
-                strError = "提交物料未找到数据";
-                return false;
-            }
-
-            if (modelList[0].VoucherType != 3) 
-            {
-                if (modelList[0].ScanQty > model.RemainQty)
+                var model = lstTaskDetail.Find(t => t.ID == modelList[0].ID);
+                if (model == null)
                 {
-                    strError = "扫描数量大于剩余数量，不能提交数据！";
+                    strError = "提交物料未找到数据";
                     return false;
                 }
-            }            
 
-            if (modelList[0].lstStockInfo != null && modelList[0].lstStockInfo.Count > 0) 
-            {
-                if (!string.IsNullOrEmpty(modelList[0].FromErpWarehouse)) {
-                    if (modelList[0].FromErpWarehouse != modelList[0].lstStockInfo[0].WarehouseNo)
+                if (modelList[0].VoucherType != 3)
+                {
+                    if (modelList[0].ScanQty > model.RemainQty)
                     {
-                        strError = "扫描条码的条码对应仓库和订单仓库不一致，不能提交数据！";
+                        strError = "扫描数量大于剩余数量，不能提交数据！";
                         return false;
                     }
                 }
+
+                if (modelList[0].lstStockInfo != null && modelList[0].lstStockInfo.Count > 0)
+                {
+                    if (!string.IsNullOrEmpty(modelList[0].FromErpWarehouse))
+                    {
+                        if (modelList[0].FromErpWarehouse != modelList[0].lstStockInfo[0].WarehouseNo)
+                        {
+                            strError = "扫描条码的条码对应仓库和订单仓库不一致，不能提交数据！";
+                            return false;
+                        }
+                    }
+                }
             }
+
+
 
             //验证提交的条码是否存在质检状态为待检或者送检
             //发起在库检会存在以上情况
