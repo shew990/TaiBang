@@ -87,7 +87,7 @@ namespace BILWeb.View_Product
             model.MaterialName = (string)dbFactory.ToModelValue(reader, "MaterialName");
             model.MaterialNo = (string)dbFactory.ToModelValue(reader, "MaterialNo");
             model.ErpVoucherNo = (string)dbFactory.ToModelValue(reader, "ErpVoucherNo");
-            model.ErpVoucherNo = (string)dbFactory.ToModelValue(reader, "ProductBatch");
+            model.ProductBatch = (string)dbFactory.ToModelValue(reader, "ProductBatch");
 
             return model;
         }
