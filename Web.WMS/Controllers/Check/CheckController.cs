@@ -2,6 +2,7 @@
 using BILWeb.Check;
 using BILWeb.Login.User;
 using BILWeb.Query;
+using BILWeb.Stock;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -219,8 +220,6 @@ namespace Web.WMS.Controllers
                 return Json(ErrMsg, JsonRequestBehavior.AllowGet);
             }
         }
-
-
         
         public JsonResult tiaozheng_ms(string CHECKNO)
         {
@@ -239,5 +238,63 @@ namespace Web.WMS.Controllers
                 return Json(ErrMsg, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+
+        #region 物料盘点
+        //获取盘点库存信息
+        private JsonResult GetCheckStock(T_StockInfoEX tm)
+        {
+            //参数//tm.MaterialNo //tm.StrongHoldCode  //tm.HouseNo //tm.AreaNo //tm.WarehouseNo //tm.BatchNo
+            try
+            {
+                string strErrMsg = string.Empty;
+                List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
+                Query_DB db = new Query_DB();
+                if (db.GetStockCombineInfo2(tm, ref lsttask, ref strErrMsg))
+                {
+                    return Json(new { state = true,data= lsttask }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { state = false, Msg = strErrMsg }, JsonRequestBehavior.AllowGet);
+                }
+        
+            }
+            catch (Exception ex)
+            {
+                return Json(new { state = false, Msg = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //保存盘点单
+        private JsonResult SaveCheck(List<T_StockInfoEX> list)
+        {
+            try
+            {
+                Check_Model cm = new Check_Model();
+                //cm.REMARKS = strremark + txt_remarkD.Text + txt_remark.Text;
+                cm.CHECKSTATUS = "新建";
+                cm.CREATER = currentUser.UserNo;
+                cm.CHECKDESC = "明盘";
+                string ErrMsg = "";
+                Check_DB db = new Check_DB();
+                if (db.SaveCheck2(cm, list, ref ErrMsg))
+                {
+                    return Json(new { state = true }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { state = false }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { state = false, Msg = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        #endregion
     }
 }
