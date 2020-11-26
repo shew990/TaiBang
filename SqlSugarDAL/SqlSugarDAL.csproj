@@ -46,9 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="barcode\OutBarcode.cs" />
+    <Compile Include="barcode\OutBarcodeService.cs" />
     <Compile Include="checkrecord\CheckRecord.cs" />
     <Compile Include="checkrecord\CheckRecordService.cs" />
     <Compile Include="DBHelper\DbContext.cs" />
+    <Compile Include="material\Material.cs" />
+    <Compile Include="material\MaterialService.cs" />
     <Compile Include="product\Product.cs" />
     <Compile Include="product\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,5 +65,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

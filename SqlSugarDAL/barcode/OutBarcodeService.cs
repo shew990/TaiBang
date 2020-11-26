@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SqlSugarDAL.product
+namespace SqlSugarDAL.barcode
 {
-    public class ProductService : DbContext<T_Product>
+    public class OutBarcodeService:DbContext<T_OutBarcode>
     {
     }
 }

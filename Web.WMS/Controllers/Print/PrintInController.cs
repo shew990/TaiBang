@@ -168,7 +168,7 @@ namespace Web.WMS.Controllers.Print
                     model.SerialNo = squence[k++];
                     model.Creater = Userno;
                     model.ReceiveTime = time1;
-                    model.BarCode = "1@" + model.StrongHoldCode + "@" + model.MaterialNo + "@" + model.ProductBatch + "@" + model.Qty + "@" + model.SerialNo;
+                    model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
                     model.RowNo = RowNO;
                     model.RowNoDel = RowNODel;
                     model.BarcodeType = 1;
@@ -194,7 +194,7 @@ namespace Web.WMS.Controllers.Print
                     model.SerialNo = squence[k++];
                     model.Creater = Userno;
                     model.ReceiveTime = time1;
-                    model.BarCode = "1@" + model.StrongHoldCode + "@" + model.MaterialNo + "@" + model.ProductBatch + "@" + model.Qty + "@" + model.SerialNo;
+                    model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
                     model.RowNo = RowNO;
                     model.RowNoDel = RowNODel;
                     model.BarcodeType = 1;
