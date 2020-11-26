@@ -153,7 +153,7 @@ namespace Web.WMS.Controllers.Print
                         barcode.qty = item.Qty <= item.InnerPackQty ? item.Qty : ((i == count - 1) ?
                                     (item.Qty % item.InnerPackQty == 0 ? item.InnerPackQty
                                     : item.Qty % item.InnerPackQty) : item.InnerPackQty);
-                        barcode.ReceiveTime = time;
+                        barcode.ReceiveTime = Convert.ToDateTime(time.ToString());
                         barcode.serialno = serialnos[i];
                         barcode.barcode = "2@" + item.MaterialNo + "@" + barcode.qty + "@" + serialnos[i];
                         barcode.materialnoid = material.ID;
