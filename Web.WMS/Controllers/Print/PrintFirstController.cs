@@ -127,7 +127,8 @@ namespace Web.WMS.Controllers.Print
                 {
                     var serialnos = GetSerialnos((item.Qty / item.InnerPackQty + 1).ToString());
                     var material = new MaterialService()
-                        .GetList(x => x.MATERIALNO == item.MaterialNo).FirstOrDefault();
+                        .GetList(x => x.MATERIALNO == item.MaterialNo && x.STRONGHOLDCODE == item.StrongHoldCode)
+                        .FirstOrDefault();
                     if (material == null)
                         throw new Exception("没有物料编号为" + item.MaterialNo + "的数据");
 
@@ -149,8 +150,9 @@ namespace Web.WMS.Controllers.Print
                         barcode.cuscode = item.CusCode;
                         barcode.cusname = item.CusName;
                         barcode.department = item.department;
-                        barcode.qty = item.Qty <= item.InnerPackQty ? item.Qty :
-                            ((i == count - 1) ? item.Qty % item.InnerPackQty : item.InnerPackQty);
+                        barcode.qty = item.Qty <= item.InnerPackQty ? item.Qty : ((i == count - 1) ?
+                                    (item.Qty % item.InnerPackQty == 0 ? item.InnerPackQty
+                                    : item.Qty % item.InnerPackQty) : item.InnerPackQty);
                         barcode.ReceiveTime = time;
                         barcode.serialno = serialnos[i];
                         barcode.barcode = "2@" + item.MaterialNo + "@" + barcode.qty + "@" + serialnos[i];
@@ -212,136 +214,136 @@ namespace Web.WMS.Controllers.Print
             return ss;
         }
 
-        public JsonResult Print(string IDs, string Path)
-        {
-            try
-            {
-                List<Barcode_Model> barcodelist = new List<Barcode_Model>();
-                var Isxls = System.IO.Path.GetExtension(Path).ToString().ToLower();
-                DataTable dt = new DataTable();
-                if (Isxls == ".xls")
-                {
-                    dt = ImportExcelFile(Path);
-                }
-                if (Isxls == ".xlsx")
-                {
-                    dt = ImportExcelFilexlsx(Path);
-                }
-                barcodelist = Print_DB.ConvertToModel<Barcode_Model>(dt);
-                List<Barcode_Model> barcodelistnew = new List<Barcode_Model>();
-                List<Barcode_Model> barcodelistnewsub = new List<Barcode_Model>();
-                List<Barcode_Model> barcodelistnewAll = new List<Barcode_Model>();
-                string[] ids = IDs.Split(',');
-                for (int i = 0; i < ids.Length; i++)
-                {
-                    if (ids[i] != "")
-                    {
-                        List<Barcode_Model> barcodes = new List<Barcode_Model>();
-                        barcodes.AddRange(barcodelist.Where(P => P.RowNo == ids[i]));
-                        //单张条码
-                        //Barcode_Model model = (Barcode_Model)DeepCopy(barcodes[0]);
-                        //barcodelistnew.Add(model);
-                        //多张条码
-                        if (barcodes.Count == 1 && barcodes[0].BoxCount >= 1)
-                        {
-                            for (int j = 0; j < barcodes[0].BoxCount; j++)
-                            {
-                                Barcode_Model model = (Barcode_Model)DeepCopy(barcodes[0]);
-                                barcodelistnew.Add(model);
-                            }
-                        }
+        //public JsonResult Print(string IDs, string Path)
+        //{
+        //    try
+        //    {
+        //        List<Barcode_Model> barcodelist = new List<Barcode_Model>();
+        //        var Isxls = System.IO.Path.GetExtension(Path).ToString().ToLower();
+        //        DataTable dt = new DataTable();
+        //        if (Isxls == ".xls")
+        //        {
+        //            dt = ImportExcelFile(Path);
+        //        }
+        //        if (Isxls == ".xlsx")
+        //        {
+        //            dt = ImportExcelFilexlsx(Path);
+        //        }
+        //        barcodelist = Print_DB.ConvertToModel<Barcode_Model>(dt);
+        //        List<Barcode_Model> barcodelistnew = new List<Barcode_Model>();
+        //        List<Barcode_Model> barcodelistnewsub = new List<Barcode_Model>();
+        //        List<Barcode_Model> barcodelistnewAll = new List<Barcode_Model>();
+        //        string[] ids = IDs.Split(',');
+        //        for (int i = 0; i < ids.Length; i++)
+        //        {
+        //            if (ids[i] != "")
+        //            {
+        //                List<Barcode_Model> barcodes = new List<Barcode_Model>();
+        //                barcodes.AddRange(barcodelist.Where(P => P.RowNo == ids[i]));
+        //                //单张条码
+        //                //Barcode_Model model = (Barcode_Model)DeepCopy(barcodes[0]);
+        //                //barcodelistnew.Add(model);
+        //                //多张条码
+        //                if (barcodes.Count == 1 && barcodes[0].BoxCount >= 1)
+        //                {
+        //                    for (int j = 0; j < barcodes[0].BoxCount; j++)
+        //                    {
+        //                        Barcode_Model model = (Barcode_Model)DeepCopy(barcodes[0]);
+        //                        barcodelistnew.Add(model);
+        //                    }
+        //                }
 
-                    }
-                }
+        //            }
+        //        }
 
-                if (barcodelistnew != null && barcodelistnew.Count > 0)
-                {
-                    string strMsg = "";
-                    PrintInController printIn = new PrintInController();
-                    List<string> squence = printIn.GetSerialnos(barcodelistnew.Count.ToString(), "外", ref strMsg);
-                    int k = 0;
-                    DateTime time = DateTime.Now;
-                    for (int i = 0; i < barcodelistnew.Count; i++)
-                    {
-                        barcodelistnew[i].CompanyCode = "SHJC";
-                        barcodelistnew[i].BarcodeType = 1;
-                        barcodelistnew[i].SerialNo = squence[k++];
-                        barcodelistnew[i].Creater = currentUser.UserNo;
-                        barcodelistnew[i].ReceiveTime = time;
-                        barcodelistnew[i].BarCode = "1@" + barcodelistnew[i].StrongHoldCode + "@" + barcodelistnew[i].MaterialNo + "@" + barcodelistnew[i].BatchNo + "@" + barcodelistnew[i].Qty + "@" + barcodelistnew[i].SerialNo;
+        //        if (barcodelistnew != null && barcodelistnew.Count > 0)
+        //        {
+        //            string strMsg = "";
+        //            PrintInController printIn = new PrintInController();
+        //            List<string> squence = printIn.GetSerialnos(barcodelistnew.Count.ToString(), "外", ref strMsg);
+        //            int k = 0;
+        //            DateTime time = DateTime.Now;
+        //            for (int i = 0; i < barcodelistnew.Count; i++)
+        //            {
+        //                barcodelistnew[i].CompanyCode = "SHJC";
+        //                barcodelistnew[i].BarcodeType = 1;
+        //                barcodelistnew[i].SerialNo = squence[k++];
+        //                barcodelistnew[i].Creater = currentUser.UserNo;
+        //                barcodelistnew[i].ReceiveTime = time;
+        //                barcodelistnew[i].BarCode = "1@" + barcodelistnew[i].StrongHoldCode + "@" + barcodelistnew[i].MaterialNo + "@" + barcodelistnew[i].BatchNo + "@" + barcodelistnew[i].Qty + "@" + barcodelistnew[i].SerialNo;
 
-                        //查物料
-                        T_Material_Func funM = new T_Material_Func();
-                        string strErrMsg = "";
-                        List<T_MaterialInfo> modelList = funM.GetMaterialModelBySql(barcodelistnew[i].MaterialNo, ref strErrMsg);
-                        if (modelList == null || modelList.Count == 0)
-                        {
-                            //失败
-                            return Json(new { state = false, obj = "没有该物料号" + barcodelistnew[i].MaterialNo }, JsonRequestBehavior.AllowGet);
-                        }
-                        if (modelList[0].sku == "是")
-                        {
-                            for (int kk = 0; kk < barcodelistnew[i].Qty; kk++)
-                            {
-                                Barcode_Model modelsub = (Barcode_Model)DeepCopy(barcodelistnew[i]);
-                                modelsub.fserialno = barcodelistnew[i].SerialNo;
-                                barcodelistnewsub.Add(modelsub);
-                            }
-                        }
-                    }
+        //                //查物料
+        //                T_Material_Func funM = new T_Material_Func();
+        //                string strErrMsg = "";
+        //                List<T_MaterialInfo> modelList = funM.GetMaterialModelBySql(barcodelistnew[i].MaterialNo, ref strErrMsg);
+        //                if (modelList == null || modelList.Count == 0)
+        //                {
+        //                    //失败
+        //                    return Json(new { state = false, obj = "没有该物料号" + barcodelistnew[i].MaterialNo }, JsonRequestBehavior.AllowGet);
+        //                }
+        //                if (modelList[0].sku == "是")
+        //                {
+        //                    for (int kk = 0; kk < barcodelistnew[i].Qty; kk++)
+        //                    {
+        //                        Barcode_Model modelsub = (Barcode_Model)DeepCopy(barcodelistnew[i]);
+        //                        modelsub.fserialno = barcodelistnew[i].SerialNo;
+        //                        barcodelistnewsub.Add(modelsub);
+        //                    }
+        //                }
+        //            }
 
-                    //本体打印
-                    DateTime timesub = DateTime.Now.AddSeconds(5);
-                    if (barcodelistnewsub != null && barcodelistnewsub.Count > 0)
-                    {
-                        List<string> squencesub = printIn.GetSerialnos(barcodelistnewsub.Count.ToString(), "内", ref strMsg);
-                        int ksub = 0;
+        //            //本体打印
+        //            DateTime timesub = DateTime.Now.AddSeconds(5);
+        //            if (barcodelistnewsub != null && barcodelistnewsub.Count > 0)
+        //            {
+        //                List<string> squencesub = printIn.GetSerialnos(barcodelistnewsub.Count.ToString(), "内", ref strMsg);
+        //                int ksub = 0;
 
-                        for (int isub = 0; isub < barcodelistnewsub.Count; isub++)
-                        {
-                            barcodelistnewsub[isub].CompanyCode = "SHJC";
-                            barcodelistnewsub[isub].BarcodeType = 2;
-                            barcodelistnewsub[isub].SerialNo = squencesub[ksub++];
-                            barcodelistnewsub[isub].Creater = currentUser.UserNo;
-                            barcodelistnewsub[isub].ReceiveTime = timesub;
-                            barcodelistnewsub[isub].Qty = 1;
+        //                for (int isub = 0; isub < barcodelistnewsub.Count; isub++)
+        //                {
+        //                    barcodelistnewsub[isub].CompanyCode = "SHJC";
+        //                    barcodelistnewsub[isub].BarcodeType = 2;
+        //                    barcodelistnewsub[isub].SerialNo = squencesub[ksub++];
+        //                    barcodelistnewsub[isub].Creater = currentUser.UserNo;
+        //                    barcodelistnewsub[isub].ReceiveTime = timesub;
+        //                    barcodelistnewsub[isub].Qty = 1;
 
-                            barcodelistnewsub[isub].BarCode = "2@" + barcodelistnewsub[isub].StrongHoldCode + "@" + barcodelistnewsub[isub].MaterialNo + "@" + barcodelistnewsub[isub].BatchNo + "@1@" + barcodelistnewsub[isub].SerialNo;
+        //                    barcodelistnewsub[isub].BarCode = "2@" + barcodelistnewsub[isub].StrongHoldCode + "@" + barcodelistnewsub[isub].MaterialNo + "@" + barcodelistnewsub[isub].BatchNo + "@1@" + barcodelistnewsub[isub].SerialNo;
 
-                        }
-                    }
-                    barcodelistnewAll.AddRange(barcodelistnew);
-                    barcodelistnewAll.AddRange(barcodelistnewsub);
-                    Print_DB func = new Print_DB();
-                    if (func.SubBarcodesNoPrint(barcodelistnewAll, ref strMsg))
-                    {
-                        if (barcodelistnewsub != null && barcodelistnewsub.Count > 0)
-                        {
-                            return Json(new { state = true, obj = time.ToString("yyyy/MM/dd HH:mm:ss"), obj1 = timesub.ToString("yyyy/MM/dd HH:mm:ss") }, JsonRequestBehavior.AllowGet);
-                        }
-                        else
-                        {
-                            return Json(new { state = true, obj = time.ToString("yyyy/MM/dd HH:mm:ss"), obj1 = "" }, JsonRequestBehavior.AllowGet);
-                        }
-                    }
-                    else
-                    {
-                        //失败
-                        return Json(new { state = false, obj = strMsg }, JsonRequestBehavior.AllowGet);
-                    }
-                }
-                else
-                {
-                    //失败
-                    return Json(new { state = false, obj = "数据为空" }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { state = false, obj = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
+        //                }
+        //            }
+        //            barcodelistnewAll.AddRange(barcodelistnew);
+        //            barcodelistnewAll.AddRange(barcodelistnewsub);
+        //            Print_DB func = new Print_DB();
+        //            if (func.SubBarcodesNoPrint(barcodelistnewAll, ref strMsg))
+        //            {
+        //                if (barcodelistnewsub != null && barcodelistnewsub.Count > 0)
+        //                {
+        //                    return Json(new { state = true, obj = time.ToString("yyyy/MM/dd HH:mm:ss"), obj1 = timesub.ToString("yyyy/MM/dd HH:mm:ss") }, JsonRequestBehavior.AllowGet);
+        //                }
+        //                else
+        //                {
+        //                    return Json(new { state = true, obj = time.ToString("yyyy/MM/dd HH:mm:ss"), obj1 = "" }, JsonRequestBehavior.AllowGet);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                //失败
+        //                return Json(new { state = false, obj = strMsg }, JsonRequestBehavior.AllowGet);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //失败
+        //            return Json(new { state = false, obj = "数据为空" }, JsonRequestBehavior.AllowGet);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { state = false, obj = ex.ToString() }, JsonRequestBehavior.AllowGet);
+        //    }
 
-        }
+        //}
 
         public JsonResult CheckSKU(string serialno)
         {
