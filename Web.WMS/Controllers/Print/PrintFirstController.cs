@@ -127,7 +127,8 @@ namespace Web.WMS.Controllers.Print
                 {
                     var serialnos = GetSerialnos((item.Qty / item.InnerPackQty + 1).ToString());
                     var material = new MaterialService()
-                        .GetList(x => x.MATERIALNO == item.MaterialNo).FirstOrDefault();
+                        .GetList(x => x.MATERIALNO == item.MaterialNo && x.STRONGHOLDCODE == item.StrongHoldCode)
+                        .FirstOrDefault();
                     if (material == null)
                         throw new Exception("没有物料编号为" + item.MaterialNo + "的数据");
 
@@ -149,9 +150,10 @@ namespace Web.WMS.Controllers.Print
                         barcode.cuscode = item.CusCode;
                         barcode.cusname = item.CusName;
                         barcode.department = item.department;
-                        barcode.qty = item.Qty <= item.InnerPackQty ? item.Qty :
-                            ((i == count - 1) ? item.Qty % item.InnerPackQty : item.InnerPackQty);
-                        barcode.ReceiveTime = time;
+                        barcode.qty = item.Qty <= item.InnerPackQty ? item.Qty : ((i == count - 1) ?
+                                    (item.Qty % item.InnerPackQty == 0 ? item.InnerPackQty
+                                    : item.Qty % item.InnerPackQty) : item.InnerPackQty);
+                        barcode.ReceiveTime = Convert.ToDateTime(time.ToString());
                         barcode.serialno = serialnos[i];
                         barcode.barcode = "2@" + item.MaterialNo + "@" + barcode.qty + "@" + serialnos[i];
                         barcode.materialnoid = material.ID;
