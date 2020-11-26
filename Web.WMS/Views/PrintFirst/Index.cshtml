@@ -1,131 +1,113 @@
-﻿@using BILWeb.Print;
-@{
+﻿@{
     ViewBag.Title = "期初打印";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
-    List<Barcode_Model> Data = ViewData["Data"] == null ? null : (List<Barcode_Model>)ViewData["Data"];
     var Path = ViewData["Path"] == null ? null : (String)ViewData["Path"];
     var printIP = System.Web.HttpContext.Current.Session["printIP"];
 }
 
-<form method="post" enctype="multipart/form-data" action="/PrintFirst/ImportExcel" class="form-group" style="margin-left:20px;">
-    <input name="file" type="file" id="file" />
-    <input type="submit" style="" class="btn btn-google-plus margin " value="导 入" onclick="saveExcel()">
-    <input type="button" class="btn btn-google-plus margin dayin" value="打 印" onclick="saveExcel()">
-</form>
-
 <input type="hidden" value="@Path" id="Path" />
 <input type="hidden" id="printIP" value="@printIP" />
-<div class="mailbox row" style="margin-bottom:20px;margin-left:20px;">
-    <div class="col-xs-12">
-        <div class="box box-solid">
-            <div class="box-body">
-                <div class="row">
-                    <div class="table-responsive">
-                        <input type="button" id="button" value="全选" class="btn bg-red pull-left margin chaxun" onclick="checkall()">
-                        <!-- THE MESSAGES -->
-                        <table name="table" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>选择</th>
-                                    <th>序号</th>
-                                    <th>据点</th>
-                                    <th>据点号</th>
-                                    <th>物料号</th>
-                                    <th>物料描述</th>
-                                    <th>批次</th>
-                                    <th>项目号</th>
-                                    <th>需求跟踪号</th>
-                                    <th>数量</th>
-                                    <th>库位</th>
-                                    <th>张数</th>
-                                </tr>
-                            </thead>
-                            <tbody id="detailTable">
-                                @{
-                                    if (Data != null && Data.Count != 0)
-                                    {
-                                        foreach (Barcode_Model row in Data)
-                                        {
-                                            <tr>
-                                                <td><input type="checkbox" class="minimal" value="@row.RowNo" /></td>
-                                                <td>@row.RowNo </td>
-                                                <td>@row.StrongHoldName </td>
-                                                <td>@row.StrongHoldCode </td>
-                                                <td>@row.MaterialNo </td>
-                                                <td>@row.MaterialDesc </td>
-                                                <td>@row.BatchNo </td>
-                                                <td>@row.ProjectNo </td>
-                                                <td>@row.TracNo </td>
-                                                <td>@row.Qty </td>
-                                                <td>@row.WorkNo </td>
-                                                <td>@row.BoxCount </td>
-                                            </tr>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <tr>
-                                            <td colspan="13" align="center"><b>无查询数据</b></td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div><!-- /.table-responsive -->
-                </div><!-- /.row -->
-            </div><!-- /.box-body -->
-        </div><!-- /.box -->
-    </div><!-- /.col (MAIN) -->
+
+<div style="margin-left:20px;margin-top:20px;">
+    <form class="layui-form" method="post" enctype="multipart/form-data" action="/PrintFirst/ImportExcel">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <input name="file" type="file" id="file" />
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-bottom:0px;">
+            <div class="layui-inline">
+                <input type="submit" class="btn btn-primary" value="导 入">
+            </div>
+        </div>
+    </form>
 </div>
+<table class="layui-hide" id="printFirstTable" lay-filter="test"></table>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="print">打印</button>
+    </div>
+</script>
 
 <script type="text/javascript">
+    layui.use(['laypage', 'layer', 'table'], function () {
+        laypage = layui.laypage
+            , layer = layui.layer
+            , table = layui.table
 
-    //正选反选
-    function checkall() {
-        var flag = true;
-        if (document.getElementById('button').value == "全选") {
-            flag = true;
-            document.getElementById('button').value = "取消";
-        } else {
-            flag = false;
-            document.getElementById('button').value = "全选";
-        }
-        $("input[type=checkbox]").each(function () { //循环checkbox选择或取消
-            $(this).prop("checked", flag);
-        })
-
-    }
-
-    $(".dayin").click(function () {
-        var IDs = "";
-        if (confirm("确定打印这" + $('input[type=checkbox]:checked').length + "条记录?")) {
-            $.each($('input:checkbox:checked'), function () {
-                IDs = (IDs + $(this).val() + ",");
-            });
-            $.ajax({
-                type: "Post",
-                url: "/PrintFirst/Print",
-                data: {
-                    IDs: IDs,
-                    Path: $("#Path").val()
-                },
-                success: function (msg) {
-                    if (msg.state) {
-                        window.open($("#printIP").val() + "Main.aspx?flag=First&parameter1=" + msg.obj);
-                        if ( msg.obj1!=""&& msg.obj1!=null) {
-                             window.open($("#printIP").val() + "Main.aspx?flag=FirstS&parameter1=" + msg.obj1);
-                        }
-                        
-                    }
-                    else {
-                        alert(msg.obj);
-                    }
-                },
-                fail: function () {
-                    alert("提交失败！")
+        //table初始化
+        var renderTable = function () {
+            table.render({
+                elem: '#printFirstTable'
+                , height: 450
+                , url: '/PrintFirst/GetData'
+                , method: 'post'
+                , contentType: 'application/json'
+                , where: {
+                    path: $("#Path").val()
+                }
+                , title: '导入明细'
+                , page: false
+                , toolbar: '#toolbarDemo'
+                , totalRow: false
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' },
+                    { field: 'MaterialNo', title: '物料号', width: 120 },
+                    { field: 'MaterialDesc', title: '物料描述', width: 120 },
+                    { field: 'Spec', title: '规格', width: 120 },
+                    { field: 'Unit', title: '单位', width: 120 },
+                    { field: 'BatchNo', title: '番号', width: 120 },
+                    { field: 'ProductBatch', title: '转换后番号', width: 120 },
+                    { field: 'StrongHoldCode', title: '组织', width: 120 },
+                    { field: 'warehouseno', title: 'erp仓库编码', width: 120 },
+                    { field: 'warehousename', title: '仓库名称', width: 120 },
+                    { field: 'CusCode', title: '客户编码', width: 120 },
+                    { field: 'CusName', title: '客户简称', width: 120 },
+                    { field: 'department', title: '部门', width: 120 },
+                    { field: 'Qty', title: '数量', width: 120 },
+                    { field: 'InnerPackQty', title: '包装量', width: 120 },
+                ]]
+                , response: {
+                    statusCode: 1
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.Result,
+                        "msg": res.ResultValue,
+                        //"count": res.PageData.totalCount,
+                        "data": res.Data
+                    };
                 }
             });
         }
-    })
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo'
+            , count: 100
+            , skin: '#1E9FFF'
+            , jump: function (obj, first) {
+                if (!first)
+                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
+            }
+        });
+
+        renderTable();
+
+        //监听头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id)
+                , data = checkStatus.data; //获取选中的数据
+            if (obj.event == "print") {
+                $.post("/PrintFirst/Print", { data: JSON.stringify(data) }, function (msg) {
+                    if (!msg.Success) {
+                        layer.alert(msg.Msg);
+                        return false;
+                    }
+                    window.open($("#printIP").val() + "Main.aspx?flag=First&parameter1=" + msg.Data);
+                });
+            };
+        });
+    });
 
 </script>
