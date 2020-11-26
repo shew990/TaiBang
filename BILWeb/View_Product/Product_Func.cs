@@ -46,10 +46,7 @@ namespace BILWeb.Product
             return modelList;
         }
         
-
-
-
-
+        
         public string GetModelList(string UserJson, string ModelJson)
         {
 
@@ -132,6 +129,14 @@ namespace BILWeb.Product
                 T_Product Newproduct = ProductDB.GetModelListADF(userModel, product)[0];
                 Newproduct.ScanQty = product.ScanQty;
                 Newproduct.Detail = product.Detail;
+                
+                if (Newproduct.ProductQty< Newproduct.LinkQty+ product.ScanQty)
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "传入的关联数量超过未关联数量，不合法！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+                
                 if (ProductDB.SaveProDuctBarcode(userModel, Newproduct))
                 {
                     //bool res = PrintLable(list, ipport, ref ErrMsg);//调用打印标签
