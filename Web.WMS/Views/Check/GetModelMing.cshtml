@@ -61,8 +61,6 @@
             laypage = layui.laypage,
             layer = layui.layer
 
-        tableInit();
-
         //表格初始化
         function tableInit() {
             table.render({
@@ -92,17 +90,17 @@
                     return {
                         "code": res.state,
                         "msg": res.ResultValue,
-                        "count": res.PageData.totalCount,
+                        //"count": res.PageData.totalCount,
                         "data": res.data
                     };
                 }
-                , title: '库位'
+                , title: '盘点'
                 , page: false
-                , toolbar: 'false'
+                , toolbar: false
                 , cols: [
                     [
-                        { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
-                        , { type: 'checkbox', width: 60, fixed: 'left' }
+                        { type: 'checkbox', width: 60, fixed: 'left' }
+                        , { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
                         , { field: 'StrongHoldCode', title: '据点编号', width: 120, fixed: 'left' }
                         , { field: 'MaterialNo', title: '产品编号', width: 120 }
                         , { field: 'MaterialName', title: '产品名称', width: 120 }
