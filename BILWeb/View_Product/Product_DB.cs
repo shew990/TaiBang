@@ -117,7 +117,7 @@ namespace BILWeb.Product
                 model.MaterialNo = modelList.MaterialNo;
                 model.MaterialDesc = modelList.MaterialDesc;
                 model.BatchNo = modelList.BatchNo;
-                model.ProductBatch = GetBatchno(model.BatchNo);//给批号加密成8位
+                model.ProductBatch = modelList.ProductBatch;//给批号加密成8位
                 model.ErpVoucherNo = modelList.ErpVoucherNo;
                 model.Qty = Convert.ToDecimal(modelList.ScanQty);
 

@@ -109,11 +109,7 @@ namespace Web.WMS.Controllers.Print
             return RedirectToAction("Index", "PrintFirst");
         }
 
-        /// <summary>
-        /// 打印
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        //期初打印方法
         public ActionResult Print(string data)
         {
             SuccessResult successResult = new SuccessResult();
@@ -147,6 +143,7 @@ namespace Web.WMS.Controllers.Print
                         barcode.strongholdcode = item.StrongHoldCode;
                         barcode.erpwarehouseno = item.warehouseno;
                         //barcode.ware = item.warehousename;//仓库名称
+                        barcode.barcodetype = 1;
                         barcode.cuscode = item.CusCode;
                         barcode.cusname = item.CusName;
                         barcode.department = item.department;
