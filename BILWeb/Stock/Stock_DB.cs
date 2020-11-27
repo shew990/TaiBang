@@ -909,6 +909,52 @@ namespace BILWeb.Stock
             }
         }
 
+
+        public List<T_StockInfo> materialnAndBatch(string SerialNo)
+        {
+            try
+            {
+                string[] strs = SerialNo.Split(',');
+
+                List<T_StockInfo> models = new List<T_StockInfo>();
+                T_StockInfo model = new T_StockInfo();
+                string strSql = "select A.Palletno,A.Areaid,a.Warehouseid,a.Houseid,a.Qty,a.Barcode,a.Serialno,a.Strongholdcode,(case a.Status when 1 then '待检' when 2 then '送检' when 3 then '合格' when 4 then '不合格' end) as StrStatus,c.areano," +
+                                "a.Strongholdname,a.Companycode,a.Batchno,a.Materialno,a.Materialdesc from t_Stock a left join t_Material b on a.Materialnoid = b.Id left join t_Area c on a.Areaid = c.Id" +
+                                " where 1=1 " ;
+                if (string.IsNullOrEmpty(strs[0]))
+                {
+                    strSql = strSql + " and a.materialno='"+ strs[0] + "'";
+                }
+                if (string.IsNullOrEmpty(strs[1]))
+                {
+                    strSql = strSql + " and a.batchno='" + strs[1] + "'";
+                }
+
+                using (IDataReader dr = dbFactory.ExecuteReader(System.Data.CommandType.Text, strSql))
+                {
+                    if (dr.Read())
+                    {
+
+                        model.MaterialNo = dr["materialno"].ToDBString();
+                        model.MaterialDesc = dr["materialdesc"].ToDBString();
+                        model.Qty = dr["Qty"].ToDecimal();
+                        model.StrongHoldName = dr["StrongHoldName"].ToDBString();
+                        model.BatchNo = dr["BatchNo"].ToDBString();
+                        model.AreaNo = dr["AreaNo"].ToDBString();
+                        model.StrStatus = dr["StrStatus"].ToDBString();
+                        //model.EAN = dr["ean"].ToDBString();//
+                        model.WareHouseID = dr["warehouseid"].ToInt32();
+
+                    }
+                }
+                models.Add(model);
+                return models;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public T_StockInfo GetStockBySerialNo(string SerialNo)
         {
             try
