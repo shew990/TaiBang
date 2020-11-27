@@ -122,12 +122,13 @@ namespace Web.WMS.Controllers.Print
             {
                 var barcodes = JsonConvert.DeserializeObject<List<Barcode_Model>>(data);
                 List<T_OutBarcode> outBarcodes = new List<T_OutBarcode>();
-                DateTime time = DateTime.Now;
+                DateTime time = Convert.ToDateTime(DateTime.Now.ToString());
                 foreach (var item in barcodes)
                 {
-                    int count = item.Qty % item.InnerPackQty == 0 ?
-                     Convert.ToInt32(item.Qty / item.InnerPackQty) : Convert.ToInt32(item.Qty / item.InnerPackQty) + 1;
-                    var serialnos = GetSerialnos(count.ToString());//多条序列号
+                    int count = item.Qty % item.InnerPackQty == 0
+                        ? Convert.ToInt32(Math.Floor(item.Qty / item.InnerPackQty))
+                        : Convert.ToInt32(Math.Floor(item.Qty / item.InnerPackQty)) + 1;
+                    var serialnos = GetSerialnos(count);//多条序列号
                     var material = new MaterialService()
                         .GetList(x => x.MATERIALNO == item.MaterialNo && x.STRONGHOLDCODE == item.StrongHoldCode)
                         .FirstOrDefault();
@@ -149,10 +150,10 @@ namespace Web.WMS.Controllers.Print
                         barcode.cuscode = item.CusCode;
                         barcode.cusname = item.CusName;
                         barcode.department = item.department;
-                        barcode.qty = item.Qty <= item.InnerPackQty ? item.Qty : ((i == count - 1) ?
-                                    (item.Qty % item.InnerPackQty == 0 ? item.InnerPackQty
+                        barcode.qty = item.Qty <= item.InnerPackQty ? item.Qty : ((i == count - 1)
+                                    ? (item.Qty % item.InnerPackQty == 0 ? item.InnerPackQty
                                     : item.Qty % item.InnerPackQty) : item.InnerPackQty);
-                        barcode.ReceiveTime = Convert.ToDateTime(time.ToString());
+                        barcode.ReceiveTime = time;
                         barcode.serialno = serialnos[i];
                         barcode.barcode = "2@" + item.MaterialNo + "@" + barcode.qty + "@" + serialnos[i];
                         barcode.materialnoid = material.ID;
@@ -172,28 +173,23 @@ namespace Web.WMS.Controllers.Print
             return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 
-
-        public List<string> GetSerialnos(string v)
+        /// <summary>
+        /// 获取序列号
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public List<string> GetSerialnos(int count)
         {
-            decimal Vnum = Convert.ToDecimal(v);
-            int VZ = (int)Vnum / 1;
-            decimal VL = Vnum % 1;
             List<string> serialnos = new List<string>();
-            for (int i = 0; i < VZ; i++)
+            for (int i = 0; i < count; i++)
             {
                 string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
-                if (serialnos.Find(t => t == code) == null)
-                    serialnos.Add(code);
-                else
+                if (serialnos.Find(x => x == code) != null)
+                {
                     i--;
-            }
-            if (VL != 0)
-            {
-                string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
-                if (serialnos.Find(t => t == code) == null)
-                    serialnos.Add(code);
-                else
-                    serialnos.Add(code + "1");
+                    continue;
+                }
+                serialnos.Add(code);
             }
             return serialnos;
         }

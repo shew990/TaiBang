@@ -246,7 +246,7 @@ namespace Web.WMS.Controllers
         #region 物料盘点
 
         /// <summary>
-        /// 跳转新建明盘单
+        /// 跳转新建明盘单页面
         /// </summary>
         /// <returns></returns>
         public ActionResult GetModelMing()
