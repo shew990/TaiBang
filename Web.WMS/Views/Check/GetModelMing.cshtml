@@ -2,59 +2,64 @@
     ViewBag.Title = "GetModelMing";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
-
-<form class="layui-form" action="">
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">据点编号</label>
-            <div class="layui-input-block">
-                <input type="text" id="StrongHoldCode" class="layui-input">
+<div style="margin:10px auto 10px 10px;">
+    <i class="layui-icon layui-icon-return" style="font-size: 16px;color: #428bca"></i>
+    <a href="/Check/GetModelList"><span style="font-size:16px;color: #428bca">返回</span></a>
+</div>
+<div style="margin-top:20px;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">据点编号</label>
+                <div class="layui-input-block">
+                    <input type="text" id="StrongHoldCode" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">产品编号</label>
+                <div class="layui-input-block">
+                    <input type="text" id="MaterialNo" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">仓库编号</label>
+                <div class="layui-input-block">
+                    <input type="text" id="WarehouseNo" class="layui-input">
+                </div>
             </div>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">产品编号</label>
-            <div class="layui-input-block">
-                <input type="text" id="MaterialNo" class="layui-input">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">库区编号</label>
+                <div class="layui-input-block">
+                    <input type="text" id="HouseNo" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">库位编号</label>
+                <div class="layui-input-block">
+                    <input type="text" id="AreaNo" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">场内批号</label>
+                <div class="layui-input-block">
+                    <input type="text" id="BatchNo" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <input type="button" class="btn btn-primary" value="查 询" id="query" style="margin-bottom:15px;">
             </div>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">仓库编号</label>
-            <div class="layui-input-block">
-                <input type="text" id="WarehouseNo" class="layui-input">
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">库区编号</label>
-            <div class="layui-input-block">
-                <input type="text" id="HouseNo" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">库位编号</label>
-            <div class="layui-input-block">
-                <input type="text" id="AreaNo" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">场内批号</label>
-            <div class="layui-input-block">
-                <input type="text" id="BatchNo" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <input type="button" class="btn btn-primary" value="查 询">
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 <table class="layui-hide" id="checkTable" lay-filter="init"></table>
 
 <script>
     layui.use(['laypage', 'layer', 'table'], function () {
-        table = layui.table
-            , laypage = layui.laypage
-            , layer = layui.layer
+        table = layui.table,
+            laypage = layui.laypage,
+            layer = layui.layer
 
         tableInit();
 
@@ -63,7 +68,7 @@
             table.render({
                 elem: '#checkTable'
                 , height: 520
-                , url: '/StockDetail/GetCheckStock'
+                , url: '/Check/GetCheckStock'
                 , method: 'post'
                 , contentType: 'application/json'
                 , where: {
@@ -85,14 +90,14 @@
                 }
                 , parseData: function (res) {
                     return {
-                        "code": res.Result,
+                        "code": res.state,
                         "msg": res.ResultValue,
                         "count": res.PageData.totalCount,
-                        "data": res.Data
+                        "data": res.data
                     };
                 }
                 , title: '库位'
-                , page: true
+                , page: false
                 , toolbar: 'false'
                 , cols: [
                     [
@@ -102,7 +107,7 @@
                         , { field: 'MaterialNo', title: '产品编号', width: 120 }
                         , { field: 'MaterialName', title: '产品名称', width: 120 }
                         , { field: 'BatchNo', title: '场内批号', width: 120 }
-                        , { field: '', title: '到期时间', width:200 }
+                        , { field: '', title: '到期时间', width: 200 }
                         , { field: 'Qty', title: '数量', width: 120 }
                         , { field: '', title: '序列号数', width: 80 }
                         , { field: '', title: '检验状态', width: 80 }
@@ -123,9 +128,9 @@
 
         //分页
         laypage.render({
-            elem: 'pageDemo'
-            , count: 100
-            , skin: '#1E9FFF'
+            elem: 'pageDemo' //分页容器的id
+            , count: 100 //总页数
+            , skin: '#1E9FFF' //自定义选中色值
             , jump: function (obj, first) {
                 if (!first)
                     layer.msg('第' + obj.curr + '页', { offset: 'b' });
@@ -133,7 +138,7 @@
         });
 
         //查询
-        $('#Query').click(function () {
+        $('#query').click(function () {
             tableInit();
         });
 

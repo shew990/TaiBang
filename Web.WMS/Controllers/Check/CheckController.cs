@@ -259,7 +259,7 @@ namespace Web.WMS.Controllers
         /// </summary>
         /// <param name="tm"></param>
         /// <returns></returns>
-        private JsonResult GetCheckStock(T_StockInfoEX tm)
+        public JsonResult GetCheckStock(T_StockInfoEX model)
         {
             //参数=>tm.MaterialNo //tm.StrongHoldCode  //tm.HouseNo //tm.AreaNo //tm.WarehouseNo //tm.BatchNo
             try
@@ -267,18 +267,18 @@ namespace Web.WMS.Controllers
                 string strErrMsg = string.Empty;
                 List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
-                if (db.GetStockCombineInfo2(tm, ref lsttask, ref strErrMsg))
-                    return Json(new { state = true, data = lsttask }, JsonRequestBehavior.AllowGet);
-                return Json(new { state = false, Msg = strErrMsg }, JsonRequestBehavior.AllowGet);
+                if (db.GetStockCombineInfo2(model, ref lsttask, ref strErrMsg))
+                    return Json(new { Result = 1, Data = lsttask }, JsonRequestBehavior.AllowGet);
+                return Json(new { Result = -1, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new { state = false, Msg = ex.ToString() }, JsonRequestBehavior.AllowGet);
+                return Json(new { Result = -1, ResultValue = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
 
         //保存盘点单
-        private JsonResult SaveCheck(List<T_StockInfoEX> list)
+        public JsonResult SaveCheck(List<T_StockInfoEX> list)
         {
             try
             {
