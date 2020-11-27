@@ -597,30 +597,30 @@ namespace BILWeb.Query
         {
             string sql = "where 1=1 ";
 
-            if (mo.WarehouseNo != "")
+            if (!string.IsNullOrEmpty(mo.WarehouseNo))
                 sql += " and WarehouseNo = '" + mo.WarehouseNo + "'";
 
-            if (mo.MaterialNo != "" && !mo.MaterialNo.Contains(','))
+            if (!string.IsNullOrEmpty(mo.MaterialNo) && !mo.MaterialNo.Contains(','))
                 sql += " and MaterialNo like '" + mo.MaterialNo + "%'";
-            else if (mo.MaterialNo != "" && mo.MaterialNo.Contains(','))
+            else if (!string.IsNullOrEmpty(mo.MaterialNo) && mo.MaterialNo.Contains(','))
             {
                 string MaterialNo = mo.MaterialNo;
                 Query_Func.ChangeQuery(ref MaterialNo);
                 sql += " and MaterialNo in(" + MaterialNo + ")";
             }
 
-            if (mo.HouseNo != "" && !mo.HouseNo.Contains(','))
+            if (!string.IsNullOrEmpty(mo.HouseNo) && !mo.HouseNo.Contains(','))
                 sql += " and HouseNo = '" + mo.HouseNo + "'";
-            else if (mo.HouseNo != "" && mo.HouseNo.Contains(','))
+            else if (!string.IsNullOrEmpty(mo.HouseNo) && mo.HouseNo.Contains(','))
             {
                 string HouseNo = mo.HouseNo;
                 Query_Func.ChangeQuery(ref HouseNo);
                 sql += " and HouseNo in(" + HouseNo + ")";
             }
 
-            if (mo.AreaNo != "" && !mo.AreaNo.Contains(','))
+            if (!string.IsNullOrEmpty(mo.AreaNo) && !mo.AreaNo.Contains(','))
                 sql += " and AreaNo = '" + mo.AreaNo + "'";
-            else if (mo.AreaNo != "" && mo.AreaNo.Contains(','))
+            else if (!string.IsNullOrEmpty(mo.AreaNo) && mo.AreaNo.Contains(','))
             {
                 string AreaNo = mo.AreaNo;
                 Query_Func.ChangeQuery(ref AreaNo);
@@ -628,9 +628,9 @@ namespace BILWeb.Query
             }
 
 
-            if (mo.BatchNo != "" && !mo.BatchNo.Contains(','))
+            if (!string.IsNullOrEmpty(mo.BatchNo) && !mo.BatchNo.Contains(','))
                 sql += " and BatchNo = '" + mo.BatchNo + "'";
-            else if (mo.BatchNo != "" && mo.BatchNo.Contains(','))
+            else if (!string.IsNullOrEmpty(mo.BatchNo) && mo.BatchNo.Contains(','))
             {
                 string BatchNo = mo.BatchNo;
                 Query_Func.ChangeQuery(ref BatchNo);
@@ -638,9 +638,9 @@ namespace BILWeb.Query
             }
 
 
-            if (mo.StrongHoldCode != "" && !mo.StrongHoldCode.Contains(','))
+            if (!string.IsNullOrEmpty(mo.StrongHoldCode) && !mo.StrongHoldCode.Contains(','))
                 sql += " and StrongHoldCode = '" + mo.StrongHoldCode + "'";
-            else if (mo.StrongHoldCode != "" && mo.StrongHoldCode.Contains(','))
+            else if (!string.IsNullOrEmpty(mo.StrongHoldCode) && mo.StrongHoldCode.Contains(','))
             {
                 string StrongHoldCode = mo.StrongHoldCode;
                 Query_Func.ChangeQuery(ref StrongHoldCode);
