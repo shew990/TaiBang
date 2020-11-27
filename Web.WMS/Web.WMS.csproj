@@ -271,6 +271,7 @@
     <Compile Include="Controllers\ProductOrders\ProductOrdersController.cs" />
     <Compile Include="Controllers\QualityDetail\QualityDetailController.cs" />
     <Compile Include="Controllers\Print\PrintInstockController.cs" />
+    <Compile Include="Controllers\SeePallet\SeePalletController.cs" />
     <Compile Include="Controllers\YS\YSController.cs" />
     <Compile Include="Controllers\LandmarkWithTask\LandmarkWithTaskController.cs" />
     <Compile Include="Controllers\Landmark\LandmarkController.cs" />
@@ -584,6 +585,7 @@
     <Content Include="Content\img\user.png" />
     <Content Include="Content\img\user2.jpg" />
     <Content Include="Content\img\X_orange.png" />
+    <Content Include="Content\jquery.media.js" />
     <Content Include="Content\js\AdminLTE\app.js" />
     <Content Include="Content\js\AdminLTE\dashboard.js" />
     <Content Include="Content\js\AdminStyle.js" />
@@ -1369,6 +1371,7 @@
     <Content Include="Views\QualityDetail\GetModelList.cshtml" />
     <Content Include="Views\ProductOrders\GetModelList.cshtml" />
     <Content Include="Views\Check\GetModelMing.cshtml" />
+    <Content Include="Views\SeePallet\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
