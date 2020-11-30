@@ -759,6 +759,7 @@ namespace SCCGAndroidService
             return func.OffSerialno(EAN, areaid, batchno, materialno);
         }
 
+
         public string GetWareHouse()
         {
             Check_DB db = new Check_DB();
