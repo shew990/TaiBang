@@ -147,7 +147,7 @@ namespace Web.WMS.Controllers.Print
                         barcode.erpwarehouseno = item.warehouseno;
                         //barcode.ware = item.warehousename;//仓库名称
                         barcode.department = item.department;
-                        //barcode.departmentname = item.departmentname;
+                        barcode.departmentname = item.departmentname;
                         barcode.barcodetype = 1;
                         barcode.cuscode = item.CusCode == null ? "" : item.CusCode;
                         barcode.cusname = item.CusName == null ? "" : item.CusName;

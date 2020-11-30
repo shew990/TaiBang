@@ -525,12 +525,20 @@ namespace SqlSugarDAL.barcode
         public string department { get; set; }
 
         /// <summary>
+        /// departmentname
+        /// </summary>
+        public string departmentname { get; set; }
+
+        /// <summary>
         /// Desc:
         /// Default:
         /// Nullable:True
         /// </summary>           
         public string erpwarehouseno { get; set; }
 
+        /// <summary>
+        /// spec
+        /// </summary>
         public string spec { get; set; }
 
     }
