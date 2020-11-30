@@ -55,18 +55,22 @@ namespace Web.WMS.Controllers.Print
                     Barcode_Model barcode = new Barcode_Model();
                     barcode.MaterialNo = dt.Rows[i][0].ToString();
                     barcode.MaterialDesc = dt.Rows[i][1].ToString();
-                    //barcode.spec = dt.Rows[i][2].ToString();//规格
-                    barcode.Unit = dt.Rows[i][3].ToString();
+                    barcode.spec = dt.Rows[i][2].ToString();
+                    barcode.StoreCondition = dt.Rows[i][3].ToString();//客户型号
                     barcode.BatchNo = dt.Rows[i][4].ToString();
                     barcode.ProductBatch = dt.Rows[i][5].ToString();
                     barcode.StrongHoldCode = dt.Rows[i][6].ToString();
                     barcode.warehouseno = dt.Rows[i][7].ToString();
                     barcode.warehousename = dt.Rows[i][8].ToString();
-                    barcode.CusCode = dt.Rows[i][9].ToString();
-                    barcode.CusName = dt.Rows[i][10].ToString();
-                    barcode.department = dt.Rows[i][11].ToString();
-                    barcode.Qty = Convert.ToDecimal(dt.Rows[i][12]);
-                    barcode.InnerPackQty = Convert.ToDecimal(dt.Rows[i][13]);
+                    barcode.department = dt.Rows[i][9].ToString();//部门编码
+                    barcode.departmentname = dt.Rows[i][10].ToString();
+                    barcode.CusCode = dt.Rows[i][11].ToString();
+                    barcode.CusName = dt.Rows[i][12].ToString();
+                    barcode.ProtectWay = dt.Rows[i][13].ToString();//单据类型
+                    barcode.LABELMARK = dt.Rows[i][14].ToString();//客户订单号
+                    barcode.Qty = Convert.ToDecimal(dt.Rows[i][15]);
+                    barcode.Unit = dt.Rows[i][16].ToString();
+                    barcode.InnerPackQty = Convert.ToDecimal(dt.Rows[i][17]);
 
                     barcodelist.Add(barcode);
                 }
@@ -136,20 +140,23 @@ namespace Web.WMS.Controllers.Print
                         T_OutBarcode barcode = new T_OutBarcode();
                         barcode.materialno = item.MaterialNo;
                         barcode.materialdesc = item.MaterialDesc;
-                        //barcode.spec = item.spec;//规格
-                        barcode.unit = item.Unit;
+                        barcode.spec = item.spec;
                         barcode.batchno = item.BatchNo;
                         barcode.productbatch = item.ProductBatch;
                         barcode.strongholdcode = item.StrongHoldCode;
                         barcode.erpwarehouseno = item.warehouseno;
                         //barcode.ware = item.warehousename;//仓库名称
-                        barcode.barcodetype = 1;
-                        barcode.cuscode = item.CusCode;
-                        barcode.cusname = item.CusName;
                         barcode.department = item.department;
+                        //barcode.departmentname = item.departmentname;
+                        barcode.barcodetype = 1;
+                        barcode.cuscode = item.CusCode == null ? "" : item.CusCode;
+                        barcode.cusname = item.CusName == null ? "" : item.CusName;
+                        barcode.protectway = item.ProtectWay;
+                        barcode.labelmark = item.LABELMARK == null ? "" : item.LABELMARK;
                         barcode.qty = item.Qty <= item.InnerPackQty ? item.Qty : ((i == count - 1)
                                     ? (item.Qty % item.InnerPackQty == 0 ? item.InnerPackQty
                                     : item.Qty % item.InnerPackQty) : item.InnerPackQty);
+                        barcode.unit = item.Unit;
                         barcode.ReceiveTime = time;
                         barcode.serialno = serialnos[i];
                         barcode.barcode = "2@" + item.MaterialNo + "@" + barcode.qty + "@" + serialnos[i];

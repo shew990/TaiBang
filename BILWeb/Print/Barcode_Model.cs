@@ -44,7 +44,6 @@ namespace BILWeb.Print
         private string ean;
         private DateTime receivetime;
 
-
         public string EAN
         {
             get
@@ -597,5 +596,9 @@ namespace BILWeb.Print
         public string department { get; set; }//部门
 
         public string erpwarehouseno { get; set; }//erp仓库，存放地址
+
+        public string departmentname { get; set; }
+
+        public string spec { get; set; }
     }
 }
