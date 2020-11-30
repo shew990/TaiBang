@@ -56,6 +56,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>DLL\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
+    <Reference Include="SqlSugar">
+      <HintPath>..\packages\sqlSugar.5.0.1.3\lib\SqlSugar.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -126,6 +129,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SqlSugarDAL\SqlSugarDAL.csproj">
+      <Project>{9FF74A45-9515-4DA5-8E2E-913A05E6BA94}</Project>
+      <Name>SqlSugarDAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

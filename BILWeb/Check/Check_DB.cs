@@ -524,11 +524,12 @@ namespace BILWeb.Query
             try
             {
                 Check_Func CF = new Check_Func();
-                string checkno = CF.GetTableID("SEQ_CHECK_NO");
-                int id = Check_Func.GetSeqID("SEQ_CHECK_ID");
+                int id = GetTableIDBySqlServer("T_CHECK");
+                string checkno = "P" + DateTime.Now.ToString("yyMMdd")+id.ToString();
+               
                 List<string> sqls = new List<string>();
-                string sqlhead = "insert into T_CHECK(ID,CHECKNO,CHECKTYPE,CHECKDESC,CHECKSTATUS,REMARKS,ISDEL,CREATER,CREATETIME) VALUES" +
-                    "(" + id + ",'" + checkno + "','" + "明盘" + "','" + model.CHECKDESC + "','" + model.CHECKSTATUS + "','" + model.REMARKS + "',1,'" + model.CREATER + "',getdate())";
+                string sqlhead = "SET IDENTITY_INSERT T_CHECK on ;insert into T_CHECK(ID,CHECKNO,CHECKTYPE,CHECKDESC,CHECKSTATUS,REMARKS,ISDEL,CREATER,CREATETIME) VALUES" +
+                    "(" + id + ",'" + checkno + "','" + "明盘" + "','" + model.CHECKDESC + "','" + model.CHECKSTATUS + "','" + model.REMARKS + "',1,'" + model.CREATER + "',getdate()) SET IDENTITY_INSERT T_CHECK off ";
                 sqls.Add(sqlhead);
                 string sql = "";
                 //合并重复项

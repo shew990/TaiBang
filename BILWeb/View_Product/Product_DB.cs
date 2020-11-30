@@ -104,7 +104,7 @@ namespace BILWeb.Product
             return lstSql;
         }
 
-        public bool SaveProDuctBarcode(UserModel user, T_Product modelList)
+        public bool SaveProDuctBarcode(UserModel user, T_Product modelList,ref Barcode_Model backmodel)
         {
             try
             {
@@ -131,6 +131,7 @@ namespace BILWeb.Product
                 model.RowNo = "1";
                 model.RowNoDel = "1";
                 model.BarcodeType = 1;
+                backmodel = model;
                 listbarcode.Add(model);
                 string err = "";
                 if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
