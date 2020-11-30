@@ -137,7 +137,7 @@ namespace BILWeb.Product
                     messageModel.Message = "传入的关联数量超过未关联数量，不合法！";
                     return JsonConvert.SerializeObject(messageModel);
                 }
-                Barcode_Model BarcodeModel= new Barcode_Model()
+                Barcode_Model BarcodeModel = new Barcode_Model();
                 if (ProductDB.SaveProDuctBarcode(userModel, Newproduct, ref BarcodeModel))
                 {
                     //bool res = PrintLable(list, ipport, ref ErrMsg);//调用打印标签
