@@ -9,6 +9,7 @@ using BILBasic.JSONUtil;
 using BILBasic.User;
 using Newtonsoft.Json;
 using BILWeb.Product;
+using BILWeb.Print;
 
 namespace BILWeb.Product
 {
@@ -107,7 +108,7 @@ namespace BILWeb.Product
 
         }
 
-        public string SaveT_ProDuctBarcodeADF(string user, string modelList)
+        public string SaveT_ProDuctBarcodeADF(string user, string modelList,string PrintIP)
         {
 
             BaseMessage_Model<List<T_Product>> messageModel = new BaseMessage_Model<List<T_Product>>();
@@ -136,8 +137,8 @@ namespace BILWeb.Product
                     messageModel.Message = "传入的关联数量超过未关联数量，不合法！";
                     return JsonConvert.SerializeObject(messageModel);
                 }
-                
-                if (ProductDB.SaveProDuctBarcode(userModel, Newproduct))
+                Barcode_Model BarcodeModel = new Barcode_Model();
+                if (ProductDB.SaveProDuctBarcode(userModel, Newproduct, ref BarcodeModel))
                 {
                     //bool res = PrintLable(list, ipport, ref ErrMsg);//调用打印标签
                     if (true)

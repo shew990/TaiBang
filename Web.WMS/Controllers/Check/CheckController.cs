@@ -267,29 +267,41 @@ namespace Web.WMS.Controllers
                 string strErrMsg = string.Empty;
                 List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
-                if (db.GetStockCombineInfo2(model, ref lsttask, ref strErrMsg))
+                if (db.GetStockCombineInfo2(model, ref lsttask, ref strErrMsg)) {
                     return Json(new { Result = 1, Data = lsttask }, JsonRequestBehavior.AllowGet);
-                return Json(new { Result = -1, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
+                } else {
+                    return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
+                }
+                //BaseModel<List<Tmodel>> returnmodel = new BaseModel<List<Tmodel>>() { Result = 1, ResultValue = strError, Data = modelList, PageData = new R_Pagedata() { totalCount = page.RecordCounts, pageSize = page.CurrentPageShowCounts, currentPage = page.CurrentPageNumber, totalPages = page.PagesCount } };
+               
             }
             catch (Exception ex)
             {
-                return Json(new { Result = -1, ResultValue = ex.ToString() }, JsonRequestBehavior.AllowGet);
+                return Json(new { Result = 0, ResultValue = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
 
         //保存盘点单
-        public JsonResult SaveCheck(List<T_StockInfoEX> list)
+        public JsonResult SaveCheck(T_StockInfoEX model)
         {
             try
             {
+                string strErrMsg = string.Empty;
+                List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
+                Query_DB db = new Query_DB();
+                if (!db.GetStockCombineInfo2(model, ref lsttask, ref strErrMsg))
+                {
+                    return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
+                }
+                
                 Check_Model cm = new Check_Model();
                 //cm.REMARKS = strremark + txt_remarkD.Text + txt_remark.Text;
                 cm.CHECKSTATUS = "新建";
                 cm.CREATER = currentUser.UserNo;
                 cm.CHECKDESC = "明盘";
                 string ErrMsg = "";
-                Check_DB db = new Check_DB();
-                if (db.SaveCheck2(cm, list, ref ErrMsg))
+                Check_DB checkdb = new Check_DB();
+                if (checkdb.SaveCheck2(cm, lsttask, ref ErrMsg))
                     return Json(new { state = true }, JsonRequestBehavior.AllowGet);
                 return Json(new { state = false }, JsonRequestBehavior.AllowGet);
             }
