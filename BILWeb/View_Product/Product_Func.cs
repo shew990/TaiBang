@@ -108,7 +108,7 @@ namespace BILWeb.Product
 
         }
 
-        public string SaveT_ProDuctBarcodeADF(string user, string modelList)
+        public string SaveT_ProDuctBarcodeADF(string user, string modelList,string PrintIP)
         {
 
             BaseMessage_Model<List<T_Product>> messageModel = new BaseMessage_Model<List<T_Product>>();

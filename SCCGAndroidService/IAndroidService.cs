@@ -438,7 +438,7 @@ namespace SCCGAndroidService
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "SaveT_ProDuctBarcodeADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson);
+        string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson, string PrintIP);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "CloseProduct", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]

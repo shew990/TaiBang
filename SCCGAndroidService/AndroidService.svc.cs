@@ -906,13 +906,13 @@ namespace SCCGAndroidService
         }
 
         //关联提交
-        public string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson)
+        public string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson, string PrintIP)
         {
             LogNet.LogInfo("关联提交UserJson:" + UserJson);
             LogNet.LogInfo("关联提交ModelJson:" + ModelJson);
             LogNet.LogInfo("-----------------------------------------------------");
             T_Product_Func tfunc = new T_Product_Func();
-            return tfunc.SaveT_ProDuctBarcodeADF(UserJson, ModelJson);
+            return tfunc.SaveT_ProDuctBarcodeADF(UserJson, ModelJson, PrintIP);
         }
 
         //完工提交

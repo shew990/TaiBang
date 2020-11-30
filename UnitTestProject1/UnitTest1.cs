@@ -55,7 +55,7 @@ namespace UnitTestProject1
                 string ModelJson1 = "{\"Detail\":[{\"Barcode\":\"0@JR20003070F0001-116@SO200728193\",\"BatchNo\":\"SO200728193\",\"IsScan\":true,\"Isbox\":false,\"MaterialDesc\":\"米啊偶倒\",\"MaterialName\":\"小电机减速箱\",\"MaterialNo\":\"JR20003070F0001-116\",\"PrintQty\":10.0,\"ProMaterialDesc\":\"秒宿5\",\"ProMaterialName\":\"小电机减速电机\",\"ProMaterialNo\":\"JMF1903-0558\",\"ProSpec\":\"3IK15S3C/3GN100K-B·10-16.5\",\"Qty\":1.0,\"Spec\":\"3GN100K-B·10-16.5\",\"headerid\":1,\"ErpLineStatus\":0,\"ErpVoucherNo\":\"MO04012007290152\",\"MaterialNoID\":0,\"StockType\":0},{\"Barcode\":\"0@MR03070F0001-714@SO200728193\",\"BatchNo\":\"SO200728193\",\"IsScan\":true,\"Isbox\":false,\"MaterialDesc\":\"阿斯顿发顺丰\",\"MaterialName\":\"交流小电机\",\"MaterialNo\":\"MR03070F0001-714\",\"PrintQty\":10.0,\"ProMaterialDesc\":\"秒宿5\",\"ProMaterialName\":\"小电机减速电机\",\"ProMaterialNo\":\"JMF1903-0558\",\"ProSpec\":\"3IK15S3C/3GN100K-B·10-16.5\",\"Qty\":1.0,\"Spec\":\"3IK15S3C\",\"headerid\":1,\"ErpLineStatus\":0,\"ErpVoucherNo\":\"MO04012007290152\",\"MaterialNoID\":0,\"StockType\":0}],\"ScanQty\":10.0,\"ErpLineStatus\":0,\"ErpVoucherNo\":\"MO04012007290152\",\"MaterialNoID\":0,\"StockType\":0}";
              
                 T_Product_Func tfunc = new T_Product_Func();
-                string aaa = tfunc.SaveT_ProDuctBarcodeADF(UserJson, ModelJson);
+                string aaa = tfunc.SaveT_ProDuctBarcodeADF(UserJson, ModelJson,  "22");
             }
             catch (Exception ex)
             {
