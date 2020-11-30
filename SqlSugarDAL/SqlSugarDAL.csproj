@@ -58,6 +58,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="remark\Remark.cs" />
     <Compile Include="remark\RemarkService.cs" />
+    <Compile Include="seepalletinfo\SeePalletInfo.cs" />
+    <Compile Include="seepalletinfo\SeePalletInfoService.cs" />
     <Compile Include="Until\SuccessResult.cs" />
     <Compile Include="view_product\View_Product.cs" />
     <Compile Include="view_product\View_ProductService.cs" />

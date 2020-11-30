@@ -51,7 +51,10 @@ namespace Web.WMS.Controllers
         public ActionResult GetModel(string orderNo)
         {
             var model = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
-            return Json(model);
+            T_CheckRecord checkRecord = new T_CheckRecord();
+            if (model != null)
+                checkRecord = new CheckRecordService().GetList(x => x.ProductOrderId == model.id).FirstOrDefault();
+            return Json(new { product = model, record = checkRecord });
         }
 
         /// <summary>
@@ -92,7 +95,8 @@ namespace Web.WMS.Controllers
                     queryData.NotInPlace = checkRecord.NotInPlace;
                     queryData.Others = checkRecord.Others;
                     queryData.Minute = checkRecord.Minute;
-                    checkRecordService.Insert(checkRecord);
+                    queryData.ProductOrderId = Convert.ToInt32(orderId);
+                    checkRecordService.Insert(queryData);
                 }
                 else
                 {
@@ -116,7 +120,8 @@ namespace Web.WMS.Controllers
                     queryData.NotInPlace = checkRecord.NotInPlace;
                     queryData.Others = checkRecord.Others;
                     queryData.Minute = checkRecord.Minute;
-                    checkRecordService.Update(checkRecord);
+                    queryData.ProductOrderId= Convert.ToInt32(orderId);
+                    checkRecordService.Update(queryData);
                 }
                 var product = productService.GetById(orderId);
                 product.QulityQty = Convert.ToDecimal(qualityQty);
