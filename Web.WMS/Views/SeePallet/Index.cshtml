@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
 <div style="margin:20px auto 10px 10px;">
-    生产订单<input type="text" />
+    生产订单<input type="text" id="orderNo" />
 </div>
 <div style="margin:0px auto 10px 10px;">
     <div class="layui-row">
@@ -23,6 +23,19 @@
 
 <script src="~/Content/jquery.media.js"></script>
 <script type="text/javascript">
+    $(function () {
+
+        //生产单号回车监听事件
+        $("#orderNo").keypress(function (even) {
+            if (even.which == 13 && $("#orderNo").val() != "") {
+                //$.post("/SeePallet/GetOrderInfo", { orderNo: $("#orderNo").val() }, function (data) {
+
+                //});
+            }
+        });
+    })
+
+    //显示pdf文件
     $('#handout_wrap_inner').media({
         width: '100%',
         height: '100%',

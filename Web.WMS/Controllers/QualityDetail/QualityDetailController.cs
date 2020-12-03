@@ -31,6 +31,7 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetModelList()
         {
+            ViewBag.StrongHoldCode = Commom.ReadUserInfo().StrongHoldCode;
             return View();
         }
 
@@ -95,6 +96,21 @@ namespace Web.WMS.Controllers
                     queryData.NotInPlace = checkRecord.NotInPlace;
                     queryData.Others = checkRecord.Others;
                     queryData.Minute = checkRecord.Minute;
+                    queryData.Burning = checkRecord.Burning;
+                    queryData.WrongLabe = checkRecord.WrongLabe;
+                    queryData.Resistance = checkRecord.Resistance;
+                    queryData.WrongNumberControl = checkRecord.WrongNumberControl;
+                    queryData.DielectricStrength = checkRecord.DielectricStrength;
+                    queryData.GearBump = checkRecord.GearBump;
+                    queryData.AbnormalNoise = checkRecord.AbnormalNoise;
+                    queryData.BearingFailure = checkRecord.BearingFailure;
+                    queryData.InputPort = checkRecord.InputPort;
+                    queryData.OutPort = checkRecord.OutPort;
+                    queryData.MountingFlange = checkRecord.MountingFlange;
+                    queryData.InstallKeyway = checkRecord.InstallKeyway;
+                    queryData.InstallationShaftDiameter = checkRecord.InstallationShaftDiameter;
+                    queryData.InstallTheStop = checkRecord.InstallTheStop;
+                    queryData.BoltCenter = checkRecord.BoltCenter;
                     queryData.ProductOrderId = Convert.ToInt32(orderId);
                     checkRecordService.Insert(queryData);
                 }
@@ -120,7 +136,22 @@ namespace Web.WMS.Controllers
                     queryData.NotInPlace = checkRecord.NotInPlace;
                     queryData.Others = checkRecord.Others;
                     queryData.Minute = checkRecord.Minute;
-                    queryData.ProductOrderId= Convert.ToInt32(orderId);
+                    queryData.Burning = checkRecord.Burning;
+                    queryData.WrongLabe = checkRecord.WrongLabe;
+                    queryData.Resistance = checkRecord.Resistance;
+                    queryData.WrongNumberControl = checkRecord.WrongNumberControl;
+                    queryData.DielectricStrength = checkRecord.DielectricStrength;
+                    queryData.GearBump = checkRecord.GearBump;
+                    queryData.AbnormalNoise = checkRecord.AbnormalNoise;
+                    queryData.BearingFailure = checkRecord.BearingFailure;
+                    queryData.InputPort = checkRecord.InputPort;
+                    queryData.OutPort = checkRecord.OutPort;
+                    queryData.MountingFlange = checkRecord.MountingFlange;
+                    queryData.InstallKeyway = checkRecord.InstallKeyway;
+                    queryData.InstallationShaftDiameter = checkRecord.InstallationShaftDiameter;
+                    queryData.InstallTheStop = checkRecord.InstallTheStop;
+                    queryData.BoltCenter = checkRecord.BoltCenter;
+                    queryData.ProductOrderId = Convert.ToInt32(orderId);
                     checkRecordService.Update(queryData);
                 }
                 var product = productService.GetById(orderId);

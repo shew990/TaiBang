@@ -117,5 +117,100 @@ namespace SqlSugarDAL.checkrecord
         /// 弧分
         /// </summary>
         public String Minute { get; set; }
+
+        /// <summary>
+        /// 氧化
+        /// </summary>
+        public String Burning { get; set; }
+
+        /// <summary>
+        /// 标签贴错
+        /// </summary>
+        public String WrongLabe { get; set; }
+
+        /// <summary>
+        /// 电机阻值
+        /// </summary>
+        public String Resistance { get; set; }
+
+        /// <summary>
+        /// 号码管有误
+        /// </summary>
+        public String WrongNumberControl { get; set; }
+
+        /// <summary>
+        /// 介电强度
+        /// </summary>
+        public String DielectricStrength { get; set; }
+
+        /// <summary>
+        /// 齿轮磕碰
+        /// </summary>
+        public String GearBump { get; set; }
+
+        /// <summary>
+        /// 减速箱异响
+        /// </summary>
+        public String AbnormalNoise { get; set; }
+
+        /// <summary>
+        /// 轴承损坏
+        /// </summary>
+        public String BearingFailure { get; set; }
+
+        /// <summary>
+        /// 输入孔
+        /// </summary>
+        public String InputPort { get; set; }
+
+        /// <summary>
+        /// 输出孔
+        /// </summary>
+        public String OutPort { get; set; }
+
+        /// <summary>
+        /// 安装法兰
+        /// </summary>
+        public String MountingFlange { get; set; }
+
+        /// <summary>
+        /// 安装键槽
+        /// </summary>
+        public String InstallKeyway { get; set; }
+
+        /// <summary>
+        /// 安装轴径
+        /// </summary>
+        public String InstallationShaftDiameter { get; set; }
+
+        /// <summary>
+        /// 安装止口
+        /// </summary>
+        public String InstallTheStop { get; set; }
+
+        /// <summary>
+        /// 安装孔距
+        /// </summary>
+        public String BoltCenter { get; set; }
+
+        /// <summary>
+        /// 空载电流范围
+        /// </summary>
+        public String NoLoad { get; set; }
+
+        /// <summary>
+        /// 总不合格数
+        /// </summary>
+        public String TotalUnqualifiedNumber { get; set; }
+
+        /// <summary>
+        /// 原材料
+        /// </summary>
+        public String RawMaterial { get; set; }
+
+        /// <summary>
+        /// 外形
+        /// </summary>
+        public String Contour { get; set; }
     }
 }

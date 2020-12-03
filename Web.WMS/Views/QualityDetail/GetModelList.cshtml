@@ -80,136 +80,292 @@
     </div>
     <div style="border-bottom:1px solid black;padding:20px;">
         <form class="layui-form" id="formRecord">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">外观掉漆</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Sensei" placeholder="请输入外观掉漆" class="layui-input record">
+            @if (@ViewBag.StrongHoldCode == "0403")
+            {
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观掉漆</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Sensei" placeholder="请输入外观掉漆" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观划伤</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Scratch" placeholder="请输入外观划伤" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观磕碰伤</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Bruise" placeholder="请输入外观磕碰伤" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观污迹</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Speckle" placeholder="请输入外观污迹" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">外观划伤</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Scratch" placeholder="请输入外观划伤" class="layui-input record">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观塌边</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="DownEdge" placeholder="请输入外观塌边" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观锈迹</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Rust" placeholder="请输入外观锈迹" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观漏工序</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="MissedProcess" placeholder="请输入外观漏工序" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">噪音分贝</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Decibel" placeholder="请输入噪音分贝" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">外观磕碰伤</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Bruise" placeholder="请输入外观磕碰伤" class="layui-input record">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">噪音打点</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Dot" placeholder="请输入噪音打点" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">噪音不一致</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Disaccord" placeholder="请输入噪音不一致" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">噪音杂音</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Noise" placeholder="请输入噪音杂音" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">卡点卡顿</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="CardPoint" placeholder="请输入卡点卡顿" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">外观污迹</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Speckle" placeholder="请输入外观污迹" class="layui-input record">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">运转轴紧</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ShaftTight" placeholder="请输入运转轴紧" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">运转抖动</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Shake" placeholder="请输入运转抖动" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">输出尺寸</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="OutputSize" placeholder="请输入输出尺寸" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">输入尺寸</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="InPutSize" placeholder="请输入输入尺寸" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">外观塌边</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="DownEdge" placeholder="请输入外观塌边" class="layui-input record">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">装配漏装</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="NeglectedLoading" placeholder="请输入装配漏装" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">装配不到位</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="NotInPlace" placeholder="请输入装配不到位" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">其他原因</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Others" placeholder="请输入其他原因" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">精度弧分</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Minute" placeholder="请输入精度弧分" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">外观锈迹</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Rust" placeholder="请输入外观锈迹" class="layui-input record">
+            }
+            else if (@ViewBag.StrongHoldCode == "0401" || @ViewBag.StrongHoldCode == "0402")
+            {
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观掉漆</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Sensei" placeholder="请输入外观掉漆" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观碰划伤</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Scratch" placeholder="请输入外观碰划伤" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观氧化</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Burning" placeholder="请输入外观氧化" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外观生锈</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Rust" placeholder="请输入外观生锈" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">外观漏工序</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="MissedProcess" placeholder="请输入外观漏工序" class="layui-input record">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">标签贴错</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="WrongLabe" placeholder="请输入标签贴错" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">电机阻值</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Resistance" placeholder="请输入电机阻值" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">电流不一致</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Disaccord" placeholder="请输入电流不一致" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">号码管有误</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="WrongNumberControl" placeholder="请输入号码管有误" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">噪音分贝</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Decibel" placeholder="请输入噪音分贝" class="layui-input record">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">介电强度</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="DielectricStrength" placeholder="请输入介电强度" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">齿轮磕碰</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="GearBump" placeholder="请输入齿轮磕碰" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">减速箱异响</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="AbnormalNoise" placeholder="请输入减速箱异响" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">轴承损坏</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="BearingFailure" placeholder="请输入轴承损坏" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">噪音打点</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Dot" placeholder="请输入噪音打点" class="layui-input record">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">输入孔</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="InputPort" placeholder="请输入输入孔" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">输出孔</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="OutPort" placeholder="请输入输出孔" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">安装法兰</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="MountingFlange" placeholder="请输入安装法兰" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">安装键槽</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="InstallKeyway" placeholder="请输入安装键槽" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">噪音不一致</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Disaccord" placeholder="请输入噪音不一致" class="layui-input record">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">安装轴径</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="InstallationShaftDiameter" placeholder="请输入安装轴径" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">安装止口</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="InstallTheStop" placeholder="请输入安装止口" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">安装孔距</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="BoltCenter" placeholder="请输入安装孔距" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">空载电流</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="NoLoad" placeholder="请输入空载电流" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">噪音杂音</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Noise" placeholder="请输入噪音杂音" class="layui-input record">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">总不合格数</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="TotalUnqualifiedNumber" placeholder="请输入总不合格数" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">原材料</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="RawMaterial" placeholder="请输入原材料" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">外型</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Contour" placeholder="请输入外型" class="layui-input record">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">卡点卡顿</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="CardPoint" placeholder="请输入卡点卡顿" class="layui-input record">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">运转轴紧</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="ShaftTight" placeholder="请输入运转轴紧" class="layui-input record">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">运转抖动</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Shake" placeholder="请输入运转抖动" class="layui-input record">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">输出尺寸</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="OutputSize" placeholder="请输入输出尺寸" class="layui-input record">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">输入尺寸</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="InPutSize" placeholder="请输入输入尺寸" class="layui-input record">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">装配漏装</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="NeglectedLoading" placeholder="请输入装配漏装" class="layui-input record">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">装配不到位</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="NotInPlace" placeholder="请输入装配不到位" class="layui-input record">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">其他原因</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Others" placeholder="请输入其他原因" class="layui-input record">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">精度弧分</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Minute" placeholder="请输入精度弧分" class="layui-input record">
-                    </div>
-                </div>
-            </div>
+            }
         </form>
     </div>
     <div style="padding:10px;">
@@ -320,7 +476,7 @@
                 },
                 function (data) {
                     layer.alert(data.Msg);
-                })
+                });
         });
     })
 
