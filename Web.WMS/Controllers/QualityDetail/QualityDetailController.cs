@@ -155,7 +155,7 @@ namespace Web.WMS.Controllers
                     checkRecordService.Update(queryData);
                 }
                 var product = productService.GetById(orderId);
-                product.QulityQty = Convert.ToDecimal(qualityQty);
+                product.QulityQty += Convert.ToDecimal(qualityQty);
                 product.Remark = remark;
                 productService.Update(product);
 
