@@ -11,7 +11,7 @@ using BILWeb.Area;
 using BILBasic.Common;
 using BILBasic.User;
 using Newtonsoft.Json;
-
+using BILWeb.BaseInfo;
 
 namespace BILWeb.Login.User
 {
@@ -293,6 +293,10 @@ namespace BILWeb.Login.User
                 //{
                 //    user.lstWarehouse = lstWarehouse;
                 //}
+                //全局配置表
+                T_System_Func funs = new T_System_Func();
+                T_System System = funs.GetModel()[0];
+                user.System = System;
 
                 messageModel.Message = "登录成功！";
                 messageModel.HeaderStatus = "S";

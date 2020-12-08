@@ -102,9 +102,8 @@ namespace BILWeb.OutStock
         }
 
         #region PDA复核获取表体数据，只是整箱区的拣货单
-        public string GetT_OutStockReviewDetailListByHeaderIDADF(string ModelDetailJson)
+        public string GetT_OutStockReviewDetailListByHeaderIDADF(string ErpVoucherNo)
         {
-
             BaseMessage_Model<List<T_OutStockDetailInfo>> messageModel = new BaseMessage_Model<List<T_OutStockDetailInfo>>();
 
             try
@@ -115,30 +114,29 @@ namespace BILWeb.OutStock
                 List<T_OutStockDetailInfo> outStockDetailList = new List<T_OutStockDetailInfo>();
                 string strError = string.Empty;
 
-                if (string.IsNullOrEmpty(ModelDetailJson))
+                if (string.IsNullOrEmpty(ErpVoucherNo))
                 {
                     messageModel.HeaderStatus = "E";
-                    messageModel.Message = "客户端传来的数据为空！";
+                    messageModel.Message = "客户端传来的ERP订单号为空！";
                     return JsonConvert.SerializeObject(messageModel);
                 }
 
-                T_OutStockDetailInfo model = JsonConvert.DeserializeObject<T_OutStockDetailInfo>(ModelDetailJson);
-
-                if (string.IsNullOrEmpty(model.ErpVoucherNo))
-                {
-                    messageModel.HeaderStatus = "E";
-                    messageModel.Message = "客户端传来ERP订单号为空！";
-                    return JsonConvert.SerializeObject(messageModel);
-                }
-
-                if (tdb.GetOutTaskDetailByErpVoucherNo(model.ErpVoucherNo, ref modelListTaskDetail, ref strError) == false)
+                if (tdb.GetOutTaskDetailByErpVoucherNo(ErpVoucherNo, ref modelListTaskDetail, ref strError) == false)
                 {
                     messageModel.HeaderStatus = "E";
                     messageModel.Message = strError;
                     return JsonConvert.SerializeObject(messageModel);
                 }
 
-                outStockDetailList = _db.CreateOutStockDetailByTaskDetail(modelListTaskDetail.Where(t=>t.HouseProp==1).ToList());
+                outStockDetailList = _db.CreateOutStockDetailByTaskDetail(modelListTaskDetail);
+
+                //add by cym 2020-9-20
+                T_OutStockTask_Func outfunc = new T_OutStockTask_Func();
+                string strmsg = "";
+                var rrr = new T_OutStockTaskInfo() { ID = modelListTaskDetail[0].HeaderID };
+                var rtt = outfunc.GetModelByID(ref rrr, ref strmsg);
+
+                outStockDetailList.ForEach(t => t.ERPNote = rrr.ERPNote);
 
                 messageModel.HeaderStatus = "S";
                 messageModel.ModelJson = outStockDetailList;
@@ -151,9 +149,66 @@ namespace BILWeb.OutStock
                 messageModel.Message = ex.Message;
                 return JsonConvert.SerializeObject(messageModel);
             }
-            
-            
-        } 
+
+
+        }
+
+
+
+
+        //正常流程
+        //public string GetT_OutStockReviewDetailListByHeaderIDADF(string ModelDetailJson)
+        //{
+
+        //    BaseMessage_Model<List<T_OutStockDetailInfo>> messageModel = new BaseMessage_Model<List<T_OutStockDetailInfo>>();
+
+        //    try
+        //    {
+        //        T_OutStockDetail_DB _db = new T_OutStockDetail_DB();
+        //        T_OutTaskDetails_DB tdb = new T_OutTaskDetails_DB();
+        //        List<T_OutStockTaskDetailsInfo> modelListTaskDetail = new List<T_OutStockTaskDetailsInfo>();
+        //        List<T_OutStockDetailInfo> outStockDetailList = new List<T_OutStockDetailInfo>();
+        //        string strError = string.Empty;
+
+        //        if (string.IsNullOrEmpty(ModelDetailJson))
+        //        {
+        //            messageModel.HeaderStatus = "E";
+        //            messageModel.Message = "客户端传来的数据为空！";
+        //            return JsonConvert.SerializeObject(messageModel);
+        //        }
+
+        //        T_OutStockDetailInfo model = JsonConvert.DeserializeObject<T_OutStockDetailInfo>(ModelDetailJson);
+
+        //        if (string.IsNullOrEmpty(model.ErpVoucherNo))
+        //        {
+        //            messageModel.HeaderStatus = "E";
+        //            messageModel.Message = "客户端传来ERP订单号为空！";
+        //            return JsonConvert.SerializeObject(messageModel);
+        //        }
+
+        //        if (tdb.GetOutTaskDetailByErpVoucherNo(model.ErpVoucherNo, ref modelListTaskDetail, ref strError) == false)
+        //        {
+        //            messageModel.HeaderStatus = "E";
+        //            messageModel.Message = strError;
+        //            return JsonConvert.SerializeObject(messageModel);
+        //        }
+
+        //        outStockDetailList = _db.CreateOutStockDetailByTaskDetail(modelListTaskDetail.Where(t=>t.HouseProp==1).ToList());
+
+        //        messageModel.HeaderStatus = "S";
+        //        messageModel.ModelJson = outStockDetailList;
+        //        return JsonConvert.SerializeObject(messageModel);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        messageModel.HeaderStatus = "E";
+        //        messageModel.Message = ex.Message;
+        //        return JsonConvert.SerializeObject(messageModel);
+        //    }
+
+
+        //} 
         #endregion
 
         #region 扫描复核条码

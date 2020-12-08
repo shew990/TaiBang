@@ -541,5 +541,10 @@ namespace SqlSugarDAL.barcode
         /// </summary>
         public string spec { get; set; }
 
+        //ymh 
+        public string erpwarehousename { get; set; }
+
+        
+
     }
 }

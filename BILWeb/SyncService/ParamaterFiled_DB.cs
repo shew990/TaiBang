@@ -235,6 +235,88 @@ namespace BILWeb.SyncService
             throw new NotImplementedException();
         }
 
-      
+
+        #region 同步单据
+        public bool GetVoucherNo(string Erpvoucherno,ref string ErrorMsg)
+        {
+            if (string.IsNullOrEmpty(Erpvoucherno))
+            {
+                ErrorMsg = "单据号不能为空";
+                return false;
+            }
+            int WmsVoucherType = 9999; string syncType = "ERP"; int syncExcelVouType = -1; DataSet excelds = null;int StockType = 0;
+            string tableName = "t_material";
+            if (Erpvoucherno.Contains("Wgr"))//成品入库单
+            {
+                tableName = " T_instock";
+                StockType = 10;
+                WmsVoucherType = 50;
+            }
+            if (Erpvoucherno.Contains("RE"))//退回处理单
+            {
+                tableName = " T_instock";
+                StockType = 10;
+                WmsVoucherType = 47;
+            }
+            if (Erpvoucherno.Contains("MO"))//生产订单
+            {
+                tableName = " T_Product";
+                StockType = 10;
+                WmsVoucherType = 51;
+            }
+            if (Erpvoucherno.Contains("SM"))//销售出货单
+            {
+                tableName = " T_Task";
+                StockType = 20;
+                WmsVoucherType = 46;
+            }
+            if (Erpvoucherno.Contains("Tra"))//形态转换单
+            {
+                StockType = 10;
+                WmsVoucherType = 52;
+            }
+            if (Erpvoucherno.Contains("DC"))//调拨出库单
+            {
+                tableName = " T_Task";
+                StockType = 20;
+                WmsVoucherType = 31;
+            }
+            if (Erpvoucherno.Contains("DR"))//调拨入库单
+            {
+                tableName = " T_instock";
+                StockType = 10;
+                WmsVoucherType = 30;
+            }
+            if (Erpvoucherno.Contains("ZF"))//杂发单
+            {
+                StockType = 20;
+                WmsVoucherType = 0;
+            }
+            if (WmsVoucherType ==0|| tableName=="")
+            {
+                ErrorMsg = "找不到该单据类型！";
+                return false;
+            }
+            ////查看单据是否存在
+            //using (var db = SqlSugarBase.GetInstance())
+            //{
+            //    if (db.Ado.GetInt("SELECT count(1) FROM " + tableName + " WHERE erpvoucherno ='" + Erpvoucherno + "'") > 0) {
+            //        return true;
+            //    }
+            //}
+            //同步单据
+            if (SyncErp.SyncJsonFromErp(StockType, string.Empty, Erpvoucherno, WmsVoucherType, ref ErrorMsg))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+        #endregion
+
+
     }
 }

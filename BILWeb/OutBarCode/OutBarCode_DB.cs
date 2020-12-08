@@ -573,8 +573,7 @@ namespace BILWeb.OutBarCode
             }
         }
             #endregion
-
-
+        
         public string GetMaterialno(string strSerialNo)
         {
             try
@@ -606,7 +605,7 @@ namespace BILWeb.OutBarCode
         {
             try
             {
-                string strSql = string.Format("select a.department,a.erpwarehouseno ,a.dimension, a.StoreCondition,a.SpecialRequire ,a.Strongholdcode,a.Strongholdname,a.Companycode,a.Supprdbatch, a.Supprddate,a.Productdate,a.Edate,a.Barcodemtype,a.Id, a.Voucherno, a.Rowno, a.Erpvoucherno, a.Vouchertype, a.Cuscode, a.Cusname," +
+                string strSql = string.Format("select a.DepartmentName, a.protectway,a.department,a.erpwarehouseno ,a.erpwarehousename,a.dimension, a.StoreCondition,a.SpecialRequire ,a.Strongholdcode,a.Strongholdname,a.Companycode,a.Supprdbatch, a.Supprddate,a.Productdate,a.Edate,a.Barcodemtype,a.Id, a.Voucherno, a.Rowno, a.Erpvoucherno, a.Vouchertype, a.Cuscode, a.Cusname," +
                                 "a.Supcode, a.Supname, a.Outpackqty, a.Innerpackqty, a.Voucherqty, a.Qty,a.workno, a.Nopack, a.Printqty, a.Barcode, a.Barcodetype, " +
                                 "a.Serialno, a.Barcodeno, a.Outcount, a.Innercount, a.Mantissaqty, a.Isrohs, a.Outbox_Id, a.Inner_Id, a.PRODUCTBATCH, " +
                                 "a.Batchno, a.Isdel, a.Creater, a.Createtime, a.Modifyer, a.Modifytime, a.Materialnoid,a.rownodel,a.Unit,a.LABELMARK,a.EAN,a.receivetime,a.materialno,a.materialdesc,a.tracno,a.projectno,a.fserialno,b.spec,b.standardbox  " +
@@ -677,8 +676,12 @@ namespace BILWeb.OutBarCode
                         t_outbarcode.WorkNo = (string)dbFactory.ToModelValue(reader, "WorkNo");
                         t_outbarcode.fserialno = (string)dbFactory.ToModelValue(reader, "fserialno");
                         t_outbarcode.department = (string)dbFactory.ToModelValue(reader, "department");
+                        t_outbarcode.DepartmentName = (string)dbFactory.ToModelValue(reader, "DepartmentName");
                         t_outbarcode.erpwarehouseno = (string)dbFactory.ToModelValue(reader, "erpwarehouseno");
+                        t_outbarcode.erpwarehousename = (string)dbFactory.ToModelValue(reader, "erpwarehousename");
                         t_outbarcode.dimension = (string)dbFactory.ToModelValue(reader, "dimension");
+                        t_outbarcode.protectway = (string)dbFactory.ToModelValue(reader, "protectway");
+                        
 
         list.Add(t_outbarcode);
                     }

@@ -323,6 +323,21 @@ namespace SCCGAndroidService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "CheckGetBatchnoAndMaterialno", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string CheckGetBatchnoAndMaterialno(string EAN, string areaid);
+
+
+        //明盘
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetCheckMing", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetCheckMing();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetMinDetail", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetMinDetail(string checkno);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetMinBarocde", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetMinBarocde(string barcode, string checkno);
+        
         #endregion
 
         #region PDA查询

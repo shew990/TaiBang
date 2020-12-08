@@ -235,7 +235,7 @@ namespace Web.WMS.Controllers.Print
             {
                 //var seed = Guid.NewGuid().GetHashCode();
                 //string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 999999).ToString().PadLeft(6, '0');
-                string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+                string code = "1"+DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
 
                 if (serialnos.Find(t => t == code) == null)
                 {
@@ -248,7 +248,7 @@ namespace Web.WMS.Controllers.Print
             }
             if (VL != 0)
             {
-                string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+                string code = "1" + DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
                 if (serialnos.Find(t => t == code) == null)
                 {
                     serialnos.Add(code);

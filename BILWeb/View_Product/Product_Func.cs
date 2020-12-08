@@ -124,7 +124,7 @@ namespace BILWeb.Product
                 UserModel userModel = JSONHelper.JsonToObject<UserModel>(user);
                 T_Product product = JSONHelper.JsonToObject<T_Product>(modelList);
 
-                string ipport = "";
+                //string ipport = "";
                 string ErrMsg = "";
                 T_Product_DB ProductDB = new T_Product_DB();
                 T_Product Newproduct = ProductDB.GetModelListADF(userModel, product)[0];

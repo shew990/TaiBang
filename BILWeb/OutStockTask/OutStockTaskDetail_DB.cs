@@ -59,7 +59,7 @@ namespace BILWeb.OutStockTask
             foreach (var item in modelList)
             {
                 //杂出没有单据来源直接出库
-                if (item.VoucherType != 50)
+                if (item.VoucherType != 53)
                 {
                     strSql1 = string.Format("update t_taskdetails  set  remainqty = (case when isnull( remainqty,0) >= ('{0}') then (isnull( remainqty,0) - '{1}')" +
                 "else 0 end ), unshelveqty = isnull( unshelveqty,0) + '{2}', operatoruserno = '{3}', operatordatetime = getdate() where id  = '{4}'",
@@ -90,7 +90,7 @@ namespace BILWeb.OutStockTask
                         lstSql.Add(GetStockTransSql(user, itemStock));
 
                         //杂出没有单据来源直接出库
-                        if (item.VoucherType == 50)
+                        if (item.VoucherType == 53)
                         {
                             lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");
                             lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 207));

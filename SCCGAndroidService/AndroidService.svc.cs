@@ -667,23 +667,23 @@ namespace SCCGAndroidService
             return stock_Func.CheckGetBatchnoAndMaterialno(EAN, areaid);
         }
 
-        //public string GetCheckMing()
-        //{
-        //    Check_DB db = new Check_DB();
-        //    return db.GetCheckMing();
-        //}
+        public string GetCheckMing()
+        {
+            Check_DB db = new Check_DB();
+            return db.GetCheckMing();
+        }
 
-        //public string GetMinDetail(string checkno)
-        //{
-        //    Check_DB db = new Check_DB();
-        //    return db.GetMinDetail(checkno);
-        //}
+        public string GetMinDetail(string checkno)
+        {
+            Check_DB db = new Check_DB();
+            return db.GetMinDetail(checkno);
+        }
 
-        //public string GetMinBarocde(string barcode, string checkno)
-        //{
-        //    Check_DB db = new Check_DB();
-        //    return db.GetMinBarocde(barcode, checkno);
-        //}
+        public string GetMinBarocde(string barcode, string checkno)
+        {
+            Check_DB db = new Check_DB();
+            return db.GetMinBarocde(barcode, checkno);
+        }
 
         public string GetMinSerialno(int id)
         {

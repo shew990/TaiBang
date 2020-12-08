@@ -1,16 +1,11 @@
 ﻿using BILBasic.Basing.Factory;
 using BILBasic.Common;
-using BILBasic.DBA;
-using BILWeb.Query;
 using BILWeb.Check;
 using BILWeb.Stock;
-using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BILWeb.OutBarCode;
 using BILWeb.Print;
 using BILWeb.Warehouse;

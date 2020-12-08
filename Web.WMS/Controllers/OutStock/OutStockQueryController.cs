@@ -49,7 +49,7 @@ namespace Web.WMS.Controllers
                 return Json(new { state = false, obj = "该ERP单号已经存在" }, JsonRequestBehavior.AllowGet);
             }
 
-            string ErrorMsg = ""; int WmsVoucherType = -1; string syncType = "ERP"; int syncExcelVouType = -1; DataSet excelds = null;
+            string ErrorMsg = ""; int WmsVoucherType = 31; string syncType = "ERP"; int syncExcelVouType = -1; DataSet excelds = null;
             BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
             //20:出库单据
             if (PFunc.Sync(20, string.Empty, ErpVoucherNo, WmsVoucherType, ref ErrorMsg, syncType, syncExcelVouType, excelds))

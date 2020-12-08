@@ -1,5 +1,6 @@
 ﻿using BILBasic.Common;
 using BILWeb.InStock;
+using BILWeb.SyncService;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,22 +46,32 @@ namespace Web.WMS.Controllers
 
         public JsonResult Sync(string ErpVoucherNo)
         {
-            //if (ErpVoucherNo.Length < 10)
-            //{
-            //    return Json(new { state = false, obj = "ERP单据长度不能少于10位！" }, JsonRequestBehavior.AllowGet);
-            //}
-            string ErrorMsg = ""; int WmsVoucherType = -1; string syncType = "ERP"; int syncExcelVouType = -1; DataSet excelds = null;
-            BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
-            //10:入库单据
-            if (PFunc.Sync(10, string.Empty, ErpVoucherNo, WmsVoucherType, ref ErrorMsg, syncType, syncExcelVouType, excelds))
-            {
-
+            string strMsg = "";
+            ParamaterFiled_DB PDB = new ParamaterFiled_DB();
+            if (PDB.GetVoucherNo(ErpVoucherNo, ref strMsg)) {
                 return Json(new { state = true }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new { state = false, obj = ErrorMsg }, JsonRequestBehavior.AllowGet);
+                return Json(new { state = false, obj = strMsg }, JsonRequestBehavior.AllowGet);
             }
+
+            ////if (ErpVoucherNo.Length < 10)
+            ////{
+            ////    return Json(new { state = false, obj = "ERP单据长度不能少于10位！" }, JsonRequestBehavior.AllowGet);
+            ////}
+            //string ErrorMsg = ""; int WmsVoucherType = 32; string syncType = "ERP"; int syncExcelVouType = -1; DataSet excelds = null;
+            //BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
+            ////10:入库单据
+            //if (PFunc.Sync(10, string.Empty, ErpVoucherNo, WmsVoucherType, ref ErrorMsg, syncType, syncExcelVouType, excelds))
+            //{
+
+            //    return Json(new { state = true }, JsonRequestBehavior.AllowGet);
+            //}
+            //else
+            //{
+            //    return Json(new { state = false, obj = ErrorMsg }, JsonRequestBehavior.AllowGet);
+            //}
         }
 
         //关闭单据

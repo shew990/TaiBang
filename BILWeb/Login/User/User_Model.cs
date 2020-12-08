@@ -6,6 +6,7 @@ using BILWeb.Menu;
 
 using BILWeb.Warehouse;
 using System.ComponentModel.DataAnnotations;
+using BILWeb.BaseInfo;
 
 namespace BILWeb.Login.User
 {
@@ -56,6 +57,7 @@ namespace BILWeb.Login.User
         public List<T_QuanUser_Model> lstQuanUser { get; set; }
 
         public int TaskCount { get; set; }
-        
+
+        public T_System System { get; set; }
     }
 }

@@ -145,6 +145,8 @@ namespace Web.WMS.Controllers.Print
                         barcode.productbatch = item.ProductBatch;
                         barcode.strongholdcode = item.StrongHoldCode;
                         barcode.erpwarehouseno = item.warehouseno;
+                        barcode.erpwarehousename = item.warehousename;
+                        barcode.storecondition = item.StoreCondition;
                         //barcode.ware = item.warehousename;//仓库名称
                         barcode.department = item.department;
                         barcode.departmentname = item.departmentname;
@@ -187,7 +189,7 @@ namespace Web.WMS.Controllers.Print
             List<string> serialnos = new List<string>();
             for (int i = 0; i < count; i++)
             {
-                string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+                string code = "1" + DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
                 if (serialnos.Find(x => x == code) != null)
                 {
                     i--;
