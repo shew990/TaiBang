@@ -17,7 +17,7 @@
                 html += "<td>" + data[i].RemainQty + "</td>"
                 html += "<td>" + data[i].ReceiveQty + "</td>"
                 html += "<td>" + data[i].FromErpWarehouse + "</td>"
- html += "<td>" + data[i].TracNo+ "</td>"
+                html += "<td>" + data[i].FromBatchNo+ "</td>"
                 html += "</tr>";
                 $("#detailTable").append(html);
             }

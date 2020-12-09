@@ -206,7 +206,7 @@ namespace BILWeb.InStock
             if (model.VoucherType > 0)
             {
                 strSql += strAnd;
-                strSql += " vouchertype ='" + model.VoucherType + "'  ";
+                strSql += " vouchertype =" + model.VoucherType + "  ";
             }
             //0：PDA 1：PC
             if (model.PcOrPda == "0")
@@ -217,7 +217,7 @@ namespace BILWeb.InStock
                 if (!user.UserNo.Equals("admin"))
                 {
                     strSql += strAnd;
-                    strSql += " strongholdcode = '" + user.StrongHoldCode + "' and ((strongholdcode+'-'+fromerpwarehouse) ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='')";
+                    strSql += " strongholdcode = '" + user.StrongHoldCode + "' and ((fromerpwarehouse) ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='')";
                 }
             }
             else {

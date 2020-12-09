@@ -8,6 +8,7 @@ using BILBasic.JSONUtil;
 using BILBasic.User;
 using BILBasic.Interface;
 using BILWeb.OutStock;
+using BILWeb.SyncService;
 
 namespace BILWeb.InStock
 {
@@ -42,9 +43,11 @@ namespace BILWeb.InStock
 
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {
-                BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
-                PFunc.Sync(10, string.Empty, model.ErpVoucherNo, -1, ref errorMsg, "ERP", -1, null);
-
+                //BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
+                //PFunc.Sync(10, string.Empty, model.ErpVoucherNo, -1, ref errorMsg, "ERP", -1, null);
+                ParamaterFiled_DB PDB = new ParamaterFiled_DB();
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref errorMsg);
+               
             }
             return JSONHelper.JsonToObject<T_InStockInfo>(strJson);
         }

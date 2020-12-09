@@ -80,6 +80,16 @@ namespace BILWeb.Product
                 strSql += strAnd;
                 strSql += " erpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
             }
+            if (model.HeaderID!=0)
+            {
+                strSql += strAnd;
+                strSql += " HeaderID = " + model.HeaderID ;
+            }
+            if (!string.IsNullOrEmpty(model.MaterialNo))
+            {
+                strSql += strAnd;
+                strSql += " MaterialNo like '%" + model.MaterialNo.Trim() + "%' ";
+            }
             return strSql;
         }
 

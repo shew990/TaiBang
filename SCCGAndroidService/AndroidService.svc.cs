@@ -204,6 +204,9 @@ namespace SCCGAndroidService
         /// <returns></returns>
         public string GetT_InStockListADF(string UserJson, string ModelJson)
         {
+            LogNet.LogInfo("收货模块UserJson:" + UserJson);
+            LogNet.LogInfo("收货模块ModelJson:" + ModelJson);
+            LogNet.LogInfo("-----------------------------------------------------");
             T_InStock_Func tfunc = new T_InStock_Func();
             return tfunc.GetModelListADF(UserJson, ModelJson);
         }
@@ -907,23 +910,32 @@ namespace SCCGAndroidService
         }
 
         //关联提交
-        public string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson, string PrintIP)
+        public string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson, string PrintIP,string outbarcode)
         {
             LogNet.LogInfo("关联提交UserJson:" + UserJson);
             LogNet.LogInfo("关联提交ModelJson:" + ModelJson);
             LogNet.LogInfo("-----------------------------------------------------");
             T_Product_Func tfunc = new T_Product_Func();
-            return tfunc.SaveT_ProDuctBarcodeADF(UserJson, ModelJson, PrintIP);
+            return tfunc.SaveT_ProDuctBarcodeADF(UserJson, ModelJson, PrintIP, outbarcode);
         }
 
+        public string SaveT_BarcodeADF(string BarcodeJson)
+        {
+            LogNet.LogInfo("U9调用BarcodeJson:" + BarcodeJson);
+            LogNet.LogInfo("-----------------------------------------------------");
+            T_Product_Func tfunc = new T_Product_Func();
+            return tfunc.SaveT_BarcodeADF(BarcodeJson);
+        }
+        
+
         //完工提交
-        public string SaveT_ProDuctListADF(string UserJson, string ModelJson)
+        public string SaveT_ProDuctListADF(string UserJson, string ModelJson,string Guid)
         {
             LogNet.LogInfo("完工提交UserJson:" + UserJson);
             LogNet.LogInfo("完工提交ModelJson:" + ModelJson);
             LogNet.LogInfo("-----------------------------------------------------");
             T_Product_Func tfunc = new T_Product_Func();
-            return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson);
+            return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson,Guid);
 
         }
 

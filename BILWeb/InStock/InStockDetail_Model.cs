@@ -298,5 +298,11 @@ namespace BILWeb.InStock
         public string spec { get; set; }
 
         public string ErpId { get; set; }
+
+        public string Customer_voucherno { get; set; }//销售订单类型
+        public string sale_vouchertypename { get; set; }//销售订单类型
+        public string PubDescSeg7 { get; set; }//客户规格型号
+        public string Customer_PrivateDescSeg5 { get; set; }//简称
+
     }
 }
