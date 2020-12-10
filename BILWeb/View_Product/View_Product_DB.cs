@@ -41,7 +41,7 @@ namespace BILWeb.View_Product
         protected override string GetFilterSql(UserModel user, View_Product_Model model)
         {
             //string strSql = base.GetFilterSql(user, model);
-            string strSql = "";
+            string strSql = "where 1=1 ";
             string strAnd = " and ";
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {

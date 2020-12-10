@@ -60,7 +60,8 @@ namespace BILWeb.Product
         public String sale_vouchertypename { get; set; }//销售订单类型
         public String Customer_PrivateDescSeg5 { get; set; }//简称
 
-        public String guid { get; set; }//guid
+        public String PrivateDescSeg20_Code { get; set; }//订单存储地址
+        public String PrivateDescSeg20_Name { get; set; }//订单存储地址名
 
 
     }

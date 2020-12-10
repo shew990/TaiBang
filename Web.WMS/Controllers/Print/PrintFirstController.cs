@@ -114,6 +114,7 @@ namespace Web.WMS.Controllers.Print
         }
 
         //期初打印方法
+        [ValidateInput(false)]
         public ActionResult Print(string data)
         {
             SuccessResult successResult = new SuccessResult();

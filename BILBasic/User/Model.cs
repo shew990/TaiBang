@@ -401,6 +401,6 @@ namespace BILBasic.User
         /// 是否上架0：不上架 1：上架
         /// </summary>
         public int ISVWAREHOUSE { get; set; }
-
+        public string guid { get; set; }
     }
 }

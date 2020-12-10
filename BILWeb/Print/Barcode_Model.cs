@@ -603,6 +603,8 @@ namespace BILWeb.Print
 
         [DBAttribute(NotDBField = true)]
         public string PrintName { get; set; }
+        public string erpwarehousename { get; set; }
+        
 
     }
 }

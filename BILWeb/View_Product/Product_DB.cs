@@ -11,6 +11,7 @@ using BILBasic.Common;
 using BILBasic.User;
 using System.Data;
 using BILWeb.Print;
+using BILWeb.View_Product;
 
 namespace BILWeb.Product
 {
@@ -181,6 +182,76 @@ namespace BILWeb.Product
             }
 
         }
+
+        //PC打印外箱码
+        public bool SaveBarcodeForPro(UserModel user, View_Product_Model modeljson, DateTime time1,ref string err)
+        {
+            try
+            {
+                List<Barcode_Model> listbarcode = new List<Barcode_Model>();
+                for (int i = 0; i < modeljson.PrintQty; i++)
+                {
+                    T_Product_DB ProductDB = new T_Product_DB();
+                    T_Product product = new T_Product() { ErpVoucherNo = modeljson.ErpVoucherNo };
+                    T_Product Newproduct = ProductDB.GetModelListADF(user, product)[0];
+
+                    Barcode_Model model = new Barcode_Model();
+                    model.CompanyCode = "";
+                    model.ErpVoucherNo = Newproduct.ErpVoucherNo;
+                    model.VoucherType = Newproduct.VoucherType.ToString();
+                    model.StrongHoldCode = Newproduct.StrongHoldCode;
+                    model.StrongHoldName = Newproduct.StrongHoldName;
+                    model.MaterialNoID = Newproduct.MaterialNoID;
+                    model.MaterialNo = Newproduct.MaterialNo;
+                    model.MaterialDesc = Newproduct.MaterialName;
+                    model.spec = Newproduct.spec;
+                    model.BatchNo = Newproduct.BatchNo;
+                    model.ProductBatch = Newproduct.ProductBatch;//给批号加密成8位
+                    model.ErpVoucherNo = Newproduct.ErpVoucherNo;
+                    model.CusCode = Newproduct.CustomerCode;
+                    model.CusName = Newproduct.CustomerShortName;
+                    model.StoreCondition = Newproduct.PubDescSeg7;
+                    model.ProtectWay = Newproduct.sale_vouchertypename;
+                    model.LABELMARK = Newproduct.Customer_voucherno;
+                    model.department = Newproduct.PubDescSeg10_Code;
+                    model.departmentname = Newproduct.PubDescSeg10_Name;
+                    model.erpwarehouseno = Newproduct.PrivateDescSeg20_Code;
+                    model.erpwarehousename = Newproduct.PrivateDescSeg20_Name;
+
+                    model.Qty = Convert.ToDecimal(modeljson.ProductQty);
+
+                    var seed = Guid.NewGuid().GetHashCode();
+                    string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+
+                    model.SerialNo = code;
+                    model.Creater = user.UserNo;
+                    model.ReceiveTime = time1;
+                    model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
+                    model.RowNo = "1";
+                    model.RowNoDel = "1";
+                    model.BarcodeType = 1;
+                    listbarcode.Add(model);
+                }
+                Print_DB print_DB = new Print_DB();
+               
+                if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                err = ex.ToString();
+                return false;
+            }
+            
+
+        }
+
 
         //专门给U9用
         public bool SaveBarcode(List<Barcode_Model> backmodels,ref string strMsg)
@@ -355,36 +426,36 @@ namespace BILWeb.Product
         }
 
         #region 生成加密批次
-        public string GetBatchno(string batch)
-        {
-            string NewProductBatch = getSqu(Guid.NewGuid().ToString("N"));
-            try
-            {
-                //检查批次是否已经存在
-                string ProductBatch = GetProductBatch(batch);
-                if (string.IsNullOrEmpty(ProductBatch))
-                {
-                    //插入新的加密批次
-                    if (InsertBatch(batch, NewProductBatch))
-                    {
-                        return NewProductBatch;
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                }
-                else
-                {
-                    return ProductBatch;
-                }
-            }
-            catch (Exception ex)
-            {
-                return "";
-            }
+        //public string GetBatchno(string batch)
+        //{
+        //    string NewProductBatch = getSqu(Guid.NewGuid().ToString("N"));
+        //    try
+        //    {
+        //        //检查批次是否已经存在
+        //        string ProductBatch = GetProductBatch(batch);
+        //        if (string.IsNullOrEmpty(ProductBatch))
+        //        {
+        //            //插入新的加密批次
+        //            if (InsertBatch(batch, NewProductBatch))
+        //            {
+        //                return NewProductBatch;
+        //            }
+        //            else
+        //            {
+        //                return "";
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return ProductBatch;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return "";
+        //    }
 
-        }
+        //}
 
         public string GetProductBatch(string batch)
         {
