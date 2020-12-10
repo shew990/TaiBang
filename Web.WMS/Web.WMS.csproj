@@ -1372,6 +1372,7 @@
     <Content Include="Views\ProductOrders\GetModelList.cshtml" />
     <Content Include="Views\Check\GetModelMing.cshtml" />
     <Content Include="Views\SeePallet\Index.cshtml" />
+    <Content Include="Views\QualityDetail\CheckRecordOut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,6 +9,7 @@ using SqlSugarDAL.checkrecord;
 using SqlSugarDAL.product;
 using SqlSugarDAL.remark;
 using SqlSugarDAL.Until;
+using SqlSugarDAL.view_checkrecord;
 using SqlSugarDAL.view_product;
 using System;
 using System.Collections.Generic;
@@ -25,13 +26,15 @@ namespace Web.WMS.Controllers
     [RoleActionFilter(Message = "QualityDetail/QualityDetail")]
     public class QualityDetailController : Controller
     {
+        string strongHoldCode = Commom.ReadUserInfo().StrongHoldCode;
+
         /// <summary>
         /// 跳转主视图
         /// </summary>
         /// <returns></returns>
         public ActionResult GetModelList()
         {
-            ViewBag.StrongHoldCode = Commom.ReadUserInfo().StrongHoldCode;
+            ViewBag.StrongHoldCode = strongHoldCode;
             return View();
         }
 
@@ -42,7 +45,7 @@ namespace Web.WMS.Controllers
         public ActionResult GetRemarks()
         {
             var remarks = new RemarkService().GetList().Select(x => x.RemarkDesc);
-            return Json(remarks);
+            return Json(remarks, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -55,14 +58,14 @@ namespace Web.WMS.Controllers
             T_CheckRecord checkRecord = new T_CheckRecord();
             if (model != null)
                 checkRecord = new CheckRecordService().GetList(x => x.ProductOrderId == model.id).FirstOrDefault();
-            return Json(new { product = model, record = checkRecord });
+            return Json(new { product = model, record = checkRecord }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
         /// 提交
         /// </summary>
         /// <returns></returns>
-        public ActionResult Submit(string formJson, string orderId, string qualityQty, string remark)
+        public ActionResult Submit(string formJson, string orderId, string qualityQty, string unQualityQty, string remark)
         {
             SuccessResult successResult = new SuccessResult();
             successResult.Success = false;
@@ -76,6 +79,32 @@ namespace Web.WMS.Controllers
                 if (queryData == null)
                 {
                     queryData = new T_CheckRecord();
+                    queryData.TotalUnqualifiedNumber =
+                        unQualityQty == "" ? 0 : Convert.ToInt32(unQualityQty);//总不合格数
+
+                    //一部/二部
+                    queryData.Burning = checkRecord.Burning;
+                    queryData.WrongLabe = checkRecord.WrongLabe;
+                    queryData.Resistance = checkRecord.Resistance;
+                    queryData.WrongNumberControl = checkRecord.WrongNumberControl;
+                    queryData.DielectricStrength = checkRecord.DielectricStrength;
+                    queryData.GearBump = checkRecord.GearBump;
+                    queryData.AbnormalNoise = checkRecord.AbnormalNoise;
+                    queryData.BearingFailure = checkRecord.BearingFailure;
+                    queryData.InputPort = checkRecord.InputPort;
+                    queryData.OutPort = checkRecord.OutPort;
+                    queryData.MountingFlange = checkRecord.MountingFlange;
+                    queryData.InstallKeyway = checkRecord.InstallKeyway;
+                    queryData.InstallationShaftDiameter = checkRecord.InstallationShaftDiameter;
+                    queryData.InstallTheStop = checkRecord.InstallTheStop;
+                    queryData.BoltCenter = checkRecord.BoltCenter;
+                    queryData.NoLoad = checkRecord.NoLoad;
+                    queryData.RawMaterial = checkRecord.RawMaterial;
+                    queryData.Contour = checkRecord.Contour;
+                    queryData.SaveTime = DateTime.Now;
+                    queryData.ProductOrderId = Convert.ToInt32(orderId);
+
+                    //三部
                     queryData.Sensei = checkRecord.Sensei;
                     queryData.Scratch = checkRecord.Scratch;
                     queryData.Bruise = checkRecord.Bruise;
@@ -96,26 +125,13 @@ namespace Web.WMS.Controllers
                     queryData.NotInPlace = checkRecord.NotInPlace;
                     queryData.Others = checkRecord.Others;
                     queryData.Minute = checkRecord.Minute;
-                    queryData.Burning = checkRecord.Burning;
-                    queryData.WrongLabe = checkRecord.WrongLabe;
-                    queryData.Resistance = checkRecord.Resistance;
-                    queryData.WrongNumberControl = checkRecord.WrongNumberControl;
-                    queryData.DielectricStrength = checkRecord.DielectricStrength;
-                    queryData.GearBump = checkRecord.GearBump;
-                    queryData.AbnormalNoise = checkRecord.AbnormalNoise;
-                    queryData.BearingFailure = checkRecord.BearingFailure;
-                    queryData.InputPort = checkRecord.InputPort;
-                    queryData.OutPort = checkRecord.OutPort;
-                    queryData.MountingFlange = checkRecord.MountingFlange;
-                    queryData.InstallKeyway = checkRecord.InstallKeyway;
-                    queryData.InstallationShaftDiameter = checkRecord.InstallationShaftDiameter;
-                    queryData.InstallTheStop = checkRecord.InstallTheStop;
-                    queryData.BoltCenter = checkRecord.BoltCenter;
-                    queryData.ProductOrderId = Convert.ToInt32(orderId);
                     checkRecordService.Insert(queryData);
                 }
                 else
                 {
+                    queryData.TotalUnqualifiedNumber +=
+                        unQualityQty == "" ? 0 : Convert.ToInt32(unQualityQty);//总不合格数
+
                     queryData.Sensei = checkRecord.Sensei;
                     queryData.Scratch = checkRecord.Scratch;
                     queryData.Bruise = checkRecord.Bruise;
@@ -136,6 +152,7 @@ namespace Web.WMS.Controllers
                     queryData.NotInPlace = checkRecord.NotInPlace;
                     queryData.Others = checkRecord.Others;
                     queryData.Minute = checkRecord.Minute;
+
                     queryData.Burning = checkRecord.Burning;
                     queryData.WrongLabe = checkRecord.WrongLabe;
                     queryData.Resistance = checkRecord.Resistance;
@@ -152,10 +169,14 @@ namespace Web.WMS.Controllers
                     queryData.InstallTheStop = checkRecord.InstallTheStop;
                     queryData.BoltCenter = checkRecord.BoltCenter;
                     queryData.ProductOrderId = Convert.ToInt32(orderId);
+                    queryData.NoLoad = checkRecord.NoLoad;
+                    queryData.RawMaterial = checkRecord.RawMaterial;
+                    queryData.Contour = checkRecord.Contour;
+                    queryData.SaveTime = DateTime.Now;
                     checkRecordService.Update(queryData);
                 }
                 var product = productService.GetById(orderId);
-                product.QulityQty = Convert.ToDecimal(qualityQty);
+                product.QulityQty += Convert.ToDecimal(qualityQty);
                 product.Remark = remark;
                 productService.Update(product);
 
@@ -166,7 +187,23 @@ namespace Web.WMS.Controllers
             {
                 successResult.Msg = ex.Message;
             }
-            return Json(successResult);
+            return Json(successResult, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 跳转导出页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CheckRecordOut()
+        {
+            ViewBag.strongHoldCode = strongHoldCode;
+            return View();
+        }
+
+        public ActionResult GetOrderList(int limit, int page)
+        {
+            var ordersObj = new View_CheckRecordService().GetOrderList(limit, page);
+            return Json(ordersObj, JsonRequestBehavior.AllowGet);
         }
 
     }
