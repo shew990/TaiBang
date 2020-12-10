@@ -178,7 +178,7 @@ namespace SCCGAndroidService
         public string GetMessageForPrint(string filter, string flag)
         {
             T_Box_Func tfunc = new T_Box_Func();
-            return tfunc.GetMessageForPrint( filter,  flag);
+            return tfunc.GetMessageForPrint(filter, flag);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace SCCGAndroidService
             T_OutBarCode_Func tfunc = new T_OutBarCode_Func();
             return tfunc.GetOutBarCodeForPrint(BarCode);
         }
-        
+
 
         /// <summary>
         /// 检查条码（包材接收）
@@ -522,7 +522,7 @@ namespace SCCGAndroidService
         /// <param name="UserJson"></param>
         /// <param name="ModelJson"></param>
         /// <returns></returns>
-        public string SaveT_OutStockTaskDetailADF(string UserJson, string ModelJson,string Guid)
+        public string SaveT_OutStockTaskDetailADF(string UserJson, string ModelJson, string Guid)
         {
             T_OutTaskDetails_Func tfunc = new T_OutTaskDetails_Func();
             return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid);
@@ -552,7 +552,7 @@ namespace SCCGAndroidService
             return tfunc.GetCarModelADF(CarNo, TaskNo, strUserNo);
         }
 
-        public string SaveBoxListADF(string UserJson, string ModelJson) 
+        public string SaveBoxListADF(string UserJson, string ModelJson)
         {
             T_OutTaskDetails_Func tfunc = new T_OutTaskDetails_Func();
             return tfunc.SaveBoxListADF(UserJson, ModelJson);
@@ -564,7 +564,7 @@ namespace SCCGAndroidService
             return tfunc.SaveCobBoxListADF(UserJson, ModelJson);
         }
 
-        public string ScanBoxSerial(string strSerialNo) 
+        public string ScanBoxSerial(string strSerialNo)
         {
             T_Box_Func tfunc = new T_Box_Func();
             return tfunc.ScanBoxSerial(strSerialNo);
@@ -574,13 +574,13 @@ namespace SCCGAndroidService
 
         #region 拣货锁定和解锁任务
 
-        public string LockTaskOperUser(string TaskOutStockModelJson, string UserJson) 
+        public string LockTaskOperUser(string TaskOutStockModelJson, string UserJson)
         {
             T_OutStockTask_Func tfunc = new T_OutStockTask_Func();
             return tfunc.LockTaskOperUser(TaskOutStockModelJson, UserJson);
         }
 
-        public string UnLockTaskOperUser(string TaskOutStockModelJson, string UserJson) 
+        public string UnLockTaskOperUser(string TaskOutStockModelJson, string UserJson)
         {
             T_OutStockTask_Func tfunc = new T_OutStockTask_Func();
             return tfunc.UnLockTaskOperUser(TaskOutStockModelJson, UserJson);
@@ -638,7 +638,7 @@ namespace SCCGAndroidService
         /// <param name="UserJson"></param>
         /// <param name="ErpVoucherNo"></param>
         /// <returns></returns>
-        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo) 
+        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo)
         {
             T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
             return tfunc.PostT_OutStockReviewDetailADF(UserJson, ErpVoucherNo);
@@ -752,7 +752,7 @@ namespace SCCGAndroidService
         public string GetStockByMaterialNoADF(string UserJson, string MaterialNo, string ScanType)
         {
             T_Stock_Func tfunc = new T_Stock_Func();
-            return tfunc.GetStockInfoByScanType(UserJson,MaterialNo, ScanType);
+            return tfunc.GetStockInfoByScanType(UserJson, MaterialNo, ScanType);
         }
         #endregion
 
@@ -810,7 +810,7 @@ namespace SCCGAndroidService
         {
             //查询
             T_LandMark_Func func = new T_LandMark_Func();
-            return func.GetLandmark( ModelJson,  UserJson);
+            return func.GetLandmark(ModelJson, UserJson);
         }
 
         /// <summary>
@@ -872,10 +872,10 @@ namespace SCCGAndroidService
             return tfunc.GetOutBarCodeForYS(BarCode);
         }
 
-        public string YSPost(string UserJson,string ModelJson)
+        public string YSPost(string UserJson, string ModelJson)
         {
             T_YSDetail_Func tfunc = new T_YSDetail_Func();
-            return tfunc.YSPost(UserJson,ModelJson);
+            return tfunc.YSPost(UserJson, ModelJson);
         }
 
         #endregion
@@ -909,7 +909,7 @@ namespace SCCGAndroidService
         }
 
         //关联提交
-        public string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson, string PrintIP,string outbarcode)
+        public string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson, string PrintIP, string outbarcode)
         {
             LogNet.LogInfo("关联提交UserJson:" + UserJson);
             LogNet.LogInfo("关联提交ModelJson:" + ModelJson);
@@ -925,16 +925,16 @@ namespace SCCGAndroidService
             T_Product_Func tfunc = new T_Product_Func();
             return tfunc.SaveT_BarcodeADF(BarcodeJson);
         }
-        
+
 
         //完工提交
-        public string SaveT_ProDuctListADF(string UserJson, string ModelJson,string Guid)
+        public string SaveT_ProDuctListADF(string UserJson, string ModelJson, string Guid)
         {
             LogNet.LogInfo("完工提交UserJson:" + UserJson);
             LogNet.LogInfo("完工提交ModelJson:" + ModelJson);
             LogNet.LogInfo("-----------------------------------------------------");
             T_Product_Func tfunc = new T_Product_Func();
-            return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson,Guid);
+            return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid);
 
         }
 
@@ -945,6 +945,21 @@ namespace SCCGAndroidService
             return tfunc.CloseProduct(ErpVoucherno);
         }
 
-            #endregion
+        #endregion
+
+        #region 基础信息
+        public string GetStrongholdList()
+        {
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            return tfunc.GetStrongholdList();
         }
+
+        public string GetStrongholdList()
+        {
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            return tfunc.GetStrongholdList();
+        }
+
+        #endregion
+    }
 }

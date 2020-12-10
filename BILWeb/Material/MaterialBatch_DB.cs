@@ -8,6 +8,7 @@ using BILBasic.Common;
 using BILBasic.User;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using BILBasic.JSONUtil;
 
 namespace BILWeb.Material
 {
@@ -25,7 +26,7 @@ namespace BILWeb.Material
 
         }
 
-        protected override List<string> GetSaveSql(UserModel user,ref  T_Material_BatchInfo model)
+        protected override List<string> GetSaveSql(UserModel user, ref T_Material_BatchInfo model)
         {
             List<string> lstSql = new List<string>();
             string strSql = string.Empty;
@@ -38,7 +39,7 @@ namespace BILWeb.Material
 
                 strSql = "insert into T_MATERIAL_BATCH (id, headerid, brand, batch, departmentcode, departmentname, pquantily, dquantily, rquantily, edate, wbs, projectno, customerno, customername, iescrow, factorycode, factoryname, version, rohs, customernote, exceptionnote,  creater, createtime)" +
                         "values ('" + voucherID + "', '" + model.HeaderID + "','" + model.Brand + "','" + model.BatchNo + "','" + model.DepartmentCode + "','" + model.DepartmentName + "','" + model.PQuantily + "','" + model.DQuantily + "'," +
-                        "'" + model.RQuantily + "','" + model.Edate + "','" + model.WBS + "','" + model.ProjectNo + "','" + model.CustomerNo + "','" + model.CustomerName + "','" + model.IEscrow + "','" + model.FactoryCode + "','" + model.FactoryName + "',"+
+                        "'" + model.RQuantily + "','" + model.Edate + "','" + model.WBS + "','" + model.ProjectNo + "','" + model.CustomerNo + "','" + model.CustomerName + "','" + model.IEscrow + "','" + model.FactoryCode + "','" + model.FactoryName + "'," +
                         "'" + model.Version + "','" + model.ROHS + "','" + model.CustomerNote + "','" + model.ExceptionNote + "','" + user.UserNo + "',sysdate)";
 
                 lstSql.Add(strSql);
@@ -46,8 +47,8 @@ namespace BILWeb.Material
             else
             {
                 strSql = "update t_Material_Batch a set a.Batch='" + model.BatchNo + "',a.Brand='" + model.Brand + "',a.Customername='" + model.CustomerName + "',a.Customerno='" + model.CustomerNo + "',a.Customernote='" + model.CustomerNote + "',a.Departmentcode='" + model.DepartmentCode + "'," +
-                        "a.Departmentname='"+model.DepartmentName+"',a.Dquantily='"+model.DQuantily+"',a.Edate='"+model.Edate+"',a.Exceptionnote='"+model.ExceptionNote+"',a.Factorycode='"+model.FactoryCode+"',a.Factoryname='"+model.FactoryName+"',a.Iescrow='"+model.IEscrow+"',"+
-                        "a.Modifyer='" + user.Modifyer + "',a.Modifytime=Sysdate,a.Pquantily='" + model.PQuantily + "',a.Projectno='" + model.ProjectNo + "',a.Rohs='" + model.ROHS + "',a.Rquantily='" + model.RQuantily + "',a.Version='" + model.Version + "',a.Wbs='" + model.WBS + "' where a.Id = '"+model.ID+"'";
+                        "a.Departmentname='" + model.DepartmentName + "',a.Dquantily='" + model.DQuantily + "',a.Edate='" + model.Edate + "',a.Exceptionnote='" + model.ExceptionNote + "',a.Factorycode='" + model.FactoryCode + "',a.Factoryname='" + model.FactoryName + "',a.Iescrow='" + model.IEscrow + "'," +
+                        "a.Modifyer='" + user.Modifyer + "',a.Modifytime=Sysdate,a.Pquantily='" + model.PQuantily + "',a.Projectno='" + model.ProjectNo + "',a.Rohs='" + model.ROHS + "',a.Rquantily='" + model.RQuantily + "',a.Version='" + model.Version + "',a.Wbs='" + model.WBS + "' where a.Id = '" + model.ID + "'";
                 lstSql.Add(strSql);
             }
 
@@ -59,7 +60,7 @@ namespace BILWeb.Material
             List<string> lstSql = new List<string>();
             string strSql = string.Empty;
 
-            strSql = "delete t_Material_Batch where id = '"+model.ID+"'";
+            strSql = "delete t_Material_Batch where id = '" + model.ID + "'";
 
             lstSql.Add(strSql);
 
@@ -112,7 +113,7 @@ namespace BILWeb.Material
             //t_material_batch.ROHS = (string)dbFactory.ToModelValue(reader, "ROHS");
             //t_material_batch.CustomerNote = (string)dbFactory.ToModelValue(reader, "CUSTOMERNOTE");
             //t_material_batch.ExceptionNote = (string)dbFactory.ToModelValue(reader, "EXCEPTIONNOTE");
-            
+
             //t_material_batch.Creater = (string)dbFactory.ToModelValue(reader, "CREATER");
             //t_material_batch.CreateTime = (DateTime?)dbFactory.ToModelValue(reader, "CREATETIME");
             //t_material_batch.Modifyer = (string)dbFactory.ToModelValue(reader, "MODIFYER");
@@ -131,7 +132,7 @@ namespace BILWeb.Material
             return "T_MATERIAL_BATCH";
         }
 
-        protected override string  GetHeaderIDFieldName()        
+        protected override string GetHeaderIDFieldName()
         {
             return "MaterialNoID";
         }
@@ -140,7 +141,7 @@ namespace BILWeb.Material
         {
             return "";
         }
-      
+
         public int CheckMaterialExist(T_Material_BatchInfo model)
         {
             string strSql = string.Format("SELECT COUNT(1) FROM T_MATERIAL_BATCH WHERE BATCH = '{0}' and id <> '{1}'", model.BatchNo, model.ID);
@@ -154,29 +155,81 @@ namespace BILWeb.Material
             List<T_Material_BatchInfo> groupList = null;
             if (list.Count > 0)
             {
-                    groupList = list
-                    .GroupBy(x => new { x.BatchNo, x.AreaNo})
-                    .Select(group => new T_Material_BatchInfo
-                    {
-                        BatchNo = group.Key.BatchNo,
-                        StockQty = group.Sum(p => p.StockQty),
-                        Edate = group.FirstOrDefault().Edate,
-                        CreateTime = group.FirstOrDefault().CreateTime,
-                        WareHouseNo = group.FirstOrDefault().WareHouseNo,
-                        HouseNo = group.FirstOrDefault().HouseNo,
-                        AreaNo = group.FirstOrDefault().AreaNo,
-                        SupCode = group.FirstOrDefault().SupCode,
-                        SupName = group.FirstOrDefault().SupName,
-                        SupPrdBatch = group.FirstOrDefault().SupPrdBatch,
-                        SupPrdDate = group.FirstOrDefault().SupPrdDate,
-                        ProductBatch = group.FirstOrDefault().ProductBatch,
-                        ProductDate = group.FirstOrDefault().ProductDate
-                    }).ToList();
+                groupList = list
+                .GroupBy(x => new { x.BatchNo, x.AreaNo })
+                .Select(group => new T_Material_BatchInfo
+                {
+                    BatchNo = group.Key.BatchNo,
+                    StockQty = group.Sum(p => p.StockQty),
+                    Edate = group.FirstOrDefault().Edate,
+                    CreateTime = group.FirstOrDefault().CreateTime,
+                    WareHouseNo = group.FirstOrDefault().WareHouseNo,
+                    HouseNo = group.FirstOrDefault().HouseNo,
+                    AreaNo = group.FirstOrDefault().AreaNo,
+                    SupCode = group.FirstOrDefault().SupCode,
+                    SupName = group.FirstOrDefault().SupName,
+                    SupPrdBatch = group.FirstOrDefault().SupPrdBatch,
+                    SupPrdDate = group.FirstOrDefault().SupPrdDate,
+                    ProductBatch = group.FirstOrDefault().ProductBatch,
+                    ProductDate = group.FirstOrDefault().ProductDate
+                }).ToList();
             }
 
             return groupList;
         }
 
 
+        //获取据点列表
+        public U9BaseInfo GetStrongholdList()
+        {
+            try
+            {
+                U9BaseInfo baseInfo = new U9BaseInfo();
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+                string json = "{\"VoucherType\":\"9998\"}";
+                string ERPJson = TIF.GetModelListByInterface(json);
+                return BILBasic.JSONUtil.JSONHelper.JsonToObject<U9BaseInfo>(ERPJson);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        //获取基础列表
+        public U9BaseInfo GetInfoList(string id)
+        {
+            try
+            {
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+                string json = "{\"data_no\":\"" + id + "\",\"VoucherType\":\"9997\"}";
+                string ERPJson = TIF.GetModelListByInterface(json);
+                return BILBasic.JSONUtil.JSONHelper.JsonToObject<U9BaseInfo>(ERPJson);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+
+        }
+
+
+
     }
+
+    public class CommonInfo
+    {
+        public long ID { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class U9BaseInfo
+    {
+        public List<CommonInfo> Orgs { get; set; }
+        public List<CommonInfo> Sites { get; set; }
+        public List<CommonInfo> Departments { get; set; }
+        public List<CommonInfo> Persons { get; set; }
+    }
+
 }
