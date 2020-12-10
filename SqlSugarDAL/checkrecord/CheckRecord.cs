@@ -212,5 +212,10 @@ namespace SqlSugarDAL.checkrecord
         /// 外形
         /// </summary>
         public String Contour { get; set; }
+
+        /// <summary>
+        /// 保存时间
+        /// </summary>
+        public DateTime SaveTime { get; set; }
     }
 }

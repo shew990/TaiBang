@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "CheckRecordOut";
+    Layout = "~/Views/Shared/_LayoutLayui.cshtml";
+}
+
+<div class="box">
+    <div class="layui-card-body layui-table-body layui-table-main">
+        <div class="layui-card-body">
+            <div class="layui-inline layui-show-xs-block">
+                <input id="orderNo" class="layui-input" placeholder="生产单号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="MaterialDesc" class="layui-input" placeholder="物料名">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="SerialNo" class="layui-input" placeholder="序列号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <button id="Query" class="btn btn-primary">
+                    查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
+                </button>
+            </div>
+        </div>
+        <table class="layui-hide" id="checkRecordTable" lay-filter="init"></table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
+        table = layui.table //表格
+            , laypage = layui.laypage //分页
+            , layer = layui.layer //弹层
+
+        tableInit();
+
+        //表格初始化
+        function tableInit() {
+            table.render({
+                elem: '#checkRecordTable'
+                , height: 520
+                , url: '/QualityDetail/GetOrderList' //数据接口
+                , method: 'post'
+                , contentType: 'application/json'
+                , where: {
+                    model: {
+                        orderNo: $("#orderNo").val().trim(),
+                        //MaterialDesc: $("#MaterialDesc").val().trim(),
+                        //SerialNo: $("#SerialNo").val().trim()
+                    }
+                }
+                , response: {
+                    statusCode: 1 //重新规定成功的状态码为 200，table 组件默认为 0
+                }
+                , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                    return {
+                        "code": res.Result, //解析接口状态
+                        "msg": res.ResultValue, //解析提示文本
+                        "count": res.PageData.totalCount, //解析数据长度
+                        "data": res.Data //解析数据列表
+                    };
+                }
+                , title: '库位'
+                , page: true //开启分页
+                , toolbar: 'false' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                //, totalRow: true //开启合计行
+                , cols: [[ //表头
+                    { type: 'numbers', title: '序号', width: 60, fixed: 'left' }//序号列
+                    , { field: 'SerialNo', title: '序列号', width: 120, fixed: 'left' }
+                    , { field: 'Barcode', title: '条码', width: 300 }
+                    , { field: 'MaterialNo', title: '物料号', width: 120, sort: true }
+                    , { field: 'MaterialDesc', title: '物料名称', width: 250 }
+                    , { field: 'BatchNo', title: '批次', width: 150, sort: true }
+                    , { field: 'Unit', title: '单位', width: 80 }
+                    , { field: 'Qty', title: '数量', width: 80, totalRow: true }
+                    , { field: 'WarehouseNo', title: '仓库', width: 80 }
+                    , { field: 'HouseNo', title: '库区', width: 80 }
+                    , { field: 'AreaNo', title: '库位', width: 100 }
+                    , { field: 'PalletNo', title: '托盘号', width: 100 }
+                    , { field: 'StatusName', title: '状态', width: 80 }
+                    , { field: 'StrIsAmount', title: '标记', width: 100 }
+                    , { field: 'CreateTime', title: '时间', width: 150 }
+                    , { fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo' }
+                ]]
+            });
+        }
+
+        //监听行工具事件
+        table.on('tool(init)', function (obj) {
+            if (obj.event === 'stamp') {
+                layer.alert('查看操作');
+            }
+        });
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo' //分页容器的id
+            , count: 100 //总页数
+            , skin: '#1E9FFF' //自定义选中色值
+            , jump: function (obj, first) {
+                if (!first)
+                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
+            }
+        });
+
+        //查询
+        $('#Query').click(function () {
+            tableInit();
+        });
+
+        //回车事件绑定
+        $("input").bind('keyup', function (event) {
+            if (event.keyCode == "13")
+                tableInit();
+        });
+    });
+</script>
+

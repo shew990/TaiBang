@@ -21,6 +21,7 @@
     <div style="border-bottom:1px solid black;padding:20px;">
         <span style="font-size:15px;padding-right:10px;">生产订单</span>
         <input id="ErpVoucherNo" placeholder="请输入生产单号" style="padding-left: 5px;height:30px;">
+        <a class="btn btn-primary" href="/QualityDetail/CheckRecordOut">质检明细</a>
     </div>
     <div style="border-bottom:1px solid black;padding:10px;">
         <form class="layui-form" action="">
@@ -472,6 +473,11 @@
                 },
                 function (data) {
                     layer.alert(data.Msg);
+                    if (data.Success) {
+                        $.each($("input"), function (item, index) {
+                            $(this).val("");
+                        });
+                    }
                 });
         });
     })

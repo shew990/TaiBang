@@ -9,6 +9,7 @@ using SqlSugarDAL.checkrecord;
 using SqlSugarDAL.product;
 using SqlSugarDAL.remark;
 using SqlSugarDAL.Until;
+using SqlSugarDAL.view_checkrecord;
 using SqlSugarDAL.view_product;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace Web.WMS.Controllers
         public ActionResult GetRemarks()
         {
             var remarks = new RemarkService().GetList().Select(x => x.RemarkDesc);
-            return Json(remarks);
+            return Json(remarks, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace Web.WMS.Controllers
             T_CheckRecord checkRecord = new T_CheckRecord();
             if (model != null)
                 checkRecord = new CheckRecordService().GetList(x => x.ProductOrderId == model.id).FirstOrDefault();
-            return Json(new { product = model, record = checkRecord });
+            return Json(new { product = model, record = checkRecord }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -166,7 +167,22 @@ namespace Web.WMS.Controllers
             {
                 successResult.Msg = ex.Message;
             }
-            return Json(successResult);
+            return Json(successResult, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 跳转导出页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CheckRecordOut()
+        {
+            return View();
+        }
+
+        public ActionResult GetOrderList(int limit, int page)
+        {
+            var ordersObj = new View_CheckRecordService().GetOrderList(limit, page);
+            return Json(ordersObj, JsonRequestBehavior.AllowGet);
         }
 
     }
