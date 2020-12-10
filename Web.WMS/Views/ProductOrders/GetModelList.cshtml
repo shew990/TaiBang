@@ -1,4 +1,7 @@
-﻿@{
+﻿@using BILBasic.Common;
+@using Web.WMS.Common;
+@{
+
     ViewBag.Title = "内盒明细";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
     var printIP = System.Web.HttpContext.Current.Session["printIP"];
@@ -17,11 +20,15 @@
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
         <div class="layui-card-body">
+
             <div class="layui-inline layui-show-xs-block">
-                <input id="MaterialNo" class="layui-input" placeholder="物料编号">
+                <input id="ErpVoucherNo" class="layui-input" placeholder="ERP单号">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                <input id="MaterialName" class="layui-input" placeholder="物料名称">
+                <input id="MaterialNo" class="layui-input" placeholder="本体物料编号">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="MaterialName" class="layui-input" placeholder="本体物料名称">
             </div>
             <div class="layui-inline layui-show-xs-block">
                 <input id="HeadMaterialNo" class="layui-input" placeholder="外箱物料编号">
@@ -57,7 +64,21 @@
                 </div>
             </div>
             <div class="layui-inline">
+                <label class="layui-form-label lab100"></label>
+                <div class="layui-input-inline">
+                    @Html.DropDownList("BarcodeType", Commom.BarcodeType as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control " } })
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
                 <label class="layui-form-label lab100">数量</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="ProductQty" autocomplete="off" class="layui-input txt200">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label lab100">张数</label>
                 <div class="layui-input-inline">
                     <input type="number" id="qty" autocomplete="off" class="layui-input txt200">
                 </div>
@@ -87,6 +108,7 @@
                 , contentType: 'application/json'
                 , where: {
                     model: {
+                        ErpVoucherNo: $("#ErpVoucherNo").val().trim(),
                         MaterialNo: $("#MaterialNo").val().trim(),
                         MaterialName: $("#MaterialName").val().trim(),
                         HeadMaterialNo: $("#HeadMaterialNo").val().trim(),
@@ -115,13 +137,15 @@
                 , cols: [
                     [
                         { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
+
+                        , { field: 'ErpVoucherNo', title: '生产订单号', width: 120, fixed: 'left' }
                         , { field: 'HeadMaterialNo', title: '外箱物料编号', width: 120, fixed: 'left' }
                         , { field: 'HeadMaterialName', title: '外箱物料名称', width: 200 }
                         , { field: 'HeadSpec', title: '外箱物料规格', width: 200 }
                         , { field: 'MaterialNo', title: '物料号', width: 200, sort: true }
                         , { field: 'MaterialName', title: '物料名称', width: 200 }
                         , { field: 'Spec', title: '物料规格', width: 200 }
-                        , { field: 'Qty', title: '物料数量', width: 80 }
+                        , { field: 'ProductQty', title: '订单数量', width: 80 }
                         , { fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo' }
                     ]
                 ]
@@ -172,7 +196,21 @@
                 return false;
             }
             PurObject.PrintQty = $('#qty').val();
-            openPostWindow($("#printIP").val() + "Main.aspx", "quality", JSON.stringify(PurObject));
+
+            if ($('#BarcodeType').val() == "0") {
+                PurObject.ProductQty = Number($('#ProductQty').val());
+                $.post("/PrintIn/SaveBarcodePro", { data: JSON.stringify(PurObject) }, function (msg) {
+                    if (msg.state) {
+                        openPostWindow($("#printIP").val() + "Main.aspx", "stock", msg.obj);
+                        return false;
+                    }
+                    layer.alert(msg.ResultValue);
+
+                } )
+            } else {
+                openPostWindow($("#printIP").val() + "Main.aspx", "quality", JSON.stringify(PurObject));
+            }
+
         });
 
         //回车事件绑定

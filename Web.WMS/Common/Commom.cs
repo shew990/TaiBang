@@ -104,6 +104,12 @@ namespace Web.WMS.Common
             new SelectListItem { Text = "不合格", Value = "4" }
         };
 
+        public static List<SelectListItem> BarcodeType = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "外箱", Value = "0" },
+            new SelectListItem { Text = "内盒", Value = "1" },
+        };
+
         //MS01    托运，到付，费用客户/供应商承担
         //MS02    送货上门，到付，费用客户/供应商承担
         //MS03    普通快递，到付，费用客户/供应商承担

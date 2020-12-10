@@ -292,10 +292,10 @@ namespace BILWeb.InStock
             t_instockdetail.FromErpAreaNo = dbFactory.ToModelValue(reader, "FromErpAreaNo").ToDBString();
 
             string FromErpWarehouse = dbFactory.ToModelValue(reader, "FromErpWarehouse").ToDBString();
-            t_instockdetail.FromErpWarehouse = string.IsNullOrEmpty(FromErpWarehouse) ? "" : (FromErpWarehouse.Contains("-") ? FromErpWarehouse : (t_instockdetail.StrongHoldCode + "-" + FromErpWarehouse));
+            t_instockdetail.FromErpWarehouse = string.IsNullOrEmpty(FromErpWarehouse) ? "" :  FromErpWarehouse;
 
             string ToErpWarehouse = dbFactory.ToModelValue(reader, "ToErpWarehouse").ToDBString();
-            t_instockdetail.ToErpWarehouse = string.IsNullOrEmpty(ToErpWarehouse) ? "" : (ToErpWarehouse.Contains("-") ? ToErpWarehouse : (t_instockdetail.StrongHoldCode + "-" + ToErpWarehouse));
+            t_instockdetail.ToErpWarehouse = string.IsNullOrEmpty(ToErpWarehouse) ? "" : ToErpWarehouse;
             t_instockdetail.IsSpcBatch = dbFactory.ToModelValue(reader, "IsSpcBatch").ToDBString();
             t_instockdetail.ToBatchNo = dbFactory.ToModelValue(reader, "ToBatchNo").ToDBString();
             t_instockdetail.ToErpAreaNo = dbFactory.ToModelValue(reader, "ToErpAreaNo").ToDBString();
@@ -317,7 +317,7 @@ namespace BILWeb.InStock
             t_instockdetail.sale_vouchertypename = dbFactory.ToModelValue(reader, "sale_vouchertypename").ToDBString();
             t_instockdetail.PubDescSeg7 = dbFactory.ToModelValue(reader, "PubDescSeg7").ToDBString();
             t_instockdetail.Customer_PrivateDescSeg5 = dbFactory.ToModelValue(reader, "Customer_PrivateDescSeg5").ToDBString();
-
+            t_instockdetail.ProductBatch = dbFactory.ToModelValue(reader, "ProductBatch").ToDBString();
             return t_instockdetail;
         }
 

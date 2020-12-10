@@ -6,6 +6,7 @@ using BILWeb.OutBarCode;
 using BILWeb.Print;
 using BILWeb.Product;
 using BILWeb.Stock;
+using BILWeb.View_Product;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -162,7 +163,7 @@ namespace Web.WMS.Controllers.Print
                     model.MaterialDesc = materialdesc;
                     //model.BatchNo = DateTime.Now.ToString("yyyyMMdd");
                     model.BatchNo = BatchNo;
-                    model.ProductBatch = proDB.GetBatchno(model.BatchNo);//给批号加密成8位
+                    model.ProductBatch = objT_InStockDetailInfo.ProductBatch;//给批号加密成8位
                     model.ErpVoucherNo = erpvoucherno;
                     model.Qty = Convert.ToDecimal(EveryQty);
                     model.SerialNo = squence[k++];
@@ -177,7 +178,7 @@ namespace Web.WMS.Controllers.Print
                     model.TracNo = TracNo;
                     model.ProjectNo = ProjectNo;
 
-                
+
                     model.StoreCondition = objT_InStockDetailInfo.PubDescSeg7;
                     model.ProtectWay = objT_InStockDetailInfo.sale_vouchertypename;
                     model.LABELMARK = objT_InStockDetailInfo.Customer_voucherno;
@@ -193,7 +194,7 @@ namespace Web.WMS.Controllers.Print
                     model.MaterialDesc = materialdesc;
                     //model.BatchNo = DateTime.Now.ToString("yyyyMMdd");
                     model.BatchNo = BatchNo;
-                    model.ProductBatch = proDB.GetBatchno(model.BatchNo);//给批号加密成8位
+                    model.ProductBatch = objT_InStockDetailInfo.ProductBatch;//给批号加密成8位
                     model.ErpVoucherNo = erpvoucherno;
                     model.Qty = Convert.ToDecimal(tailnum);
                     model.SerialNo = squence[k++];
@@ -233,6 +234,29 @@ namespace Web.WMS.Controllers.Print
             }
         }
 
+
+        //外箱码打印生产订单
+        [HttpPost]
+        public ActionResult SaveBarcodePro(string data)
+        {
+            var objT_InStockDetailInfo = JsonConvert.DeserializeObject<View_Product_Model>(data);
+            string err = "";
+            T_Product_DB print_DB = new T_Product_DB();
+            DateTime time1=DateTime.Now;
+            try
+            {
+                if (print_DB.SaveBarcodeForPro(currentUser, objT_InStockDetailInfo, time1, ref err))
+                {
+                    return Json(new { state = true, obj = time1.ToString("yyyy/MM/dd HH:mm:ss") }, JsonRequestBehavior.AllowGet);
+                }
+                return Json(new { state = false, obj = err }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { state = false, obj = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public List<string> GetSerialnos(string v, string flag, ref string err)
         {
             decimal Vnum = Convert.ToDecimal(v);
@@ -244,7 +268,7 @@ namespace Web.WMS.Controllers.Print
             {
                 //var seed = Guid.NewGuid().GetHashCode();
                 //string code = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 999999).ToString().PadLeft(6, '0');
-                string code = "1"+DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+                string code = "1" + DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
 
                 if (serialnos.Find(t => t == code) == null)
                 {
@@ -299,7 +323,7 @@ namespace Web.WMS.Controllers.Print
 
         }
 
-        
+
         public JsonResult DeleteForAdv(string ID)
         {
             try

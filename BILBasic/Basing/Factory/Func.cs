@@ -544,7 +544,7 @@ namespace BILBasic.Basing.Factory
                 }
 
                 User.UserModel user = JSONUtil.JSONHelper.JsonToObject<User.UserModel>(UserJson);
-
+                user.GUID = Guid;
 
                 List<TBase_Model> modelList = GetModelListByJson(UserJson, ModeJson);
 
@@ -566,14 +566,14 @@ namespace BILBasic.Basing.Factory
                 LogNet.LogInfo("ERPJsonAfter:" + JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model));
 
                 //过账失败直接返回
-                //if (model.HeaderStatus == "E" && !string.IsNullOrEmpty(model.Message))
-                //{
-                //    return interfaceJson;
-                //}
-                //else if (model.HeaderStatus == "S" && !string.IsNullOrEmpty(model.MaterialDoc)) //过账成功，并且生成了凭证要记录数据库
-                //{
-                //    modelList.ForEach(t => t.MaterialDoc = model.MaterialDoc);
-                //}
+                if (model.HeaderStatus == "E" && !string.IsNullOrEmpty(model.Message))
+                {
+                    return interfaceJson;
+                }
+                else if (model.HeaderStatus == "S" && !string.IsNullOrEmpty(model.MaterialDoc)) //过账成功，并且生成了凭证要记录数据库
+                {
+                    modelList.ForEach(t => t.MaterialDoc = model.MaterialDoc);
+                }
 
                 LogNet.LogInfo("ERPJson:" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
                 LogNet.LogInfo("ymh：ERPtoWMS-" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
