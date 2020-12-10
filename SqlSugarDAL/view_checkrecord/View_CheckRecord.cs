@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -305,7 +306,13 @@ namespace SqlSugarDAL.view_checkrecord
         /// Default:
         /// Nullable:True
         /// </summary>           
-        public DateTime? SaveTime { get; set; }
+        public DateTime SaveTime { get; set; }
+
+        /// <summary>
+        /// 保存日期显示
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public String SaveTimeString { get { return this.SaveTime == null ? "" : this.SaveTime.ToString("yyyy-MM-dd"); } }
 
         /// <summary>
         /// Desc:
@@ -334,6 +341,16 @@ namespace SqlSugarDAL.view_checkrecord
         /// Nullable:True
         /// </summary>           
         public decimal? QulityQty { get; set; }
+
+        /// <summary>
+        /// 订单数量
+        /// </summary>
+        public decimal? ProductQty { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public String Decription { get; set; }
 
     }
 }

@@ -201,7 +201,7 @@ namespace SqlSugarDAL.checkrecord
         /// <summary>
         /// 总不合格数
         /// </summary>
-        public String TotalUnqualifiedNumber { get; set; }
+        public Int32 TotalUnqualifiedNumber { get; set; }
 
         /// <summary>
         /// 原材料
@@ -217,5 +217,10 @@ namespace SqlSugarDAL.checkrecord
         /// 保存时间
         /// </summary>
         public DateTime SaveTime { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public String Decription { get; set; }
     }
 }

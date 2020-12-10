@@ -26,13 +26,15 @@ namespace Web.WMS.Controllers
     [RoleActionFilter(Message = "QualityDetail/QualityDetail")]
     public class QualityDetailController : Controller
     {
+        string strongHoldCode = Commom.ReadUserInfo().StrongHoldCode;
+
         /// <summary>
         /// 跳转主视图
         /// </summary>
         /// <returns></returns>
         public ActionResult GetModelList()
         {
-            ViewBag.StrongHoldCode = Commom.ReadUserInfo().StrongHoldCode;
+            ViewBag.StrongHoldCode = strongHoldCode;
             return View();
         }
 
@@ -63,7 +65,7 @@ namespace Web.WMS.Controllers
         /// 提交
         /// </summary>
         /// <returns></returns>
-        public ActionResult Submit(string formJson, string orderId, string qualityQty, string remark)
+        public ActionResult Submit(string formJson, string orderId, string qualityQty, string unQualityQty, string remark)
         {
             SuccessResult successResult = new SuccessResult();
             successResult.Success = false;
@@ -77,6 +79,32 @@ namespace Web.WMS.Controllers
                 if (queryData == null)
                 {
                     queryData = new T_CheckRecord();
+                    queryData.TotalUnqualifiedNumber =
+                        unQualityQty == "" ? 0 : Convert.ToInt32(unQualityQty);//总不合格数
+
+                    //一部/二部
+                    queryData.Burning = checkRecord.Burning;
+                    queryData.WrongLabe = checkRecord.WrongLabe;
+                    queryData.Resistance = checkRecord.Resistance;
+                    queryData.WrongNumberControl = checkRecord.WrongNumberControl;
+                    queryData.DielectricStrength = checkRecord.DielectricStrength;
+                    queryData.GearBump = checkRecord.GearBump;
+                    queryData.AbnormalNoise = checkRecord.AbnormalNoise;
+                    queryData.BearingFailure = checkRecord.BearingFailure;
+                    queryData.InputPort = checkRecord.InputPort;
+                    queryData.OutPort = checkRecord.OutPort;
+                    queryData.MountingFlange = checkRecord.MountingFlange;
+                    queryData.InstallKeyway = checkRecord.InstallKeyway;
+                    queryData.InstallationShaftDiameter = checkRecord.InstallationShaftDiameter;
+                    queryData.InstallTheStop = checkRecord.InstallTheStop;
+                    queryData.BoltCenter = checkRecord.BoltCenter;
+                    queryData.NoLoad = checkRecord.NoLoad;
+                    queryData.RawMaterial = checkRecord.RawMaterial;
+                    queryData.Contour = checkRecord.Contour;
+                    queryData.SaveTime = DateTime.Now;
+                    queryData.ProductOrderId = Convert.ToInt32(orderId);
+
+                    //三部
                     queryData.Sensei = checkRecord.Sensei;
                     queryData.Scratch = checkRecord.Scratch;
                     queryData.Bruise = checkRecord.Bruise;
@@ -97,26 +125,13 @@ namespace Web.WMS.Controllers
                     queryData.NotInPlace = checkRecord.NotInPlace;
                     queryData.Others = checkRecord.Others;
                     queryData.Minute = checkRecord.Minute;
-                    queryData.Burning = checkRecord.Burning;
-                    queryData.WrongLabe = checkRecord.WrongLabe;
-                    queryData.Resistance = checkRecord.Resistance;
-                    queryData.WrongNumberControl = checkRecord.WrongNumberControl;
-                    queryData.DielectricStrength = checkRecord.DielectricStrength;
-                    queryData.GearBump = checkRecord.GearBump;
-                    queryData.AbnormalNoise = checkRecord.AbnormalNoise;
-                    queryData.BearingFailure = checkRecord.BearingFailure;
-                    queryData.InputPort = checkRecord.InputPort;
-                    queryData.OutPort = checkRecord.OutPort;
-                    queryData.MountingFlange = checkRecord.MountingFlange;
-                    queryData.InstallKeyway = checkRecord.InstallKeyway;
-                    queryData.InstallationShaftDiameter = checkRecord.InstallationShaftDiameter;
-                    queryData.InstallTheStop = checkRecord.InstallTheStop;
-                    queryData.BoltCenter = checkRecord.BoltCenter;
-                    queryData.ProductOrderId = Convert.ToInt32(orderId);
                     checkRecordService.Insert(queryData);
                 }
                 else
                 {
+                    queryData.TotalUnqualifiedNumber +=
+                        unQualityQty == "" ? 0 : Convert.ToInt32(unQualityQty);//总不合格数
+
                     queryData.Sensei = checkRecord.Sensei;
                     queryData.Scratch = checkRecord.Scratch;
                     queryData.Bruise = checkRecord.Bruise;
@@ -137,6 +152,7 @@ namespace Web.WMS.Controllers
                     queryData.NotInPlace = checkRecord.NotInPlace;
                     queryData.Others = checkRecord.Others;
                     queryData.Minute = checkRecord.Minute;
+
                     queryData.Burning = checkRecord.Burning;
                     queryData.WrongLabe = checkRecord.WrongLabe;
                     queryData.Resistance = checkRecord.Resistance;
@@ -153,6 +169,10 @@ namespace Web.WMS.Controllers
                     queryData.InstallTheStop = checkRecord.InstallTheStop;
                     queryData.BoltCenter = checkRecord.BoltCenter;
                     queryData.ProductOrderId = Convert.ToInt32(orderId);
+                    queryData.NoLoad = checkRecord.NoLoad;
+                    queryData.RawMaterial = checkRecord.RawMaterial;
+                    queryData.Contour = checkRecord.Contour;
+                    queryData.SaveTime = DateTime.Now;
                     checkRecordService.Update(queryData);
                 }
                 var product = productService.GetById(orderId);
@@ -176,6 +196,7 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult CheckRecordOut()
         {
+            ViewBag.strongHoldCode = strongHoldCode;
             return View();
         }
 

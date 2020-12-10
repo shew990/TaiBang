@@ -18,7 +18,7 @@
 </style>
 
 <div class="box">
-    <div style="border-bottom:1px solid black;padding:20px;">
+    <div style="border-bottom:1px solid black;padding:10px;">
         <span style="font-size:15px;padding-right:10px;">生产订单</span>
         <input id="ErpVoucherNo" placeholder="请输入生产单号" style="padding-left: 5px;height:30px;">
         <a class="btn btn-primary" href="/QualityDetail/CheckRecordOut">质检明细</a>
@@ -76,10 +76,16 @@
                         <input type="text" id="noQulaityQty" readonly class="layui-input">
                     </div>
                 </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">总不合格数</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="TotalUnqualifiedNumber" readonly class="layui-input">
+                    </div>
+                </div>
             </div>
         </form>
     </div>
-    <div style="border-bottom:1px solid black;padding:20px;">
+    <div style="border-bottom:1px solid black;padding:10px;">
         <form class="layui-form" id="formRecord">
             @if (@ViewBag.StrongHoldCode == "0403")
             {
@@ -348,12 +354,6 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label">总不合格数</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="TotalUnqualifiedNumber" placeholder="请输入总不合格数" class="layui-input record">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
                         <label class="layui-form-label">原材料</label>
                         <div class="layui-input-block">
                             <input type="text" name="RawMaterial" placeholder="请输入原材料" class="layui-input record">
@@ -373,6 +373,8 @@
         <div style="padding-bottom:10px;">
             <span style="padding-right:20px;">合格数量</span>
             <input id="QualityQty" type="number" style="height:30px;padding-left:5px;" placeholder="请输入合格数量">
+            <span style="padding-right:20px;padding-left:40px;">不合格数量</span>
+            <input id="UnQualityQty" type="number" style="height:30px;padding-left:5px;" placeholder="请输入不合格数量">
         </div>
         <div>
             <div class="layui-row">
@@ -384,7 +386,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md4" style="padding-left:10px;">
+                <div class="layui-col-md4" style="padding-left:45px;">
                     <button class="btn btn-primary" id="ok">确定</button>
                 </div>
             </div>
@@ -428,6 +430,7 @@
                     $("#alreadyQulaityQty").val(data.product.QulityQty);
                     $("#noQulaityQty").val(data.product.NoQualityQty);
                     $("#QualityQty").val(data.product.QulityQty);
+                    $("#TotalUnqualifiedNumber").val(data.record.TotalUnqualifiedNumber);
                     $("#remark").val(data.product.Remark);
 
                     //赋值checkrecord表单
@@ -461,7 +464,7 @@
                 layer.alert("请先输入查询订单获取订单数据,再提交!");
                 return false;
             }
-            if (Number($("#QualityQty").val()) > objOrder.product.ProductQty) {
+            if (Number($("#QualityQty").val()) + Number(objOrder.product.QulityQty) > Number(objOrder.product.ProductQty)) {
                 layer.alert("合格数量不能大于订单数量!");
                 return false;
             }
@@ -469,7 +472,9 @@
                 {
                     formJson: formSerialize($('#formRecord').serializeArray()),
                     orderId: objOrder.product.id,
-                    qualityQty: $("#QualityQty").val(), remark: $("#remark").val()
+                    qualityQty: $("#QualityQty").val(),
+                    remark: $("#remark").val(),
+                    unQualityQty: $("#UnQualityQty").val()
                 },
                 function (data) {
                     layer.alert(data.Msg);
