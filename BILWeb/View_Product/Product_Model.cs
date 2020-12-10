@@ -54,8 +54,13 @@ namespace BILWeb.Product
         public List<T_OutBarCodeInfo> lstBarCode { get; set; }
 
         public String ProductBatch { get; set; }
+        public String VoucherNo { get; set; }
 
+        public String Customer_voucherno { get; set; }//客户订单号
+        public String sale_vouchertypename { get; set; }//销售订单类型
+        public String Customer_PrivateDescSeg5 { get; set; }//简称
 
+        public String guid { get; set; }//guid
 
 
     }

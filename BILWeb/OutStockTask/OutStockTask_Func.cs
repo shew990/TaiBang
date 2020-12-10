@@ -3,6 +3,7 @@ using BILBasic.Interface;
 using BILBasic.JSONUtil;
 using BILBasic.User;
 using BILWeb.OutStock;
+using BILWeb.SyncService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,16 @@ namespace BILWeb.OutStockTask
 
         protected override T_OutStockTaskInfo GetModelByJson(string ModelJson)
         {
+            string errorMsg = string.Empty;
+            T_OutStockTaskDetailsInfo model = JSONHelper.JsonToObject<T_OutStockTaskDetailsInfo>(ModelJson);
+
+            if (!string.IsNullOrEmpty(model.ErpVoucherNo))
+            {
+                //BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
+                //PFunc.Sync(10, string.Empty, model.ErpVoucherNo, -1, ref errorMsg, "ERP", -1, null);
+                ParamaterFiled_DB PDB = new ParamaterFiled_DB();
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref errorMsg);
+            }
             return JSONHelper.JsonToObject<T_OutStockTaskInfo>(ModelJson);
         }
 

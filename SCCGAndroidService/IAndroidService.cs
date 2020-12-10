@@ -449,15 +449,20 @@ namespace SCCGAndroidService
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "SaveT_ProDuctListADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string SaveT_ProDuctListADF(string UserJson, string ModelJson);
+        string SaveT_ProDuctListADF(string UserJson, string ModelJson,string Guid);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "SaveT_ProDuctBarcodeADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson, string PrintIP);
+        string SaveT_ProDuctBarcodeADF(string UserJson, string ModelJson, string PrintIP,string outbarcode);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "CloseProduct", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string CloseProduct(string ErpVoucherno);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "SaveT_BarcodeADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string SaveT_BarcodeADF(string BarcodeJson);
+        
         #endregion
 
     }

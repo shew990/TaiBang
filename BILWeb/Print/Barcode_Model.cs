@@ -600,5 +600,9 @@ namespace BILWeb.Print
         public string departmentname { get; set; }
 
         public string spec { get; set; }
+
+        [DBAttribute(NotDBField = true)]
+        public string PrintName { get; set; }
+
     }
 }

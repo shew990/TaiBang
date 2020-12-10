@@ -25,7 +25,6 @@ namespace BILWeb.Product
             //注意!head表ID要填basemodel的headerID new SqlParameter("@CustomerID", DbHelperSQL.ToDBValue(model.HeaderID)),
             throw new NotImplementedException();
 
-
         }
 
         protected override List<string> GetSaveSql(UserModel user, ref T_Product T_Product)
@@ -104,40 +103,15 @@ namespace BILWeb.Product
             return lstSql;
         }
 
-        public bool SaveProDuctBarcode(UserModel user, T_Product modelList,ref Barcode_Model backmodel)
+        public bool SaveProDuctBarcode(UserModel user, T_Product modelList, ref Barcode_Model backmodel)
         {
             try
             {
-                Print_DB print_DB = new Print_DB();
-                List<Barcode_Model> listbarcode = new List<Barcode_Model>();
-                Barcode_Model model = new Barcode_Model();
-                model.CompanyCode = "";
-                model.StrongHoldCode = modelList.StrongHoldCode;
-                model.MaterialNoID = modelList.MaterialNoID;
-                model.MaterialNo = modelList.MaterialNo;
-                model.MaterialDesc = modelList.MaterialDesc;
-                model.BatchNo = modelList.BatchNo;
-                model.ProductBatch = modelList.ProductBatch;//给批号加密成8位
-                model.ErpVoucherNo = modelList.ErpVoucherNo;
-                model.Qty = Convert.ToDecimal(modelList.ScanQty);
-
-                var seed = Guid.NewGuid().GetHashCode();
-                string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
-
-                model.SerialNo = code;
-                model.Creater = user.UserNo;
-                model.ReceiveTime = DateTime.Now;
-                model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
-                model.RowNo = "1";
-                model.RowNoDel = "1";
-                model.BarcodeType = 1;
-                backmodel = model;
-                listbarcode.Add(model);
-                string err = "";
-                if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
+                //不生成外箱，直接做关联
+                if (!string.IsNullOrEmpty(backmodel.BarCode))
                 {
                     //修改关联量，插入记录表
-                    if (updateproduct(modelList, model.BarCode))
+                    if (updateproduct(modelList, backmodel.BarCode))
                     {
                         return true;
                     }
@@ -148,7 +122,57 @@ namespace BILWeb.Product
                 }
                 else
                 {
-                    return false;
+                    Print_DB print_DB = new Print_DB();
+                    List<Barcode_Model> listbarcode = new List<Barcode_Model>();
+                    Barcode_Model model = new Barcode_Model();
+                    model.CompanyCode = "";
+                    model.ErpVoucherNo = modelList.ErpVoucherNo;
+                    model.VoucherType = modelList.VoucherType.ToString();
+                    model.StrongHoldCode = modelList.StrongHoldCode;
+                    model.StrongHoldName = backmodel.StrongHoldName;
+                    model.MaterialNoID = modelList.MaterialNoID;
+                    model.MaterialNo = modelList.MaterialNo;
+                    model.MaterialDesc = modelList.MaterialName;
+                    model.spec = backmodel.spec;
+                    model.BatchNo = modelList.BatchNo;
+                    model.ProductBatch = modelList.ProductBatch;//给批号加密成8位
+                    model.ErpVoucherNo = modelList.ErpVoucherNo;
+                    model.CusCode = modelList.CustomerCode;
+                    model.CusName = modelList.CustomerName;
+                    model.StoreCondition = modelList.PubDescSeg7;
+                    model.ProtectWay = modelList.sale_vouchertypename;
+                    model.LABELMARK = modelList.Customer_voucherno;
+                    model.Qty = Convert.ToDecimal(modelList.ScanQty);
+
+                    var seed = Guid.NewGuid().GetHashCode();
+                    string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+
+                    model.SerialNo = code;
+                    model.Creater = user.UserNo;
+                    model.ReceiveTime = DateTime.Now;
+                    model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
+                    model.RowNo = "1";
+                    model.RowNoDel = "1";
+                    model.BarcodeType = 1;
+                    backmodel = model;
+                    listbarcode.Add(model);
+                    string err = "";
+                    if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
+                    {
+                        //修改关联量，插入记录表
+                        if (updateproduct(modelList, model.BarCode))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
             catch (Exception ex)
@@ -158,6 +182,66 @@ namespace BILWeb.Product
 
         }
 
+        //专门给U9用
+        public bool SaveBarcode(List<Barcode_Model> backmodels,ref string strMsg)
+        {
+            try
+            {
+                Print_DB print_DB = new Print_DB();
+                List<Barcode_Model> listbarcode = new List<Barcode_Model>();
+                foreach (var backmodel in backmodels)
+                {
+
+                    Barcode_Model model = new Barcode_Model();
+                    model.CompanyCode = "";
+                    model.ErpVoucherNo = backmodel.ErpVoucherNo;
+                    model.VoucherType = "51";
+                    model.StrongHoldCode = backmodel.StrongHoldCode;
+                    model.StrongHoldName = backmodel.StrongHoldName;
+                    model.MaterialNoID = backmodel.MaterialNoID;
+                    model.MaterialNo = backmodel.MaterialNo;
+                    model.MaterialDesc = backmodel.MaterialDesc;
+                    model.spec = backmodel.spec;
+                    model.BatchNo = backmodel.BatchNo;
+                    model.ProductBatch = backmodel.ProductBatch;//给批号加密成8位
+                    model.ErpVoucherNo = backmodel.ErpVoucherNo;
+                    model.Qty = backmodel.Qty;
+                    model.CusCode = backmodel.CusCode;
+                    model.CusName = backmodel.CusName;
+                    model.StoreCondition = backmodel.StoreCondition;
+                    model.ProtectWay = backmodel.ProtectWay;
+                    model.LABELMARK = backmodel.LABELMARK;
+
+                    var seed = Guid.NewGuid().GetHashCode();
+                    string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+
+                    model.SerialNo = code;
+                    model.Creater = "U9";
+                    model.ReceiveTime = DateTime.Now;
+                    model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
+                    model.RowNo = "1";
+                    model.RowNoDel = "1";
+                    model.BarcodeType = 1;
+                    listbarcode.Add(model);
+                }
+
+                if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref strMsg))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                strMsg = ex.ToString();
+                return false;
+            }
+
+        }
 
         public bool updateproduct(T_Product product, string fserialno)
         {
@@ -218,7 +302,7 @@ namespace BILWeb.Product
             T_Product.ErpWarehouseName = (string)dbFactory.ToModelValue(reader, "ErpWarehouseName");
 
             T_Product.MaterialNo = (string)dbFactory.ToModelValue(reader, "MaterialNo");
-            T_Product.MaterialDesc = (string)dbFactory.ToModelValue(reader, "MaterialDesc");
+            T_Product.MaterialDesc = dbFactory.ToModelValue(reader, "MaterialDesc").ToString();
             T_Product.spec = (string)dbFactory.ToModelValue(reader, "spec");
             T_Product.MaterialName = (string)dbFactory.ToModelValue(reader, "MaterialName");
 
@@ -233,6 +317,12 @@ namespace BILWeb.Product
             T_Product.PackQty = (decimal)dbFactory.ToModelValue(reader, "PackQty");
             T_Product.Strstatus = (string)dbFactory.ToModelValue(reader, "Strstatus");
             T_Product.ProductBatch = (string)dbFactory.ToModelValue(reader, "ProductBatch");
+            T_Product.MaterialNoID = Convert.ToInt32(dbFactory.ToModelValue(reader, "MaterialNoID"));
+            T_Product.VoucherType = Convert.ToInt32(dbFactory.ToModelValue(reader, "VoucherType"));
+            T_Product.VoucherNo = (string)dbFactory.ToModelValue(reader, "VoucherNo");
+            T_Product.Customer_voucherno = (string)dbFactory.ToModelValue(reader, "Customer_voucherno");
+            T_Product.sale_vouchertypename = (string)dbFactory.ToModelValue(reader, "sale_vouchertypename");
+            T_Product.Customer_PrivateDescSeg5 = (string)dbFactory.ToModelValue(reader, "Customer_PrivateDescSeg5");
 
             return T_Product;
         }

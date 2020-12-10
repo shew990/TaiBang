@@ -153,6 +153,7 @@
     <Compile Include="House\IHouseService.cs" />
     <Compile Include="IBaseService.cs" />
     <Compile Include="Quality\IQualityDetailService.cs" />
+    <Compile Include="T00L\HttpTool.cs" />
     <Compile Include="View_Product\IProductService.cs" />
     <Compile Include="View_Product\IProductDerailService.cs" />
     <Compile Include="View_Product\IView_ProductService.cs" />

@@ -312,6 +312,12 @@ namespace BILWeb.InStock
             t_instockdetail.iarrsid = dbFactory.ToModelValue(reader, "iarrsid").ToDBString();
             t_instockdetail.spec = dbFactory.ToModelValue(reader, "spec").ToDBString();
             t_instockdetail.ErpId = dbFactory.ToModelValue(reader, "ErpId").ToDBString();
+
+            t_instockdetail.Customer_voucherno = dbFactory.ToModelValue(reader, "Customer_voucherno").ToDBString();
+            t_instockdetail.sale_vouchertypename = dbFactory.ToModelValue(reader, "sale_vouchertypename").ToDBString();
+            t_instockdetail.PubDescSeg7 = dbFactory.ToModelValue(reader, "PubDescSeg7").ToDBString();
+            t_instockdetail.Customer_PrivateDescSeg5 = dbFactory.ToModelValue(reader, "Customer_PrivateDescSeg5").ToDBString();
+
             return t_instockdetail;
         }
 

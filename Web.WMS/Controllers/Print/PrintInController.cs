@@ -176,6 +176,11 @@ namespace Web.WMS.Controllers.Print
                     model.WorkNo = WarehouseName;
                     model.TracNo = TracNo;
                     model.ProjectNo = ProjectNo;
+
+                
+                    model.StoreCondition = objT_InStockDetailInfo.PubDescSeg7;
+                    model.ProtectWay = objT_InStockDetailInfo.sale_vouchertypename;
+                    model.LABELMARK = objT_InStockDetailInfo.Customer_voucherno;
                     listbarcode.Add(model);
                 }
                 if (inboxnum == 1)
@@ -202,6 +207,10 @@ namespace Web.WMS.Controllers.Print
                     model.WorkNo = WarehouseName;
                     model.TracNo = TracNo;
                     model.ProjectNo = ProjectNo;
+
+                    model.StoreCondition = objT_InStockDetailInfo.PubDescSeg7;
+                    model.ProtectWay = objT_InStockDetailInfo.sale_vouchertypename;
+                    model.LABELMARK = objT_InStockDetailInfo.Customer_voucherno;
                     listbarcode.Add(model);
                 }
                 if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))

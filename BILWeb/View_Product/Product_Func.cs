@@ -10,6 +10,8 @@ using BILBasic.User;
 using Newtonsoft.Json;
 using BILWeb.Product;
 using BILWeb.Print;
+using BILWeb.T00L;
+using BILWeb.SyncService;
 
 namespace BILWeb.Product
 {
@@ -35,7 +37,18 @@ namespace BILWeb.Product
 
         protected override T_Product GetModelByJson(string strJson)
         {
-            return null;
+            string errorMsg = string.Empty;
+            T_Product model = JSONHelper.JsonToObject<T_Product>(strJson);
+
+            if (!string.IsNullOrEmpty(model.ErpVoucherNo))
+            {
+                //BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
+                //PFunc.Sync(10, string.Empty, model.ErpVoucherNo, -1, ref errorMsg, "ERP", -1, null);
+                ParamaterFiled_DB PDB = new ParamaterFiled_DB();
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref errorMsg);
+
+            }
+            return JSONHelper.JsonToObject<T_Product>(strJson);
         }
 
 
@@ -108,7 +121,7 @@ namespace BILWeb.Product
 
         }
 
-        public string SaveT_ProDuctBarcodeADF(string user, string modelList,string PrintIP)
+        public string SaveT_ProDuctBarcodeADF(string user, string modelList,string PrintIP, string OutBarcode)
         {
 
             BaseMessage_Model<List<T_Product>> messageModel = new BaseMessage_Model<List<T_Product>>();
@@ -137,10 +150,19 @@ namespace BILWeb.Product
                     messageModel.Message = "传入的关联数量超过未关联数量，不合法！";
                     return JsonConvert.SerializeObject(messageModel);
                 }
+
                 Barcode_Model BarcodeModel = new Barcode_Model();
+                if (!string.IsNullOrEmpty(OutBarcode))
+                {
+                    BarcodeModel.BarCode = OutBarcode;
+                }
+               
                 if (ProductDB.SaveProDuctBarcode(userModel, Newproduct, ref BarcodeModel))
                 {
-                    //bool res = PrintLable(list, ipport, ref ErrMsg);//调用打印标签
+                    string date = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    BarcodeModel.PrintName = PrintIP;
+                    string data = JsonConvert.SerializeObject(BarcodeModel);
+                    HttpTool.Post("http://192.168.250.37:8022/api/print/PrintOuterBox", data, date);
                     if (true)
                     {
                         messageModel.HeaderStatus = "S";
@@ -169,6 +191,52 @@ namespace BILWeb.Product
             }
 
         }
+
+        protected override string GetModelListByJsonToERP(UserModel user, List<T_Product> modelList)
+        {
+            modelList.ForEach(item=>item.PostQty=item.ScanQty);
+            return JSONHelper.ObjectToJson<List<T_Product>>(modelList);
+
+        }
+
+        public string SaveT_BarcodeADF(string BarcodeJson)
+        {
+
+            BaseMessage_Model<string> messageModel = new BaseMessage_Model<string>();
+            try
+            {
+                if (string.IsNullOrEmpty(BarcodeJson))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "传入参数不能为空！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+
+                List<Barcode_Model> BarcodeModel = JSONHelper.JsonToObject<List<Barcode_Model>>(BarcodeJson);
+                T_Product_DB ProductDB = new T_Product_DB();
+                string strMsg = "";
+                if (ProductDB.SaveBarcode(BarcodeModel,ref strMsg))
+                {
+                    messageModel.HeaderStatus = "S";
+                    messageModel.Message = "打印成功";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+                else
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "数据插入失败！"+ strMsg;
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.ToString();
+                return JsonConvert.SerializeObject(messageModel);
+            }
+
+        }
+        
 
 
         public string CloseProduct(string ErpVoucherno) {
