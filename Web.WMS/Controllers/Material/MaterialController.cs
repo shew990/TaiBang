@@ -1,5 +1,6 @@
 ﻿using BILBasic.Common;
 using BILWeb.Material;
+using BILWeb.SyncService;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,18 +25,32 @@ namespace Web.WMS.Controllers.Material
 
         public JsonResult Sync(string MaterialNo)
         {
-            string ErrorMsg = ""; int WmsVoucherType = -1; string syncType = "ERP"; int syncExcelVouType = -1; DataSet excelds = null;
-            BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
-           
-            if (PFunc.Sync(99, string.Empty, MaterialNo, WmsVoucherType, ref ErrorMsg, syncType, syncExcelVouType, excelds))
-            {
+            //string ErrorMsg = ""; int WmsVoucherType = -1; string syncType = "ERP"; int syncExcelVouType = -1; DataSet excelds = null;
+            //BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
 
+            //if (PFunc.Sync(99, string.Empty, MaterialNo, WmsVoucherType, ref ErrorMsg, syncType, syncExcelVouType, excelds))
+            //{
+
+            //    return Json(new { state = true }, JsonRequestBehavior.AllowGet);
+            //}
+            //else
+            //{
+            //    return Json(new { state = false, obj = ErrorMsg }, JsonRequestBehavior.AllowGet);
+            //}
+
+            string strMsg = "";
+            ParamaterFiled_DB PDB = new ParamaterFiled_DB();
+            if (PDB.GetVoucherNo(MaterialNo, ref strMsg,"0"))
+            {
                 return Json(new { state = true }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new { state = false, obj = ErrorMsg }, JsonRequestBehavior.AllowGet);
+                return Json(new { state = false, obj = strMsg }, JsonRequestBehavior.AllowGet);
             }
+
+
+
         }
 
 

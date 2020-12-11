@@ -125,7 +125,12 @@ namespace Web.WMS.Controllers.Print
                 StrongHoldCode = objT_InStockDetailInfo.StrongHoldCode, CompanyCode = objT_InStockDetailInfo.CompanyCode,
                 Createname = objT_InStockDetailInfo.Creater, WarehouseName = objT_InStockDetailInfo.WareHouseNo,
                 TracNo = objT_InStockDetailInfo.TracNo, ProjectNo = objT_InStockDetailInfo.ProjectNo,
-                BatchNo = objT_InStockDetailInfo.BatchNo;
+                BatchNo = objT_InStockDetailInfo.FromBatchNo;
+
+            T_InStock_Func InFunc = new T_InStock_Func();
+            string strMsg = "";
+            T_InStockInfo InStockInfo = new T_InStockInfo() { ID = objT_InStockDetailInfo.HeaderID };
+            InFunc.GetModelByID(ref InStockInfo, ref strMsg);
             //查物料
             T_Material_Func funM = new T_Material_Func();
             string strErrMsg = "";
@@ -178,8 +183,12 @@ namespace Web.WMS.Controllers.Print
                     model.TracNo = TracNo;
                     model.ProjectNo = ProjectNo;
 
+                    model.SupCode = InStockInfo.SupplierNo;
+                    model.SupName = InStockInfo.SupplierName;
+                    model.StoreCondition = InStockInfo.StrVoucherType;
+                    model.department = InStockInfo.DepartmentCode;
+                    model.departmentname = InStockInfo.DepartmentName;
 
-                    model.StoreCondition = objT_InStockDetailInfo.PubDescSeg7;
                     model.ProtectWay = objT_InStockDetailInfo.sale_vouchertypename;
                     model.LABELMARK = objT_InStockDetailInfo.Customer_voucherno;
                     listbarcode.Add(model);
@@ -209,7 +218,12 @@ namespace Web.WMS.Controllers.Print
                     model.TracNo = TracNo;
                     model.ProjectNo = ProjectNo;
 
-                    model.StoreCondition = objT_InStockDetailInfo.PubDescSeg7;
+                    model.SupCode = InStockInfo.SupplierNo;
+                    model.SupName = InStockInfo.SupplierName;
+                    model.StoreCondition = InStockInfo.StrVoucherType;
+                    model.department = InStockInfo.DepartmentCode;
+                    model.departmentname = InStockInfo.DepartmentName;
+
                     model.ProtectWay = objT_InStockDetailInfo.sale_vouchertypename;
                     model.LABELMARK = objT_InStockDetailInfo.Customer_voucherno;
                     listbarcode.Add(model);

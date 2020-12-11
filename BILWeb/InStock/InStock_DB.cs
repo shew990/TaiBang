@@ -223,15 +223,16 @@ namespace BILWeb.InStock
                 if (!user.UserNo.Equals("admin"))
                 {
                     strSql += strAnd;
-                    strSql += " strongholdcode = '" + user.StrongHoldCode + "' and ((fromerpwarehouse) ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='')";
+                    //strongholdcode = '" + user.StrongHoldCode + "' and
+                    strSql += "  ((fromerpwarehouse) ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='')";
                 }
             }
             else {
-                if (!user.UserNo.Equals("admin"))
-                {
-                    strSql += strAnd;
-                    strSql += " strongholdcode = '" + user.StrongHoldCode + "' ";
-                }
+                //if (!user.UserNo.Equals("admin"))
+                //{
+                //    strSql += strAnd;
+                //    strSql += " strongholdcode = '" + user.StrongHoldCode + "' ";
+                //}
             }
 
 

@@ -140,7 +140,7 @@
                         , { field: 'ReceiveQty', title: '收货数', width: 80 }
                         , { field: 'RemainQty', title: '剩余数', width: 80 }
                         , { field: 'spec', title: '规格', width: 200 }
-                        , { field: 'BatchNo', title: '番号', width: 100 }
+                        , { field: 'FromBatchNo', title: '番号', width: 100 }
                         , { fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barDemo' }
                     ]
                 ]
@@ -174,7 +174,7 @@
                 }
                 $('#Materialno1').val(data.MaterialNo);
                 $('#Materialdesc1').val(data.MaterialDesc);
-                $('#Batchno1').val(data.BatchNo);
+                $('#Batchno1').val(data.FromBatchNo);
                 $('#Rowno1').val(data.RowNo);
                 $('#VoucherQty1').val(data.RemainQty);
                 $('#EveryQty1').val(data.RemainQty);

@@ -252,10 +252,10 @@ namespace BILWeb.OutStockTask
                     }
                     
                 }
-                
 
 
-                strSql += " StrongHoldCode = '" + user.StrongHoldCode + "' and ("+ strwarehouse + " or isnull(fromerpwarehouse,'')='')";
+                //StrongHoldCode = '" + user.StrongHoldCode + "' and
+                strSql += "  ("+ strwarehouse + " or isnull(fromerpwarehouse,'')='')";
             }
 
             if (model.WareHouseID > 0) 
