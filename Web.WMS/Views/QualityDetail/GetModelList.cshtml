@@ -422,13 +422,67 @@
         var objOrder;
         $("#ErpVoucherNo").keypress(function (even) {
             if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
-                GetModel();
+                $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
+                    objOrder = data;
+                    $("#orderNo").val(data.product.ErpVoucherNo);
+                    $("#batchNo").val(data.product.BatchNo);
+                    $("#moudle").val("");
+                    $("#materialNo").val(data.product.MaterialNo);
+                    $("#line").val(data.product.LineName);
+                    $("#qty").val(data.product.ProductQty);
+                    $("#alreadyQulaityQty").val(data.product.QulityQty);
+                    $("#noQulaityQty").val(data.product.NoQualityQty);
+                    $("#QualityQty").val(data.product.QulityQty);
+                    $("#TotalUnqualifiedNumber").val(data.record.TotalUnqualifiedNumber);
+                    $("#remark").val(data.product.Remark);
+
+                    //赋值checkrecord表单
+                    if (data.record != null) {
+                        $(".record").each(function () {
+                            let keyArray = Object.keys(data.record);
+                            let valueArray = Object.values(data.record);
+                            for (let i = 0; i < keyArray.length; i++) {
+                                if ($(this).attr("name") == keyArray[i]) {
+                                    $(this).val(valueArray[i]);
+                                    break;
+                                }
+                            }
+                        });
+                    }
+                });
             }
         });
 
         //查询
         $("#Query").click(function () {
-            GetModel();
+            $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
+                objOrder = data;
+                $("#orderNo").val(data.product.ErpVoucherNo);
+                $("#batchNo").val(data.product.BatchNo);
+                $("#moudle").val("");
+                $("#materialNo").val(data.product.MaterialNo);
+                $("#line").val(data.product.LineName);
+                $("#qty").val(data.product.ProductQty);
+                $("#alreadyQulaityQty").val(data.product.QulityQty);
+                $("#noQulaityQty").val(data.product.NoQualityQty);
+                $("#QualityQty").val(data.product.QulityQty);
+                $("#TotalUnqualifiedNumber").val(data.record.TotalUnqualifiedNumber);
+                $("#remark").val(data.product.Remark);
+
+                //赋值checkrecord表单
+                if (data.record != null) {
+                    $(".record").each(function () {
+                        let keyArray = Object.keys(data.record);
+                        let valueArray = Object.values(data.record);
+                        for (let i = 0; i < keyArray.length; i++) {
+                            if ($(this).attr("name") == keyArray[i]) {
+                                $(this).val(valueArray[i]);
+                                break;
+                            }
+                        }
+                    });
+                }
+            });
         })
 
         //确定
@@ -467,37 +521,6 @@
                 });
         });
     });
-
-    function GetModel() {
-        $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
-            objOrder = data;
-            $("#orderNo").val(data.product.ErpVoucherNo);
-            $("#batchNo").val(data.product.BatchNo);
-            $("#moudle").val("");
-            $("#materialNo").val(data.product.MaterialNo);
-            $("#line").val(data.product.LineName);
-            $("#qty").val(data.product.ProductQty);
-            $("#alreadyQulaityQty").val(data.product.QulityQty);
-            $("#noQulaityQty").val(data.product.NoQualityQty);
-            $("#QualityQty").val(data.product.QulityQty);
-            $("#TotalUnqualifiedNumber").val(data.record.TotalUnqualifiedNumber);
-            $("#remark").val(data.product.Remark);
-
-            //赋值checkrecord表单
-            if (data.record != null) {
-                $(".record").each(function () {
-                    let keyArray = Object.keys(data.record);
-                    let valueArray = Object.values(data.record);
-                    for (let i = 0; i < keyArray.length; i++) {
-                        if ($(this).attr("name") == keyArray[i]) {
-                            $(this).val(valueArray[i]);
-                            break;
-                        }
-                    }
-                });
-            }
-        });
-    }
 
     //表单序列化
     function formSerialize(t) {
