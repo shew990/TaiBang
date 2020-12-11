@@ -196,12 +196,12 @@ namespace BILWeb.Material
             }
         }
         //获取基础列表
-        public U9BaseInfo GetInfoList(string id)
+        public U9BaseInfo GetInfoList(string id,string StrongHoldCode)
         {
             try
             {
                 BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
-                string json = "{\"data_no\":\"" + id + "\",\"VoucherType\":\"9997\"}";
+                string json = "{\"company_no\":\"" + id + "\",\"data_no\":\"" + StrongHoldCode + "\",\"VoucherType\":\"9997\"}";
                 string ERPJson = TIF.GetModelListByInterface(json);
                 return BILBasic.JSONUtil.JSONHelper.JsonToObject<U9BaseInfo>(ERPJson);
             }
@@ -230,6 +230,8 @@ namespace BILWeb.Material
         public List<CommonInfo> Sites { get; set; }
         public List<CommonInfo> Departments { get; set; }
         public List<CommonInfo> Persons { get; set; }
+        public List<CommonInfo> DocTypes { get; set; }
+        
     }
 
 }

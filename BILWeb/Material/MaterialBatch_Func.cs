@@ -71,15 +71,28 @@ namespace BILWeb.Material
         }
 
 
-        public string GetInfoList(string id)
+        public string GetInfoList(string id, string StrongHoldCode)
         {
             BaseMessage_Model<U9BaseInfo> messageModel = new BaseMessage_Model<U9BaseInfo>();
 
             try
             {
+                if (string.IsNullOrEmpty(id))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "参数不能为空";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<U9BaseInfo>>(messageModel);
+                }
+                if (string.IsNullOrEmpty(StrongHoldCode))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = " 参数不能为空";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<U9BaseInfo>>(messageModel);
+                }
+
                 T_Material_Batch_DB _db = new T_Material_Batch_DB();
                 U9BaseInfo BaseInfo = new U9BaseInfo();
-                BaseInfo=_db.GetInfoList(id);
+                BaseInfo=_db.GetInfoList(id, StrongHoldCode);
                 if (BaseInfo == null)
                 {
                     messageModel.HeaderStatus = "E";
@@ -100,25 +113,6 @@ namespace BILWeb.Material
                 messageModel.Message = ex.Message;
                 return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<U9BaseInfo>>(messageModel);
             }
-        }
-
-
-        public U9BaseInfo GetStrongholdList()
-        {
-            U9BaseInfo baseInfo = new U9BaseInfo();
-            BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
-            string json = "{\"VoucherType\":\"9998\"}";
-            string ERPJson = TIF.GetModelListByInterface(json);
-            return BILBasic.JSONUtil.JSONHelper.JsonToObject<U9BaseInfo>(ERPJson);
-        }
-        //获取基础列表
-        public U9BaseInfo GetInfoList(string id)
-        {
-            BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
-            string json = "{\"data_no\":\"" + id + "\",\"VoucherType\":\"9997\"}";
-            string ERPJson = TIF.GetModelListByInterface(json);
-            return BILBasic.JSONUtil.JSONHelper.JsonToObject<U9BaseInfo>(ERPJson);
-
         }
 
 

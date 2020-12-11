@@ -10,6 +10,7 @@ using BILBasic.DBA;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using BILBasic.Basing;
+using BILWeb.SyncService;
 
 namespace BILWeb.InStock
 {
@@ -199,6 +200,11 @@ namespace BILWeb.InStock
 
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {
+                //同步单据
+                string strMsg = "";
+                ParamaterFiled_DB PDB = new ParamaterFiled_DB();
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg);
+
                 strSql += strAnd;
                 strSql += " erpvoucherno like  '%" + model.ErpVoucherNo.Trim() + "%'  ";
             }

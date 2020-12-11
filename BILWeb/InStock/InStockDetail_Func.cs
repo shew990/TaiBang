@@ -213,8 +213,8 @@ namespace BILWeb.InStock
             }
             else { bSucc = true; }
 
-            T_OutBarcode_DB _db = new T_OutBarcode_DB();
-            bSucc = _db.CheckBarCodeIsExists(XmlUtil.Serializer(typeof(List<T_OutBarCodeInfo>), lstBarCode), ref strErrMsg);
+            //T_OutBarcode_DB _db = new T_OutBarcode_DB();
+            //bSucc = _db.CheckBarCodeIsExists(XmlUtil.Serializer(typeof(List<T_OutBarCodeInfo>), lstBarCode), ref strErrMsg);
 
             return bSucc;
         }
