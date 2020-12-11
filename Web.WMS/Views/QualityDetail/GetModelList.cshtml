@@ -21,6 +21,9 @@
     <div style="border-bottom:1px solid black;padding:10px;">
         <span style="font-size:15px;padding-right:10px;">生产订单</span>
         <input id="ErpVoucherNo" placeholder="请输入生产单号" style="padding-left: 5px;height:30px;">
+        <button id="Query" class="btn btn-primary">
+            查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
+        </button>
         <a class="btn btn-primary" href="/QualityDetail/CheckRecordOut">质检明细</a>
     </div>
     <div style="border-bottom:1px solid black;padding:10px;">
@@ -419,36 +422,14 @@
         var objOrder;
         $("#ErpVoucherNo").keypress(function (even) {
             if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
-                $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
-                    objOrder = data;
-                    $("#orderNo").val(data.product.ErpVoucherNo);
-                    $("#batchNo").val(data.product.BatchNo);
-                    $("#moudle").val("");
-                    $("#materialNo").val(data.product.MaterialNo);
-                    $("#line").val(data.product.LineName);
-                    $("#qty").val(data.product.ProductQty);
-                    $("#alreadyQulaityQty").val(data.product.QulityQty);
-                    $("#noQulaityQty").val(data.product.NoQualityQty);
-                    $("#QualityQty").val(data.product.QulityQty);
-                    $("#TotalUnqualifiedNumber").val(data.record.TotalUnqualifiedNumber);
-                    $("#remark").val(data.product.Remark);
-
-                    //赋值checkrecord表单
-                    if (data.record != null) {
-                        $(".record").each(function () {
-                            let keyArray = Object.keys(data.record);
-                            let valueArray = Object.values(data.record);
-                            for (let i = 0; i < keyArray.length; i++) {
-                                if ($(this).attr("name") == keyArray[i]) {
-                                    $(this).val(valueArray[i]);
-                                    break;
-                                }
-                            }
-                        });
-                    }
-                });
+                GetModel();
             }
         });
+
+        //查询
+        $("#Query").click(function () {
+            GetModel();
+        })
 
         //确定
         $("#ok").click(function () {
@@ -485,7 +466,38 @@
                     }
                 });
         });
-    })
+    });
+
+    function GetModel() {
+        $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
+            objOrder = data;
+            $("#orderNo").val(data.product.ErpVoucherNo);
+            $("#batchNo").val(data.product.BatchNo);
+            $("#moudle").val("");
+            $("#materialNo").val(data.product.MaterialNo);
+            $("#line").val(data.product.LineName);
+            $("#qty").val(data.product.ProductQty);
+            $("#alreadyQulaityQty").val(data.product.QulityQty);
+            $("#noQulaityQty").val(data.product.NoQualityQty);
+            $("#QualityQty").val(data.product.QulityQty);
+            $("#TotalUnqualifiedNumber").val(data.record.TotalUnqualifiedNumber);
+            $("#remark").val(data.product.Remark);
+
+            //赋值checkrecord表单
+            if (data.record != null) {
+                $(".record").each(function () {
+                    let keyArray = Object.keys(data.record);
+                    let valueArray = Object.values(data.record);
+                    for (let i = 0; i < keyArray.length; i++) {
+                        if ($(this).attr("name") == keyArray[i]) {
+                            $(this).val(valueArray[i]);
+                            break;
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     //表单序列化
     function formSerialize(t) {

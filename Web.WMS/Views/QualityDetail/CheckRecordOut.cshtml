@@ -3,18 +3,27 @@
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
     string strongHoldCode = (string)ViewBag.strongHoldCode;
 }
+<style type="text/css">
+    #formOutExcel > Button > a {
+        color: white;
+    }
 
+        #formOutExcel > Button > a:hover {
+            text-decoration: none;
+            color: white;
+        }
+</style>
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
         <div class="layui-card-body">
             <div class="layui-inline layui-show-xs-block">
-                <input id="orderNo" class="layui-input" placeholder="生产单号">
+                <input id="OrderNo" class="layui-input" placeholder="生产单号">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                <input id="MaterialDesc" class="layui-input" placeholder="物料名">
+                <input id="StartDate" class="layui-input" placeholder="开始时间">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                <input id="SerialNo" class="layui-input" placeholder="序列号">
+                <input id="EndDate" class="layui-input" placeholder="结束时间">
             </div>
             <div class="layui-inline layui-show-xs-block">
                 <button id="Query" class="btn btn-primary">
@@ -23,19 +32,39 @@
             </div>
         </div>
         <table class="layui-hide" id="checkRecordTable" lay-filter="init"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <form asp-controller="QualityDetailController" asp-action="QualityDetail" id="formOutExcel">
+                    <a href="/QualityDetail/OutExcel" class="layui-btn layui-btn-sm">
+                        <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                        导出EXCEL
+                    </a>
+                </form>
+            </div>
+        </script>
     </div>
 </div>
 
 <script type="text/javascript">
     layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
         table = layui.table //表格
+            , laydate = layui.laydate
             , laypage = layui.laypage //分页
             , layer = layui.layer //弹层
+
+        laydate.render({
+            elem: '#StartDate'
+        });
+
+        laydate.render({
+            elem: '#EndDate'
+        });
 
         tableInit();
 
         //表格初始化
         function tableInit() {
+            let isThreeDepart = @strongHoldCode== "0403" ? true : false;
             table.render({
                 elem: '#checkRecordTable'
                 , height: 520
@@ -43,11 +72,9 @@
                 , method: 'post'
                 , contentType: 'application/json'
                 , where: {
-                    model: {
-                        //orderNo: $("#orderNo").val().trim(),
-                        //MaterialDesc: $("#MaterialDesc").val().trim(),
-                        //SerialNo: $("#SerialNo").val().trim()
-                    }
+                    OrderNo: $("#OrderNo").val().trim(),
+                    StartDate: $("#StartDate").val().trim(),
+                    EndDate: $("#EndDate").val().trim()
                 }
                 , response: {
                     statusCode: 1 //重新规定成功的状态码为 200，table 组件默认为 0
@@ -62,67 +89,67 @@
                 }
                 , title: '库位'
                 , page: true //开启分页
-                , toolbar: 'false' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                , toolbar: '#toolbarDemo'
                 //, totalRow: true //开启合计行
                 , cols: [[ //表头
                     { type: 'numbers', title: '序号', width: 60, fixed: 'left' }//序号列
                     , { field: 'SaveTimeString', title: '日期', width: 100, }
 
-                    , { field: 'ErpVoucherNo', title: '制令号', width: 150,hide: @strongHoldCode==0403? false : true }
-                    , { field: 'CustomerName', title: '客户名称', width: 200,hide: @strongHoldCode==0403? false : true }
-                    , { field: 'spec', title: '型号规格', width: 180,hide: @strongHoldCode==0403? false : true }
-                    , { field: 'QulityQty', title: '送检数', width: 80,hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Sensei', title: '外观掉漆', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Scratch', title: '外观划伤', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Bruise', title: '外观磕碰伤', width: 100, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Speckle', title: '外观污迹', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'DownEdge', title: '外观塌边', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Rust', title: '外观锈迹', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'MissedProcess', title: '外观漏工序', width: 100, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Decibel', title: '噪音分贝', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Dot', title: '噪音打点', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Disaccord', title: '噪音不一致', width: 100, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Noise', title: '噪音杂音', width: 80, hide: @strongHoldCode==0403? false : true}
-                    , { field: 'CardPoint', title: '卡点卡顿', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'ShaftTight', title: '运转轴紧', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Shake', title: '运转抖动', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'OutputSize', title: '输出尺寸', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'InPutSize', title: '输入尺寸', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'NeglectedLoading', title: '装配漏装', width: 80, hide: @strongHoldCode==0403? false : true}
-                    , { field: 'NotInPlace', title: '装配不到位', width: 100, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Others', title: '其他原因', width: 80, hide: @strongHoldCode==0403? false : true }
-                    , { field: 'Minute', title: '精度弧分', width: 80, hide: @strongHoldCode== 0403 ? false : true }
-                    , { field: 'TotalUnqualifiedNumber', title: '不合格数', width: 80, hide: @strongHoldCode==0403? false : true }
+                    , { field: 'ErpVoucherNo', title: '制令号', width: 150,hide: !isThreeDepart }
+                    , { field: 'CustomerName', title: '客户名称', width: 200,hide: !isThreeDepart }
+                    , { field: 'spec', title: '型号规格', width: 180,hide: !isThreeDepart }
+                    , { field: 'QulityQty', title: '送检数', width: 80,hide: !isThreeDepart }
+                    , { field: 'Sensei', title: '外观掉漆', width: 80, hide: !isThreeDepart }
+                    , { field: 'Scratch', title: '外观划伤', width: 80, hide: !isThreeDepart }
+                    , { field: 'Bruise', title: '外观磕碰伤', width: 100, hide: !isThreeDepart }
+                    , { field: 'Speckle', title: '外观污迹', width: 80, hide: !isThreeDepart }
+                    , { field: 'DownEdge', title: '外观塌边', width: 80, hide: !isThreeDepart }
+                    , { field: 'Rust', title: '外观锈迹', width: 80, hide: !isThreeDepart }
+                    , { field: 'MissedProcess', title: '外观漏工序', width: 100, hide: !isThreeDepart }
+                    , { field: 'Decibel', title: '噪音分贝', width: 80, hide: !isThreeDepart }
+                    , { field: 'Dot', title: '噪音打点', width: 80, hide: !isThreeDepart }
+                    , { field: 'Disaccord', title: '噪音不一致', width: 100, hide: !isThreeDepart }
+                    , { field: 'Noise', title: '噪音杂音', width: 80, hide: !isThreeDepart}
+                    , { field: 'CardPoint', title: '卡点卡顿', width: 80, hide: !isThreeDepart }
+                    , { field: 'ShaftTight', title: '运转轴紧', width: 80, hide: !isThreeDepart }
+                    , { field: 'Shake', title: '运转抖动', width: 80, hide: !isThreeDepart }
+                    , { field: 'OutputSize', title: '输出尺寸', width: 80, hide: !isThreeDepart }
+                    , { field: 'InPutSize', title: '输入尺寸', width: 80, hide: !isThreeDepart }
+                    , { field: 'NeglectedLoading', title: '装配漏装', width: 80, hide: !isThreeDepart}
+                    , { field: 'NotInPlace', title: '装配不到位', width: 100, hide: !isThreeDepart }
+                    , { field: 'Others', title: '其他原因', width: 80, hide: !isThreeDepart }
+                    , { field: 'Minute', title: '精度弧分', width: 80, hide: !isThreeDepart }
+                    , { field: 'TotalUnqualifiedNumber', title: '不合格数', width: 80, hide: !isThreeDepart }
 
-                    , { field: '', title: '流水线班组', width: 150, hide: @strongHoldCode== 0403 ? true : false }
-                    , { field: 'ErpVoucherNo', title: '单据编号', width: 150, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'CustomerName', title: '客户名称', width: 200, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'spec', title: '电机型号/规格', width: 180, hide: @strongHoldCode== 0403 ? true : false }
-                    , { field: 'QulityQty', title: '交检数', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'Sensei', title: '外观掉漆', width: 80, hide: @strongHoldCode== 0403 ? true : false }
-                    , { field: 'Scratch', title: '外观碰划伤', width: 100, hide: @strongHoldCode== 0403 ? true : false }
-                    , { field: 'Burning', title: '外观氧化', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'Rust', title: '外观生锈', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'WrongLabe', title: '标签贴错', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'Resistance', title: '电机阻值', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'Disaccord', title: '电流不一致', width: 100, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'WrongNumberControl', title: '号码管有误', width: 100, hide:  @strongHoldCode== 0403 ? true : false}
-                    , { field: 'DielectricStrength', title: '介电强度', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'GearBump', title: '齿轮磕碰', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'AbnormalNoise', title: '减速箱异响', width: 100, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'BearingFailure', title: '轴承损坏', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'InputPort', title: '输入孔', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'OutPort', title: '输出孔', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'MountingFlange', title: '安装法兰', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'InstallKeyway', title: '安装键槽', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'InstallationShaftDiameter', title: '安装轴径', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'InstallTheStop', title: '安装止口', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'BoltCenter', title: '安装孔距', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'NoLoad', title: '空载电流', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'TotalUnqualifiedNumber', title: '总不合格数', width: 100, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'RawMaterial', title: '原材料', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: 'Contour', title: '外型', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
-                    , { field: '', title: '处置', width: 80, hide:  @strongHoldCode== 0403 ? true : false }
+                    , { field: '', title: '流水线班组', width: 150, hide: isThreeDepart }
+                    , { field: 'ErpVoucherNo', title: '单据编号', width: 150, hide:  isThreeDepart }
+                    , { field: 'CustomerName', title: '客户名称', width: 200, hide:  isThreeDepart }
+                    , { field: 'spec', title: '电机型号/规格', width: 180, hide: isThreeDepart }
+                    , { field: 'QulityQty', title: '交检数', width: 80, hide:  isThreeDepart }
+                    , { field: 'Sensei', title: '外观掉漆', width: 80, hide: isThreeDepart }
+                    , { field: 'Scratch', title: '外观碰划伤', width: 100, hide: isThreeDepart }
+                    , { field: 'Burning', title: '外观氧化', width: 80, hide:  isThreeDepart }
+                    , { field: 'Rust', title: '外观生锈', width: 80, hide:  isThreeDepart }
+                    , { field: 'WrongLabe', title: '标签贴错', width: 80, hide:  isThreeDepart }
+                    , { field: 'Resistance', title: '电机阻值', width: 80, hide:  isThreeDepart }
+                    , { field: 'Disaccord', title: '电流不一致', width: 100, hide:  isThreeDepart }
+                    , { field: 'WrongNumberControl', title: '号码管有误', width: 100, hide:  isThreeDepart}
+                    , { field: 'DielectricStrength', title: '介电强度', width: 80, hide:  isThreeDepart }
+                    , { field: 'GearBump', title: '齿轮磕碰', width: 80, hide:  isThreeDepart }
+                    , { field: 'AbnormalNoise', title: '减速箱异响', width: 100, hide:  isThreeDepart }
+                    , { field: 'BearingFailure', title: '轴承损坏', width: 80, hide:  isThreeDepart }
+                    , { field: 'InputPort', title: '输入孔', width: 80, hide:  isThreeDepart }
+                    , { field: 'OutPort', title: '输出孔', width: 80, hide:  isThreeDepart }
+                    , { field: 'MountingFlange', title: '安装法兰', width: 80, hide:  isThreeDepart }
+                    , { field: 'InstallKeyway', title: '安装键槽', width: 80, hide:  isThreeDepart }
+                    , { field: 'InstallationShaftDiameter', title: '安装轴径', width: 80, hide:  isThreeDepart }
+                    , { field: 'InstallTheStop', title: '安装止口', width: 80, hide:  isThreeDepart }
+                    , { field: 'BoltCenter', title: '安装孔距', width: 80, hide:  isThreeDepart }
+                    , { field: 'NoLoad', title: '空载电流', width: 80, hide:  isThreeDepart }
+                    , { field: 'TotalUnqualifiedNumber', title: '总不合格数', width: 100, hide:  isThreeDepart }
+                    , { field: 'RawMaterial', title: '原材料', width: 80, hide:  isThreeDepart }
+                    , { field: 'Contour', title: '外型', width: 80, hide:  isThreeDepart }
+                    , { field: '', title: '处置', width: 80, hide:  isThreeDepart }
 
                     , { field: 'Decription', title: '备注', width: 100}
                 ]]
@@ -130,9 +157,12 @@
         }
 
         //监听行工具事件
-        table.on('tool(init)', function (obj) {
-            if (obj.event === 'stamp') {
-                layer.alert('查看操作');
+        table.on('toolbar(init)', function (obj) {
+            if (obj.event === 'outExcel') {
+                let orderNo = $("#OrderNo").val().trim();
+                let startDate = $("#StartDate").val().trim();
+                let endDate = $("#EndDate").val().trim();
+                location.href = "/QualityDetail/OutExcel?orderNo=" + orderNo + "&startDate=" + startDate + "&endDate=" + endDate+"";
             }
         });
 
