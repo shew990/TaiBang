@@ -954,11 +954,13 @@ namespace SCCGAndroidService
             return tfunc.GetStrongholdList();
         }
 
-        public string GetStrongholdList()
+        public string GetInfoList(string id,string StrongHoldCode)
         {
+            LogNet.LogInfo("基础数据:" + id+"S:"+ StrongHoldCode);
             T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
-            return tfunc.GetStrongholdList();
+            return tfunc.GetInfoList(id, StrongHoldCode);
         }
+
 
         #endregion
     }

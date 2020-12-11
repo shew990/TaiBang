@@ -229,11 +229,16 @@ namespace BILWeb.OutStockTask
                 model.WareHouseNo = NewLstStock[0].FromErpWarehouse;//
                 model.ToErpWarehouse = user.PickWareHouseNo;//
                 model.ToErpAreaNo = user.PickAreaNo; //
-                model.PostUser = user.UserNo;// /
+                model.PostUser = item.PostUser;//
                 model.VoucherType = item.VoucherType;
                 model.ScanQty = item.ScanQty;
                 model.ERPVoucherType = item.ERPVoucherType;
                 model.RowNo = item.RowNo;
+                model.DepartmentCode = item.DepartmentCode;
+                model.StrVoucherType = item.StrVoucherType;
+                model.ToStrongHoldCode = item.ToStrongHoldCode;
+                model.ToErpWarehouse = item.ToErpWarehouse;
+                model.Remark = item.Remark;
                 model.PassWord = user.PassWord;
                 model.ErpId = item.ErpId;
                 lstDetail.Add(model);

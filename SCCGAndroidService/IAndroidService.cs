@@ -462,7 +462,14 @@ namespace SCCGAndroidService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "SaveT_BarcodeADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string SaveT_BarcodeADF(string BarcodeJson);
-        
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetStrongholdList", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetStrongholdList();
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetInfoList", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetInfoList(string id, string StrongHoldCode);
+
         #endregion
 
     }

@@ -26,7 +26,8 @@ namespace BILBasic.Interface
 
                 if (lstModel == null || lstModel.Count == 0) return null;
 
-                return lstModel.Where(t => t.StrVoucherType == VoucherType).ToList();
+                 List<T_InterfaceInfo> lstModelSS= lstModel.Where(t => t.StrVoucherType == VoucherType).ToList();
+                return lstModelSS;
             }
             catch (Exception ex) 
             {
@@ -197,22 +198,23 @@ namespace BILBasic.Interface
                     Result = jtoken[0]["result"].ToString();
                 }
 
-                if (Result == "0" )
-                {
-                    messageModel.HeaderStatus = "E";
-                    messageModel.MaterialDoc = string.Empty;
-                    messageModel.ModelJson = null;
-                    messageModel.Message ="ERP接口"+ jtoken["resultValue"].ToString();
-                    return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_InterfaceInfo>>>(messageModel);
-                }
-                else 
+                if (Result == "1")
                 {
                     messageModel.HeaderStatus = "S";
                     messageModel.MaterialDoc = jtoken["resultValue"].ToString();
                     messageModel.ModelJson = null;
                     messageModel.Message = string.Empty;
                     return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_InterfaceInfo>>>(messageModel);
+
+                }else 
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.MaterialDoc = string.Empty;
+                    messageModel.ModelJson = null;
+                    messageModel.Message = "ERP接口" + jtoken["resultValue"].ToString();
+                    return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_InterfaceInfo>>>(messageModel);
                 }
+               
             }
             catch (Exception ex)
             {
@@ -248,6 +250,7 @@ namespace BILBasic.Interface
                 object[] obj = new object[1];
                 obj[0] = VoucherJson;
                 var method = type.GetMethod(model.FunctionName);
+                LogNet.LogInfo("葛志伟:" + model.ClassName + model.FunctionName+"参数："+ VoucherJson);
                 return method.Invoke(instance, obj).ToString();
             }
             catch (Exception ex)

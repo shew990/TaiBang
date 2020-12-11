@@ -35,7 +35,7 @@ namespace BILWeb.OutStockTask
         protected override T_OutStockTaskInfo GetModelByJson(string ModelJson)
         {
             string errorMsg = string.Empty;
-            T_OutStockTaskDetailsInfo model = JSONHelper.JsonToObject<T_OutStockTaskDetailsInfo>(ModelJson);
+            T_OutStockTaskInfo model = JSONHelper.JsonToObject<T_OutStockTaskInfo>(ModelJson);
 
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {

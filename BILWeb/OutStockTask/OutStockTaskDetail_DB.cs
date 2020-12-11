@@ -403,10 +403,10 @@ namespace BILWeb.OutStockTask
             t_taskdetails.TracNo = dbFactory.ToModelValue(reader, "TracNo").ToDBString();
 
             string FromErpWarehouse = dbFactory.ToModelValue(reader, "FromErpWarehouse").ToDBString();
-            t_taskdetails.FromErpWarehouse = string.IsNullOrEmpty(FromErpWarehouse) ? "" : (FromErpWarehouse.Contains("-") ? FromErpWarehouse : (t_taskdetails.StrongHoldCode + "-" + FromErpWarehouse));
+            t_taskdetails.FromErpWarehouse = string.IsNullOrEmpty(FromErpWarehouse) ? "" : FromErpWarehouse;
 
             string ToErpWareHouse = dbFactory.ToModelValue(reader, "ToErpWareHouse").ToDBString();
-            t_taskdetails.ToErpWarehouse = string.IsNullOrEmpty(ToErpWareHouse) ? "" : (ToErpWareHouse.Contains("-") ? ToErpWareHouse : (t_taskdetails.StrongHoldCode + "-" + ToErpWareHouse));
+            t_taskdetails.ToErpWarehouse = string.IsNullOrEmpty(ToErpWareHouse) ? "" : ToErpWareHouse;
 
             t_taskdetails.ErpId = dbFactory.ToModelValue(reader, "ErpId").ToDBString();
 

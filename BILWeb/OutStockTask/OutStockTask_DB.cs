@@ -12,6 +12,7 @@ using System.Data;
 using BILWeb.Boxing;
 using BILWeb.Warehouse;
 using BILWeb.Login.User;
+using BILWeb.SyncService;
 
 namespace BILWeb.OutStockTask
 {
@@ -194,6 +195,11 @@ namespace BILWeb.OutStockTask
 
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {
+                //同步单据
+                string strMsg = "";
+                ParamaterFiled_DB PDB = new ParamaterFiled_DB();
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg);
+
                 strSql += strAnd;
                 strSql += " ErpVoucherNo like '%" + model.ErpVoucherNo.Trim() + "%'";
             }

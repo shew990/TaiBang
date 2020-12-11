@@ -804,5 +804,9 @@ namespace BILWeb.OutStockTask
         public string PassWord { get; set; }
 
         public string ErpId { get; set; }
+
+
+        public string ToStrongHoldCode { get; set; }
+
     }
 }

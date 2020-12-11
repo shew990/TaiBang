@@ -7,6 +7,7 @@
         async: false,
         success: function (data) {
             for (var i = 0; i < data.length; i++) {
+                
                 var html = "<tr>";
                 html += "<td>" + data[i].RowNo + "</td>"
                 //html += "<td>" + data[i].RowNoDel + "</td>"
