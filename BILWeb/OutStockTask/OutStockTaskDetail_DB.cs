@@ -58,7 +58,7 @@ namespace BILWeb.OutStockTask
 
             foreach (var item in modelList)
             {
-                //杂出没有单据来源直接出库
+                //杂出没有单据来源和调出单直接出库，不需要复核&& item.VoucherType != 31
                 if (item.VoucherType != 53)
                 {
                     strSql1 = string.Format("update t_taskdetails  set  remainqty = (case when isnull( remainqty,0) >= ('{0}') then (isnull( remainqty,0) - '{1}')" +
@@ -89,11 +89,15 @@ namespace BILWeb.OutStockTask
                     {
                         lstSql.Add(GetStockTransSql(user, itemStock));
 
-                        //杂出没有单据来源直接出库
-                        if (item.VoucherType == 53)
+                        //杂出没有单据来源和调出单直接出库
+                        if (item.VoucherType == 53 || item.VoucherType == 31)
                         {
                             lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");
-                            lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 207));
+                            if (item.VoucherType == 53)
+                                lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 207));
+                            else
+                                lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 208));
+
                         }
                         else {
                             //如果是补货单，需要转移到仓库对应的补货库位

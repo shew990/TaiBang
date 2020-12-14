@@ -213,6 +213,43 @@ namespace BILWeb.Material
 
         }
 
+        //获取转换单
+        public List<U9Zh> GetZhList(string ErpVoucherNo)
+        {
+            try
+            {
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+                string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"52\"}";
+                string ERPJson = TIF.GetModelListByInterface(json);
+                return BILBasic.JSONUtil.JSONHelper.JsonToObject<List<U9Zh>>(ERPJson);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        ////提交转换单
+        //public bool PostZh(U9Zh model, UserModel user, string Guid, ref string receive,ref string Message)
+        //{
+
+        //    try
+        //    {
+
+
+
+
+        //        BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+        //        string json = "\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"52\"}";
+        //        string ERPJson = TIF.GetModelListByInterface(json);
+        //        return BILBasic.JSONUtil.JSONHelper.JsonToObject<U9Zh>(ERPJson);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return null;
+        //    }
+        //}
+
 
 
     }
@@ -232,6 +269,46 @@ namespace BILWeb.Material
         public List<CommonInfo> Persons { get; set; }
         public List<CommonInfo> DocTypes { get; set; }
         
+    }
+
+    public class U9Zh
+    {
+        public string ErpVoucherNo { get; set; }
+        public long ErpVoucherType { get; set; }
+        public string ErpVoucherTypeName { get; set; }
+        public string CreateTime { get; set; }
+        public string StrongHoldCode { get; set; }
+        public string StrongHoldName { get; set; }
+        public string CustomerNo { get; set; }
+        public string CustomerName { get; set; }
+        //二层
+        public int RowNo { get; set; }
+        public int Type { get; set; }
+        public string MaterialNo { get; set; }
+        public string MaterialName { get; set; }
+        public string MaterialDesc { get; set; }
+        public string Spec{ get; set; }
+        public string ErpWareHouseNo { get; set; }
+        public string ErpWareHouseName { get; set; }
+        public decimal Qty { get; set; }
+        public string Unit { get; set; }
+        public List<U9ZhDetail> detail { get; set; }
+
+    }
+
+    public class U9ZhDetail
+    {
+        public int RowNo { get; set; }
+        public int Type { get; set; }
+        public string MaterialNo { get; set; }
+        public string MaterialName { get; set; }
+        public string MaterialDesc { get; set; }
+        public string Spec { get; set; }
+        public string ErpWareHouseNo { get; set; }
+        public string ErpWareHouseName { get; set; }
+        public decimal Qty { get; set; }
+        public string Unit { get; set; }
+
     }
 
 }

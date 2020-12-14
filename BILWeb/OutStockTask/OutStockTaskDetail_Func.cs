@@ -242,6 +242,7 @@ namespace BILWeb.OutStockTask
                 model.Remark = item.Remark; //收益备注
                 model.PassWord = user.PassWord;
                 model.ErpId = item.ErpId;
+                model.GUID = user.GUID;
                 lstDetail.Add(model);
             }
             //string strUserNo = string.Empty;

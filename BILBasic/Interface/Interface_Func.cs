@@ -26,6 +26,7 @@ namespace BILBasic.Interface
 
                 if (lstModel == null || lstModel.Count == 0) return null;
 
+
                  List<T_InterfaceInfo> lstModelSS= lstModel.Where(t => t.StrVoucherType == VoucherType).ToList();
                 return lstModelSS;
             }

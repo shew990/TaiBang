@@ -935,7 +935,6 @@ namespace SCCGAndroidService
             LogNet.LogInfo("-----------------------------------------------------");
             T_Product_Func tfunc = new T_Product_Func();
             return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid);
-
         }
 
         //关闭单子
@@ -961,7 +960,20 @@ namespace SCCGAndroidService
             return tfunc.GetInfoList(id, StrongHoldCode);
         }
 
+        #endregion
 
+        #region 转换单
+        public string GetZh(string ErpVoucherNo)
+        {
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            return tfunc.GetZhList(ErpVoucherNo);
+        }
+
+        public string PostZh(string UserJson, string ModelJson,string Guid)
+        {
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            return tfunc.PostZh(UserJson,  ModelJson, Guid);
+        }
         #endregion
     }
 }

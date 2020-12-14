@@ -230,8 +230,9 @@ namespace BILWeb.InStockTask
             if (!user.UserNo.Equals("admin"))
             {
                 strSql += strAnd;
-                strSql += " strongholdcode = '" + user.StrongHoldCode + "' and (fromerpwarehouse ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='')";
+                strSql += "  (fromerpwarehouse ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='')";
             }
+            //strongholdcode = '" + user.StrongHoldCode + "'
 
             //if (!string.IsNullOrEmpty(model.StrongHoldCode))
             //{

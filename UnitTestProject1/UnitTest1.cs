@@ -43,6 +43,21 @@ namespace UnitTestProject1
         }
         #endregion
 
+        #region 基础数据
+
+        public void 转换单列表()
+        {
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            string aaa= tfunc.GetZhList("TraY-20120004");
+        }
+
+        public void 转换单提交()
+        {
+            //T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            //string aaa = tfunc.PostZh("1", "1");
+        }
+        #endregion
+
 
         #region 完工入库
         [TestMethod]
@@ -179,7 +194,7 @@ namespace UnitTestProject1
             string UserJson = "{\"BIsAdmin\":true,\"BIsOnline\":false,\"IsOnline\":1,\"PickAreaNo\":\"DFA01\",\"PickHouseNo\":\"DFA\",\"PickWareHouseName\":\"SHJC\",\"PickWareHouseNo\":\"SHJC\",\"QuanUserName\":\"\",\"QuanUserNo\":\"\",\"ReceiveAreaNo\":\"SHA01\",\"ReceiveHouseNo\":\"SHA\",\"ReceiveWareHouseName\":\"SHJC\",\"ReceiveWareHouseNo\":\"SHJC\",\"StrIsAdmin\":\"管理员\",\"StrSex\":\"男\",\"StrUserStatus\":\"正常\",\"StrUserType\":\"管理员\",\"WarehouseName\":\"SHJC\",\"lstMenu\":[{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"SH\",\"MenuStatus\":1,\"MenuStyle\":2.0,\"MenuType\":4,\"NodeUrl\":\"base\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"SH\",\"MenuStatus\":1,\"MenuStyle\":2.0,\"MenuType\":4,\"NodeUrl\":\"2\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"SH\",\"MenuStatus\":1,\"MenuStyle\":2.0,\"MenuType\":4,\"NodeUrl\":\"3\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"XJ\",\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"4\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"FHFH\",\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"5\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"7\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"14\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"8\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"YK\",\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"6\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"9\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"10\",\"SafeLevel\":1.0}],\"lstUserGroup\":[{\"BIsChecked\":true,\"Description\":\"华南收货组\",\"IsDel\":1.0,\"UserGroupAbbname\":\"华南收货组\",\"UserGroupName\":\"华南收货组\",\"UserGroupNo\":\"801\",\"UserGroupStatus\":1,\"UserGroupType\":2},{\"BIsChecked\":true,\"IsDel\":1.0,\"UserGroupName\":\"测试用户组\",\"UserGroupNo\":\"ceshi\",\"UserGroupStatus\":1,\"UserGroupType\":2}],\"lstWarehouse\":[{\"AreaCount\":0,\"AreaRate\":0.0,\"AreaUsingCount\":0,\"BIsChecked\":true,\"BIsLock\":false,\"HouseCount\":0,\"HouseRate\":0.0,\"HouseUsingCount\":0,\"ID\":19,\"IsDel\":1.0,\"LocationDesc\":\"上海嘉成\",\"PickRule\":0,\"WareHouseName\":\"SHJC\",\"WareHouseNo\":\"SHJC\",\"WareHouseStatus\":1,\"WareHouseType\":0}],\"GroupCode\":\"2,1\",\"GroupName\":\"华南收货组,测试用户组\",\"ID\":1216941,\"IsDel\":1.0,\"IsPick\":0,\"IsPickLeader\":0,\"IsQuality\":0,\"IsReceive\":0,\"PDAPrintIP\":\"1.1.1.1\",\"PassWord\":\"123\",\"PickAreaID\":642,\"PickHouseID\":15,\"PickLeader\":false,\"PickWareHouseID\":19,\"ReceiveAreaID\":641,\"ReceiveHouseID\":14,\"Sex\":1,\"StrIsPick\":\"不拣货\",\"StrIsPickLeader\":\"否\",\"StrIsReceive\":\"不收货\",\"UserName\":\"test\",\"UserNo\":\"test\",\"UserStatus\":1,\"UserType\":1,\"WarehouseCode\":\"SHJC\",\"WarehouseID\":19}";
 
             T_InStockDetail_Func tfunc = new T_InStockDetail_Func();
-            string json = tfunc.SaveModelListSqlToDBADF(UserJson, "[{\"ADVRECEIVEQTY\":0.0,\"ArrStockDate\":\"Jan 1, 2040 3:00:00 AM\",\"ArrivalDate\":\"Jan 1, 2040 3:00:00 AM\",\"ErpId\":\"\",\"FromBatchNo\":\"SO201123060\",\"FromErpAreaNo\":\"\",\"FromErpWarehouse\":\"0401-C101\",\"InStockID\":0,\"InStockQty\":8.0,\"InvoiceNo\":\"\",\"IsSerial\":0,\"IsSpcBatch\":\"\",\"MaterialDesc\":\"小电机减速电机\",\"MaterialNo\":\"JMF1903-5706\",\"PartNo\":\"\",\"ProjectNo\":\"\",\"QcCode\":\"\",\"QcDesc\":\"\",\"QualityQty\":0.0,\"ReceiveQty\":0.0,\"RemainQty\":8.0,\"RowNo\":\"10\",\"RowNoDel\":\"\",\"SaleCode\":\"\",\"SaleName\":\"\",\"ScanQty\":8.0,\"ShipmentDate\":\"Jan 1, 2040 3:00:00 AM\",\"SupPrdDate\":\"Dec 31, 3938 7:00:00 PM\",\"SupplierName\":\"\",\"SupplierNo\":\"\",\"ToBatchNo\":\"\",\"ToErpAreaNo\":\"\",\"ToErpWarehouse\":\"\",\"TracNo\":\"\",\"UnQualityQty\":0.0,\"Unit\":\"S001\",\"VoucherNo\":\"20120936500001\",\"iarrsid\":\"\",\"lstBarCode\":[{\"AreaID\":0,\"BarCode\":\"2@JMF1903-5706@8@1209b84d459c\",\"BarcodeMType\":\"\",\"BarcodeNo\":0,\"BarcodeType\":1,\"BatchNo\":\"SO201123060\",\"CusCode\":\"3302.0006\",\"CusName\":\"宁波泰邦\",\"EAN\":\"\",\"HouseID\":0,\"InnerCount\":0,\"InnerPackQty\":0.0,\"Inner_ID\":0,\"IsCheck\":false,\"IsDel\":0,\"IsRohs\":0,\"LabelMark\":\"456363454\",\"MantissaQty\":0.0,\"MaterialDesc\":\"小电机减速电机\",\"MaterialNo\":\"JMF1903-5706\",\"NoPack\":0,\"OutBox_ID\":0,\"OutCount\":0,\"OutPackQty\":0.0,\"PalletNo\":\"P201209000909\",\"PalletQty\":8.0,\"PalletType\":0,\"PrintQty\":0.0,\"ProductBatch\":\"PUCITNM5\",\"ProductClass\":\"\",\"ProductDate\":\"Dec 31, 3938 7:00:00 PM\",\"Qty\":8.0,\"RowNo\":\"1\",\"RowNoDel\":\"1\",\"SerialNo\":\"1209b84d459c\",\"SpecialRequire\":\"\",\"SupCode\":\"\",\"SupName\":\"\",\"SupPrdBatch\":\"\",\"SupPrdDate\":\"Dec 31, 3938 7:00:00 PM\",\"TracNo\":\"\",\"Unit\":\"\",\"VoucherNo\":\"\",\"VoucherQty\":0.0,\"WareHouseID\":0,\"fserialno\":\"\",\"originalCode\":\"\",\"CompanyCode\":\"\",\"Creater\":\"TEST01\",\"EDate\":\"Dec 31, 3938 7:00:00 PM\",\"ErpLineStatus\":0,\"ErpVoucherNo\":\"MO04012012090002\",\"HeaderID\":0,\"ID\":343979,\"LineStatus\":0,\"MaterialNoID\":182585,\"Status\":0,\"StockType\":0,\"StrongHoldCode\":\"0401\",\"StrongHoldName\":\"事业一部\",\"TerminateReasonID\":0,\"VoucherType\":51}],\"CompanyCode\":\"\",\"Creater\":\"admin\",\"EDate\":\"Dec 31, 3938 7:00:00 PM\",\"ERPNote\":\"\",\"ERPVoucherType\":\"WGR01\",\"ErpLineStatus\":0,\"ErpVoucherNo\":\"Wgr0401201209017\",\"GUID\":\"3a31e4e3-65ff-4d04-849c-1c8d7f66d3ac\",\"HeaderID\":3578,\"ID\":30259,\"LineStatus\":1,\"MaterialNoID\":182585,\"Status\":0,\"StockType\":0,\"StrongHoldCode\":\"0401\",\"StrongHoldName\":\"事业一部\",\"TerminateReasonID\":0,\"VoucherType\":50}]");
+            string json = tfunc.SaveModelListSqlToDBADF(UserJson, "");
         }
         #endregion
 
@@ -779,8 +794,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void UserLoginADF()
         {
-            //User_Func tfunc = new User_Func();
-            //string json = tfunc.UserLoginADF("{\"PassWord\":\"1810ED1B5833AE21\",\"UserNo\":\"001\",\"WarehouseID\":19}");
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            string aaa = tfunc.GetZhList("TraY-20120004");
 
             User_Func tfun = new User_Func();
             tfun.GetWareHouseByUserADF("001");
