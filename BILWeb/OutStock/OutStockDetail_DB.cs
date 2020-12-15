@@ -240,7 +240,7 @@ namespace BILWeb.OutStock
         }
 
         //提交复核扣库存SQL
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_OutStockDetailInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_OutStockDetailInfo> modelList, string strPost = "")
         {
             string strSql = string.Empty;
             List<string> lstSql = new List<string>();

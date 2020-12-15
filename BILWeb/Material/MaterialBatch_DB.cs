@@ -9,6 +9,7 @@ using BILBasic.User;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using BILBasic.JSONUtil;
+using BILWeb.Stock;
 
 namespace BILWeb.Material
 {
@@ -203,6 +204,7 @@ namespace BILWeb.Material
                 BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
                 string json = "{\"company_no\":\"" + id + "\",\"data_no\":\"" + StrongHoldCode + "\",\"VoucherType\":\"9997\"}";
                 string ERPJson = TIF.GetModelListByInterface(json);
+                LogNet.LogInfo("转换单接口返回的JSON:" + ERPJson);
                 return BILBasic.JSONUtil.JSONHelper.JsonToObject<U9BaseInfo>(ERPJson);
             }
             catch (Exception ex)
@@ -212,6 +214,24 @@ namespace BILWeb.Material
 
 
         }
+
+
+        //SOP列表
+        public List<MoReport> GetSopList(string ErpVoucherNo)
+        {
+            try
+            {
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+                string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"9996\"}";
+                string ERPJson = TIF.GetModelListByInterface(json);
+                return BILBasic.JSONUtil.JSONHelper.JsonToObject<List<MoReport>>(ERPJson);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
 
         //获取转换单
         public List<U9Zh> GetZhList(string ErpVoucherNo)
@@ -250,6 +270,35 @@ namespace BILWeb.Material
         //    }
         //}
 
+        // Tasktype=209转换入  Tasktype=210转换出
+        private List<string> GetTaskTransSqlList(UserModel user, T_StockInfo model, U9Zh detailModel, int Tasktype)
+        {
+            int id = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+            List<string> lstSql = new List<string>();
+            string strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
+            "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
+            "Strongholdcode,Strongholdname,Companycode,Supprdbatch,taskno,batchno,barcode,status,materialdoc,houseprop,ean,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo,IsPalletOrBox)" +
+            " values ('" + id + "' , '" + model.SerialNo + "'," +
+            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','','','" + model.Qty + "','" + Tasktype + "'," +
+            " (52,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
+            "'" + detailModel.Unit + "','" + detailModel.Unit + "','','','" + detailModel.ErpVoucherNo + "'," +
+            "  '','" + detailModel.StrongHoldCode + "','" + detailModel.StrongHoldName + "',''," +
+            "  '" + model.SupPrdBatch + "',''," +
+            " '" + model.BatchNo + "' ,'" + model.Barcode + "','" + model.Status + "','','','" + model.EAN + "'," +
+            "  (select WAREHOUSENO from T_WAREHOUSE where id ='" + model.WareHouseID + "')," +
+            " (select WAREHOUSENAME from T_WAREHOUSE where id ='" + model.WareHouseID + "'), " +
+            " (select HOUSENO from T_HOUSE where id='" + model.HouseID + "')," +
+            " (select AREANO from T_AREA where id ='" + model.AreaID + "')," +
+            " '',''," +
+            " ''," +
+            " '','" + model.PalletNo + "','" + model.IsPalletOrBox + "' ) SET IDENTITY_INSERT t_tasktrans off ";//,(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),'" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "'
+
+            lstSql.Add(strSql);
+
+            return lstSql;
+        }
+
+
 
 
     }
@@ -260,7 +309,6 @@ namespace BILWeb.Material
         public string Code { get; set; }
         public string Name { get; set; }
     }
-
     public class U9BaseInfo
     {
         public List<CommonInfo> Orgs { get; set; }
@@ -270,7 +318,6 @@ namespace BILWeb.Material
         public List<CommonInfo> DocTypes { get; set; }
         
     }
-
     public class U9Zh
     {
         public string ErpVoucherNo { get; set; }
@@ -295,7 +342,6 @@ namespace BILWeb.Material
         public List<U9ZhDetail> detail { get; set; }
 
     }
-
     public class U9ZhDetail
     {
         public int RowNo { get; set; }
@@ -310,5 +356,35 @@ namespace BILWeb.Material
         public string Unit { get; set; }
 
     }
-
+    public class MoReport
+    {
+        /// <summary>
+        /// 生产订单号
+        /// </summary>
+        public string ErpVoucherNo { get; set; }
+        /// <summary>
+        /// SOP文件地址1
+        /// </summary>
+        public string Sop1 { get; set; }
+        /// <summary>
+        /// SOP文件地址2
+        /// </summary>
+        public string Sop2 { get; set; }
+        /// <summary>
+        /// SOP文件地址3
+        /// </summary>
+        public string Sop3 { get; set; }
+        /// <summary>
+        /// SOP文件地址4
+        /// </summary>
+        public string Sop4 { get; set; }
+        /// <summary>
+        /// SOP文件地址5
+        /// </summary>
+        public string Sop5 { get; set; }
+        /// <summary>
+        /// SOP文件地址6
+        /// </summary>
+        public string Sop6 { get; set; }
+    }
 }

@@ -158,8 +158,11 @@ namespace BILWeb.Material
 
         public string PostZh(string UserJson, string ModelJson, string Guid)
         {
-            return "";
-            //BaseMessage_Model<List<T_OutBarCodeInfo>> messageModel = new BaseMessage_Model<List<T_OutBarCodeInfo>>();
+            BaseMessage_Model<List<T_OutBarCodeInfo>> messageModel = new BaseMessage_Model<List<T_OutBarCodeInfo>>();
+            messageModel.HeaderStatus = "E";
+            messageModel.Message = "报错了，呆子" ;
+            return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
+         
             //try
             //{
             //    string strError = "";
@@ -229,7 +232,7 @@ namespace BILWeb.Material
             //    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
             //}
         }
-        
+
 
 
 

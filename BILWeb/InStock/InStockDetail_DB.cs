@@ -51,7 +51,7 @@ namespace BILWeb.InStock
             return lstSql;
         }
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_InStockDetailInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_InStockDetailInfo> modelList, string strPost = "")
         {
             string strSql1 = string.Empty;
             string strSql2 = string.Empty;

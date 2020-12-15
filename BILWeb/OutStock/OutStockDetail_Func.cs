@@ -1034,7 +1034,7 @@ namespace BILWeb.OutStock
                 return false;
             }
 
-            if (stockModel.IsAmount == 2) 
+            if (stockModel.IsAmount == 2)
             {
                 strError = "拆零标签不能在PDA复核，请在PC扫描69码复核！";
                 return false;
@@ -1836,11 +1836,9 @@ namespace BILWeb.OutStock
         }
 
         #region PDA复核过账
-
-        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo)
+        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo,string Guid)
         {
             BaseMessage_Model<List<T_OutStockDetailInfo>> messageModel = new BaseMessage_Model<List<T_OutStockDetailInfo>>();
-
             try
             {
                 string strError = string.Empty;
@@ -1860,41 +1858,56 @@ namespace BILWeb.OutStock
                 }
 
                 UserModel user = JsonConvert.DeserializeObject<UserModel>(UserJson);//JSONUtil.JSONHelper.JsonToObject<User.UserModel>(UserJson);
-                List<T_OutStockDetailInfo> modelList = new List<T_OutStockDetailInfo>();//JsonConvert.DeserializeObject<List<T_OutStockDetailInfo>>(ModelJson);
+                List<T_OutStockTaskDetailsInfo> modelList = new List<T_OutStockTaskDetailsInfo>();//JsonConvert.DeserializeObject<List<T_OutStockDetailInfo>>(ModelJson);
 
-                string strFilter = "erpvoucherno = '" + ErpVoucherNo + "'";
+                //string strFilter = "erpvoucherno = '" + ErpVoucherNo + "'";
 
-                bool bSucc = base.GetModelListByFilter(ref modelList, ref strError, "", strFilter, "*");
-                if (bSucc == false)
-                {
-                    messageModel.HeaderStatus = "E";
-                    messageModel.Message = strError;
-                    return JsonConvert.SerializeObject(messageModel);
-                }
+                //bool bSucc = base.GetModelListByFilter(ref modelList, ref strError, "", strFilter, "*");
+                //if (bSucc == false)
+                //{
+                //    messageModel.HeaderStatus = "E";
+                //    messageModel.Message = strError;
+                //    return JsonConvert.SerializeObject(messageModel);
+                //}
 
-                if (CheckPostStatus(ref strError, modelList) == false)
-                {
-                    messageModel.HeaderStatus = "E";
-                    messageModel.Message = strError;
-                    return JsonConvert.SerializeObject(messageModel);
-                }
+                //if (CheckPostStatus(ref strError, modelList) == false)
+                //{
+                //    messageModel.HeaderStatus = "E";
+                //    messageModel.Message = strError;
+                //    return JsonConvert.SerializeObject(messageModel);
+                //}
 
-                if (CheckReviewAndPickQty(ref strError, modelList) == false)
-                {
-                    messageModel.HeaderStatus = "E";
-                    messageModel.Message = strError;
-                    return JsonConvert.SerializeObject(messageModel);
-                }
+                //if (CheckReviewAndPickQty(ref strError, modelList) == false)
+                //{
+                //    messageModel.HeaderStatus = "E";
+                //    messageModel.Message = strError;
+                //    return JsonConvert.SerializeObject(messageModel);
+                //}
 
                 T_Stock_DB tdb = new T_Stock_DB();
                 List<T_StockInfo> lstStock = tdb.GetStockPickByErpNo(ErpVoucherNo);
 
-                GetOutStockDetailIntoStock(ref modelList, lstStock);
+                //GetOutStockDetailIntoStock(ref modelList, lstStock);
                 //需要判断拣货数量是否和复核数量一致
+                T_OutTaskDetails_DB otb = new T_OutTaskDetails_DB();
+                otb.GetOutTaskDetailByErpVoucherNo(ErpVoucherNo, ref modelList, ref strError);
+
+                modelList.FirstOrDefault().lstStockInfo = lstStock;
+
+                //add by cym 2020-9-20
+                T_OutStockTask_Func outfunc = new T_OutStockTask_Func();
+                var rrr = new T_OutStockTaskInfo() { ID = modelList[0].HeaderID };
+                var rtt = outfunc.GetModelByID(ref rrr, ref strError);
+
+                modelList.ForEach(t => t.ScanQty = t.TaskQty.Value);
+                modelList.ForEach(t => t.ERPNote = rrr.ERPNote);
+                modelList.ForEach(t => t.VouUser = rrr.VouUser);
 
                 string ModelJson = JsonConvert.SerializeObject(modelList);
-                T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
-                return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson);
+                T_OutTaskDetails_Func tfunc = new T_OutTaskDetails_Func();
+                return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid, "复核");
+                //T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
+                //return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson);
             }
             catch (Exception ex)
             {
@@ -1903,6 +1916,75 @@ namespace BILWeb.OutStock
                 return JsonConvert.SerializeObject(messageModel);
             }
         }
+
+
+
+        //public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo)
+        //{
+        //    BaseMessage_Model<List<T_OutStockDetailInfo>> messageModel = new BaseMessage_Model<List<T_OutStockDetailInfo>>();
+
+        //    try
+        //    {
+        //        string strError = string.Empty;
+
+        //        if (string.IsNullOrEmpty(ErpVoucherNo))
+        //        {
+        //            messageModel.HeaderStatus = "E";
+        //            messageModel.Message = "传入单号为空！";
+        //            return JsonConvert.SerializeObject(messageModel);
+        //        }
+
+        //        if (string.IsNullOrEmpty(UserJson))
+        //        {
+        //            messageModel.HeaderStatus = "E";
+        //            messageModel.Message = "客户端传来的人员JSON为空！";
+        //            return JsonConvert.SerializeObject(messageModel);
+        //        }
+
+        //        UserModel user = JsonConvert.DeserializeObject<UserModel>(UserJson);//JSONUtil.JSONHelper.JsonToObject<User.UserModel>(UserJson);
+        //        List<T_OutStockDetailInfo> modelList = new List<T_OutStockDetailInfo>();//JsonConvert.DeserializeObject<List<T_OutStockDetailInfo>>(ModelJson);
+
+        //        string strFilter = "erpvoucherno = '" + ErpVoucherNo + "'";
+
+        //        bool bSucc = base.GetModelListByFilter(ref modelList, ref strError, "", strFilter, "*");
+        //        if (bSucc == false)
+        //        {
+        //            messageModel.HeaderStatus = "E";
+        //            messageModel.Message = strError;
+        //            return JsonConvert.SerializeObject(messageModel);
+        //        }
+
+        //        if (CheckPostStatus(ref strError, modelList) == false)
+        //        {
+        //            messageModel.HeaderStatus = "E";
+        //            messageModel.Message = strError;
+        //            return JsonConvert.SerializeObject(messageModel);
+        //        }
+
+        //        if (CheckReviewAndPickQty(ref strError, modelList) == false)
+        //        {
+        //            messageModel.HeaderStatus = "E";
+        //            messageModel.Message = strError;
+        //            return JsonConvert.SerializeObject(messageModel);
+        //        }
+
+        //        T_Stock_DB tdb = new T_Stock_DB();
+        //        List<T_StockInfo> lstStock = tdb.GetStockPickByErpNo(ErpVoucherNo);
+
+        //        GetOutStockDetailIntoStock(ref modelList, lstStock);
+        //        //需要判断拣货数量是否和复核数量一致
+
+        //        string ModelJson = JsonConvert.SerializeObject(modelList);
+        //        T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
+        //        return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        messageModel.HeaderStatus = "E";
+        //        messageModel.Message = ex.Message;
+        //        return JsonConvert.SerializeObject(messageModel);
+        //    }
+        //}
 
 
         #endregion

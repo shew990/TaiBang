@@ -999,6 +999,14 @@ namespace BILWeb.Query
                 {
                     TMM.tasktypename = "调拨出";
                 }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 209)
+                {
+                    TMM.tasktypename = "转换入";
+                }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 210)
+                {
+                    TMM.tasktypename = "转换出";
+                }
             }
             qtyall += (decimal)TMM.QTY;
             return TMM;

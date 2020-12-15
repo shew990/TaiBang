@@ -417,7 +417,7 @@ namespace BILWeb.OutBarCode
         }
 
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_OutBarCodeInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_OutBarCodeInfo> modelList, string strPost = "")
         {
             List<string> listSql = new List<string>();
             string strSql1 = "";

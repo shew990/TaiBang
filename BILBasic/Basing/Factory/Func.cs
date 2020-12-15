@@ -520,7 +520,7 @@ namespace BILBasic.Basing.Factory
         }
 
 
-        public string SaveModelListSqlToDBADF(string UserJson, string ModeJson, string Guid = "")
+        public string SaveModelListSqlToDBADF(string UserJson, string ModeJson, string Guid = "",string strPost="")
         {
             BaseMessage_Model<List<TBase_Model>> model = new BaseMessage_Model<List<TBase_Model>>();
             try
@@ -555,34 +555,43 @@ namespace BILBasic.Basing.Factory
                     return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model);
                 }
 
-                T_Interface_Func tfunc = new T_Interface_Func();
-                string ERPJson = GetModelListByJsonToERP(user, modelList);//JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList);
-
-                LogNet.LogInfo("ERPJsonBefore:" + ERPJson);
-                string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
-
-                model = JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<TBase_Model>>>(interfaceJson);
-
-                LogNet.LogInfo("ERPJsonAfter:" + JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model));
-
-                //过账失败直接返回
-                if (model.HeaderStatus == "E" && !string.IsNullOrEmpty(model.Message))
+                //是否过账
+                if (string.IsNullOrEmpty(strPost)|| (strPost == "下架"&& modelList[0].VoucherType==31)|| strPost == "复核")
                 {
-                    return interfaceJson;
-                }
-                else if (model.HeaderStatus == "S" && !string.IsNullOrEmpty(model.MaterialDoc)) //过账成功，并且生成了凭证要记录数据库
-                {
-                    modelList.ForEach(t => t.MaterialDoc = model.MaterialDoc);
+                    T_Interface_Func tfunc = new T_Interface_Func();
+                    string ERPJson = GetModelListByJsonToERP(user, modelList);//JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList);
+
+                    LogNet.LogInfo("----------------------------------------------------------------------");
+                    LogNet.LogInfo("ERPJsonBefore:" + ERPJson);
+                    string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
+
+                    model = JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<TBase_Model>>>(interfaceJson);
+
+                    LogNet.LogInfo("----------------------------------------------------------------------");
+                    LogNet.LogInfo("ERPJsonAfter:" + JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model));
+
+                    //过账失败直接返回
+                    if (model.HeaderStatus == "E" && !string.IsNullOrEmpty(model.Message))
+                    {
+                        return interfaceJson;
+                    }
+                    else if (model.HeaderStatus == "S" && !string.IsNullOrEmpty(model.MaterialDoc)) //过账成功，并且生成了凭证要记录数据库
+                    {
+                        modelList.ForEach(t => t.MaterialDoc = model.MaterialDoc);
+                    }
                 }
 
-                LogNet.LogInfo("ERPJson:" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
+
+                //LogNet.LogInfo("ERPJson:" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
+                LogNet.LogInfo("----------------------------------------------------------------------");
                 LogNet.LogInfo("ymh：ERPtoWMS-" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
-                bSucc = db.SaveModelListBySqlToDB(user, ref modelList, ref strError);
+                bSucc = db.SaveModelListBySqlToDB(user, ref modelList, ref strError, strPost);
                 
                 if (bSucc == false)
                 {
                     model.HeaderStatus = "E";
                     model.Message = strError;
+                    LogNet.LogInfo("----------------------------------------------------------------------");
                     LogNet.LogInfo("ymh：WMS-失败");
                 }
                 else
@@ -590,6 +599,7 @@ namespace BILBasic.Basing.Factory
                     model.HeaderStatus = "S";
                     model.TaskNo = modelList[0].TaskNo;
                     model.Message = GetSuccessMessage(model.MaterialDoc, modelList[0].TaskNo);
+                    LogNet.LogInfo("----------------------------------------------------------------------");
                     LogNet.LogInfo("ymh：WMS-成功");
                 }
 

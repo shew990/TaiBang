@@ -525,7 +525,7 @@ namespace SCCGAndroidService
         public string SaveT_OutStockTaskDetailADF(string UserJson, string ModelJson, string Guid)
         {
             T_OutTaskDetails_Func tfunc = new T_OutTaskDetails_Func();
-            return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid);
+            return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid,"下架");
         }
 
         /// <summary>
@@ -971,6 +971,10 @@ namespace SCCGAndroidService
 
         public string PostZh(string UserJson, string ModelJson,string Guid)
         {
+            LogNet.LogInfo("提交转换单UserJson:" + UserJson);
+            LogNet.LogInfo("提交转换单ModelJson:" + ModelJson);
+            LogNet.LogInfo("提交转换单UserJson:" + Guid);
+            LogNet.LogInfo("-----------------------------------------------------");
             T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
             return tfunc.PostZh(UserJson,  ModelJson, Guid);
         }

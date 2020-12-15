@@ -29,7 +29,7 @@ namespace BILWeb.AdvInStock
 
 
         }
-        protected override List<string> GetSaveModelListSql(BILBasic.User.UserModel user, List<T_AdvInStockInfo> listadvinstock)
+        protected override List<string> GetSaveModelListSql(BILBasic.User.UserModel user, List<T_AdvInStockInfo> listadvinstock, string strPost = "")
         {
             T_AdvInStockInfo t_advinstock = listadvinstock[0];
             return GetSaveSql(user, ref  t_advinstock);

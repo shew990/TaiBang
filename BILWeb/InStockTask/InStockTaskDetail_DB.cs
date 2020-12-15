@@ -34,7 +34,7 @@ namespace BILWeb.InStockTask
             throw new NotImplementedException();
         }
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_InStockTaskDetailsInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_InStockTaskDetailsInfo> modelList, string strPost = "")
         {
             string strSql1 = string.Empty;
             string strSql2 = string.Empty;

@@ -34,7 +34,7 @@ namespace BILWeb.Pallet
         }
 
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_PalletDetailInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_PalletDetailInfo> modelList, string strPost = "")
         {
             string strSql = string.Empty;
             List<string> lstSql = new List<string>();

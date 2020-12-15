@@ -35,7 +35,7 @@ namespace BILWeb.OutStockCreate
             throw new NotImplementedException();
         }
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_OutStockCreateInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_OutStockCreateInfo> modelList, string strPost = "")
         {
             RuleAll.t_RuleAll_DB ruleDB = new RuleAll.t_RuleAll_DB();
             List<RuleAll.T_RuleAllInfo> ruleList = ruleDB.GetRuleListByPage(4);

@@ -34,7 +34,7 @@ namespace BILWeb.Product
             throw new NotImplementedException();
         }
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_Product> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_Product> modelList, string strPost = "")
         {
 
             if (modelList == null || modelList.Count == 0)
