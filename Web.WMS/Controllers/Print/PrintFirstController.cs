@@ -2,6 +2,7 @@
 using BILWeb.Material;
 using BILWeb.OutBarCode;
 using BILWeb.Print;
+using BILWeb.T00L;
 using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
 using NPOI.XSSF.UserModel;
@@ -129,7 +130,7 @@ namespace Web.WMS.Controllers.Print
                     int count = item.Qty % item.InnerPackQty == 0
                         ? Convert.ToInt32(Math.Floor(item.Qty / item.InnerPackQty))
                         : Convert.ToInt32(Math.Floor(item.Qty / item.InnerPackQty)) + 1;
-                    var serialnos = GetSerialnos(count);//多条序列号
+                    var serialnos = SerialnoHelp.GetSerialnos(count);//多条序列号
                     var material = new MaterialService()
                         .GetList(x => x.MATERIALNO == item.MaterialNo && x.STRONGHOLDCODE == item.StrongHoldCode)
                         .FirstOrDefault();
@@ -180,40 +181,40 @@ namespace Web.WMS.Controllers.Print
             return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// 获取序列号
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public List<string> GetSerialnos(int count)
-        {
-            List<string> serialnos = new List<string>();
-            for (int i = 0; i < count; i++)
-            {
-                string code = "1" + DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
-                if (serialnos.Find(x => x == code) != null)
-                {
-                    i--;
-                    continue;
-                }
-                serialnos.Add(code);
-            }
-            return serialnos;
-        }
+        ///// <summary>
+        ///// 获取序列号
+        ///// </summary>
+        ///// <param name="count"></param>
+        ///// <returns></returns>
+        //public List<string> GetSerialnos(int count)
+        //{
+        //    List<string> serialnos = new List<string>();
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        string code = "1" + DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+        //        if (serialnos.Find(x => x == code) != null)
+        //        {
+        //            i--;
+        //            continue;
+        //        }
+        //        serialnos.Add(code);
+        //    }
+        //    return serialnos;
+        //}
 
-        public string getSqu(string ss)
-        {
-            if (ss.Length >= 8)
-            {
-                ss = ss.Substring(ss.Length - 8, 8);
-            }
-            else
-            {
-                ss = "00000000" + ss;
-                ss = ss.Substring(ss.Length - 8, 8);
-            }
-            return ss;
-        }
+        //public string getSqu(string ss)
+        //{
+        //    if (ss.Length >= 8)
+        //    {
+        //        ss = ss.Substring(ss.Length - 8, 8);
+        //    }
+        //    else
+        //    {
+        //        ss = "00000000" + ss;
+        //        ss = ss.Substring(ss.Length - 8, 8);
+        //    }
+        //    return ss;
+        //}
 
         //public JsonResult Print(string IDs, string Path)
         //{
