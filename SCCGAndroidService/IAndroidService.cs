@@ -279,7 +279,7 @@ namespace SCCGAndroidService
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "PostT_OutStockReviewDetailADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo);
+        string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo, string Guid, string Remark);
 
         #endregion
 

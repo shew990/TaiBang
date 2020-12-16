@@ -1836,7 +1836,7 @@ namespace BILWeb.OutStock
         }
 
         #region PDA复核过账
-        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo,string Guid)
+        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo, string Guid, string Remark)
         {
             BaseMessage_Model<List<T_OutStockDetailInfo>> messageModel = new BaseMessage_Model<List<T_OutStockDetailInfo>>();
             try

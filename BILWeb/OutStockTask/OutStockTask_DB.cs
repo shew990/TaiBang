@@ -198,7 +198,7 @@ namespace BILWeb.OutStockTask
                 //同步单据
                 string strMsg = "";
                 ParamaterFiled_DB PDB = new ParamaterFiled_DB();
-                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg);
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg, "2");
 
                 strSql += strAnd;
                 strSql += " ErpVoucherNo like '%" + model.ErpVoucherNo.Trim() + "%'";

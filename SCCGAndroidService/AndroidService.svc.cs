@@ -638,10 +638,10 @@ namespace SCCGAndroidService
         /// <param name="UserJson"></param>
         /// <param name="ErpVoucherNo"></param>
         /// <returns></returns>
-        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo)
+        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo, string Guid,string Remark)
         {
             T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
-            return tfunc.PostT_OutStockReviewDetailADF(UserJson, ErpVoucherNo);
+            return tfunc.PostT_OutStockReviewDetailADF(UserJson, ErpVoucherNo,Guid, Remark);
         }
 
         #endregion

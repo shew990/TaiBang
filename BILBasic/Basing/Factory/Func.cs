@@ -548,12 +548,16 @@ namespace BILBasic.Basing.Factory
 
                 List<TBase_Model> modelList = GetModelListByJson(UserJson, ModeJson);
 
-                if (CheckModelBeforeSave(modelList, ref strError) == false)
+                if (strPost != "复核")
                 {
-                    model.HeaderStatus = "E";
-                    model.Message = strError;
-                    return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model);
+                    if (CheckModelBeforeSave(modelList, ref strError) == false)
+                    {
+                        model.HeaderStatus = "E";
+                        model.Message = strError;
+                        return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model);
+                    }
                 }
+ 
 
                 //是否过账
                 if (string.IsNullOrEmpty(strPost)|| (strPost == "下架"&& modelList[0].VoucherType==31)|| strPost == "复核")
