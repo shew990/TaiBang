@@ -24,7 +24,7 @@
         <button id="Query" class="btn btn-primary">
             查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
         </button>
-        <a class="btn btn-primary" href="/QualityDetail/CheckRecordOut">质检明细</a>
+        <a class="btn btn-primary" id="delete" disabled>删除</a>
     </div>
     <div style="border-bottom:1px solid black;padding:10px;">
         <form class="layui-form" action="">
@@ -90,7 +90,7 @@
     </div>
     <div style="border-bottom:1px solid black;padding:10px;">
         <form class="layui-form" id="formRecord">
-            @if (@ViewBag.StrongHoldCode == "0403")
+            @if (ViewBag.StrongHoldCode == "0403")
             {
                 <div class="layui-form-item">
                     <div class="layui-inline">
@@ -223,7 +223,7 @@
                     </div>
                 </div>
             }
-            else if (@ViewBag.StrongHoldCode == "0401" || @ViewBag.StrongHoldCode == "0402")
+            else if (ViewBag.StrongHoldCode == "0401" || ViewBag.StrongHoldCode == "0402")
             {
                 <div class="layui-form-item">
                     <div class="layui-inline">
@@ -376,8 +376,6 @@
         <div style="padding-bottom:10px;">
             <span style="padding-right:20px;">合格数量</span>
             <input id="QualityQty" type="number" style="height:30px;padding-left:5px;" placeholder="请输入合格数量">
-            <span style="padding-right:20px;padding-left:40px;">不合格数量</span>
-            <input id="UnQualityQty" type="number" style="height:30px;padding-left:5px;" placeholder="请输入不合格数量">
         </div>
         <div>
             <div class="layui-row">
@@ -400,6 +398,36 @@
 <script src="~/Scripts/jquery-ui.js"></script>
 <script type="text/javascript">
     $(function () {
+
+        //赋值
+        if (@ViewBag.record!= null) {
+            $("#delete").removeAttr('disabled');
+            $("#ok").attr('disabled', 'disabled');
+
+            $("#orderNo").val(@ViewBag.record.ErpVoucherNo);
+            $("#batchNo").val(@ViewBag.record.BatchNo);
+            $("#moudle").val("");
+            $("#materialNo").val(@ViewBag.record.MaterialNo);
+            $("#line").val(@ViewBag.record.LineName);
+            $("#qty").val(@ViewBag.record.ProductQty);
+            $("#alreadyQulaityQty").val(@ViewBag.record.QulityQty);
+            $("#noQulaityQty").val(@ViewBag.record.NoQualityQty);
+            $("#QualityQty").val(@ViewBag.record.QulityQty);
+            $("#TotalUnqualifiedNumber").val(@ViewBag.record.TotalUnqualifiedNumber);
+            $("#remark").val(@ViewBag.record.Remark);
+
+            //赋值checkrecord表单
+            let keyArray = Object.keys(@ViewBag.record);
+            let valueArray = Object.values(@ViewBag.record);
+            $(".record").each(function () {
+                for (let i = 0; i < keyArray.length; i++) {
+                   if ($(this).attr("name") == keyArray[i]) {
+                       $(this).val(valueArray[i]);
+                       break;
+                   }
+                }
+            });
+        }
 
         //初始化input下拉选项
         var availableTags;
@@ -438,9 +466,9 @@
 
                     //赋值checkrecord表单
                     if (data.record != null) {
+                        let keyArray = Object.keys(data.record);
+                        let valueArray = Object.values(data.record);
                         $(".record").each(function () {
-                            let keyArray = Object.keys(data.record);
-                            let valueArray = Object.values(data.record);
                             for (let i = 0; i < keyArray.length; i++) {
                                 if ($(this).attr("name") == keyArray[i]) {
                                     $(this).val(valueArray[i]);
@@ -471,9 +499,9 @@
 
                 //赋值checkrecord表单
                 if (data.record != null) {
+                    let keyArray = Object.keys(data.record);
+                    let valueArray = Object.values(data.record);
                     $(".record").each(function () {
-                        let keyArray = Object.keys(data.record);
-                        let valueArray = Object.values(data.record);
                         for (let i = 0; i < keyArray.length; i++) {
                             if ($(this).attr("name") == keyArray[i]) {
                                 $(this).val(valueArray[i]);
@@ -487,10 +515,6 @@
 
         //确定
         $("#ok").click(function () {
-            if ($("#ErpVoucherNo").val() == "") {
-                layer.alert("生产订单号不能为空!");
-                return false;
-            }
             if ($("#QualityQty").val() == "") {
                 layer.alert("合格数量不能为空!");
                 return false;
@@ -508,13 +532,12 @@
                     formJson: formSerialize($('#formRecord').serializeArray()),
                     orderId: objOrder.product.id,
                     qualityQty: $("#QualityQty").val(),
-                    remark: $("#remark").val(),
-                    unQualityQty: $("#UnQualityQty").val()
+                    remark: $("#remark").val()
                 },
                 function (data) {
                     layer.alert(data.Msg);
                     if (data.Success) {
-                        $.each($("input"), function (item, index) {
+                        $.each($("input"), function () {
                             $(this).val("");
                         });
                     }

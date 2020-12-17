@@ -113,7 +113,7 @@
         function tableInit() {
             table.render({
                 elem: '#productOrderTable'
-                , height: 450
+                , height: 430
                 , url: '/ProductOrders/GetData'
                 , method: 'post'
                 , contentType: 'application/json'
@@ -277,9 +277,9 @@
     });
 
     $(function () {
-        $("#qty").removeAttr('disabled');
-        $("#ProductQty").attr('disabled', 'disabled');
-        $("#PackQty").attr('disabled', 'disabled');
+        $("#qty").attr('disabled', 'disabled');
+        $("#ProductQty").removeAttr('disabled');
+        $("#PackQty").removeAttr('disabled');
     });
 
     function openPostWindow(url, keys, values) {
