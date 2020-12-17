@@ -35,7 +35,7 @@ namespace BILWeb.YS
             return lstSql;
         }
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_YSDetailInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_YSDetailInfo> modelList, string strPost = "")
         {
             List<string> lstSql = new List<string>();
 

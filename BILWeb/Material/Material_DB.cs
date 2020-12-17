@@ -254,5 +254,19 @@ namespace BILWeb.Material
             string sql = string.Format("select watercode from t_material_pack where mateno='"+ materialno + "' and unit='PCS'");
             return GetScalarBySql(sql).ToString();
         }
+
+        public int GetMaterialNoid(string materialno,string strongholdcode)
+        {
+            try
+            {
+                string strSql = string.Format("SELECT id FROM T_MATERIAL WHERE materialno = '{0}'and strongholdcode = '{1}' ", materialno, strongholdcode);
+                return GetScalarBySql(strSql).ToInt32();
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+ 
+        }
     }
 }

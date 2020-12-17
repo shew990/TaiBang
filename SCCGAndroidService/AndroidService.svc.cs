@@ -525,7 +525,7 @@ namespace SCCGAndroidService
         public string SaveT_OutStockTaskDetailADF(string UserJson, string ModelJson, string Guid)
         {
             T_OutTaskDetails_Func tfunc = new T_OutTaskDetails_Func();
-            return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid);
+            return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid,"下架");
         }
 
         /// <summary>
@@ -638,10 +638,10 @@ namespace SCCGAndroidService
         /// <param name="UserJson"></param>
         /// <param name="ErpVoucherNo"></param>
         /// <returns></returns>
-        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo)
+        public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo, string Guid,string Remark)
         {
             T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
-            return tfunc.PostT_OutStockReviewDetailADF(UserJson, ErpVoucherNo);
+            return tfunc.PostT_OutStockReviewDetailADF(UserJson, ErpVoucherNo,Guid, Remark);
         }
 
         #endregion
@@ -935,7 +935,6 @@ namespace SCCGAndroidService
             LogNet.LogInfo("-----------------------------------------------------");
             T_Product_Func tfunc = new T_Product_Func();
             return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid);
-
         }
 
         //关闭单子
@@ -961,7 +960,24 @@ namespace SCCGAndroidService
             return tfunc.GetInfoList(id, StrongHoldCode);
         }
 
+        #endregion
 
+        #region 转换单
+        public string GetZh(string ErpVoucherNo)
+        {
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            return tfunc.GetZhList(ErpVoucherNo);
+        }
+
+        public string PostZh(string UserJson, string ModelJson,string Guid)
+        {
+            LogNet.LogInfo("提交转换单UserJson:" + UserJson);
+            LogNet.LogInfo("提交转换单ModelJson:" + ModelJson);
+            LogNet.LogInfo("提交转换单Guid:" + Guid);
+            LogNet.LogInfo("-----------------------------------------------------");
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            return tfunc.PostZh(UserJson,  ModelJson, Guid);
+        }
         #endregion
     }
 }

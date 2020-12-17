@@ -203,7 +203,7 @@ namespace BILWeb.InStock
                 //同步单据
                 string strMsg = "";
                 ParamaterFiled_DB PDB = new ParamaterFiled_DB();
-                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg);
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg,"1");
 
                 strSql += strAnd;
                 strSql += " erpvoucherno like  '%" + model.ErpVoucherNo.Trim() + "%'  ";
@@ -223,15 +223,16 @@ namespace BILWeb.InStock
                 if (!user.UserNo.Equals("admin"))
                 {
                     strSql += strAnd;
-                    strSql += " strongholdcode = '" + user.StrongHoldCode + "' and ((fromerpwarehouse) ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='')";
+                    //strongholdcode = '" + user.StrongHoldCode + "' and
+                    strSql += "  ((fromerpwarehouse) ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='')";
                 }
             }
             else {
-                if (!user.UserNo.Equals("admin"))
-                {
-                    strSql += strAnd;
-                    strSql += " strongholdcode = '" + user.StrongHoldCode + "' ";
-                }
+                //if (!user.UserNo.Equals("admin"))
+                //{
+                //    strSql += strAnd;
+                //    strSql += " strongholdcode = '" + user.StrongHoldCode + "' ";
+                //}
             }
 
 

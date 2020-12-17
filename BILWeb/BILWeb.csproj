@@ -153,6 +153,7 @@
     <Compile Include="House\IHouseService.cs" />
     <Compile Include="IBaseService.cs" />
     <Compile Include="Quality\IQualityDetailService.cs" />
+    <Compile Include="T00L\SerialnoHelp.cs" />
     <Compile Include="T00L\HttpTool.cs" />
     <Compile Include="View_Product\IProductService.cs" />
     <Compile Include="View_Product\IProductDerailService.cs" />
@@ -438,6 +439,10 @@
     <ProjectReference Include="..\Factory\Factory.csproj">
       <Project>{f21b8328-ec47-43a5-b28d-462a66b6a686}</Project>
       <Name>Factory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SqlSugarDAL\SqlSugarDAL.csproj">
+      <Project>{9FF74A45-9515-4DA5-8E2E-913A05E6BA94}</Project>
+      <Name>SqlSugarDAL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

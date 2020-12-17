@@ -196,6 +196,7 @@ namespace BILWeb.Product
         {
             modelList.ForEach(item=>item.PostQty=item.ScanQty);
             modelList.ForEach(item => item.GUID = user.GUID);
+            modelList.ForEach(item => item.PostUser = user.UserNo);
             return JSONHelper.ObjectToJson<List<T_Product>>(modelList);
 
         }

@@ -101,7 +101,7 @@ namespace BILWeb.Quality
         /// <param name="user"></param>
         /// <param name="modelList"></param>
         /// <returns></returns>
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_QualityDetailInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_QualityDetailInfo> modelList, string strPost = "")
         {         
             string strSql = string.Empty;
             List<string> lstSql = new List<string>();
@@ -237,8 +237,8 @@ namespace BILWeb.Quality
             List<string> lstSql = new List<string>();
             var seed = Guid.NewGuid().GetHashCode();
 
-            NewSerialNo = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 99999999).ToString().PadLeft(8, '0') + "01";
-
+            //NewSerialNo = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 99999999).ToString().PadLeft(8, '0') + "01";
+            NewSerialNo = "1" + DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
             //"1@" + barcodelistnew[i].StrongHoldCode + "@" + barcodelistnew[i].MaterialNo + "@" + barcodelistnew[i].BatchNo + "@" + barcodelistnew[i].Qty + "@" + barcodelistnew[i].SerialNo;
             //NewSerialNo = DateTime.Now.ToString("yyMMdd") + "77" + new Random(seed).Next(0, 999999).ToString().PadLeft(6, '0');//奥碧虹
 
@@ -248,10 +248,12 @@ namespace BILWeb.Quality
 
             if (i > 0) 
             {
-                NewSerialNo = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 99999999).ToString().PadLeft(8, '0') + "01";
+                NewSerialNo = "1" + DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+                //NewSerialNo = DateTime.Now.ToString("yyMMddHHmmss") + new Random(seed).Next(0, 99999999).ToString().PadLeft(8, '0') + "01";
                 //NewSerialNo = DateTime.Now.ToString("yyMMdd") + "77" + new Random(seed).Next(0, 999999).ToString().PadLeft(6, '0');//奥碧虹
             }
-            string BarCode = "1@" + model.StrongHoldCode + "@" + model.MaterialNo + "@" + model.BatchNo + "@" + model.Qty + "@" + NewSerialNo;
+            //string BarCode = "1@" + model.StrongHoldCode + "@" + model.MaterialNo + "@" + model.BatchNo + "@" + model.Qty + "@" + NewSerialNo;
+            string BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + NewSerialNo;
             NewBaecode = BarCode;
             //string BarCode =""+model.BarCodeType+"" + model.MaterialNo.PadLeft(16, '0') + "" + model.BatchNo.PadLeft(11, '0') + ""+NewSerialNo+"";
 
@@ -285,8 +287,20 @@ namespace BILWeb.Quality
             return lstSql;
 
         }
+        public string getSqu(string ss)
+        {
+            if (ss.Length >= 8)
+                ss = ss.Substring(ss.Length - 8, 8);
+            else
+            {
+                ss = "00000000" + ss;
+                ss = ss.Substring(ss.Length - 8, 8);
+            }
+            return ss;
+        }
 
-        public  string GetAmountQtyInsertStockSql(T_StockInfo model, UserModel user, string NewSerialNo)
+
+        public string GetAmountQtyInsertStockSql(T_StockInfo model, UserModel user, string NewSerialNo)
         {
             int stockID = 0;
             string strSql = string.Empty;

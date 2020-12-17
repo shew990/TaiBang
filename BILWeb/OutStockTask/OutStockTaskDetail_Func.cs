@@ -90,7 +90,7 @@ namespace BILWeb.OutStockTask
                 return false;
             }
             //杂出单校验
-            if (modelList[0].VoucherType!=50)
+            if (modelList[0].VoucherType!=53)
             {
                 var model = lstTaskDetail.Find(t => t.ID == modelList[0].ID);
                 if (model == null)
@@ -188,6 +188,7 @@ namespace BILWeb.OutStockTask
             List<T_OutStockTaskDetailsInfo> modelList = new List<T_OutStockTaskDetailsInfo>();
             modelList = JSONHelper.JsonToObject<List<T_OutStockTaskDetailsInfo>>(ModelListJson);
             modelList = modelList.Where(t => t.ScanQty > 0).ToList();
+            modelList.ForEach(t => t.PostUser= userModel.UserNo);
             //modelList.ForEach(t => t.VoucherType = 9996);
             LogNet.LogInfo("SaveT_OutStockTaskDetailADF---" + JSONHelper.ObjectToJson<List<T_OutStockTaskDetailsInfo>>(modelList));
             //modelList.ForEach(t => t.PostUser = userModel.UserNo);
@@ -229,18 +230,20 @@ namespace BILWeb.OutStockTask
                 model.WareHouseNo = NewLstStock[0].FromErpWarehouse;//
                 model.ToErpWarehouse = user.PickWareHouseNo;//
                 model.ToErpAreaNo = user.PickAreaNo; //
-                model.PostUser = item.PostUser;//
+                model.ToUser = user.UserNo;//人
+                model.PostUser = item.PostUser;//人
                 model.VoucherType = item.VoucherType;
                 model.ScanQty = item.ScanQty;
                 model.ERPVoucherType = item.ERPVoucherType;
                 model.RowNo = item.RowNo;
-                model.DepartmentCode = item.DepartmentCode;
-                model.StrVoucherType = item.StrVoucherType;
-                model.ToStrongHoldCode = item.ToStrongHoldCode;
-                model.ToErpWarehouse = item.ToErpWarehouse;
-                model.Remark = item.Remark;
+                model.DepartmentCode = item.DepartmentCode; //收益部门
+                model.StrVoucherType = item.StrVoucherType; //收益单据类型
+                model.ToStrongHoldCode = item.ToStrongHoldCode; //收益据点
+                model.ToErpWarehouse = item.ToErpWarehouse; //收益仓库
+                model.Remark = item.Remark; //收益备注
                 model.PassWord = user.PassWord;
                 model.ErpId = item.ErpId;
+                model.GUID = user.GUID;
                 lstDetail.Add(model);
             }
             //string strUserNo = string.Empty;

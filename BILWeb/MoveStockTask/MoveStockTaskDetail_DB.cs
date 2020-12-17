@@ -89,7 +89,7 @@ namespace BILWeb.MoveStockTask
             return strSql;
         }
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_MoveTaskDetailInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_MoveTaskDetailInfo> modelList, string strPost = "")
         {
             List<string> listSql = new List<string>();
             string strSql1 = "";

@@ -279,7 +279,7 @@ namespace SCCGAndroidService
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "PostT_OutStockReviewDetailADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo);
+        string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo, string Guid, string Remark);
 
         #endregion
 
@@ -469,6 +469,12 @@ namespace SCCGAndroidService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetInfoList", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string GetInfoList(string id, string StrongHoldCode);
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetZh", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetZh(string ErpVoucherNo);
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "PostZh", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string PostZh(string UserJson, string ModelJson, string Guid);
 
         #endregion
 

@@ -120,7 +120,7 @@ namespace BILWeb.Move
             return strSql;
         }
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_MoveDetailInfo> modelList)
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_MoveDetailInfo> modelList, string strPost = "")
         {
             List<string> listSql = new List<string>();
             string strSql1 = "";

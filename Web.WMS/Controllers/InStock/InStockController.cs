@@ -48,7 +48,7 @@ namespace Web.WMS.Controllers
         {
             string strMsg = "";
             ParamaterFiled_DB PDB = new ParamaterFiled_DB();
-            if (PDB.GetVoucherNo(ErpVoucherNo, ref strMsg)) {
+            if (PDB.GetVoucherNo(ErpVoucherNo, ref strMsg,"1")) {
                 return Json(new { state = true }, JsonRequestBehavior.AllowGet);
             }
             else

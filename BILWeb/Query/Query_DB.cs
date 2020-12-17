@@ -16,9 +16,6 @@ using System.Threading.Tasks;
 
 namespace BILWeb.Query
 {
-
-
-
     public class Query_DB
     {
         public DbFactory dbFactory = new DbFactory(DbFactory.DbFactoryType.SQLSERVER);
@@ -997,6 +994,18 @@ namespace BILWeb.Query
                 else if (Convert.ToInt32(dr["TASKTYPE"]) == 207)
                 {
                     TMM.tasktypename = "杂出";
+                }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 208)
+                {
+                    TMM.tasktypename = "调拨出";
+                }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 209)
+                {
+                    TMM.tasktypename = "转换入";
+                }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 210)
+                {
+                    TMM.tasktypename = "转换出";
                 }
             }
             qtyall += (decimal)TMM.QTY;

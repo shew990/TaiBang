@@ -236,8 +236,9 @@ namespace BILWeb.SyncService
         }
 
 
-        #region 同步单据
-        public bool GetVoucherNo(string Erpvoucherno,ref string ErrorMsg)
+        #region 同步单据  
+        //物料：flag= "0" 入库单：1  出库单 2
+        public bool GetVoucherNo(string Erpvoucherno,ref string ErrorMsg,string flag= "0")
         {
             if (string.IsNullOrEmpty(Erpvoucherno))
             {
@@ -277,9 +278,19 @@ namespace BILWeb.SyncService
             }
             if (Erpvoucherno.Contains("DC"))//调拨出库单
             {
-                tableName = " T_Task";
-                StockType = 20;
-                WmsVoucherType = 31;
+                if (flag=="1")
+                {
+                    tableName = " T_instock";
+                    StockType = 10;
+                    WmsVoucherType = 30;
+                }
+                else
+                {
+                    tableName = " T_Task";
+                    StockType = 20;
+                    WmsVoucherType = 31;
+                }
+
             }
             if (Erpvoucherno.Contains("DR"))//调拨入库单
             {
@@ -297,14 +308,18 @@ namespace BILWeb.SyncService
                 ErrorMsg = "找不到该单据类型！";
                 return false;
             }
-            //查看单据是否存在
-            using (var db = SqlSugarBase.GetInstance())
+            if (flag!="0")
             {
-                if (db.Ado.GetInt("SELECT count(1) FROM " + tableName + " WHERE erpvoucherno ='" + Erpvoucherno + "'") > 0)
+                //查看单据是否存在
+                using (var db = SqlSugarBase.GetInstance())
                 {
-                    return true;
+                    if (db.Ado.GetInt("SELECT count(1) FROM " + tableName + " WHERE erpvoucherno ='" + Erpvoucherno + "'") > 0)
+                    {
+                        return true;
+                    }
                 }
             }
+
             //同步单据
             if (SyncErp.SyncJsonFromErp(StockType, string.Empty, Erpvoucherno, WmsVoucherType, ref ErrorMsg))
             {

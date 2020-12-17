@@ -20,6 +20,7 @@ namespace Web.WMS.Controllers.Task
             outStockTaskService = (IOutStockTaskService)ServiceFactory.CreateObject("OutStockTask.T_OutStockTask_Func");
             baseservice = outStockTaskService;
         }
+
         T_OutStockTask_Func tfunc_task = new T_OutStockTask_Func();
         T_OutTaskDetails_Func tfunc_detail = new T_OutTaskDetails_Func();
         public JsonResult GetDetail(Int32 ID)

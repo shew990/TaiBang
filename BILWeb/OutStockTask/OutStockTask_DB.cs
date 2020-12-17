@@ -198,7 +198,7 @@ namespace BILWeb.OutStockTask
                 //同步单据
                 string strMsg = "";
                 ParamaterFiled_DB PDB = new ParamaterFiled_DB();
-                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg);
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg, "2");
 
                 strSql += strAnd;
                 strSql += " ErpVoucherNo like '%" + model.ErpVoucherNo.Trim() + "%'";
@@ -252,10 +252,10 @@ namespace BILWeb.OutStockTask
                     }
                     
                 }
-                
 
 
-                strSql += " StrongHoldCode = '" + user.StrongHoldCode + "' and ("+ strwarehouse + " or isnull(fromerpwarehouse,'')='')";
+                //StrongHoldCode = '" + user.StrongHoldCode + "' and
+                strSql += "  ("+ strwarehouse + " or isnull(fromerpwarehouse,'')='')";
             }
 
             if (model.WareHouseID > 0) 
