@@ -47,17 +47,17 @@ namespace BILWeb.Product
             int ID = base.GetTableIDBySqlServer("t_Pallet");
             string PalletNo = "P" + System.DateTime.Now.ToString("yyMMdd") + ID.ToString().PadLeft(6, '0');
 
+            //插托盘表头
+            string strSql4 = string.Format("SET IDENTITY_INSERT t_Pallet on ;insert into t_Pallet(Id, Palletno, Creater, Createtime,Strongholdcode,Strongholdname,Companycode,Pallettype,ERPVOUCHERNO)" +
+                 " values ('{0}','{1}','{2}',GETDATE(),'{3}','{4}','{5}','{6}','{7}');SET IDENTITY_INSERT t_Pallet off ;", ID, PalletNo, user.UserNo, modelList[0].StrongHoldCode, modelList[0].StrongHoldName, modelList[0].CompanyCode, '1', modelList[0].ErpVoucherNo);
+
+            lstSql.Add(strSql4);
+
 
             foreach (var item in modelList)
             {
                 string strSql1 = "update T_Product  set   Receiveqty = (isnull( Receiveqty,0) + '" + item.ScanQty + "')  where ErpVoucherNo  ='" + item.ErpVoucherNo + "'";
                 lstSql.Add(strSql1);// remainqty = (case when (isnull( remainqty,0) - '" + item.ScanQty + "') <= 0 then 0 else isnull( remainqty,0) - '" + item.ScanQty + "' end),
-
-                //插托盘表头
-                string strSql4 = string.Format("SET IDENTITY_INSERT t_Pallet on ;insert into t_Pallet(Id, Palletno, Creater, Createtime,Strongholdcode,Strongholdname,Companycode,Pallettype,ERPVOUCHERNO)" +
-                     " values ('{0}','{1}','{2}',GETDATE(),'{3}','{4}','{5}','{6}','{7}');SET IDENTITY_INSERT t_Pallet off ;", ID, PalletNo, user.UserNo, modelList[0].StrongHoldCode, modelList[0].StrongHoldName, modelList[0].CompanyCode, '1', modelList[0].ErpVoucherNo);
-
-                lstSql.Add(strSql4);
 
                 foreach (var itemBarCode in item.lstBarCode)
                 {

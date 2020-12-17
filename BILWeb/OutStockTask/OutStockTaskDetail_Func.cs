@@ -228,8 +228,8 @@ namespace BILWeb.OutStockTask
                 model.FromErpWarehouse = NewLstStock[0].FromErpWarehouse;//
                 model.FromErpAreaNo = NewLstStock[0].FromErpAreaNo;//
                 model.WareHouseNo = NewLstStock[0].FromErpWarehouse;//
-                model.ToErpWarehouse = user.PickWareHouseNo;//
-                model.ToErpAreaNo = user.PickAreaNo; //
+                model.ToStrongHoldCode = item.ToStrongHoldCode;//调拨出的调入据点
+                //model.ToErpAreaNo = user.PickAreaNo; //
                 model.ToUser = user.UserNo;//人
                 model.PostUser = item.PostUser;//人
                 model.VoucherType = item.VoucherType;

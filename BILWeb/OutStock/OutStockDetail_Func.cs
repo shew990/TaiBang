@@ -121,6 +121,13 @@ namespace BILWeb.OutStock
                     return JsonConvert.SerializeObject(messageModel);
                 }
 
+                if (!ErpVoucherNo.Contains("SM"))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "只有销售发货单才复核！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+
                 if (tdb.GetOutTaskDetailByErpVoucherNo(ErpVoucherNo, ref modelListTaskDetail, ref strError) == false)
                 {
                     messageModel.HeaderStatus = "E";

@@ -494,7 +494,5 @@ namespace BILWeb.OutStockTask
         public string BarCode { get; set; }
 
         public string ErpId { get; set; }
-        //调拨出的目的据点
-        public string ToStrongHoldCode { get; set; }
     }
 }

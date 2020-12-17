@@ -89,6 +89,8 @@ namespace BILWeb.Query
         public string SupPrdBatch { get; set; }
 
         public DateTime Edate { get; set; }
+        public string strCreate { get; set; }
+        
 
     }
 }
