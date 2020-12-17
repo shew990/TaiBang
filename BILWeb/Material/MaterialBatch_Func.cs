@@ -159,78 +159,75 @@ namespace BILWeb.Material
         public string PostZh(string UserJson, string ModelJson, string Guid)
         {
             BaseMessage_Model<List<T_OutBarCodeInfo>> messageModel = new BaseMessage_Model<List<T_OutBarCodeInfo>>();
-            messageModel.HeaderStatus = "E";
-            messageModel.Message = "报错了，呆子" ;
-            return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
-         
-            //try
-            //{
-            //    string strError = "";
-            //    if (Guid != "")
-            //    {
-            //        if (!CheckGuid(Guid, ref strError))
-            //        {
-            //            messageModel.HeaderStatus = "E";
-            //            messageModel.Message = "GUID已经存在，不能重复提交-" + strError;
-            //            return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
-            //        }
-            //    }
+            try
+            {
+                string strError = "";
+                if (Guid != "")
+                {
+                    if (!CheckGuid(Guid, ref strError))
+                    {
+                        messageModel.HeaderStatus = "E";
+                        messageModel.Message = "GUID已经存在，不能重复提交-" + strError;
+                        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
+                    }
+                }
 
-            //    if (string.IsNullOrEmpty(UserJson)||string.IsNullOrEmpty(ModelJson) ||string.IsNullOrEmpty(Guid))
-            //    {
-            //        messageModel.HeaderStatus = "E";
-            //        messageModel.Message = "参数不能为空";
-            //        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
-            //    }
+                if (string.IsNullOrEmpty(UserJson) || string.IsNullOrEmpty(ModelJson) || string.IsNullOrEmpty(Guid))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "参数不能为空";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
+                }
 
-            //    List<U9Zh> modelList = JSONHelper.JsonToObject<List<U9Zh>>(ModelJson);
-            //    UserModel user = JSONHelper.JsonToObject<UserModel>(UserJson);
+                List<U9Zh> modelList = JSONHelper.JsonToObject<List<U9Zh>>(ModelJson);
+                UserModel user = JSONHelper.JsonToObject<UserModel>(UserJson);
 
-            //    string ERPJson = "";
+                modelList.ForEach(t => t.PostUser = user.UserNo);
+                modelList.ForEach(t => t.GUID = Guid);
+                string ERPJson = BILBasic.JSONUtil.JSONHelper.ObjectToJson<List<U9Zh>>(modelList);
 
-            //    BILBasic.Interface.T_Interface_Func tfunc = new BILBasic.Interface.T_Interface_Func();
-            //    LogNet.LogInfo("ERPJsonBefore:" + ERPJson);
-            //    string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
+                BILBasic.Interface.T_Interface_Func tfunc = new BILBasic.Interface.T_Interface_Func();
+                LogNet.LogInfo("ERPJsonBefore:" + ERPJson);
+                string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
 
-            //    messageModel = BILBasic.JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<T_OutBarCodeInfo>>>(interfaceJson);
+                messageModel = BILBasic.JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<T_OutBarCodeInfo>>>(interfaceJson);
 
-            //    LogNet.LogInfo("ERPJsonAfter:" + BILBasic.JSONUtil.JSONHelper.ObjectToJson<BILBasic.Basing.Factory.BaseMessage_Model<List<string>>>(model));
+                LogNet.LogInfo("ERPJsonAfter:" + messageModel);
 
-            //    //过账失败直接返回
-            //    if (messageModel.HeaderStatus == "E" && !string.IsNullOrEmpty(messageModel.Message))
-            //    {
-            //        return interfaceJson;
-            //    }
-            //    else if (messageModel.HeaderStatus == "S" && !string.IsNullOrEmpty(messageModel.MaterialDoc)) //过账成功，并且生成了凭证要记录数据库
-            //    {
-            //        modelList.ForEach(t => t.MaterialDoc = messageModel.MaterialDoc);
-            //    }
+                //过账失败直接返回
+                if (messageModel.HeaderStatus == "E" && !string.IsNullOrEmpty(messageModel.Message))
+                {
+                    return interfaceJson;
+                }
+                else if (messageModel.HeaderStatus == "S" && !string.IsNullOrEmpty(messageModel.MaterialDoc)) //过账成功，并且生成了凭证要记录数据库
+                {
+                    modelList.ForEach(t => t.MaterialDoc = messageModel.MaterialDoc);
+                }
 
-            //    LogNet.LogInfo("ERPJson:" + BILBasic.JSONUtil.JSONHelper.ObjectToJson<List<T_OutBarCodeInfo>>(messageModel));
-            //    LogNet.LogInfo("ymh：ERPtoWMS-" + BILBasic.JSONUtil.JSONHelper.ObjectToJson<List<T_OutBarCodeInfo>>(messageModel));
+                LogNet.LogInfo("ymh：ERPtoWMS-" + BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel));
 
-            //    if (db.SaveModelListBySqlToDB(user, ref modelList, ref strError) == false)
-            //    {
-            //        messageModel.HeaderStatus = "E";
-            //        messageModel.Message = strError;
-            //        LogNet.LogInfo("ymh：WMS-失败");
-            //    }
-            //    else
-            //    {
-            //        messageModel.HeaderStatus = "S";
-            //        messageModel.Message = model.MaterialDoc;
-            //        LogNet.LogInfo("ymh：WMS-成功");
-            //    }
+                if (db.PostZh(user,modelList,ref strError) == false)
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = strError;
+                    LogNet.LogInfo("ymh：WMS-失败");
+                }
+                else
+                {
+                    messageModel.HeaderStatus = "S";
+                    messageModel.Message = messageModel.MaterialDoc;
+                    LogNet.LogInfo("ymh：WMS-成功");
+                }
 
-            //    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(modelList);
+                return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    messageModel.HeaderStatus = "E";
-            //    messageModel.Message = ex.Message;
-            //    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
-            //}
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.Message;
+                return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel);
+            }
         }
 
 

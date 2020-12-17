@@ -443,6 +443,9 @@ namespace BILWeb.OutStockTask
 
             t_taskdetails.ErpId = dbFactory.ToModelValue(reader, "ErpId").ToDBString();
 
+            string ToStrongHoldCode = dbFactory.ToModelValue(reader, "ToStrongHoldCode").ToDBString();
+            t_taskdetails.ToStrongHoldCode = string.IsNullOrEmpty(ToStrongHoldCode) ? "" : ToStrongHoldCode;
+
             return t_taskdetails;
         }
 

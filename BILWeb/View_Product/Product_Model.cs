@@ -45,14 +45,10 @@ namespace BILWeb.Product
         public decimal ProductQty { get; set; }//生产订单数量
         public decimal ScanQty { get; set; }//扫描数量
         public decimal Receiveqty { get; set; }//完工数量
-
         public decimal PackQty { get; set; }//标准装箱量
-
         public string Strstatus { get; set; }//生产订单状态
-
         public List<T_ProductDetail> Detail { get; set; }
         public List<T_OutBarCodeInfo> lstBarCode { get; set; }
-
         public String ProductBatch { get; set; }
         public String VoucherNo { get; set; }
 
@@ -63,6 +59,8 @@ namespace BILWeb.Product
         public String PrivateDescSeg20_Code { get; set; }//订单存储地址
         public String PrivateDescSeg20_Name { get; set; }//订单存储地址名
 
+        public String PostUser { get; set; }//操作人
+        
 
     }
 }

@@ -146,6 +146,8 @@ namespace BILWeb.InStock
                         else
                         {
                             stockDetailInfo.ScanQty = stockDetailInfo.ScanQty + Convert.ToDecimal(item.Qty);
+                            stockDetailInfo.PostUser = user.UserNo;
+                            stockDetailInfo.GUID = modelList[i].GUID;
                         }
                     }
                 }

@@ -973,7 +973,7 @@ namespace SCCGAndroidService
         {
             LogNet.LogInfo("提交转换单UserJson:" + UserJson);
             LogNet.LogInfo("提交转换单ModelJson:" + ModelJson);
-            LogNet.LogInfo("提交转换单UserJson:" + Guid);
+            LogNet.LogInfo("提交转换单Guid:" + Guid);
             LogNet.LogInfo("-----------------------------------------------------");
             T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
             return tfunc.PostZh(UserJson,  ModelJson, Guid);
