@@ -1,4 +1,6 @@
-﻿@{
+﻿
+@using Web.WMS.Common;
+@{
     ViewBag.Title = "出入库明细";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
@@ -34,18 +36,11 @@
                 <input id="begintime" class="layui-input" placeholder="开始时间">
             </div>
             <div class="layui-inline layui-show-xs-block">
-                <select name="city" lay-verify="required">
-                    <option value=""></option>
-                    <option value="0">北京</option>
-                    <option value="1">上海</option>
-                </select>
+                @Html.DropDownList("TASKTYPE", Commom.TaskTypeList as IEnumerable<SelectListItem>, new { htmlAttributes = new { htmlAttributes = new { @class = "form-control " } } })
+
             </div>
             <div class="layui-inline layui-show-xs-block">
-                <select name="city" lay-verify="required">
-                    <option value=""></option>
-                    <option value="0">北京</option>
-                    <option value="1">上海</option>
-                </select>
+                @Html.DropDownList("VOUCHERTYPE", Commom.GetList("cbxVoucherName") as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control " } })
             </div>
             <div class="layui-inline layui-show-xs-block">
                 <button id="Query" class="btn btn-primary">
@@ -89,7 +84,9 @@
                         StrongHoldCode: $("#StrongHoldCode").val().trim(),
                         FROMWAREHOUSENO: $("#FROMWAREHOUSENO").val().trim(),
                         FROMHOUSENO: $("#FROMHOUSENO").val().trim(),
-                        FROMAREANO: $("#FROMAREANO").val().trim()
+                        FROMAREANO: $("#FROMAREANO").val().trim(),
+                        TASKTYPE: $("#TASKTYPE").val().trim()=="全部"?0:$("#TASKTYPE").val().trim(),
+                        VOUCHERTYPE:$("#VOUCHERTYPE").val().trim()=="全部"?0:$("#VOUCHERTYPE").val().trim(),
                     }
                 }
                 , request: {
@@ -102,12 +99,13 @@
                 , cols: [
                     [
                         { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
-                        , { field: 'ERPVOUCHERNO', title: 'ERP单号', width: 200 }
-                        , { field: 'StrongHoldCode', title: '据点', width: 100 }
+                        , { field: 'ERPVOUCHERNO', title: 'ERP单号', width: 150 }
+                        , { field: 'tasktypename', title: '类型', width: 100 }
+                        , { field: 'StrongHoldCode', title: '据点', width: 80 }
                         , { field: 'MATERIALNO', title: '物料号', width: 100 }
-                        , { field: 'MATERIALDESC', title: '物料名称', width: 100 }
-                        , { field: 'SERIALNO', title: '序列号', width: 200 }
-                        , { field: 'QTY', title: '数量', width: 100 }
+                        , { field: 'MATERIALDESC', title: '物料名称', width: 150 }
+                        , { field: 'SERIALNO', title: '序列号', width: 150 }
+                        , { field: 'QTY', title: '数量', width: 80 }
                         , { field: 'BATCHNO', title: '批次号', width: 100 }
                         , { field: 'FROMWAREHOUSENO', title: '来源仓库', width: 100 }
                         , { field: 'FROMHOUSENO', title: '来源库区', width: 100 }
@@ -115,10 +113,10 @@
                         , { field: 'TOWAREHOUSENO', title: '目标仓库', width: 100 }
                         , { field: 'TOHOUSENO', title: '目标库区', width: 100 }
                         , { field: 'TOAREANO', title: '目标库位', width: 100 }
-                        , { field: 'StatusName', title: '状态', width: 100 }
-                        , { field: 'TASKNO', title: '任务号', width: 200 }
-                        , { field: 'tasktypename', title: '类型', width: 100 }
-                        , { field: 'CREATETIME', title: '创建时间', width: 200, sort: true }
+                        //, { field: 'StatusName', title: '状态', width: 100 }
+                        , { field: 'TASKNO', title: '任务号', width: 150 }
+
+                        , { field: 'strCreate', title: '创建时间', width: 150, sort: true }
                         , { field: 'CREATER', title: '创建人', width: 100, }
                     ]
                 ]

@@ -41,6 +41,11 @@
                     查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
                 </button>
             </div>
+            <div class="layui-inline layui-show-xs-block">
+                <button id="sync" class="btn btn-primary">
+                    同步<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
+                </button>
+            </div>
         </div>
         <table class="layui-hide" id="productOrderTable" lay-filter="init"></table>
         <script type="text/html" id="barDemo">
@@ -207,6 +212,34 @@
         //查询
         $('#Query').click(function () {
             tableInit();
+        });
+
+        //同步
+        $('#sync').click(function () {
+        if ($("#ErpVoucherNo").val() == "") {
+            alert("先输入ERP单号！");
+            return;
+        }
+        var index = layer.load(1);
+        $.ajax({
+            type: "GET",
+            url: "Sync?ErpVoucherNo=" + $("#ErpVoucherNo").val(),
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.state) {
+                    alert("同步成功！");
+                } else {
+                    alert(data.obj);
+                }
+                layer.close(index);
+            },
+            fail: function () {
+                alert("提交失败！");
+                layer.close(index);
+            }
+
+        });
         });
 
         //打印

@@ -45,7 +45,7 @@ namespace UnitTestProject1
 
         #endregion
 
-        #region 基础数据
+        #region 转换单数据
 
         public void 转换单列表()
         {
@@ -337,8 +337,6 @@ namespace UnitTestProject1
         {
             T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
             string json = tfunc.GetT_OutStockReviewDetailListByHeaderIDADF("{\"IsReviewFinish\":false,\"IsSerial\":0,\"OustockStatus\":0,\"OutstockDetailID\":0,\"lstStock\":[],\"ErpLineStatus\":0,\"ErpVoucherNo\":\"D3707\",\"HeaderID\":55,\"ID\":0,\"LineStatus\":0,\"MaterialNoID\":0,\"Status\":0,\"StockType\":0,\"TerminateReasonID\":0,\"VoucherType\":31}");
-
-
 
         }
 
