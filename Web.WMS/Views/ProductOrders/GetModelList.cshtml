@@ -69,16 +69,22 @@
                     @Html.DropDownList("BarcodeType", Commom.BarcodeType as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control " } })
                 </div>
             </div>
-
-
+        </div>
+        <div class="layui-card-body" style="padding:2px 2px;">
             <div class="layui-inline">
-                <label class="layui-form-label lab100">数量</label>
+                <label class="layui-form-label lab100">打印数量</label>
                 <div class="layui-input-inline">
                     <input type="number" id="ProductQty" autocomplete="off" class="layui-input txt200">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label lab100">张数</label>
+                <label class="layui-form-label lab100">包装量</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="PackQty" autocomplete="off" class="layui-input txt200">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label lab100">打印张数</label>
                 <div class="layui-input-inline">
                     <input type="number" id="qty" autocomplete="off" class="layui-input txt200">
                 </div>
@@ -142,7 +148,7 @@
                         , { field: 'HeadMaterialNo', title: '外箱物料编号', width: 120, fixed: 'left' }
                         , { field: 'HeadMaterialName', title: '外箱物料名称', width: 200 }
                         , { field: 'HeadSpec', title: '外箱物料规格', width: 200 }
-                        , { field: 'MaterialNo', title: '物料号', width: 200}
+                        , { field: 'MaterialNo', title: '物料号', width: 200 }
                         , { field: 'MaterialName', title: '物料名称', width: 200 }
                         , { field: 'Spec', title: '物料规格', width: 200 }
                         , { field: 'BatchNo', title: '番号', width: 200 }
@@ -163,6 +169,7 @@
                 if ($("#stampType").val() == "0") {
                     $('#Materialno1').val(data.HeadMaterialNo);
                     $('#MaterialName1').val(data.HeadMaterialName);
+                    $("#PackQty").val(data.PackQty);
                     return false;
                 }
                 $('#Materialno1').val(data.MaterialNo);
@@ -181,6 +188,22 @@
             }
         });
 
+        //打印类型下拉框改变事件
+        $("#BarcodeType").change(function () {
+            if ($("#BarcodeType").val() == "0") {//外箱
+                $("#qty").val("");
+                $("#qty").attr('disabled', 'disabled');
+                $("#ProductQty").removeAttr('disabled');
+                $("#PackQty").removeAttr('disabled');
+            } else {
+                $("#qty").removeAttr('disabled');
+                $("#ProductQty").val("");
+                $("#ProductQty").attr('disabled', 'disabled');
+                $("#PackQty").val("");
+                $("#PackQty").attr('disabled', 'disabled');
+            }
+        });
+
         //查询
         $('#Query').click(function () {
             tableInit();
@@ -192,23 +215,22 @@
                 layer.alert("请先编辑行,再进行打印!");
                 return false;
             }
-            if ($('#qty').val() == "") {
-                layer.alert("打印张数不能为空!");
-                return false;
-            }
-            PurObject.PrintQty = $('#qty').val();
-
             if ($('#BarcodeType').val() == "0") {
+                if ($('#ProductQty').val() == "") {
+                    layer.alert("打印数量不能为空!");
+                    return false;
+                }
                 PurObject.ProductQty = Number($('#ProductQty').val());
+                PurObject.PackQty = Number($('#PackQty').val());
                 $.post("/PrintIn/SaveBarcodePro", { data: JSON.stringify(PurObject) }, function (msg) {
                     if (msg.state) {
                         openPostWindow($("#printIP").val() + "Main.aspx", "stock", msg.obj);
                         return false;
                     }
                     layer.alert(msg.ResultValue);
-
-                } )
+                });
             } else {
+                PurObject.PrintQty = $('#qty').val();
                 openPostWindow($("#printIP").val() + "Main.aspx", "quality", JSON.stringify(PurObject));
             }
 
@@ -219,6 +241,12 @@
             if (event.keyCode == "13")
                 tableInit();
         });
+    });
+
+    $(function () {
+        $("#qty").removeAttr('disabled');
+        $("#ProductQty").attr('disabled', 'disabled');
+        $("#PackQty").attr('disabled', 'disabled');
     });
 
     function openPostWindow(url, keys, values) {

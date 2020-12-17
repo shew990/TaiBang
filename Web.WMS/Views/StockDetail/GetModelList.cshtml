@@ -57,7 +57,7 @@
 </div>
 
 <script>
-    layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
+    layui.use(['laypage', 'layer', 'table'], function () {
         table = layui.table //表格
             , laypage = layui.laypage //分页
             , layer = layui.layer //弹层
@@ -68,7 +68,7 @@
         function tableInit() {
             table.render({
                 elem: '#detailTable'
-                , height: 520
+                , height: 450
                 , url: '/StockDetail/GetData' //数据接口
                 , method: 'post'
                 , contentType: 'application/json'
@@ -127,9 +127,8 @@
 
         //监听行工具事件
         table.on('tool(init)', function (obj) {
-            if (obj.event === 'stamp') {
-                layer.alert('查看操作');
-            }
+            if (obj.event === 'stamp')
+                openPostWindow($("#printIP").val() + "Main.aspx", "stock", obj.data.SerialNo);
         });
 
         //分页
@@ -154,6 +153,21 @@
                 tableInit();
         });
     });
+
+    function openPostWindow(url, keys, values) {
+        var newWindow = window.open(url, name);
+        if (!newWindow)
+            return false;
+        var html = "";
+        html += "<html><head></head><body><form id='formid' method='post' action='" + url + "'>";
+        if (keys && values) {
+            html += "<input type='hidden' name='" + keys + "' value='" + values + "'/>";
+        }
+        html += "</form><script type='text/javascript'>document.getElementById('formid').submit();";
+        html += "<\/script></body></html>".toString().replace(/^.+?\*|\\(?=\/)|\*.+?$/gi, "");
+        newWindow.document.write(html);
+        return newWindow;
+    }
 </script>
 
 
