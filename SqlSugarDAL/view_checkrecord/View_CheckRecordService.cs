@@ -47,5 +47,15 @@ namespace SqlSugarDAL.view_checkrecord
             return records.ToList();
         }
 
+        /// <summary>
+        /// 根据id获取视图对象
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public View_CheckRecord GetRecord(int checkRecordId)
+        {
+            return GetSugarQueryable(x => x.Id == checkRecordId).First();
+        }
+
     }
 }

@@ -34,7 +34,7 @@
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
                 <form asp-controller="QualityDetailController" asp-action="QualityDetail" id="formOutExcel">
-                    <a href="/QualityDetail/OutExcel" class="layui-btn layui-btn-sm">
+                    <a href="###" class="layui-btn layui-btn-sm">
                         <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
                         导出EXCEL
                     </a>
@@ -66,7 +66,7 @@
 
         //表格初始化
         function tableInit() {
-            let isThreeDepart = @strongHoldCode== "0403" ? true : false;
+            let isThreeDepart = "@strongHoldCode"== "0403" ? true : false;
             table.render({
                 elem: '#checkRecordTable'
                 , height: 520
@@ -170,7 +170,7 @@
         });
 
         //监听行工具事件
-        table.on('tool(tableTest)', function (obj) {
+        table.on('tool(init)', function (obj) {
             var data = obj.data;
             if (obj.event === 'detail')
                 location.href = "/QualityDetail/GetModelList?checkRecordId=" + data.Id + "";

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using SqlSugarDAL.view_checkrecord
+@{
     ViewBag.Title = "质检单";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
@@ -19,7 +20,12 @@
 
 <div class="box">
     <div style="border-bottom:1px solid black;padding:10px;">
-        <span style="font-size:15px;padding-right:10px;">生产订单</span>
+        <span style="font-size:15px;padding-right:10px;">
+            <a href="/QualityDetail/CheckRecordOut" style="text-decoration:none;margin-right:15px;">
+                <i class="layui-icon layui-icon-return"></i>
+            </a>
+            生产订单
+        </span>
         <input id="ErpVoucherNo" placeholder="请输入生产单号" style="padding-left: 5px;height:30px;">
         <button id="Query" class="btn btn-primary">
             查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
@@ -77,12 +83,6 @@
                     <label class="layui-form-label">未检合格数</label>
                     <div class="layui-input-block">
                         <input type="text" id="noQulaityQty" readonly class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">总不合格数</label>
-                    <div class="layui-input-block">
-                        <input type="text" id="TotalUnqualifiedNumber" readonly class="layui-input">
                     </div>
                 </div>
             </div>
@@ -219,6 +219,14 @@
                         <label class="layui-form-label">精度弧分</label>
                         <div class="layui-input-block">
                             <input type="text" name="Minute" placeholder="请输入精度弧分" class="layui-input record">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">合格数量</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="QualityQty" placeholder="请输入合格数量" class="layui-input record">
                         </div>
                     </div>
                 </div>
@@ -368,66 +376,69 @@
                             <input type="text" name="Contour" placeholder="请输入外型" class="layui-input record">
                         </div>
                     </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">合格数量</label>
+                        <div class="layui-input-block">
+                            <input id="QualityQty" type="text" name="QualityQty" placeholder="请输入合格数量" class="layui-input record">
+                        </div>
+                    </div>
                 </div>
             }
         </form>
     </div>
-    <div style="padding:10px;">
-        <div style="padding-bottom:10px;">
-            <span style="padding-right:20px;">合格数量</span>
-            <input id="QualityQty" type="number" style="height:30px;padding-left:5px;" placeholder="请输入合格数量">
-        </div>
-        <div>
-            <div class="layui-row">
-                <div class="layui-col-md4">
-                    <div div class="layui-row">
-                        <div class="layui-col-md2" style="padding-top:6px;">备注</div>
-                        <div class="layui-col-md10">
-                            <input type="text" id="remark" class="layui-input">
-                        </div>
+    <div style="padding:20px;">
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <div div class="layui-row">
+                    <div class="layui-col-md2" style="padding-top:6px;">备注</div>
+                    <div class="layui-col-md10">
+                        <input type="text" id="remark" class="layui-input">
                     </div>
                 </div>
-                <div class="layui-col-md4" style="padding-left:45px;">
-                    <button class="btn btn-primary" id="ok">确定</button>
-                </div>
+            </div>
+            <div class="layui-col-md4" style="padding-left:45px;">
+                <button class="btn btn-primary" id="ok">确定</button>
             </div>
         </div>
     </div>
 </div>
+<input type="hidden" id="checkRecordId" value="@ViewBag.checkRecordId" />
 
 <script src="~/Scripts/jquery-ui.js"></script>
 <script type="text/javascript">
     $(function () {
 
         //赋值
-        if (@ViewBag.record!= null) {
-            $("#delete").removeAttr('disabled');
-            $("#ok").attr('disabled', 'disabled');
+        $.post("/QualityDetail/AsyncInit", function (data) {
+            if (data != null) {
+                $("#delete").removeAttr('disabled');
+                $("#ok").attr('disabled', 'disabled');
 
-            $("#orderNo").val(@ViewBag.record.ErpVoucherNo);
-            $("#batchNo").val(@ViewBag.record.BatchNo);
-            $("#moudle").val("");
-            $("#materialNo").val(@ViewBag.record.MaterialNo);
-            $("#line").val(@ViewBag.record.LineName);
-            $("#qty").val(@ViewBag.record.ProductQty);
-            $("#alreadyQulaityQty").val(@ViewBag.record.QulityQty);
-            $("#noQulaityQty").val(@ViewBag.record.NoQualityQty);
-            $("#QualityQty").val(@ViewBag.record.QulityQty);
-            $("#TotalUnqualifiedNumber").val(@ViewBag.record.TotalUnqualifiedNumber);
-            $("#remark").val(@ViewBag.record.Remark);
+                $("#ErpVoucherNo").val(data.ErpVoucherNo);
+                $("#orderNo").val(data.ErpVoucherNo);
+                $("#batchNo").val(data.BatchNo);
+                $("#moudle").val("");
+                $("#materialNo").val(data.MaterialNo);
+                $("#line").val(data.LineName);
+                $("#qty").val(data.ProductQty);
+                $("#alreadyQulaityQty").val(data.QulityQty);
+                $("#noQulaityQty").val(data.NoQualityQty);
+                $("#QualityQty").val(data.QulityQty);
+                $("#remark").val(data.Remark);
 
-            //赋值checkrecord表单
-            let keyArray = Object.keys(@ViewBag.record);
-            let valueArray = Object.values(@ViewBag.record);
-            $(".record").each(function () {
-                for (let i = 0; i < keyArray.length; i++) {
-                   if ($(this).attr("name") == keyArray[i]) {
-                       $(this).val(valueArray[i]);
-                       break;
-                   }
-                }
-            });
-        }
+                //赋值checkrecord表单
+                let keyArray = Object.keys(data);
+                let valueArray = Object.values(data);
+                $(".record").each(function () {
+                    for (let i = 0; i < keyArray.length; i++) {
+                        if ($(this).attr("name") == keyArray[i]) {
+                            $(this).val(valueArray[i]);
+                            break;
+                        }
+                    }
+                });
+            }
+        });
 
         //初始化input下拉选项
         var availableTags;
@@ -446,42 +457,8 @@
             });
         });
 
-        //生产单号回车监听事件
-        var objOrder;
-        $("#ErpVoucherNo").keypress(function (even) {
-            if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
-                $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
-                    objOrder = data;
-                    $("#orderNo").val(data.product.ErpVoucherNo);
-                    $("#batchNo").val(data.product.BatchNo);
-                    $("#moudle").val("");
-                    $("#materialNo").val(data.product.MaterialNo);
-                    $("#line").val(data.product.LineName);
-                    $("#qty").val(data.product.ProductQty);
-                    $("#alreadyQulaityQty").val(data.product.QulityQty);
-                    $("#noQulaityQty").val(data.product.NoQualityQty);
-                    $("#QualityQty").val(data.product.QulityQty);
-                    $("#TotalUnqualifiedNumber").val(data.record.TotalUnqualifiedNumber);
-                    $("#remark").val(data.product.Remark);
-
-                    //赋值checkrecord表单
-                    if (data.record != null) {
-                        let keyArray = Object.keys(data.record);
-                        let valueArray = Object.values(data.record);
-                        $(".record").each(function () {
-                            for (let i = 0; i < keyArray.length; i++) {
-                                if ($(this).attr("name") == keyArray[i]) {
-                                    $(this).val(valueArray[i]);
-                                    break;
-                                }
-                            }
-                        });
-                    }
-                });
-            }
-        });
-
         //查询
+        var objOrder;
         $("#Query").click(function () {
             $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
                 objOrder = data;
@@ -493,8 +470,7 @@
                 $("#qty").val(data.product.ProductQty);
                 $("#alreadyQulaityQty").val(data.product.QulityQty);
                 $("#noQulaityQty").val(data.product.NoQualityQty);
-                $("#QualityQty").val(data.product.QulityQty);
-                $("#TotalUnqualifiedNumber").val(data.record.TotalUnqualifiedNumber);
+                $("#QualityQty").val(data.product.QulityQty == 0 ? "" : data.product.QulityQty);
                 $("#remark").val(data.product.Remark);
 
                 //赋值checkrecord表单
@@ -511,7 +487,18 @@
                     });
                 }
             });
-        })
+        });
+
+        //删除
+        $("#delete").click(function () {
+            if (confirm("是否确认删除?")) {
+                $.post("/QualityDetail/Delete", { checkRecordId: $("#checkRecordId").val() }, function (data) {
+                    layer.alert(data.Msg);
+                    if (data.Success)
+                        location.href = "/QualityDetail/CheckRecordOut";
+                });
+            }
+        });
 
         //确定
         $("#ok").click(function () {

@@ -211,9 +211,25 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetModelList(string checkRecordId = null)
         {
-            ViewBag.record = checkRecordId == null ? null : new View_CheckRecordService().GetById(checkRecordId);
+            TempData["checkRecordId"] = checkRecordId;
+
+            ViewBag.checkRecordId = checkRecordId;
             ViewBag.StrongHoldCode = strongHoldCode;
             return View();
+        }
+
+        /// <summary>
+        /// 获取初始化数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AsyncInit()
+        {
+            if (TempData["checkRecordId"] != null)
+            {
+                var record = new View_CheckRecordService().GetRecord(Convert.ToInt32(TempData["checkRecordId"]));
+                return Json(record, JsonRequestBehavior.AllowGet);
+            }
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -224,6 +240,17 @@ namespace Web.WMS.Controllers
         {
             var remarks = new RemarkService().GetList().Select(x => x.RemarkDesc);
             return Json(remarks, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 删除质检记录
+        /// </summary>
+        /// <param name="checkRecordId"></param>
+        /// <returns></returns>
+        public ActionResult Delete(string checkRecordId)
+        {
+            var successResult = new CheckRecordService().DeleteById(checkRecordId);
+            return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
