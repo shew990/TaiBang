@@ -120,7 +120,7 @@ namespace BILWeb.YS
                             stockDetailInfo.ScanQty = Convert.ToDecimal(item.Qty);
                             stockDetailInfo.Unit = modelList[i].Unit;
                             stockDetailInfo.SupPrdBatch = modelList[i].SupPrdBatch;
-                            stockDetailInfo.ReceiveWareHouseNo = modelList[i].ReceiveWareHouseNo.Replace("SHJC-","").Replace("JSJC-", "").Replace("SHSY-", "");
+                            stockDetailInfo.ReceiveWareHouseNo = modelList[i].ReceiveWareHouseNo;
                             stockDetailInfo.WareHouseNo = stockDetailInfo.ReceiveWareHouseNo;
                             stockDetailInfo.ReceiveAreaNo = modelList[i].ReceiveAreaNo;
                             stockDetailInfo.BatchNo = item.BatchNo;

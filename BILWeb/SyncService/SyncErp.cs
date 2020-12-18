@@ -581,7 +581,7 @@ namespace BILWeb.SyncService
                                                                                      //string Json = "{\"result\":\"1\",\"resultValue\":\"\",\"data\":[{\"head\":{\"standard_box2\":null,\"standard_box3\":null,\"sto_condition\":null,\"spc_require\":null,\"protect_way\":null,\"EntId\":null,\"item_spec\":\"个\",\"item_unit\":null,\"group_code\":null,\"group_name\":null,\"classfiy_code\":null,\"classfiy_name\":null,\"purchase_group_code\":null,\"purchase_group_name\":null,\"main_supplier\":null,\"quality_month\":null,\"quality_day\":0,\"item_brand\":null,\"origin_place\":null,\"life_cycle\":null,\"pack_quantity\":0,\"item_size\":null,\"pallet_size\":null,\"pallet_amount\":null,\"all_size\":null,\"item_weight\":null,\"status\":null,\"standard_box1\":null,\"customer\":null,\"standard_box\":null,\"brand_intro\":null,\"bar_code\":\"\",\"Companyid\":null,\"item_name_us\":null,\"item_no\":\"14H22Q1\",\"item_name\":\"ALBION产品托盘\",\"Detail\":[{\"base_num\":0,\"base_unit\":null,\"unit_num\":0,\"Companyid\":\"ABH\",\"from_unit\":null,\"water_code\":\"\",\"item_no\":\"14H22Q1\",\"unit\":null,\"pack_amount\":0,\"EntId\":10,\"USNAM\":null,\"GUID\":null}]}}],\"MaterialDoc\":null,\"MaterialYear\":null,\"QualityNo\":null,\"GUID\":null,\"DeliveryNo\":null}";
                                                                                      //    time += "获取json：" + stopwatch.Elapsed.TotalSeconds;
                                                                                      //  stopwatch.Reset(); stopwatch.Start();
-                    LogNet.LogInfo("SyncYMH:"+ Type+"--" + Json);
+                    //LogNet.LogInfo("-------------------------------------------------同步U9help返回JSON:"+ Type+"--" + Json);
                     //解析JSON格式
                     result = GetDataJson(Json, ref dataJson, WmsvouType, ref ErrMsg);
 
@@ -661,6 +661,7 @@ namespace BILWeb.SyncService
                         List<int> BeforeIDs = new List<int>();  //同步前表体ID集合
                         List<int> AfterIDs = new List<int>();  //同步后表体ID集合
                         string headsql = GetSql(headJToken, db, pmListbyType, Headkeys, MatrtialKeys, headTableName, true, ref headID, ref WmsVourcherNo, ref BeforeIDs, ref AfterIDs);
+                        LogNet.LogInfo("-------------------------------------------------同步SQL语句:" + headsql);
                         SQLIST.Add(headsql);
                         foreach (JProperty hjp in headJToken)
                         {
@@ -674,6 +675,7 @@ namespace BILWeb.SyncService
                                     {
                                         JToken detailJToken = JObject.Parse(detailJarray[j].ToString());
                                         string detailsql = GetSql(detailJToken, db, pmListbyType, Detailkeys, MatrtialKeys, detailTableName, false, ref headID, ref WmsVourcherNo, ref BeforeIDs, ref AfterIDs);
+                                        LogNet.LogInfo("-------------------------------------------------同步SQL语句:" + headsql);
                                         SQLIST.Add(detailsql);
                                     }
                                 }
