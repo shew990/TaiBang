@@ -91,5 +91,10 @@ namespace BILWeb.View_Product
         /// </summary>
         public Int32 PrintQty { get; set; }
 
+        /// <summary>
+        /// 包装量
+        /// </summary>
+        public Decimal PackQty { get; set; }
+
     }
 }
