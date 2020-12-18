@@ -249,7 +249,7 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult Delete(string checkRecordId)
         {
-            var successResult = new CheckRecordService().DeleteById(checkRecordId);
+            var successResult = new CheckRecordService().DeleteById(Convert.ToInt32(checkRecordId));
             return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 
