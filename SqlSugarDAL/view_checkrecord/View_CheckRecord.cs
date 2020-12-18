@@ -340,17 +340,48 @@ namespace SqlSugarDAL.view_checkrecord
         /// Default:
         /// Nullable:True
         /// </summary>           
-        public decimal? QulityQty { get; set; }
+        public Decimal QulityQty { get; set; }
 
         /// <summary>
         /// 订单数量
         /// </summary>
-        public decimal? ProductQty { get; set; }
+        public Decimal ProductQty { get; set; }
 
         /// <summary>
         /// 备注
         /// </summary>
         public String Decription { get; set; }
+
+        /// <summary>
+        /// 番号
+        /// </summary>
+        public String BatchNo { get; set; }
+
+        /// <summary>
+        /// 物料编码
+        /// </summary>
+        public String MaterialNo { get; set; }
+
+        /// <summary>
+        /// 产线名称
+        /// </summary>
+        public String LineName { get; set; }
+
+        /// <summary>
+        /// 未质检数量
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public Decimal NoQualityQty { get { return this.ProductQty - this.QulityQty; } }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public String Remark { get; set; }
+
+        /// <summary>
+        /// 质检记录合格数量
+        /// </summary>
+        public Decimal RecordQualityQty { get; set; }
 
     }
 }
