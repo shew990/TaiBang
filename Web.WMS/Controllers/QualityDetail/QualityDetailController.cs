@@ -29,6 +29,9 @@ namespace Web.WMS.Controllers
     [RoleActionFilter(Message = "QualityDetail/QualityDetail")]
     public class QualityDetailController : Controller
     {
+        View_CheckRecordService view_CheckRecordService = new View_CheckRecordService();
+        CheckRecordService checkRecordService = new CheckRecordService();
+
         string strongHoldCode = Commom.ReadUserInfo().StrongHoldCode;
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetOrderList(int limit, int page, string OrderNo, string StartDate, string EndDate)
         {
-            var ordersObj = new View_CheckRecordService().GetOrderList(limit, page, OrderNo, StartDate, EndDate);
+            var ordersObj = view_CheckRecordService.GetOrderList(limit, page, OrderNo, StartDate, EndDate);
             return Json(ordersObj, JsonRequestBehavior.AllowGet);
         }
 
@@ -128,7 +131,7 @@ namespace Web.WMS.Controllers
                 row1.CreateCell(29).SetCellValue("处置");
                 row1.CreateCell(30).SetCellValue("备注");
             }
-            var orders = new View_CheckRecordService().GetRecords(orderNo, startDate, endDate);
+            var orders = view_CheckRecordService.GetRecords(orderNo, startDate, endDate);
             for (int i = 0; i < orders.Count(); i++)
             {
                 IRow row = sheet.CreateRow(i + 1);//给sheet添加一行
@@ -196,7 +199,6 @@ namespace Web.WMS.Controllers
                     row.CreateCell(30).SetCellValue(orders[i].Decription);
                 }
             }
-
             string fileName = "质检明细列表" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls";
             MemoryStream memoryStream = new MemoryStream();
             book.Write(memoryStream);
@@ -226,7 +228,7 @@ namespace Web.WMS.Controllers
         {
             if (TempData["checkRecordId"] != null)
             {
-                var record = new View_CheckRecordService().GetRecord(Convert.ToInt32(TempData["checkRecordId"]));
+                var record = view_CheckRecordService.GetRecord(Convert.ToInt32(TempData["checkRecordId"]));
                 return Json(record, JsonRequestBehavior.AllowGet);
             }
             return Json(null, JsonRequestBehavior.AllowGet);
@@ -249,7 +251,7 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult Delete(string checkRecordId)
         {
-            var successResult = new CheckRecordService().DeleteById(checkRecordId);
+            var successResult = checkRecordService.DeleteById(Convert.ToInt32(checkRecordId));
             return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 
@@ -262,7 +264,7 @@ namespace Web.WMS.Controllers
             var model = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
             T_CheckRecord checkRecord = new T_CheckRecord();
             if (model != null)
-                checkRecord = new CheckRecordService().GetList(x => x.ProductOrderId == model.id).FirstOrDefault();
+                checkRecord = checkRecordService.GetList(x => x.ProductOrderId == model.id).FirstOrDefault();
             return Json(new { product = model, record = checkRecord }, JsonRequestBehavior.AllowGet);
         }
 
@@ -272,71 +274,7 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult Submit(string formJson, string orderId, string qualityQty, string remark)
         {
-            SuccessResult successResult = new SuccessResult();
-            successResult.Success = false;
-            try
-            {
-                ProductService productService = new ProductService();
-                var checkRecord = JsonConvert.DeserializeObject<T_CheckRecord>(formJson);
-
-                T_CheckRecord queryData = new T_CheckRecord();
-                //一部/二部
-                queryData.Burning = checkRecord.Burning;
-                queryData.WrongLabe = checkRecord.WrongLabe;
-                queryData.Resistance = checkRecord.Resistance;
-                queryData.WrongNumberControl = checkRecord.WrongNumberControl;
-                queryData.DielectricStrength = checkRecord.DielectricStrength;
-                queryData.GearBump = checkRecord.GearBump;
-                queryData.AbnormalNoise = checkRecord.AbnormalNoise;
-                queryData.BearingFailure = checkRecord.BearingFailure;
-                queryData.InputPort = checkRecord.InputPort;
-                queryData.OutPort = checkRecord.OutPort;
-                queryData.MountingFlange = checkRecord.MountingFlange;
-                queryData.InstallKeyway = checkRecord.InstallKeyway;
-                queryData.InstallationShaftDiameter = checkRecord.InstallationShaftDiameter;
-                queryData.InstallTheStop = checkRecord.InstallTheStop;
-                queryData.BoltCenter = checkRecord.BoltCenter;
-                queryData.NoLoad = checkRecord.NoLoad;
-                queryData.RawMaterial = checkRecord.RawMaterial;
-                queryData.Contour = checkRecord.Contour;
-                queryData.SaveTime = DateTime.Now;
-                queryData.ProductOrderId = Convert.ToInt32(orderId);
-
-                //三部
-                queryData.Sensei = checkRecord.Sensei;
-                queryData.Scratch = checkRecord.Scratch;
-                queryData.Bruise = checkRecord.Bruise;
-                queryData.Speckle = checkRecord.Speckle;
-                queryData.DownEdge = checkRecord.DownEdge;
-                queryData.Rust = checkRecord.Rust;
-                queryData.MissedProcess = checkRecord.MissedProcess;
-                queryData.Decibel = checkRecord.Decibel;
-                queryData.Dot = checkRecord.Dot;
-                queryData.Disaccord = checkRecord.Disaccord;
-                queryData.Noise = checkRecord.Noise;
-                queryData.CardPoint = checkRecord.CardPoint;
-                queryData.ShaftTight = checkRecord.ShaftTight;
-                queryData.Shake = checkRecord.Shake;
-                queryData.OutputSize = checkRecord.OutputSize;
-                queryData.InPutSize = checkRecord.InPutSize;
-                queryData.NeglectedLoading = checkRecord.NeglectedLoading;
-                queryData.NotInPlace = checkRecord.NotInPlace;
-                queryData.Others = checkRecord.Others;
-                queryData.Minute = checkRecord.Minute;
-                new CheckRecordService().Insert(queryData);
-
-                var product = productService.GetById(orderId);
-                product.QulityQty += Convert.ToDecimal(qualityQty);
-                product.Remark = remark;
-                productService.Update(product);
-
-                successResult.Msg = "保存成功!";
-                successResult.Success = true;
-            }
-            catch (Exception ex)
-            {
-                successResult.Msg = ex.Message;
-            }
+            var successResult = checkRecordService.Submit(formJson, orderId, qualityQty, remark);
             return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 
