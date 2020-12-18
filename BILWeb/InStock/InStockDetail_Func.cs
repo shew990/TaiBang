@@ -209,7 +209,7 @@ namespace BILWeb.InStock
                                   SerialNo = m.Key.t1
                               };
 
-            if (groupByList.Count() != modelList.Count)
+            if (groupByList.Count() != lstBarCode.Count)
             {
                 strErrMsg = "收货条码存在相同数据，不能提交！";
                 bSucc = false;
@@ -229,6 +229,8 @@ namespace BILWeb.InStock
         /// <returns></returns>
         protected override List<T_InStockDetailInfo> GetModelListByJson(string UserJson, string ModelListJson)
         {
+            LogNet.LogInfo("SaveT_InStockDetailADF---" + ModelListJson);
+
             int IsQuality = 0;
             string strUserNo = string.Empty;
 
@@ -266,7 +268,7 @@ namespace BILWeb.InStock
                     item.ReceiveWareHouseNo = user.ReceiveWareHouseNo;
                     item.ReceiveAreaNo = string.Empty;
                     item.ReceiveUserNo = user.UserNo;// strPostUser;
-                    item.ToErpWarehouse = user.ReceiveWareHouseNo;
+                    //item.ToErpWarehouse = user.ReceiveWareHouseNo;
                     item.ToErpAreaNo = string.Empty;
                     item.ToBatchNo = item.BatchNo;
                     item.PostUser = user.UserNo;
@@ -276,7 +278,7 @@ namespace BILWeb.InStock
                 //item..PostDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy/MM/dd"));
             }
 
-            LogNet.LogInfo("SaveT_InStockDetailADF---" + JSONHelper.ObjectToJson<List<T_InStockDetailInfo>>(modelList));
+            
 
             return modelList;
         }
@@ -361,7 +363,7 @@ namespace BILWeb.InStock
         /// </summary>
         /// <param name="BarCode"></param>
         /// <returns></returns>
-        public string GetPalletDetailByBarCode(string UserJson, string BarCode)
+        public string GetPalletDetailByBarCode(string UserJson, string BarCode,string VoucherType)
         {
 
             BaseMessage_Model<List<T_OutBarCodeInfo>> model = new BaseMessage_Model<List<T_OutBarCodeInfo>>();
@@ -405,7 +407,7 @@ namespace BILWeb.InStock
                 }
 
                 //验证外箱条码或者托盘条码是否已经收货
-                if (outBarCodeFunc.CheckBaeCodeIsRecive(SerialNo, ref strError) == false)
+                if (outBarCodeFunc.CheckBaeCodeIsReciveForTB(userModel,SerialNo, ref strError, VoucherType) == false)
                 {
                     model.HeaderStatus = "E";
                     model.Message = strError;

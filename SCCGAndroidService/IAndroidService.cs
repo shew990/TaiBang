@@ -92,13 +92,13 @@ namespace SCCGAndroidService
         [WebInvoke(Method = "POST", UriTemplate = "GetT_SerialNoADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string GetT_SerialNoADF(string SerialNo);
 
-        [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "GetT_SerialNobyymhADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string GetT_SerialNobyymhADF(string SerialNo);
+        //[OperationContract]
+        //[WebInvoke(Method = "POST", UriTemplate = "GetT_SerialNobyymhADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        //string GetT_SerialNobyymhADF(string SerialNo);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetT_PalletDetailByBarCodeADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string GetT_PalletDetailByBarCodeADF(string UserJson, string BarCode);
+        string GetT_PalletDetailByBarCodeADF(string UserJson, string BarCode, string VoucherType);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetT_InStockDetailListByHeaderIDADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]

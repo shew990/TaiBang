@@ -47,6 +47,7 @@
                     <th>@Html.DisplayNameFor(model => model.StrStatus)</th>
                     @*<th>@Html.DisplayNameFor(model => model.DepartmentName)</th>*@
                     @*<th>@Html.DisplayNameFor(model => model.StrCreater)</th>*@
+                    <th>@Html.DisplayNameFor(model => model.FromErpWareHouse)</th>
                     <th>@Html.DisplayNameFor(model => model.CreateTime)</th>
                     <th>@Html.DisplayNameFor(model => model.SupplierName)</th>
                     <th>操作</th>
@@ -56,23 +57,23 @@
                 @{
                     if (pageData.data != null && pageData.data.Count != 0)
                     {
-                        foreach (T_InStockInfo t_OutStockInfo in pageData.data)
+                        foreach (T_InStockInfo t_InStockInfo in pageData.data)
                         {
                             <tr>
-                                <td><input type="checkbox" value="@t_OutStockInfo.ID" /></td>
-                                <td>@t_OutStockInfo.VoucherNo</td>
-                                <td>@t_OutStockInfo.StrongHoldCode</td>
-                                <td>@t_OutStockInfo.StrongHoldName</td>
+                                <td><input type="checkbox" value="@t_InStockInfo.ID" /></td>
+                                <td>@t_InStockInfo.VoucherNo</td>
+                                <td>@t_InStockInfo.StrongHoldCode</td>
+                                <td>@t_InStockInfo.StrongHoldName</td>
                                 @*<td>@t_OutStockInfo.CompanyCode</td>*@
-                                <td>@t_OutStockInfo.ErpVoucherNo</td>
-                                <td>@t_OutStockInfo.StrVoucherType</td>
-                                <td>@t_OutStockInfo.StrStatus</td>
+                                <td>@t_InStockInfo.ErpVoucherNo</td>
+                                <td>@t_InStockInfo.StrVoucherType</td>
+                                <td>@t_InStockInfo.StrStatus</td>
                                 @*<td>@t_OutStockInfo.DepartmentName</td>*@
-                                @*<td>@t_OutStockInfo.StrCreater</td>*@
-                                <td>@t_OutStockInfo.CreateTime</td>
-                                <td>@t_OutStockInfo.SupplierName</td>
+                            <td>@t_InStockInfo.FromErpWareHouse</td>
+                                <td>@t_InStockInfo.CreateTime</td>
+                                <td>@t_InStockInfo.SupplierName</td>
                                 <td>
-                                    <a title="详情" onclick="getDetail(@t_OutStockInfo.ID)" class="detail" data-toggle="modal" data-target="#compose-modal">
+                                    <a title="详情" onclick="getDetail(@t_InStockInfo.ID)" class="detail" data-toggle="modal" data-target="#compose-modal">
                                         <i class="layui-icon">&#xe642;</i>
                                     </a>
                                 </td>

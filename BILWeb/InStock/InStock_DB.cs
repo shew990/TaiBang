@@ -134,6 +134,8 @@ namespace BILWeb.InStock
             t_instock.Note = (string)dbFactory.ToModelValue(reader, "Note");
             t_instock.ErpId = dbFactory.ToModelValue(reader, "ErpId").ToDBString();
             t_instock.ERPVoucherType = dbFactory.ToModelValue(reader, "ERPVoucherType").ToDBString();
+            t_instock.FromErpWareHouse = dbFactory.ToModelValue(reader, "FromErpWareHouse").ToDBString();
+            
             return t_instock;
         }
 
@@ -224,7 +226,15 @@ namespace BILWeb.InStock
                 {
                     strSql += strAnd;
                     //strongholdcode = '" + user.StrongHoldCode + "' and
-                    strSql += "  ((fromerpwarehouse) ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='')";
+                    strSql += "  (fromerpwarehouse ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='' ";
+                    //G102  G202 G301 成品入库单 除了这三个仓库默认收到 集团成品仓G001
+                    if (user.WarehouseCode == "G001")
+                    {
+                        strSql += " or fromerpwarehouse not in ('G102','G202','G301') ";
+                    }
+                    strSql += " )";
+                    
+
                 }
             }
             else {

@@ -1,6 +1,7 @@
 ﻿using BILBasic.Basing.Factory;
 using BILBasic.Common;
 using BILBasic.User;
+using BILWeb.SyncService;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,6 +46,13 @@ namespace BILWeb.View_Product
             string strAnd = " and ";
             if (!string.IsNullOrEmpty(model.ErpVoucherNo))
             {
+
+                //同步单据
+                string strMsg = "";
+                ParamaterFiled_DB PDB = new ParamaterFiled_DB();
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg, "1");
+
+
                 strSql += strAnd;
                 strSql += " erpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
             }

@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "库存明细";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
+        var printIP = System.Web.HttpContext.Current.Session["printIP"];
 }
 <style type="text/css">
     .layui-container {
@@ -12,7 +13,7 @@
         font-size: 16px;
     }
 </style>
-
+<input type="hidden" id="printIP" value="@printIP" />
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
         <div class="layui-card-body">
