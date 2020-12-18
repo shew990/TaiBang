@@ -213,7 +213,7 @@ namespace BILWeb.InStockTask
         {
             modelList.ForEach(t => t.PostUser = user.UserNo);
             modelList.ForEach(t => t.PassWord = user.PassWord);
-            modelList.ForEach(t => t.WareHouseNo = t.WareHouseNo.Replace("SHJC-", "").Replace("JSJC-", "").Replace("SHSY-", ""));
+            modelList.ForEach(t => t.WareHouseNo = t.WareHouseNo);
             return JSONHelper.ObjectToJson<List<T_InStockTaskDetailsInfo>>(modelList);
         }
 

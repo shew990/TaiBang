@@ -60,7 +60,28 @@ namespace BILWeb.Product
         public String PrivateDescSeg20_Name { get; set; }//订单存储地址名
 
         public String PostUser { get; set; }//操作人
-        
+
+
+        /// <summary>
+        /// 操作组编码 
+        /// </summary>
+        public string PrivateDescSeg7 { get; set; }
+        /// <summary>
+        /// 操作组名称 
+        /// </summary>
+        public string PrivateDescSeg7_Name { get; set; }
+        /// <summary>
+        /// 标贴
+        /// </summary>
+        public string PrivateDescSeg17 { get; set; }
+        /// <summary>
+        /// 包装要求编码 
+        /// </summary>
+        public string PrivateDescSeg18 { get; set; }
+        /// <summary>
+        /// 包装要求名称
+        /// </summary>
+        public string PrivateDescSeg18_Name { get; set; }
 
     }
 }

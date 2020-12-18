@@ -396,6 +396,12 @@ namespace BILWeb.Product
             T_Product.sale_vouchertypename = (string)dbFactory.ToModelValue(reader, "sale_vouchertypename");
             T_Product.Customer_PrivateDescSeg5 = (string)dbFactory.ToModelValue(reader, "Customer_PrivateDescSeg5");
 
+            T_Product.PrivateDescSeg7 = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg7");
+            T_Product.PrivateDescSeg7_Name = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg7_Name");
+            T_Product.PrivateDescSeg17 = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg17");
+            T_Product.PrivateDescSeg18 = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg18");
+            T_Product.PrivateDescSeg18_Name = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg18_Name");
+            
             return T_Product;
         }
 

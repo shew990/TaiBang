@@ -304,5 +304,7 @@ namespace BILWeb.InStock
         public string PubDescSeg7 { get; set; }//客户规格型号
         public string Customer_PrivateDescSeg5 { get; set; }//简称
 
+        public string ToStrongHoldCode { get; set; }//
+        
     }
 }

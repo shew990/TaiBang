@@ -119,7 +119,7 @@ namespace BILWeb.InStock
                             stockDetailInfo.ScanQty = Convert.ToDecimal(item.Qty);
                             stockDetailInfo.Unit = modelList[i].Unit;
                             stockDetailInfo.SupPrdBatch = modelList[i].SupPrdBatch;
-                            stockDetailInfo.ReceiveWareHouseNo = modelList[i].ReceiveWareHouseNo.Replace("SHJC-","").Replace("JSJC-", "").Replace("SHSY-", "");
+                            stockDetailInfo.ReceiveWareHouseNo = modelList[i].ReceiveWareHouseNo;
                             stockDetailInfo.WareHouseNo = stockDetailInfo.ReceiveWareHouseNo;
                             stockDetailInfo.ReceiveAreaNo = modelList[i].ReceiveAreaNo;
                             stockDetailInfo.BatchNo = item.BatchNo;
@@ -133,6 +133,7 @@ namespace BILWeb.InStock
                             stockDetailInfo.ToErpAreaNo = "";
                             stockDetailInfo.ToBatchNo = modelList[i].ToBatchNo;
                             stockDetailInfo.ErpId = modelList[i].ErpId;
+                            stockDetailInfo.ToStrongHoldCode = modelList[i].ToStrongHoldCode;
 
                             stockDetailInfo.GUID = modelList[i].GUID;
                             if (item.EDate != null)
