@@ -323,6 +323,8 @@ namespace Web.WMS.Controllers
                 queryData.NotInPlace = checkRecord.NotInPlace;
                 queryData.Others = checkRecord.Others;
                 queryData.Minute = checkRecord.Minute;
+
+                queryData.QualityQty = checkRecord.QualityQty;
                 new CheckRecordService().Insert(queryData);
 
                 var product = productService.GetById(orderId);
