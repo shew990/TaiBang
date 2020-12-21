@@ -89,7 +89,7 @@
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label lab100">打印张数</label>
+                <label class="layui-form-label lab100" id="qtyLable">打印张数</label>
                 <div class="layui-input-inline">
                     <input type="number" id="qty" autocomplete="off" class="layui-input txt200">
                 </div>
@@ -196,12 +196,15 @@
         //打印类型下拉框改变事件
         $("#BarcodeType").change(function () {
             if ($("#BarcodeType").val() == "0") {//外箱
+                $("#qtyLable").style.display = "none";
                 $("#qty").val("");
+                $("#qty").style.visibility = "hidden";
                 $("#qty").attr('disabled', 'disabled');
                 $("#ProductQty").removeAttr('disabled');
                 $("#PackQty").removeAttr('disabled');
             } else {
-                $("#qty").removeAttr('disabled');
+                $("#qtyLable").style.display = "block";
+                $("#qty").style.visibility = "visible";
                 $("#ProductQty").val("");
                 $("#ProductQty").attr('disabled', 'disabled');
                 $("#PackQty").val("");
@@ -216,30 +219,30 @@
 
         //同步
         $('#sync').click(function () {
-        if ($("#ErpVoucherNo").val() == "") {
-            alert("先输入ERP单号！");
-            return;
-        }
-        var index = layer.load(1);
-        $.ajax({
-            type: "GET",
-            url: "Sync?ErpVoucherNo=" + $("#ErpVoucherNo").val(),
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                if (data.state) {
-                    alert("同步成功！");
-                } else {
-                    alert(data.obj);
-                }
-                layer.close(index);
-            },
-            fail: function () {
-                alert("提交失败！");
-                layer.close(index);
+            if ($("#ErpVoucherNo").val() == "") {
+                alert("先输入ERP单号！");
+                return;
             }
+            var index = layer.load(1);
+            $.ajax({
+                type: "GET",
+                url: "Sync?ErpVoucherNo=" + $("#ErpVoucherNo").val(),
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.state) {
+                        alert("同步成功！");
+                    } else {
+                        alert(data.obj);
+                    }
+                    layer.close(index);
+                },
+                fail: function () {
+                    alert("提交失败！");
+                    layer.close(index);
+                }
 
-        });
+            });
         });
 
         //打印
