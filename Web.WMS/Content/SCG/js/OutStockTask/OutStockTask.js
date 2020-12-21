@@ -27,7 +27,7 @@
                 //html += "<td>" + data[i].OperatorDateTime + "</td>"
                 //html += "<td>" + data[i].StrModifyer + "</td>"
                 //html += "<td>" + data[i].Modifytime + "</td>"
- html += "<td>" + data[i].TracNo+ "</td>"
+                html += "<td>" + data[i].TracNo + "</td>"
                 html += "</tr>";
                 $("#detailTable").append(html);
             }

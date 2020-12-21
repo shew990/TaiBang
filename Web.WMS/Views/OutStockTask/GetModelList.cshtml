@@ -6,8 +6,9 @@
     ViewBag.Title = "出库任务总览";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
     PageData<T_OutStockTaskInfo> pageData = (PageData<T_OutStockTaskInfo>)ViewData["PageData"];
+    var printIP = System.Web.HttpContext.Current.Session["printIP"];
 }
-
+<input type="hidden" id="printIP" value="@printIP" />
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
         <form action="/OutStockTask/GetModelList" method="post">
@@ -34,14 +35,14 @@
                     @Html.EditorFor(model => model.DateTo, new { htmlAttributes = new { @class = "form-control laydateY", @placeholder = "结束时间" } })
                 </div>
                 @*<div class="layui-inline layui-show-xs-block">
-                    @Html.EditorFor(model => model.PickUserName, new { htmlAttributes = new { @class = "form-control", @placeholder = "拣货人" } })
-                </div>*@
-                
+                        @Html.EditorFor(model => model.PickUserName, new { htmlAttributes = new { @class = "form-control", @placeholder = "拣货人" } })
+                    </div>*@
+
                 <input type="hidden" name="TaskType" value="4" />
                 <input type="hidden" name="PcOrPda" value="1" />
                 @*<div class="layui-inline layui-show-xs-block">
-            @Html.DropDownList("VoucherType", Commom.GetList("cbxOutStockVoucherName") as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control" }, disabled = "disabled" })
-        </div>*@
+                        @Html.DropDownList("VoucherType", Commom.GetList("cbxOutStockVoucherName") as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control" }, disabled = "disabled" })
+                    </div>*@
                 <div class="layui-inline layui-show-xs-block">
                     @Html.DropDownList("Status", Commom.GetList("cbxOutTaskStatus") as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
@@ -51,6 +52,7 @@
             </div>
         </form>
         @{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}
+        <button class="btn btn-primary" onclick="printCheck()">打印</button>
         <table class="layui-table layui-form">
             <thead>
                 <tr>
@@ -58,7 +60,7 @@
                         选择
                     </th>
                     @*<th>@Html.DisplayNameFor(model => model.CompanyCode)</th>
-        <th>@Html.DisplayNameFor(model => model.StrongHoldCode)</th>*@
+                        <th>@Html.DisplayNameFor(model => model.StrongHoldCode)</th>*@
                     <th>@Html.DisplayNameFor(model => model.StrongHoldName)</th>
                     <th>@Html.DisplayNameFor(model => model.StrVoucherType)</th>
                     <th>@Html.DisplayNameFor(model => model.ErpVoucherNo)</th>
@@ -68,12 +70,12 @@
                     <th>@Html.DisplayNameFor(model => model.StrStatus)</th>
                     <th>@Html.DisplayNameFor(model => model.CreateTime)</th>
                     @*<th>@Html.DisplayNameFor(model => model.PickUserName)</th>
-                    <th>@Html.DisplayNameFor(model => model.FloorName)</th>*@
+                        <th>@Html.DisplayNameFor(model => model.FloorName)</th>*@
                     @*<th>@Html.DisplayNameFor(model => model.HeightAreaName)</th>*@
                     <th>@Html.DisplayNameFor(model => model.WareHouseName)</th>
                     @*<th>@Html.DisplayNameFor(model => model.VouUser)</th>*@
                     @*<th>@Html.DisplayNameFor(model => model.CarNo)</th>
-                    <th>@Html.DisplayNameFor(model => model.LandMarkNo)</th>*@
+                        <th>@Html.DisplayNameFor(model => model.LandMarkNo)</th>*@
                     <th>操作</th>
                 </tr>
             </thead>
@@ -83,32 +85,34 @@
                     {
                         foreach (T_OutStockTaskInfo t_OutStockTaskInfo in pageData.data)
                         {
-                                <tr>
-                                    <td><input type="checkbox" value="@t_OutStockTaskInfo.ID" class="minimal" /></td>
-                                    @*<td> @t_OutStockTaskInfo.CompanyCode </td>
-        <td> @t_OutStockTaskInfo.StrongHoldCode </td>*@
-                                    <td> @t_OutStockTaskInfo.StrongHoldName </td>
-                                    <td> @t_OutStockTaskInfo.StrVoucherType </td>
-                                    <td> @t_OutStockTaskInfo.ErpVoucherNo </td>
-                                    <td> @t_OutStockTaskInfo.TaskNo </td>
-                                    @*<td> @t_OutStockTaskInfo.SupcusCode </td>*@
-                                    <td> @t_OutStockTaskInfo.SupcusName </td>
-                                    <td> @t_OutStockTaskInfo.StrStatus </td>
-                                    <td> @t_OutStockTaskInfo.CreateTime </td>
-                                    @*<td> @t_OutStockTaskInfo.PickUserName </td>
+                            <tr>
+                                <td><input type="checkbox" value="@t_OutStockTaskInfo.ID" data-erpNo="@t_OutStockTaskInfo.ErpVoucherNo" class="minimal" /></td>
+                                @*<td> @t_OutStockTaskInfo.CompanyCode </td>
+                                    <td> @t_OutStockTaskInfo.StrongHoldCode </td>*@
+                                <td> @t_OutStockTaskInfo.StrongHoldName </td>
+                                <td> @t_OutStockTaskInfo.StrVoucherType </td>
+                                <td> @t_OutStockTaskInfo.ErpVoucherNo </td>
+                                <td> @t_OutStockTaskInfo.TaskNo </td>
+                                @*<td> @t_OutStockTaskInfo.SupcusCode </td>*@
+                                <td> @t_OutStockTaskInfo.SupcusName </td>
+                                <td> @t_OutStockTaskInfo.StrStatus </td>
+                                <td> @t_OutStockTaskInfo.CreateTime </td>
+                                @*<td> @t_OutStockTaskInfo.PickUserName </td>
                                     <td> @t_OutStockTaskInfo.FloorName </td>*@
-                                    @*<td> @t_OutStockTaskInfo.HeightAreaName </td>*@
-                                    <td> @t_OutStockTaskInfo.WareHouseName </td>
-                                    @*<td> @t_OutStockTaskInfo.VouUser </td>*@
-                                    @*<td> @t_OutStockTaskInfo.CarNo </td>
+                                @*<td> @t_OutStockTaskInfo.HeightAreaName </td>*@
+                                <td> @t_OutStockTaskInfo.WareHouseName </td>
+                                @*<td> @t_OutStockTaskInfo.VouUser </td>*@
+                                @*<td> @t_OutStockTaskInfo.CarNo </td>
                                     <td> @t_OutStockTaskInfo.LandMarkNo </td>*@
-                                    <td>
-                                        <a title="详情" onclick="getDetail(@t_OutStockTaskInfo.ID)" class="detail" data-toggle="modal" data-target="#compose-modal">
-                                            <i class="layui-icon">&#xe642;</i>
-                                        </a>
-
-                                    </td>
-                                </tr>
+                                <td>
+                                    <a title="详情" onclick="getDetail(@t_OutStockTaskInfo.ID)" class="detail" data-toggle="modal" data-target="#compose-modal">
+                                        <i class="layui-icon">&#xe642;</i>
+                                    </a>
+                                    <a title="地址标打印" onclick="printModel(@t_OutStockTaskInfo.ID)" class="detail" data-toggle="modal" data-target="#compose-print">
+                                        <i class="layui-icon layui-icon-release"></i>
+                                    </a>
+                                </td>
+                            </tr>
                         }
                     }
                     else
@@ -153,7 +157,6 @@
                                     @*<th>操作时间</th>
                                         <th>修改人</th>
                                         <th>修改时间</th>*@
-
                                 </tr>
                             </thead>
                             <tbody id="detailTable"></tbody>
@@ -167,6 +170,30 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div class="modal fade" id="compose-print" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:90%;">
+        <div class="modal-content">
+            <form class="layui-form" action="#">
+                <div class="layui-form-item" style="margin-top:40px;">
+                    <label class="layui-form-label">打印张数</label>
+                    <div class="layui-input-block">
+                        <input type="hidden" id="addressInfo" />
+                        <input type="number" name="title" id="printQty" placeholder="请输入打印张数" class="layui-input">
+                    </div>
+                </div>
+                <div class="modal-footer clearfix">
+                    <button type="button" class="btn btn-primary" onclick="printAddress();">
+                        <i class="layui-icon layui-icon-release" style="padding-right:5px;"></i>打印
+                    </button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fa fa-times"></i>关闭
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
     $(".guanbi").click(function () {
@@ -227,7 +254,7 @@
         }
     })
 
-        $(".tongbu").click(function () {
+    $(".tongbu").click(function () {
         if ($("#ErpVoucherNo").val() == "") {
             alert("先输入ERP单号！");
             return;
@@ -251,7 +278,60 @@
                 layer.close(index);
             }
         });
-    })
+    });
+
+    //弹出模态框
+    function printModel(address) {
+        $("#addressInfo").val(address);
+    }
+
+    //打印选中的数据(出库清单打印)
+    function printCheck() {
+        if ($('input[type=checkbox]:checked').length < 1) {
+            layer.alert("至少选中一行任务!");
+            return false;
+        }
+        let erpOrderNos = [];
+        $.each($('input:checkbox:checked'), function () {
+            erpOrderNos.push($(this).data("erpNo"));
+        });
+        openPostWindow($("#printIP").val() + "Main.aspx", "outlist", JSON.stringify(erpOrderNos));
+    }
+
+    //打印地址标
+    function printAddress() {
+        let printQtyPage = $("#printQty").val();
+        let addressInfoPage = $("#addressInfo").val();
+        if (addressInfo == null || addressInfo == "") {
+            layer.alert("地址信息不能为空,请联系管理员!");
+            return false;
+        }
+        if (printQty == "") {
+            layer.alert("请输入打印张数!");
+            return false;
+        }
+        let obj = {
+            printQty: printQtyPage,
+            addressInfo: addressInfoPage
+        }
+        openPostWindow($("#printIP").val() + "Main.aspx", "address", JSON.stringify(obj));
+    }
+
+    function openPostWindow(url, keys, values) {
+        var newWindow = window.open(url, name);
+        if (!newWindow)
+            return false;
+        var html = "";
+        html += "<html><head></head><body><form id='formid' method='post' action='" + url + "'>";
+        if (keys && values) {
+            html += "<input type='hidden' name='" + keys + "' value='" + values + "'/>";
+        }
+        html += "</form><script type='text/javascript'>document.getElementById('formid').submit();";
+        html += "<\/script></body></html>".toString().replace(/^.+?\*|\\(?=\/)|\*.+?$/gi, "");
+        newWindow.document.write(html);
+        return newWindow;
+    }
+
 </script>
 
 <script src="~/Content/SCG/js/Common/Operate.js"></script>
