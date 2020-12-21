@@ -287,8 +287,8 @@
 
     //打印选中的数据(出库清单打印)
     function printCheck() {
-        if ($('input[type=checkbox]:checked').length != 1) {
-            layer.alert("必须选中一行任务");
+        if ($('input[type=checkbox]:checked').length < 1) {
+            layer.alert("至少选中一行任务!");
             return false;
         }
         let erpOrderNos = [];
