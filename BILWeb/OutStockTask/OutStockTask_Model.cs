@@ -492,7 +492,11 @@ namespace BILWeb.OutStockTask
         public string StrHouseProp { get; set; }
 
         public string BarCode { get; set; }
-
         public string ErpId { get; set; }
+        [Display(Name = "快递单号")]
+        public string EXCHNAME { get; set; }
+        [Display(Name = "地址")]
+        public string address { get; set; }
+        
     }
 }

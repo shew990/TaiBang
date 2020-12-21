@@ -500,6 +500,8 @@ namespace BILWeb.Material
         public List<T_StockInfo> barcodeList { get; set; }
 
         public int VoucherType { get; set; }
+
+        public string BatchNo { get; set; }
     }
     public class U9ZhDetail
     {
@@ -513,6 +515,8 @@ namespace BILWeb.Material
         public string ErpWareHouseName { get; set; }
         public decimal Qty { get; set; }
         public string Unit { get; set; }
+
+        public string BatchNo { get; set; }
 
     }
     public class MoReport

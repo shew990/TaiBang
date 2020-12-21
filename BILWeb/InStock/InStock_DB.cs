@@ -135,7 +135,10 @@ namespace BILWeb.InStock
             t_instock.ErpId = dbFactory.ToModelValue(reader, "ErpId").ToDBString();
             t_instock.ERPVoucherType = dbFactory.ToModelValue(reader, "ERPVoucherType").ToDBString();
             t_instock.FromErpWareHouse = dbFactory.ToModelValue(reader, "FromErpWareHouse").ToDBString();
+            t_instock.EXCHNAME = dbFactory.ToModelValue(reader, "EXCHNAME").ToDBString();
+
             
+
             return t_instock;
         }
 
