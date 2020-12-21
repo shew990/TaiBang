@@ -129,7 +129,7 @@
         //监听行工具事件
         table.on('tool(init)', function (obj) {
             if (obj.event === 'stamp')
-                openPostWindow($("#printIP").val() + "Main.aspx", "stock", obj.data.SerialNo);
+                openPostWindow($("#printIP").val() + "Main.aspx", "serialno", obj.data.SerialNo);
         });
 
         //分页
