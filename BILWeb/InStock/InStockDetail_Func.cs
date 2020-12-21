@@ -268,7 +268,7 @@ namespace BILWeb.InStock
                     item.ReceiveWareHouseNo = user.ReceiveWareHouseNo;
                     item.ReceiveAreaNo = string.Empty;
                     item.ReceiveUserNo = user.UserNo;// strPostUser;
-                    //item.ToErpWarehouse = user.ReceiveWareHouseNo;
+                    item.FromErpWarehouse = user.ReceiveWareHouseNo;
                     item.ToErpAreaNo = string.Empty;
                     item.ToBatchNo = item.BatchNo;
                     item.PostUser = user.UserNo;

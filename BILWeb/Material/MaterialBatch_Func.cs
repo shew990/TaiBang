@@ -134,6 +134,8 @@ namespace BILWeb.Material
                 T_Material_Batch_DB _db = new T_Material_Batch_DB();
                 List<U9Zh> BaseInfo = new List<U9Zh>();
                 BaseInfo = _db.GetZhList(ErpVoucherNo);
+                BaseInfo.ForEach(item => item.VoucherType = 52);
+                LogNet.LogInfo("----------------------------------------------------转换单获取单据信息" + BaseInfo);
                 if (BaseInfo == null|| BaseInfo.Count == 0)
                 {
                     messageModel.HeaderStatus = "E";

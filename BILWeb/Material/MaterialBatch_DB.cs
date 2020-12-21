@@ -498,6 +498,8 @@ namespace BILWeb.Material
         public string Unit { get; set; }
         public List<U9ZhDetail> detail { get; set; }
         public List<T_StockInfo> barcodeList { get; set; }
+
+        public int VoucherType { get; set; }
     }
     public class U9ZhDetail
     {

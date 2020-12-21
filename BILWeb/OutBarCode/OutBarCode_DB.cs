@@ -643,7 +643,7 @@ namespace BILWeb.OutBarCode
                                 "a.Supcode, a.Supname, a.Outpackqty, a.Innerpackqty, a.Voucherqty, a.Qty,a.workno, a.Nopack, a.Printqty, a.Barcode, a.Barcodetype, " +
                                 "a.Serialno, a.Barcodeno, a.Outcount, a.Innercount, a.Mantissaqty, a.Isrohs, a.Outbox_Id, a.Inner_Id, a.PRODUCTBATCH, " +
                                 "a.Batchno, a.Isdel, a.Creater, a.Createtime, a.Modifyer, a.Modifytime, a.Materialnoid,a.rownodel,a.Unit,a.LABELMARK,a.EAN,a.receivetime,a.materialno,a.materialdesc,a.tracno,a.projectno,a.fserialno,b.spec,b.standardbox  " +
-                                "from t_Outbarcode a left join t_material b on a.materialnoid=b.id  where ReceiveTime ='{0}' order by Erpvoucherno", ReceiveTime);
+                                "from t_Outbarcode a left join t_material b on a.materialnoid=b.id  where ReceiveTime ='{0}' order by labelmark", ReceiveTime);
 
                 using (IDataReader reader = dbFactory.ExecuteReader(strSql))
                 {

@@ -13,7 +13,6 @@ namespace WMSSyncService
         [DllImport("kernel32.dll")]
         private static extern bool SetConsoleCtrlHandler(ControlCtrlDelegate HandlerRoutine, bool Add);
         private static ControlCtrlDelegate cancelHandler = new ControlCtrlDelegate(HandlerRoutine);
-
         static Sync sync = new Sync();
 
         public static bool HandlerRoutine(int CtrlType)

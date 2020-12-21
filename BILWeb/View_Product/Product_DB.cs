@@ -189,8 +189,14 @@ namespace BILWeb.Product
         {
             try
             {
+                //计算外箱数量,和尾箱数量,和尾箱里面的个数
+                int outboxnum = 0;
+                int inboxnum = 0;
+                decimal tailnum = 0;
+                GetBoxInfo(ref outboxnum, ref tailnum, ref inboxnum, modeljson.ProductQty.ToDecimal(), modeljson.PackQty);
+
                 List<Barcode_Model> listbarcode = new List<Barcode_Model>();
-                for (int i = 0; i < modeljson.PrintQty; i++)
+                for (int i = 0; i < outboxnum; i++)
                 {
                     T_Product_DB ProductDB = new T_Product_DB();
                     T_Product product = new T_Product() { ErpVoucherNo = modeljson.ErpVoucherNo };
@@ -219,7 +225,51 @@ namespace BILWeb.Product
                     model.erpwarehouseno = Newproduct.PrivateDescSeg20_Code;
                     model.erpwarehousename = Newproduct.PrivateDescSeg20_Name;
 
-                    model.Qty = Convert.ToDecimal(modeljson.ProductQty);
+                    model.Qty = Convert.ToDecimal(modeljson.PackQty);
+
+                    var seed = Guid.NewGuid().GetHashCode();
+                    string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
+
+                    model.SerialNo = code;
+                    model.Creater = user.UserNo;
+                    model.ReceiveTime = time1;
+                    model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
+                    model.RowNo = "1";
+                    model.RowNoDel = "1";
+                    model.BarcodeType = 1;
+                    listbarcode.Add(model);
+                }
+                //处理尾箱
+                if (inboxnum!=0)
+                {
+                    T_Product_DB ProductDB = new T_Product_DB();
+                    T_Product product = new T_Product() { ErpVoucherNo = modeljson.ErpVoucherNo };
+                    T_Product Newproduct = ProductDB.GetModelListADF(user, product)[0];
+
+                    Barcode_Model model = new Barcode_Model();
+                    model.CompanyCode = "";
+                    model.ErpVoucherNo = Newproduct.ErpVoucherNo;
+                    model.VoucherType = Newproduct.VoucherType.ToString();
+                    model.StrongHoldCode = Newproduct.StrongHoldCode;
+                    model.StrongHoldName = Newproduct.StrongHoldName;
+                    model.MaterialNoID = Newproduct.MaterialNoID;
+                    model.MaterialNo = Newproduct.MaterialNo;
+                    model.MaterialDesc = Newproduct.MaterialName;
+                    model.spec = Newproduct.spec;
+                    model.BatchNo = Newproduct.BatchNo;
+                    model.ProductBatch = Newproduct.ProductBatch;//给批号加密成8位
+                    model.ErpVoucherNo = Newproduct.ErpVoucherNo;
+                    model.CusCode = Newproduct.CustomerCode;
+                    model.CusName = Newproduct.CustomerShortName;
+                    model.StoreCondition = Newproduct.PubDescSeg7;
+                    model.ProtectWay = Newproduct.sale_vouchertypename;
+                    model.LABELMARK = Newproduct.Customer_voucherno;
+                    model.department = Newproduct.PubDescSeg10_Code;
+                    model.departmentname = Newproduct.PubDescSeg10_Name;
+                    model.erpwarehouseno = Newproduct.PrivateDescSeg20_Code;
+                    model.erpwarehousename = Newproduct.PrivateDescSeg20_Name;
+
+                    model.Qty = Convert.ToDecimal(tailnum);
 
                     var seed = Guid.NewGuid().GetHashCode();
                     string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
@@ -250,6 +300,23 @@ namespace BILWeb.Product
                 return false;
             }
             
+
+        }
+
+        private void GetBoxInfo(ref int outboxnum, ref decimal tailnum, ref int inboxnum, decimal num, decimal everynum)
+        {
+            if (num % everynum == 0)
+            {
+                outboxnum = (int)(num / everynum);
+                tailnum = everynum;
+                inboxnum = 0;
+            }
+            else
+            {
+                outboxnum = (int)(num / everynum);
+                tailnum = num % everynum;
+                inboxnum = 1;
+            }
 
         }
 
