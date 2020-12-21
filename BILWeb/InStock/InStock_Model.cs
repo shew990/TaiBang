@@ -157,5 +157,8 @@ namespace BILWeb.InStock
         public string QcDesc { get; set; }
 
         public string ErpId { get; set; }
+
+        [Display(Name = "仓库")]
+        public string FromErpWareHouse { get; set; }
     }
 }

@@ -120,7 +120,7 @@ namespace BILWeb.OutStockTask
                             {
                                 lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");
                                 if (item.VoucherType == 53)
-                                    lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 207));
+                                    lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 211));
                                 else
                                     lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 208));
 

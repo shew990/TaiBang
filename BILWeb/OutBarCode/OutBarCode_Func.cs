@@ -8,6 +8,7 @@ using BILBasic.Common;
 using BILWeb.Login.User;
 using BILBasic.JSONUtil;
 using BILWeb.Stock;
+using BILBasic.User;
 
 namespace BILWeb.OutBarCode
 {
@@ -37,77 +38,77 @@ namespace BILWeb.OutBarCode
         }
 
         
-        /// <summary>
-        /// 获取条码信息(包材接收)
-        /// </summary>
-        /// <param name="BarCode"></param>
-        /// <returns></returns>
-        public string GetOutBarCodeInfobyymh(string BarCode)
-        {
-            //return "";
-            BaseMessage_Model<T_OutBarCodeInfo> model = new BaseMessage_Model<T_OutBarCodeInfo>();
-            try
-            {
-                bool bSucc = false;
+        ///// <summary>
+        ///// 获取条码信息(包材接收)
+        ///// </summary>
+        ///// <param name="BarCode"></param>
+        ///// <returns></returns>
+        //public string GetOutBarCodeInfobyymh(string BarCode)
+        //{
+        //    //return "";
+        //    BaseMessage_Model<T_OutBarCodeInfo> model = new BaseMessage_Model<T_OutBarCodeInfo>();
+        //    try
+        //    {
+        //        bool bSucc = false;
 
-                string strError = string.Empty;
-                string SerialNo = string.Empty;
-                string BarCodeType = string.Empty;
+        //        string strError = string.Empty;
+        //        string SerialNo = string.Empty;
+        //        string BarCodeType = string.Empty;
 
-                //验证条码正确性
-                if (GetSerialNoByBarCode(BarCode, ref SerialNo, ref BarCodeType, ref strError) == false)
-                {
-                    model.HeaderStatus = "E";
-                    model.Message = strError;
-                    return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
-                }
+        //        //验证条码正确性
+        //        if (GetSerialNoByBarCode(BarCode, ref SerialNo, ref BarCodeType, ref strError) == false)
+        //        {
+        //            model.HeaderStatus = "E";
+        //            model.Message = strError;
+        //            return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
+        //        }
 
-                if (BarCodeType == "2")
-                {
-                    model.HeaderStatus = "E";
-                    model.Message = "该条码是托盘条码，必须是外箱条码，请重新扫描！";
-                    return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
-                }
+        //        if (BarCodeType == "2")
+        //        {
+        //            model.HeaderStatus = "E";
+        //            model.Message = "该条码是托盘条码，必须是外箱条码，请重新扫描！";
+        //            return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
+        //        }
 
-                T_OutBarcode_DB _db = new T_OutBarcode_DB();
-                bSucc = _db.CheckSerialNo(SerialNo, ref strError);
+        //        T_OutBarcode_DB _db = new T_OutBarcode_DB();
+        //        bSucc = _db.CheckSerialNo(SerialNo, ref strError);
 
-                if (bSucc == false)
-                {
-                    model.HeaderStatus = "E";
-                    model.Message = strError;
-                    return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
-                }
+        //        if (bSucc == false)
+        //        {
+        //            model.HeaderStatus = "E";
+        //            model.Message = strError;
+        //            return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
+        //        }
                
-                T_OutBarCodeInfo BarCodeInfo = new T_OutBarCodeInfo();
-                BarCodeInfo.SerialNo = SerialNo;
+        //        T_OutBarCodeInfo BarCodeInfo = new T_OutBarCodeInfo();
+        //        BarCodeInfo.SerialNo = SerialNo;
 
-                BarCodeInfo = _db.GetModelBySql(BarCodeInfo);
-                if (BarCodeInfo == null)
-                {
-                    model.HeaderStatus = "E";
-                    model.Message = "您扫描的条码不存在！请确认是否已经打印！";
-                    return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
-                }
+        //        BarCodeInfo = _db.GetModelBySql(BarCodeInfo);
+        //        if (BarCodeInfo == null)
+        //        {
+        //            model.HeaderStatus = "E";
+        //            model.Message = "您扫描的条码不存在！请确认是否已经打印！";
+        //            return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
+        //        }
 
-                if (_db.CheckSerialNobyymh(SerialNo, ref strError) == false)
-                {
-                    model.HeaderStatus = "E";
-                    model.Message = strError;
-                    return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
-                }
+        //        if (_db.CheckSerialNobyymh(SerialNo, ref strError) == false)
+        //        {
+        //            model.HeaderStatus = "E";
+        //            model.Message = strError;
+        //            return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
+        //        }
 
-                model.HeaderStatus = "S";
-                model.ModelJson = BarCodeInfo;
-                return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
-            }
-            catch (Exception ex)
-            {
-                model.HeaderStatus = "E";
-                model.Message = ex.Message;
-                return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
-            }
-        }
+        //        model.HeaderStatus = "S";
+        //        model.ModelJson = BarCodeInfo;
+        //        return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        model.HeaderStatus = "E";
+        //        model.Message = ex.Message;
+        //        return JSONHelper.ObjectToJson<BaseMessage_Model<T_OutBarCodeInfo>>(model);
+        //    }
+        //}
 
 
 
@@ -403,7 +404,7 @@ namespace BILWeb.OutBarCode
         /// <param name="model"></param>
         /// <param name="strErrMsg"></param>
         /// <returns>如果已经收货返回FALSE,没有收货返回TRUE和SERIALNO</returns>
-        public bool CheckBaeCodeIsRecive( string SerialNo, ref string strErrMsg)
+        public bool CheckBaeCodeIsRecive(string SerialNo, ref string strErrMsg)
         {
             try
             {
@@ -411,6 +412,29 @@ namespace BILWeb.OutBarCode
                 //string strError = string.Empty;
                 T_OutBarcode_DB _db = new T_OutBarcode_DB();
                 bSucc = _db.CheckSerialNo(SerialNo, ref strErrMsg);
+
+                if (bSucc == false)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        public bool CheckBaeCodeIsReciveForTB(UserModel userModel, string SerialNo, ref string strErrMsg, string VoucherType)
+        {
+            try
+            {
+                bool bSucc = false;
+                //string strError = string.Empty;
+                T_OutBarcode_DB _db = new T_OutBarcode_DB();
+                bSucc = _db.CheckSerialNoForTB(userModel, SerialNo, ref strErrMsg, VoucherType);
 
                 if (bSucc == false)
                 {

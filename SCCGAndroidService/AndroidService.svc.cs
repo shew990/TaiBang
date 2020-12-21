@@ -232,18 +232,18 @@ namespace SCCGAndroidService
         }
 
 
-        /// <summary>
-        /// 检查条码（包材接收）
-        /// </summary>
-        /// <param name="SerialNo"></param>
-        /// <returns></returns>
-        public string GetT_SerialNobyymhADF(string SerialNo)
-        {
-            //T_SerialNo_Func tfun = new T_SerialNo_Func();
-            //return tfun.CheckSerialNo(SerialNo);
-            T_OutBarCode_Func tfunc = new T_OutBarCode_Func();
-            return tfunc.GetOutBarCodeInfobyymh(SerialNo);
-        }
+        ///// <summary>
+        ///// 检查条码（包材接收）
+        ///// </summary>
+        ///// <param name="SerialNo"></param>
+        ///// <returns></returns>
+        //public string GetT_SerialNobyymhADF(string SerialNo)
+        //{
+        //    //T_SerialNo_Func tfun = new T_SerialNo_Func();
+        //    //return tfun.CheckSerialNo(SerialNo);
+        //    T_OutBarCode_Func tfunc = new T_OutBarCode_Func();
+        //    return tfunc.GetOutBarCodeInfobyymh(SerialNo);
+        //}
 
 
         /// <summary>
@@ -251,10 +251,10 @@ namespace SCCGAndroidService
         /// </summary>
         /// <param name="SerialNo"></param>
         /// <returns></returns>
-        public string GetT_PalletDetailByBarCodeADF(string UserJson, string BarCode)
+        public string GetT_PalletDetailByBarCodeADF(string UserJson, string BarCode, string VoucherType)
         {
             T_InStockDetail_Func tfunc = new T_InStockDetail_Func();
-            return tfunc.GetPalletDetailByBarCode(UserJson, BarCode);
+            return tfunc.GetPalletDetailByBarCode(UserJson, BarCode, VoucherType);
         }
 
 

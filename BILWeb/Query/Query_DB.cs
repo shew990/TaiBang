@@ -290,7 +290,6 @@ namespace BILWeb.Query
                 }
                 else
                 {
-
                     for (int i = 1; i <= lsttask.Count; i++)
                     {
                         lsttask[i - 1].XH = i.ToString();
@@ -992,7 +991,7 @@ namespace BILWeb.Query
                 {
                     TMM.tasktypename = "预留下架";
                 }
-                else if (Convert.ToInt32(dr["TASKTYPE"]) == 207)
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 211)
                 {
                     TMM.tasktypename = "杂出";
                 }

@@ -60,7 +60,7 @@ namespace Web.WMS.Common
                 new SelectListItem(){Value="202",Text="调整下"},
                 new SelectListItem(){Value="203",Text="盘点上架"},
                 new SelectListItem(){Value="204",Text="盘点下架"},
-                new SelectListItem(){Value="207",Text="杂出"},
+                new SelectListItem(){Value="211",Text="杂出"},
                 new SelectListItem(){Value="208",Text="调拨出"},
                 new SelectListItem(){Value="209",Text="转换入"},
                 new SelectListItem(){Value="210",Text="转换出"},

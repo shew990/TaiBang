@@ -401,7 +401,9 @@ namespace BILWeb.Product
             T_Product.PrivateDescSeg17 = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg17");
             T_Product.PrivateDescSeg18 = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg18");
             T_Product.PrivateDescSeg18_Name = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg18_Name");
-            
+
+            T_Product.PrivateDescSeg20_Code = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg20_Code");
+
             return T_Product;
         }
 
