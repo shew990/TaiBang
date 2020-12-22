@@ -1,14 +1,17 @@
 ﻿@using BILBasic.Common;
 @using BILWeb.OutStockTask;
 @using Web.WMS.Common;
+@using Newtonsoft.Json;
 @model T_OutStockTaskInfo
 @{
     ViewBag.Title = "出库任务总览";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
     PageData<T_OutStockTaskInfo> pageData = (PageData<T_OutStockTaskInfo>)ViewData["PageData"];
+    var pageDataJson = JsonConvert.SerializeObject(pageData);
     var printIP = System.Web.HttpContext.Current.Session["printIP"];
 }
 <input type="hidden" id="printIP" value="@printIP" />
+<input type="hidden" id="pageDataJson" value="@pageDataJson" />
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
         <form action="/OutStockTask/GetModelList" method="post">
@@ -282,7 +285,7 @@
 
     //弹出模态框
     function printModel(index) {
-        $("#checkInfo").val(JSON.stringify(pageData.data[index]));
+        $("#checkInfo").val(JSON.stringify(JSON.parse($("#pageDataJson").val()).data[index]));
     }
 
     //打印选中的数据(出库清单打印)
