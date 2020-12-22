@@ -279,7 +279,7 @@ namespace BILWeb.OutStockTask
                             model.ToUser = user.UserNo;//人
                             model.PostUser = item.PostUser;//人
                             model.VoucherType = item.VoucherType;
-                            model.ScanQty = item.ScanQty;
+                            model.ScanQty = Newitem.Qty;
                             model.ERPVoucherType = item.ERPVoucherType;
                             model.RowNo = item.RowNo;
                             model.DepartmentCode = item.DepartmentCode; //收益部门

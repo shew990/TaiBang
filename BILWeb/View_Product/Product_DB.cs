@@ -61,6 +61,9 @@ namespace BILWeb.Product
 
                 foreach (var itemBarCode in item.lstBarCode)
                 {
+
+                    lstSql.Add("update t_outbarcode set dimension='"+ item.MaterialDoc + "' where serialno='"+ itemBarCode.SerialNo + "'");
+
                     string strSql2 = "insert into t_stock(serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
                              "islimitstock,materialnoid,warehouseid,houseid,areaid,Receivestatus,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,EDATE,SUPCODE,SUPNAME," +
                             "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo)" +
@@ -451,7 +454,7 @@ namespace BILWeb.Product
             T_Product.CustomerShortName = (string)dbFactory.ToModelValue(reader, "CustomerShortName");
             T_Product.QulityQty = (decimal)dbFactory.ToModelValue(reader, "QulityQty");
             T_Product.LinkQty = (decimal)dbFactory.ToModelValue(reader, "LinkQty");
-            T_Product.LinkQty = (decimal)dbFactory.ToModelValue(reader, "LinkQty");
+            T_Product.PostQty = (decimal)dbFactory.ToModelValue(reader, "PostQty");
             T_Product.ProductQty = (decimal)dbFactory.ToModelValue(reader, "ProductQty");
 
             T_Product.PackQty = (decimal)dbFactory.ToModelValue(reader, "PackQty");
