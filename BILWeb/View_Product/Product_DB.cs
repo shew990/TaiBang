@@ -427,6 +427,7 @@ namespace BILWeb.Product
             T_Product.ErpVoucherTypeCode = (string)dbFactory.ToModelValue(reader, "ErpVoucherTypeCode");
             T_Product.ErpVoucherTypeName = (string)dbFactory.ToModelValue(reader, "ErpVoucherTypeName");
             T_Product.BatchNo = (string)dbFactory.ToModelValue(reader, "BatchNo");
+            T_Product.ProductBatch = (string)dbFactory.ToModelValue(reader, "ProductBatch");
             T_Product.Unit = (string)dbFactory.ToModelValue(reader, "Unit");
             T_Product.PubDescSeg10_Code = (string)dbFactory.ToModelValue(reader, "PubDescSeg10_Code");
 
@@ -470,7 +471,7 @@ namespace BILWeb.Product
             T_Product.PrivateDescSeg18_Name = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg18_Name");
 
             T_Product.PrivateDescSeg20_Code = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg20_Code");
-
+            T_Product.PrivateDescSeg20_Name = (string)dbFactory.ToModelValue(reader, "PrivateDescSeg20_Name");
             return T_Product;
         }
 

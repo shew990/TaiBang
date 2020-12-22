@@ -119,13 +119,13 @@ namespace BILWeb.InStock
                     {
                         strSql8 = "insert into t_stock(serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
                          "islimitstock,materialnoid,warehouseid,houseid,areaid,Receivestatus,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,EDATE,SUPCODE,SUPNAME," +
-                        "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo)" +
+                        "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo,MaterialDoc)" +
                         "values ('" + itemBarCode.SerialNo + "','" + itemBarCode.MaterialNo + "','" + itemBarCode.MaterialDesc + "','" + itemBarCode.Qty + "','" + item.IsQuality + "','1'" +
                         ",'" + user.UserNo + "',getdate(),'" + itemBarCode.BatchNo + "','" + item.Unit + "','" + item.UnitName + "'" +
                         ",(select palletno from t_Palletdetail where serialno = '" + itemBarCode.SerialNo + "'),'1','" + itemBarCode.MaterialNoID + "'" +
                         ", '" + user.WarehouseID + "','" + user.ReceiveHouseID + "','" + user.ReceiveAreaID + "','1','" + itemBarCode.BarCode + "','" + item.StrongHoldCode + "', " +
                         "  '" + itemBarCode.StrongHoldName + "','" + itemBarCode.CompanyCode + "','" + itemBarCode.EDate + "','" + item.SupplierNo + "','" + item.SupplierName + "'," +
-                        "'" + itemBarCode.SupPrdBatch + "','3' ,'1','" + itemBarCode.EAN + "','" + itemBarCode.BarcodeType + "','" + (itemBarCode.ProjectNo == null ? "" : itemBarCode.ProjectNo) + "','" + (itemBarCode.TracNo == null ? "" : itemBarCode.TracNo) + "' )";
+                        "'" + itemBarCode.SupPrdBatch + "','3' ,'1','" + itemBarCode.EAN + "','" + itemBarCode.BarcodeType + "','" + (itemBarCode.ProjectNo == null ? "" : itemBarCode.ProjectNo) + "','" + (itemBarCode.TracNo == null ? "" : itemBarCode.TracNo) + "','"+ modelList[0].MaterialDoc + "' )";
 
                     }
 

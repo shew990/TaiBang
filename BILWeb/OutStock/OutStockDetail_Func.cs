@@ -1848,6 +1848,7 @@ namespace BILWeb.OutStock
             BaseMessage_Model<List<T_OutStockDetailInfo>> messageModel = new BaseMessage_Model<List<T_OutStockDetailInfo>>();
             try
             {
+                LogNet.LogInfo("----------------------------------------------------------------------复核提交:" + ErpVoucherNo+",GUID:"+ Guid);
                 string strError = string.Empty;
 
                 if (string.IsNullOrEmpty(ErpVoucherNo))
@@ -1900,24 +1901,23 @@ namespace BILWeb.OutStock
                 otb.GetOutTaskDetailByErpVoucherNo(ErpVoucherNo, ref modelList, ref strError);
 
                 modelList.FirstOrDefault().lstStockInfo = lstStock;
-
-                //add by cym 2020-9-20
+               
                 T_OutStockTask_Func outfunc = new T_OutStockTask_Func();
                 var rrr = new T_OutStockTaskInfo() { ID = modelList[0].HeaderID };
                 var rtt = outfunc.GetModelByID(ref rrr, ref strError);
-
+               
                 modelList.ForEach(t => t.ScanQty = t.TaskQty.Value);
                 modelList.ForEach(t => t.ERPNote = rrr.ERPNote);
                 modelList.ForEach(t => t.VouUser = rrr.VouUser);
-
+                
                 string ModelJson = JsonConvert.SerializeObject(modelList);
                 T_OutTaskDetails_Func tfunc = new T_OutTaskDetails_Func();
+               
                 return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson, Guid, "复核");
-                //T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
-                //return tfunc.SaveModelListSqlToDBADF(UserJson, ModelJson);
             }
             catch (Exception ex)
             {
+                LogNet.LogInfo("----------------------------------------------------------------------复核提交报错:" + ex.ToString());
                 messageModel.HeaderStatus = "E";
                 messageModel.Message = ex.Message;
                 return JsonConvert.SerializeObject(messageModel);

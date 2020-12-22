@@ -938,6 +938,7 @@ namespace BILWeb.OutStockTask
         {
             //获取拣货单表体数据            
             string taskFilter = " erpvoucherno = '" + strErpVoucherNo + "' ";
+
             modelListTaskDetail = base.GetModelListByFilter("", taskFilter, "*");
             if (modelListTaskDetail == null || modelListTaskDetail.Count == 0)
             {

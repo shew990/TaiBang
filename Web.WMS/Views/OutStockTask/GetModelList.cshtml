@@ -108,7 +108,7 @@
                                     <a title="详情" onclick="getDetail(@t_OutStockTaskInfo.ID)" class="detail" data-toggle="modal" data-target="#compose-modal">
                                         <i class="layui-icon">&#xe642;</i>
                                     </a>
-                                    <a title="地址标打印" onclick="printModel(@t_OutStockTaskInfo.ID)" class="detail" data-toggle="modal" data-target="#compose-print">
+                                    <a title="地址标打印" onclick="printModel(@t_OutStockTaskInfo.address)" class="detail" data-toggle="modal" data-target="#compose-print">
                                         <i class="layui-icon layui-icon-release"></i>
                                     </a>
                                 </td>
@@ -300,6 +300,7 @@
 
     //打印地址标
     function printAddress() {
+       
         let printQtyPage = $("#printQty").val();
         let addressInfoPage = $("#addressInfo").val();
         if (addressInfo == null || addressInfo == "") {

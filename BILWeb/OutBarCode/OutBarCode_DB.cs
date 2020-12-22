@@ -147,8 +147,10 @@ namespace BILWeb.OutBarCode
             string strSql = string.Format("select WAREHOUSENo from  v_stock where SERIALNO = '{0}' or Palletno = '{1}'", SerialNo, SerialNo);
             using (IDataReader reader = dbFactory.ExecuteReader(strSql))
             {
+                bool isStock = false;
                 while (reader.Read())
                 {
+                    isStock = true;
                     //有库存再做收货情况
                     if (VoucherType == "50")
                     {
@@ -175,6 +177,11 @@ namespace BILWeb.OutBarCode
                     //}
 
                   
+                }
+                if (VoucherType == "50"&&isStock==false)
+                {
+                    strError = "该外箱条码或者托盘条码未进行完工入库，不能做成品收货！";
+                    return false;
                 }
                 return true;
             }
@@ -698,10 +705,11 @@ namespace BILWeb.OutBarCode
                         t_outbarcode.SpecialRequire = dbFactory.ToModelValue(reader, "SpecialRequire").ToDBString();
                         t_outbarcode.BarcodeMType = dbFactory.ToModelValue(reader, "BarcodeMType").ToDBString();
 
-                        t_outbarcode.RowNoDel = dbFactory.ToModelValue(reader, "RowNoDel").ToDBString();
 
+                        t_outbarcode.RowNoDel = dbFactory.ToModelValue(reader, "RowNoDel").ToDBString();
                         t_outbarcode.Unit = dbFactory.ToModelValue(reader, "Unit").ToDBString();
                         t_outbarcode.LabelMark = dbFactory.ToModelValue(reader, "LABELMARK").ToDBString();
+
 
                         t_outbarcode.EAN = dbFactory.ToModelValue(reader, "EAN").ToDBString();
                         t_outbarcode.receivetime = (DateTime)dbFactory.ToModelValue(reader, "RECEIVETIME");
