@@ -163,7 +163,7 @@
                     [
                         { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
 
-                        , { field: 'ErpVoucherNo', title: '生产订单号', width: 120, fixed: 'left' }
+                        , { field: 'HeadErpVoucherNo', title: '生产订单号', width: 120, fixed: 'left' }
                         , { field: 'HeadMaterialNo', title: '外箱物料编号', width: 120, fixed: 'left' }
                         , { field: 'HeadMaterialName', title: '外箱物料名称', width: 200 }
                         , { field: 'HeadSpec', title: '外箱物料规格', width: 200 }
@@ -185,7 +185,7 @@
             var data = obj.data //获得当前行数据
                 , layEvent = obj.event; //获得 lay-event 对应的值
             if (layEvent === 'edit') {
-                if ($("#stampType").val() == "0") {
+                if ($("#BarcodeType").val() == "0") {
                     $('#Materialno1').val(data.HeadMaterialNo);
                     $('#MaterialName1').val(data.HeadMaterialName);
                     $("#PackQty").val(data.PackQty);
@@ -267,7 +267,6 @@
                     layer.alert("打印数量不能为空!");
                     return false;
                 }
-                $("#PackQty").val(PurObject.PackQty);
                 PurObject.ProductQty = Number($('#ProductQty').val());
                 PurObject.PackQty = Number($('#PackQty').val());
                 $.post("/PrintIn/SaveBarcodePro", { data: JSON.stringify(PurObject) }, function (msg) {

@@ -305,10 +305,6 @@
     function printAddress() {
         let printQtyPage = $("#printQty").val();
         let checkInfoPage = $("#checkInfo").val();
-        if (addressInfo == null || addressInfo == "") {
-            layer.alert("地址信息不能为空,请联系管理员!");
-            return false;
-        }
         if (printQty == "") {
             layer.alert("请输入打印张数!");
             return false;
