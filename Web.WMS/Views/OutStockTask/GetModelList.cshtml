@@ -83,32 +83,32 @@
                 @{
                     if (pageData.data != null && pageData.data.Count != 0)
                     {
-                        foreach (T_OutStockTaskInfo t_OutStockTaskInfo in pageData.data)
+                        for (int i = 0; i < pageData.data.Count(); i++)
                         {
                             <tr>
-                                <td><input type="checkbox" value="@t_OutStockTaskInfo.ID" data-erpNo="@t_OutStockTaskInfo.ErpVoucherNo" class="minimal" /></td>
+                                <td><input type="checkbox" value="@pageData.data[i].ID" data-erpNo="@pageData.data[i].ErpVoucherNo" class="minimal" /></td>
                                 @*<td> @t_OutStockTaskInfo.CompanyCode </td>
                                     <td> @t_OutStockTaskInfo.StrongHoldCode </td>*@
-                                <td> @t_OutStockTaskInfo.StrongHoldName </td>
-                                <td> @t_OutStockTaskInfo.StrVoucherType </td>
-                                <td> @t_OutStockTaskInfo.ErpVoucherNo </td>
-                                <td> @t_OutStockTaskInfo.TaskNo </td>
+                                <td> @pageData.data[i].StrongHoldName </td>
+                                <td> @pageData.data[i].StrVoucherType </td>
+                                <td> @pageData.data[i].ErpVoucherNo </td>
+                                <td> @pageData.data[i].TaskNo </td>
                                 @*<td> @t_OutStockTaskInfo.SupcusCode </td>*@
-                                <td> @t_OutStockTaskInfo.SupcusName </td>
-                                <td> @t_OutStockTaskInfo.StrStatus </td>
-                                <td> @t_OutStockTaskInfo.CreateTime </td>
+                                <td> @pageData.data[i].SupcusName </td>
+                                <td> @pageData.data[i].StrStatus </td>
+                                <td> @pageData.data[i].CreateTime </td>
                                 @*<td> @t_OutStockTaskInfo.PickUserName </td>
                                     <td> @t_OutStockTaskInfo.FloorName </td>*@
                                 @*<td> @t_OutStockTaskInfo.HeightAreaName </td>*@
-                                <td> @t_OutStockTaskInfo.WareHouseName </td>
+                                <td> @pageData.data[i].WareHouseName </td>
                                 @*<td> @t_OutStockTaskInfo.VouUser </td>*@
                                 @*<td> @t_OutStockTaskInfo.CarNo </td>
                                     <td> @t_OutStockTaskInfo.LandMarkNo </td>*@
                                 <td>
-                                    <a title="详情" onclick="getDetail(@t_OutStockTaskInfo.ID)" class="detail" data-toggle="modal" data-target="#compose-modal">
+                                    <a title="详情" onclick="getDetail(@pageData.data[i].ID)" class="detail" data-toggle="modal" data-target="#compose-modal">
                                         <i class="layui-icon">&#xe642;</i>
                                     </a>
-                                    <a title="地址标打印" onclick="printModel(@t_OutStockTaskInfo.ID)" class="detail" data-toggle="modal" data-target="#compose-print">
+                                    <a title="地址标打印" onclick="printModel(@i)" class="detail" data-toggle="modal" data-target="#compose-print">
                                         <i class="layui-icon layui-icon-release"></i>
                                     </a>
                                 </td>
@@ -178,7 +178,7 @@
                 <div class="layui-form-item" style="margin-top:40px;">
                     <label class="layui-form-label">打印张数</label>
                     <div class="layui-input-block">
-                        <input type="hidden" id="addressInfo" />
+                        <input type="hidden" id="checkInfo" />
                         <input type="number" name="title" id="printQty" placeholder="请输入打印张数" class="layui-input">
                     </div>
                 </div>
@@ -281,8 +281,8 @@
     });
 
     //弹出模态框
-    function printModel(address) {
-        $("#addressInfo").val(address);
+    function printModel(index) {
+        $("#checkInfo").val(JSON.stringify(pageData.data[index]));
     }
 
     //打印选中的数据(出库清单打印)
@@ -301,7 +301,7 @@
     //打印地址标
     function printAddress() {
         let printQtyPage = $("#printQty").val();
-        let addressInfoPage = $("#addressInfo").val();
+        let checkInfoPage = $("#checkInfo").val();
         if (addressInfo == null || addressInfo == "") {
             layer.alert("地址信息不能为空,请联系管理员!");
             return false;
@@ -312,7 +312,7 @@
         }
         let obj = {
             printQty: printQtyPage,
-            addressInfo: addressInfoPage
+            checkInfo: checkInfoPage
         }
         openPostWindow($("#printIP").val() + "Main.aspx", "address", JSON.stringify(obj));
     }
