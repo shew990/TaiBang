@@ -248,6 +248,7 @@ namespace BILWeb.OutStockTask
                     model.ErpId = item.ErpId;
                     model.GUID = user.GUID;
                     lstDetail.Add(model);
+
                 }
             }
             else
