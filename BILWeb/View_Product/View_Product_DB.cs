@@ -39,6 +39,7 @@ namespace BILWeb.View_Product
             return "t_palletdetail";
         }
 
+
         protected override string GetFilterSql(UserModel user, View_Product_Model model)
         {
             //string strSql = base.GetFilterSql(user, model);
