@@ -41,7 +41,7 @@
                     查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
                 </button>
             </div>
-        
+
         </div>
         <table class="layui-hide" id="productOrderTable" lay-filter="init"></table>
         <script type="text/html" id="barDemo">
@@ -104,6 +104,24 @@
             , layer = layui.layer
 
         tableInit();
+
+        $("#ProductQty").mouseleave(function () {
+            if ($("#ProductQty").val() != "" && $("#PackQty").val() != "") {
+                let printQty = $("#ProductQty").val() % $("#PackQty").val() > 0
+                    ? Math.floor($("#ProductQty").val() / $("#PackQty").val()) + 1
+                    : $("#ProductQty").val() / $("#PackQty").val();
+                $("#qty").val(printQty);
+            }
+        });
+
+        $("#PackQty").mouseleave(function () {
+            if ($("#PackQty").val() != "" && $("#ProductQty").val() != "") {
+                let printQty = $("#ProductQty").val() % $("#PackQty").val() > 0
+                    ? Math.floor($("#ProductQty").val() / $("#PackQty").val()) + 1
+                    : $("#ProductQty").val() / $("#PackQty").val();
+                $("#qty").val(printQty);
+            }
+        });
 
         //表格初始化
         function tableInit() {
@@ -192,15 +210,12 @@
         //打印类型下拉框改变事件
         $("#BarcodeType").change(function () {
             if ($("#BarcodeType").val() == "0") {//外箱
-                $("#qtyLable").style.display = "none";
                 $("#qty").val("");
-                $("#qty").style.visibility = "hidden";
-                $("#qty").attr('disabled', 'disabled');
+                $("#qty").css("disabled", "disabled");
                 $("#ProductQty").removeAttr('disabled');
                 $("#PackQty").removeAttr('disabled');
             } else {
-                $("#qtyLable").style.display = "block";
-                $("#qty").style.visibility = "visible";
+                $("#qty").removeAttr('disabled');
                 $("#ProductQty").val("");
                 $("#ProductQty").attr('disabled', 'disabled');
                 $("#PackQty").val("");
@@ -256,12 +271,23 @@
                 PurObject.PackQty = Number($('#PackQty').val());
                 $.post("/PrintIn/SaveBarcodePro", { data: JSON.stringify(PurObject) }, function (msg) {
                     if (msg.state) {
+                        $("#Materialno1").val("");
+                        $("#MaterialName1").val("");
+                        $("#ProductQty").val("");
+                        $("#PackQty").val("");
+                        $("#qty").val("");
                         openPostWindow($("#printIP").val() + "Main.aspx", "stock", msg.obj);
                         return false;
                     }
                     layer.alert(msg.ResultValue);
                 });
             } else {
+                $("#Materialno1").val("");
+                $("#MaterialName1").val("");
+                $("#ProductQty").val("");
+                $("#PackQty").val("");
+                $("#qty").val("");
+
                 PurObject.PrintQty = $('#qty').val();
                 openPostWindow($("#printIP").val() + "Main.aspx", "quality", JSON.stringify(PurObject));
             }
