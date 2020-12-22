@@ -256,7 +256,7 @@ namespace BILWeb.OutStockTask
                 {
                     if (item.lstStockInfo == null|| item.lstStockInfo.Count==0)
                     {
-                        break;
+                        continue;
                     }
                     else
                     {
