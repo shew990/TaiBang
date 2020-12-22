@@ -98,7 +98,7 @@
 </div>
 
 <script>
-    layui.use(['laydate', 'laypage', 'layer', 'table'], function () {
+    layui.use(['laypage', 'layer', 'table'], function () {
         table = layui.table
             , laypage = layui.laypage
             , layer = layui.layer
@@ -267,6 +267,7 @@
                     layer.alert("打印数量不能为空!");
                     return false;
                 }
+                $("#PackQty").val(PurObject.PackQty);
                 PurObject.ProductQty = Number($('#ProductQty').val());
                 PurObject.PackQty = Number($('#PackQty').val());
                 $.post("/PrintIn/SaveBarcodePro", { data: JSON.stringify(PurObject) }, function (msg) {
@@ -282,6 +283,10 @@
                     layer.alert(msg.ResultValue);
                 });
             } else {
+                if ($('#qty').val() == "") {
+                    layer.alert("打印张数不能为空!");
+                    return false;
+                }
                 $("#Materialno1").val("");
                 $("#MaterialName1").val("");
                 $("#ProductQty").val("");
