@@ -1,4 +1,5 @@
-﻿using BILWeb.OutStock;
+﻿using BILWeb.Login.User;
+using BILWeb.OutStock;
 using BILWeb.OutStockTask;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace Web.WMS.Controllers.Task
     [RoleActionFilter(Message = "Task/OutStockTask")]
     public class OutStockTaskController : BaseController<T_OutStockTaskInfo>
     {
+        protected UserInfo currentUser = Common.Commom.ReadUserInfo();
+
         private IOutStockTaskService outStockTaskService;
         public OutStockTaskController()
         {
@@ -88,73 +91,109 @@ namespace Web.WMS.Controllers.Task
         }
 
 
+        ////关闭任务
+        //[HttpPost]
+        //public JsonResult CloseTask(string ID)
+        //{
+        //    try
+        //    {
+        //        //判断当前用户，只有admin，能操作
+        //        //if (currentUser.UserNo !="admin" && currentUser.UserNo != "2008050001" && currentUser.UserNo != "2012020004")
+        //        //{
+        //        //    return Json(new { state = false, obj = "任务关闭权限只有admin，（叶盼盼）2008050001，（游亚勇）2012020004才能操作！" }, JsonRequestBehavior.AllowGet);
+        //        //}
+
+        //        T_OutStockTaskInfo model = new T_OutStockTaskInfo();
+        //        model.ID =Convert.ToInt32(ID);
+        //        string strError = "";
+        //        if (!tfunc_task.GetModelByID(ref model, ref strError)) {
+        //            return Json(new { state = false, obj = strError }, JsonRequestBehavior.AllowGet);
+        //        }
+        //        if (model.Status == 5)
+        //        {
+        //            return Json(new { state = false, obj = "当前任务已关闭,请不要重复关闭!" }, JsonRequestBehavior.AllowGet);
+        //        }
+
+        //        string strmsg = "";
+        //        List<T_OutStockTaskInfo> model1 = new List<T_OutStockTaskInfo>();
+
+        //        tfunc_task.GetModelListByFilter(ref model1, ref strmsg,"", "erpvoucherno='"+ model.ErpVoucherNo + "'");
+        //        List<T_OutStockInfo> modelpost = new List<T_OutStockInfo>();
+        //        if (model1 != null && model1.Count > 0) {
+        //            for (int i = 0; i < model1.Count; i++)
+        //            {
+        //                T_OutStockInfo TOutStockInfo = new T_OutStockInfo();
+        //                TOutStockInfo.VoucherType = 50;
+        //                TOutStockInfo.ErpVoucherNo = model1[i].ErpVoucherNo;
+        //                TOutStockInfo.CompanyCode = model1[i].StrongHoldCode;
+        //                TOutStockInfo.StrongHoldCode = model1[i].StrongHoldCode;
+        //                TOutStockInfo.ERPVoucherType = model1[i].ERPVoucherType;
+        //                modelpost.Add(TOutStockInfo);
+        //            }
+
+        //        }
+
+        //        if (!tfunc_task.PostCloseOutStockVoucherNo(modelpost, ref strmsg))
+        //        {
+        //            return Json(new { state = false, obj = "ERP端关闭失败!"+ strmsg }, JsonRequestBehavior.AllowGet);
+        //        }
+
+        //        //if (model.Status == 3)
+        //        //{
+        //        //    return Json(new { state = false, obj = "当前任务完成,不能关闭!" }, JsonRequestBehavior.AllowGet);
+        //        //}
+        //        model.Status = 5;
+        //        if (tfunc_task.UpadteModelByModelSql(currentUser,model, ref strError))
+        //        {
+        //            return Json(new { state = true, obj = "当前任务关闭成功!" }, JsonRequestBehavior.AllowGet);
+        //        }
+        //        else
+        //        {
+        //            return Json(new { state = false, obj = "关闭失败!" }, JsonRequestBehavior.AllowGet);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { state = false, obj = ex.ToString() }, JsonRequestBehavior.AllowGet);
+        //    }
+
+        //}
+
         //关闭任务
         [HttpPost]
         public JsonResult CloseTask(string ID)
         {
             try
             {
-                //判断当前用户，只有admin，能操作
-                //if (currentUser.UserNo !="admin" && currentUser.UserNo != "2008050001" && currentUser.UserNo != "2012020004")
-                //{
-                //    return Json(new { state = false, obj = "任务关闭权限只有admin，（叶盼盼）2008050001，（游亚勇）2012020004才能操作！" }, JsonRequestBehavior.AllowGet);
-                //}
-
                 T_OutStockTaskInfo model = new T_OutStockTaskInfo();
-                model.ID =Convert.ToInt32(ID);
+                model.ID = Convert.ToInt32(ID);
                 string strError = "";
-                if (!tfunc_task.GetModelByID(ref model, ref strError)) {
+                if (!tfunc_task.GetModelByID(ref model, ref strError))
+                {
                     return Json(new { state = false, obj = strError }, JsonRequestBehavior.AllowGet);
                 }
-                if (model.Status == 5)
+                if (model.Status == 6)
                 {
-                    return Json(new { state = false, obj = "当前任务已关闭,请不要重复关闭!" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { state = false, obj = "当前单据已复核,不能撤销扫描!" }, JsonRequestBehavior.AllowGet);
                 }
-
-                string strmsg = "";
-                List<T_OutStockTaskInfo> model1 = new List<T_OutStockTaskInfo>();
-                
-                tfunc_task.GetModelListByFilter(ref model1, ref strmsg,"", "erpvoucherno='"+ model.ErpVoucherNo + "'");
-                List<T_OutStockInfo> modelpost = new List<T_OutStockInfo>();
-                if (model1 != null && model1.Count > 0) {
-                    for (int i = 0; i < model1.Count; i++)
-                    {
-                        T_OutStockInfo TOutStockInfo = new T_OutStockInfo();
-                        TOutStockInfo.VoucherType = 50;
-                        TOutStockInfo.ErpVoucherNo = model1[i].ErpVoucherNo;
-                        TOutStockInfo.CompanyCode = model1[i].StrongHoldCode;
-                        TOutStockInfo.StrongHoldCode = model1[i].StrongHoldCode;
-                        TOutStockInfo.ERPVoucherType = model1[i].ERPVoucherType;
-                        modelpost.Add(TOutStockInfo);
-                    }
-
-                }
-                
-                if (!tfunc_task.PostCloseOutStockVoucherNo(modelpost, ref strmsg))
+                string strmsg = ""; 
+                if (!tfunc_task.BackOutTask(currentUser, model, ref strmsg))
                 {
-                    return Json(new { state = false, obj = "ERP端关闭失败!"+ strmsg }, JsonRequestBehavior.AllowGet);
-                }
-
-                //if (model.Status == 3)
-                //{
-                //    return Json(new { state = false, obj = "当前任务完成,不能关闭!" }, JsonRequestBehavior.AllowGet);
-                //}
-                model.Status = 5;
-                if (tfunc_task.UpadteModelByModelSql(currentUser,model, ref strError))
-                {
-                    return Json(new { state = true, obj = "当前任务关闭成功!" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { state = true, obj = "当前任务撤销成功!" }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    return Json(new { state = false, obj = "关闭失败!" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { state = false, obj = "撤销失败!"+ strmsg }, JsonRequestBehavior.AllowGet);
                 }
+
             }
             catch (Exception ex)
             {
                 return Json(new { state = false, obj = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
-            
+
         }
+
 
         //打开任务
         [HttpPost]

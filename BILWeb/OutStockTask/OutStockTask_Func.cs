@@ -296,6 +296,10 @@ namespace BILWeb.OutStockTask
 
         #endregion
 
-
+        public bool BackOutTask(UserModel user, T_OutStockTaskInfo OutTaskInfo, ref string strError)
+        {
+            T_OutStockTask_DB _db = new T_OutStockTask_DB();
+            return _db.BackOutTask(user, OutTaskInfo, ref strError);
+        }
     }
 }

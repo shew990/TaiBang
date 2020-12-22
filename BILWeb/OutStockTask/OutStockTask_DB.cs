@@ -522,6 +522,31 @@ namespace BILWeb.OutStockTask
         }
 
 
+        //撤销下架任务
+        public bool BackOutTask(UserModel user, T_OutStockTaskInfo OutTaskInfo, ref string strError)
+        {
+            List<string> lstSql = new List<string>();
+            string strSql = string.Empty;
+
+            List<T_OutStockTaskDetailsInfo> details = new List<T_OutStockTaskDetailsInfo>();
+            T_OutTaskDetails_Func func = new T_OutTaskDetails_Func();
+            func.GetModelListByHeaderID(ref details, OutTaskInfo.ID,ref strError);
+
+            lstSql.Add("update t_task  set  status = 1  WHERE id= '" + OutTaskInfo.ID + "'");
+
+            lstSql.Add("update t_taskdetails  set  Linestatus = 1,REMAINQTY=taskqty,  WHERE headerid= '" + OutTaskInfo.ID + "'");
+
+            foreach (T_OutStockTaskDetailsInfo itemModel in details)
+            {
+                lstSql.Add("update t_stock SET  Taskdetailesid= ''  WHERE  Taskdetailesid= '" + itemModel.ID + "'");
+                
+            }
+            
+            return base.SaveModelListBySqlToDB(lstSql, ref strError);
+
+        }
+
+
 
 
         protected override string GetOrderNoFieldName()
