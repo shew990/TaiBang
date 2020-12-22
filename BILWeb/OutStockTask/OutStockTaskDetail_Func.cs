@@ -248,6 +248,7 @@ namespace BILWeb.OutStockTask
                     model.ErpId = item.ErpId;
                     model.GUID = user.GUID;
                     lstDetail.Add(model);
+
                 }
             }
             else
@@ -256,7 +257,7 @@ namespace BILWeb.OutStockTask
                 {
                     if (item.lstStockInfo == null|| item.lstStockInfo.Count==0)
                     {
-                        break;
+                        continue;
                     }
                     else
                     {
