@@ -26,7 +26,7 @@ namespace BILWeb.Warehouse
         protected override IDataParameter[] GetSaveModelIDataParameter(T_WareHouseInfo model)
         {
 
-            dbFactory.dbF.CreateParameters(21);
+            dbFactory.dbF.CreateParameters(22);
             dbFactory.dbF.AddParameters(0, "@bResult", SqlDbType.Int, 0);
             dbFactory.dbF.AddParameters(1, "@ErrorMsg", SqlDbType.NVarChar, 1000);
             dbFactory.dbF.AddParameters(2, "@v_ID", model.ID.ToOracleValue(), 0);
@@ -49,7 +49,8 @@ namespace BILWeb.Warehouse
             dbFactory.dbF.AddParameters(18, "@v_SamplerCode", model.SamplerCode.ToOracleValue(), 0);
             dbFactory.dbF.AddParameters(19, "@v_SamplerName", model.SamplerName.ToOracleValue(), 0);
             dbFactory.dbF.AddParameters(20, "@v_ISVWAREHOUSE", model.ISVWAREHOUSE.ToOracleValue(), 0);
-
+            dbFactory.dbF.AddParameters(21, "@v_DefaultAreaNo", model.DefaultAreaNo.ToOracleValue(), 0);
+            
             dbFactory.dbF.Parameters[0].Direction = System.Data.ParameterDirection.Output;
             dbFactory.dbF.Parameters[1].Direction = System.Data.ParameterDirection.Output;
             dbFactory.dbF.Parameters[2].Direction = System.Data.ParameterDirection.InputOutput;
@@ -139,6 +140,8 @@ namespace BILWeb.Warehouse
             t_warehouse.DisplayID = t_warehouse.WareHouseNo;
             t_warehouse.DisplayName = t_warehouse.WareHouseName;
             t_warehouse.ISVWAREHOUSE = dbFactory.ToModelValue(reader, "ISVWAREHOUSE").ToInt32();
+            t_warehouse.DefaultAreaNo = dbFactory.ToModelValue(reader, "DefaultAreaNo").ToDBString();
+
 
             return t_warehouse;
         }

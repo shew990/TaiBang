@@ -212,6 +212,9 @@ namespace BILWeb.Warehouse
         /// 是否上架0：不上架 1：上架
         /// </summary>
         public int ISVWAREHOUSE { get; set; }
+        [Display(Name = "默认库位")]
+        public string DefaultAreaNo { get; set; }//默认上架库位
+        
 
     }
 }

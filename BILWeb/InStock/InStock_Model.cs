@@ -160,5 +160,9 @@ namespace BILWeb.InStock
 
         [Display(Name = "仓库")]
         public string FromErpWareHouse { get; set; }
+
+        [Display(Name = "快递单号")]
+        public string EXCHNAME { get; set; }
+        
     }
 }

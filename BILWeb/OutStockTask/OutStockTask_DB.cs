@@ -121,6 +121,9 @@ namespace BILWeb.OutStockTask
             t_task.ERPNote = dbFactory.ToModelValue(reader, "ERPNote").ToDBString();
             t_task.ErpId = dbFactory.ToModelValue(reader, "ErpId").ToDBString();
             t_task.ERPVoucherType = dbFactory.ToModelValue(reader, "ERPVoucherType").ToDBString();
+            t_task.EXCHNAME = dbFactory.ToModelValue(reader, "EXCHNAME").ToDBString();
+            t_task.address = dbFactory.ToModelValue(reader, "address").ToDBString();
+            
             return t_task;
         }
 

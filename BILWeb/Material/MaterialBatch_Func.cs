@@ -186,6 +186,33 @@ namespace BILWeb.Material
 
                 modelList.ForEach(t => t.PostUser = user.UserNo);
                 modelList.ForEach(t => t.GUID = Guid);
+
+                modelList.ForEach(item=> {
+                    item.PostUser = user.UserNo;
+                    item.GUID = Guid;
+
+                    if (item.Type == 0&& item.barcodeList.Count>0)
+                    {
+                        item.BatchNo = item.barcodeList[0].BatchNo;
+                    }
+                    if (item.Type == 1 && item.barcodeList.Count ==item.detail.Count )
+                    {
+                        //扫描的条码给明细行赋值
+                        for (int i = 0; i < item.detail.Count; i++)
+                        {
+                            for (int j = 0; j < item.barcodeList.Count; j++)
+                            {
+                                if (item.detail[i].MaterialNo== item.barcodeList[j].MaterialNo)
+                                {
+                                    item.detail[i].BatchNo = item.barcodeList[j].BatchNo;
+                                }
+                            }
+                        }
+                    }
+
+                }); 
+
+
                 string ERPJson = BILBasic.JSONUtil.JSONHelper.ObjectToJson<List<U9Zh>>(modelList);
 
                 BILBasic.Interface.T_Interface_Func tfunc = new BILBasic.Interface.T_Interface_Func();
