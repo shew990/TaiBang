@@ -109,6 +109,10 @@ namespace BILWeb.InStock
                         if (stockDetailInfo == null)
                         {
                             stockDetailInfo = new T_InStockDetailInfo();
+                            stockDetailInfo.Plant = modelList[i].Plant; //客户编码 ，
+                            stockDetailInfo.PlantName = modelList[i].PlantName;//客户型号，
+                            stockDetailInfo.SaleName = modelList[i].SaleName;//类型
+
                             stockDetailInfo.VoucherType = modelList[i].VoucherType;
                             stockDetailInfo.ErpVoucherNo = modelList[i].ErpVoucherNo;
                             stockDetailInfo.RowNo = modelList[i].RowNo;

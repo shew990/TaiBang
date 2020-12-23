@@ -123,7 +123,11 @@ namespace BILWeb.OutStockTask
             t_task.ERPVoucherType = dbFactory.ToModelValue(reader, "ERPVoucherType").ToDBString();
             t_task.EXCHNAME = dbFactory.ToModelValue(reader, "EXCHNAME").ToDBString();
             t_task.address = dbFactory.ToModelValue(reader, "address").ToDBString();
+            t_task.CUSTOMERCODE = dbFactory.ToModelValue(reader, "CUSTOMERCODE").ToDBString();
+            t_task.CUSTOMERNAME = dbFactory.ToModelValue(reader, "CUSTOMERNAME").ToDBString();
             
+
+
             return t_task;
         }
 
