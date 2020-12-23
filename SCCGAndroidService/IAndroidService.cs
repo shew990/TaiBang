@@ -438,7 +438,7 @@ namespace SCCGAndroidService
         string GetBarCodeFirst(string ReceiveTime);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "GetBarCodeSerial", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        [WebInvoke(Method = "POST", UriTemplate = "GetBarCodeSerialno", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string GetBarCodeSerialno(string Serialno);
 
 

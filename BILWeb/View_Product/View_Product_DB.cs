@@ -31,7 +31,6 @@ namespace BILWeb.View_Product
         protected override string GetViewName()
         {
             return "View_Product";
-        
         }
 
         protected override string GetTableName()

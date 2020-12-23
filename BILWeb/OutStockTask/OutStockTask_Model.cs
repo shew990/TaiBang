@@ -497,6 +497,11 @@ namespace BILWeb.OutStockTask
         public string EXCHNAME { get; set; }
         [Display(Name = "地址")]
         public string address { get; set; }
-        
+        [Display(Name = "客户编码")]
+        public string CUSTOMERCODE { get; set; }
+        [Display(Name = "客户名称")]
+        public string CUSTOMERNAME { get; set; }
+      
+
     }
 }
