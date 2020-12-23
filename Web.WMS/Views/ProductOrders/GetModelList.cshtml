@@ -282,6 +282,10 @@
                     layer.alert(msg.ResultValue);
                 });
             } else {
+                if ($('#Materialno1').val() == "" || $('#MaterialName1').val() == "") {
+                    layer.alert("该任务没有内盒物料编号和内盒物料名称,不能打印内核,请切换打印外箱!");
+                    return false;
+                }
                 if ($('#qty').val() == "") {
                     layer.alert("打印张数不能为空!");
                     return false;
