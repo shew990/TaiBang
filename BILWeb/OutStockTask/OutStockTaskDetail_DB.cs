@@ -880,6 +880,13 @@ namespace BILWeb.OutStockTask
             return base.GetScalarBySql(strSql).ToDBString();
         }
 
+        public string GetRow(int TaskDetailesID)
+        {
+            string strSql = "select RowNo from t_taskdetails where id="+ TaskDetailesID + "";
+            return base.GetScalarBySql(strSql).ToDBString();
+        }
+        
+
         #region 拣选小车操作
 
         public int GetCarNo(string strCarNo)

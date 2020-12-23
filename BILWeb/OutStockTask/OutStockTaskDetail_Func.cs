@@ -264,7 +264,6 @@ namespace BILWeb.OutStockTask
                         NewLstStock = GroupInstockDetailList(modelList[0].VoucherType, item.lstStockInfo);
                         foreach (var Newitem in NewLstStock)
                         {
-
                             T_OutStockTaskDetailsInfo model = new T_OutStockTaskDetailsInfo();
                             model.ErpVoucherNo = item.ErpVoucherNo;
                             model.CompanyCode = item.CompanyCode;
@@ -282,6 +281,13 @@ namespace BILWeb.OutStockTask
                             model.ScanQty = Newitem.Qty;
                             model.ERPVoucherType = item.ERPVoucherType;
                             model.RowNo = item.RowNo;
+                            if (modelList[0].VoucherType == 46)
+                            {
+                                //直接复核的查出行号
+                                T_OutTaskDetails_DB db = new T_OutTaskDetails_DB();
+                                model.RowNo = db.GetRow(Newitem.TaskDetailesID);
+                            }
+                           
                             model.DepartmentCode = item.DepartmentCode; //收益部门
                             model.StrVoucherType = item.StrVoucherType; //收益单据类型
                             model.ToStrongHoldCode = item.ToStrongHoldCode; //收益据点
@@ -290,6 +296,7 @@ namespace BILWeb.OutStockTask
                             model.PassWord = user.PassWord;
                             model.ErpId = item.ErpId;
                             model.GUID = user.GUID;
+                           
                             lstDetail.Add(model);
                         }
                     }
@@ -335,13 +342,14 @@ namespace BILWeb.OutStockTask
         private List<T_StockInfo> GroupInstockDetailList(int VoucherType,List<T_StockInfo> modelList)
         {
             var newModelList = from t in modelList
-                               group t by new { t1 = t.MaterialNo, t2 = t.BatchNo ,t3 = t.WarehouseNo} into m //t4 = t.AreaNo
+                               group t by new { t1 = t.MaterialNo, t2 = t.BatchNo ,t3 = t.WarehouseNo,t4=t.TaskDetailesID} into m //t4 = t.AreaNo
                                select new T_StockInfo
                                {
                                   MaterialNo = m.Key.t1,
                                   Qty = m.Sum(item => item.Qty),                                   
                                   FromBatchNo =m.Key.t2,
                                   FromErpWarehouse = m.Key.t3,
+                                   TaskDetailesID=m.Key.t4,
                                   //FromErpAreaNo = m.Key.t4,
                                   VoucherType = VoucherType,
                                   CompanyCode = m.FirstOrDefault().CompanyCode,

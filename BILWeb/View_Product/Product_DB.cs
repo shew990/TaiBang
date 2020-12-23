@@ -105,6 +105,8 @@ namespace BILWeb.Product
 
             }
 
+            modelList.ForEach(pro=> { pro.TaskNo = PalletNo + "," + pro.MaterialDoc; });
+
             return lstSql;
         }
 
