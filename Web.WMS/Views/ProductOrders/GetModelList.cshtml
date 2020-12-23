@@ -106,11 +106,19 @@
         tableInit();
 
         $("#ProductQty").mouseleave(function () {
-            if ($("#ProductQty").val() != "" && $("#PackQty").val() != "") {
-                let printQty = $("#ProductQty").val() % $("#PackQty").val() > 0
-                    ? Math.floor($("#ProductQty").val() / $("#PackQty").val()) + 1
-                    : $("#ProductQty").val() / $("#PackQty").val();
-                $("#qty").val(printQty);
+            if ($("#BarcodeType").val() == "0") {//外箱
+                if ($("#ProductQty").val() != "" && $("#PackQty").val() != "") {
+                    let printQtyToOut = $("#ProductQty").val() % $("#PackQty").val() > 0
+                        ? Math.floor($("#ProductQty").val() / $("#PackQty").val()) + 1
+                        : $("#ProductQty").val() / $("#PackQty").val();
+                    $("#qty").val(printQtyToOut);
+                }
+                return false;
+            }
+            if ($("#ProductQty").val() != "") {//内盒
+                let printQtyToIn = $("#ProductQty").val() % 2 > 0
+                    ? Math.floor($("#ProductQty").val() / 2) + 1 : $("#ProductQty").val() / 2;
+                $("#qty").val(printQtyToIn);
             }
         });
 
@@ -133,7 +141,7 @@
                 , contentType: 'application/json'
                 , where: {
                     model: {
-                        ErpVoucherNo: $("#ErpVoucherNo").val().trim(),
+                        HeadErpVoucherNo: $("#ErpVoucherNo").val().trim(),
                         MaterialNo: $("#MaterialNo").val().trim(),
                         MaterialName: $("#MaterialName").val().trim(),
                         HeadMaterialNo: $("#HeadMaterialNo").val().trim(),
@@ -211,16 +219,11 @@
         $("#BarcodeType").change(function () {
             if ($("#BarcodeType").val() == "0") {//外箱
                 $("#qty").val("");
-                $("#qty").css("disabled", "disabled");
-                $("#ProductQty").removeAttr('disabled');
                 $("#PackQty").removeAttr('disabled');
-            } else {
-                $("#qty").removeAttr('disabled');
-                $("#ProductQty").val("");
-                $("#ProductQty").attr('disabled', 'disabled');
-                $("#PackQty").val("");
-                $("#PackQty").attr('disabled', 'disabled');
+                return false;
             }
+            $("#PackQty").val("");
+            $("#PackQty").attr('disabled', 'disabled');
         });
 
         //查询
@@ -282,6 +285,10 @@
                     layer.alert(msg.ResultValue);
                 });
             } else {
+                if ($('#Materialno1').val() == "" || $('#MaterialName1').val() == "") {
+                    layer.alert("该任务没有内盒物料编号和内盒物料名称,不能打印内核,请切换打印外箱!");
+                    return false;
+                }
                 if ($('#qty').val() == "") {
                     layer.alert("打印张数不能为空!");
                     return false;
