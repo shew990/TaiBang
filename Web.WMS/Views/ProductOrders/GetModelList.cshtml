@@ -286,7 +286,7 @@
                     layer.alert("打印张数不能为空!");
                     return false;
                 }
-                PurObject.PrintQty = $('#qty').val();
+                PurObject.PrintQty = Number($('#qty').val());
                 openPostWindow($("#printIP").val() + "Main.aspx", "quality", JSON.stringify(PurObject));
                 $("#Materialno1").val("");
                 $("#MaterialName1").val("");
