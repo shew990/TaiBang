@@ -54,8 +54,10 @@ namespace BILWeb.View_Product
 
 
                 strSql += strAnd;
-                strSql += " erpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
+                strSql += " headerpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
             }
+            
+            strSql += " and (substring(materialno,1,1)='J' or substring(materialno,1,1)='M' or materialno='') ";
             return strSql;
         }
 
