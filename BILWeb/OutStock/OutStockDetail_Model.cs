@@ -501,6 +501,8 @@ namespace BILWeb.OutStock
         public string CarNo { get; set; }
 
         public bool isLight { get; set; }
+        public string EXCHNAME { get; set; }
+        
 
     }
 }

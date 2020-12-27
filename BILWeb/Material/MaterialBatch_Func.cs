@@ -245,6 +245,7 @@ namespace BILWeb.Material
                 {
                     messageModel.HeaderStatus = "S";
                     messageModel.Message = messageModel.MaterialDoc;
+                    messageModel.Message = "转换操作成功！";
                     LogNet.LogInfo("ymh：WMS-成功");
                 }
 

@@ -441,7 +441,9 @@ namespace SCCGAndroidService
         [WebInvoke(Method = "POST", UriTemplate = "GetBarCodeSerialno", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string GetBarCodeSerialno(string Serialno);
 
-
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetOffList", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetOffList(string ErpVoucherno);
         #region 完工入库
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetT_ProDuctListADF", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]

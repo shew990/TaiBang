@@ -109,7 +109,7 @@ namespace BILWeb.OutBarCode
             t_outbarcode.BarcodeType = dbFactory.ToModelValue(reader, "BarcodeType").ToInt32();
             t_outbarcode.originalCode = dbFactory.ToModelValue(reader, "originalCode").ToDBString();
             t_outbarcode.TracNo = dbFactory.ToModelValue(reader, "TracNo").ToDBString();
-            
+            t_outbarcode.dimension = dbFactory.ToModelValue(reader, "dimension").ToDBString();
 
             return t_outbarcode;
         }
@@ -254,7 +254,7 @@ namespace BILWeb.OutBarCode
             return string.Format("select a.StoreCondition,a.SpecialRequire ,a.Strongholdcode,a.Strongholdname,a.Companycode,a.Supprdbatch, a.Supprddate,a.Productdate,a.Edate,a.Barcodemtype,a.Id, a.Voucherno, a.Rowno, a.Erpvoucherno, a.Vouchertype, a.Cuscode, a.Cusname," +
                                  "a.Supcode, a.Supname, a.Outpackqty, a.Innerpackqty, a.Voucherqty, a.Qty, a.Nopack, a.Printqty, a.Barcode, a.Barcodetype, " +
                                  "a.Serialno, a.Barcodeno, a.Outcount, a.Innercount, a.Mantissaqty, a.Isrohs, a.Outbox_Id, a.Inner_Id, a.PRODUCTBATCH, " +
-                                 "a.Batchno, a.Isdel, a.Creater, a.Createtime, a.Modifyer, a.Modifytime, a.Materialnoid,a.rownodel,a.Unit,a.LABELMARK,a.EAN,a.receivetime,a.materialno,a.materialdesc  ,a.productclass,a.workno,a.status,a.fserialno,a.BarCodeType,a.originalCode,a.TracNo  " +
+                                 "a.Batchno, a.Isdel, a.Creater, a.Createtime, a.Modifyer, a.Modifytime, a.Materialnoid,a.rownodel,a.Unit,a.LABELMARK,a.EAN,a.receivetime,a.materialno,a.materialdesc  ,a.productclass,a.workno,a.status,a.fserialno,a.BarCodeType,a.originalCode,a.TracNo,a.dimension  " +
                                  "from t_Outbarcode a where serialno = '{0}' or barcode='{1}'", model.SerialNo, model.SerialNo);
         }
 
@@ -346,6 +346,47 @@ namespace BILWeb.OutBarCode
                 return modellist;
             }
         }
+
+        public bool GetOffList(string ErpVoucherno,ref List<OffList> modellist)
+        {
+            try
+            {
+                string strerp = "";
+                string[] strsp = ErpVoucherno.Split(',');
+                for (int i = 0; i < strsp.Length; i++)
+                {
+                    strerp = strerp+("'" + strsp[i] + "',");
+                }
+                strerp = strerp.Substring(0, strerp.Length-1);
+
+                //string strSql = " select MaterialNo,SUM(QTY) Sumqty,count(1) Countqty from t_tasktrans where ERPVOUCHERNO in (" + ErpVoucherno + ")  and tasktype = 2  group by MATERIALNO";
+                string strsql = "select a.*,b.PACKQTY from (select MaterialNo,MATERIALNOID,SUM(QTY) Sumqty,count(1) Countqty from t_tasktrans where ERPVOUCHERNO in (" + strerp + ")  and tasktype = 2  group by MATERIALNO,MATERIALNOID) a left join T_MATERIAL b on a.MATERIALNOID=b.ID  ";
+                using (IDataReader reader = dbFactory.ExecuteReader(strsql))
+                {
+                    while (reader.Read())
+                    {
+                        OffList model = new OffList();
+                        model.MaterialNo = reader["MaterialNo"].ToDBString();
+                        model.Sumqty = reader["PACKQTY"].ToDBString();
+                        model.Countqty = reader["Countqty"].ToDBString();
+                        modellist.Add(model);
+                    }
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+  
+        }
+        public class OffList {
+            public string MaterialNo { get; set; }
+            public string Sumqty { get; set; }
+            public string Countqty { get; set; }
+        }
+        
 
 
 

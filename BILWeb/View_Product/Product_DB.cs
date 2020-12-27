@@ -92,12 +92,12 @@ namespace BILWeb.Product
                     var detailID = base.GetTableIDBySqlServerTaskTrans("t_Palletdetail");
                     string strSql5 = string.Format("SET IDENTITY_INSERT t_Palletdetail on ;insert into t_Palletdetail(Id, Headerid, Palletno, Materialno, Materialdesc, Serialno,Creater," +
                     "Createtime,RowNo,VOUCHERNO,ERPVOUCHERNO,materialnoid,qty,BARCODE,StrongHoldCode,StrongHoldName,CompanyCode,pallettype," +
-                    "batchno,rownodel,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,PRODUCTBATCH,EDATE,Supplierno,Suppliername,Unit)" +
+                    "batchno,rownodel,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,PRODUCTBATCH,EDATE,Supplierno,Suppliername,Unit,SN)" +
                     "values('{0}','{1}','{2}','{3}','{4}','{5}','{6}',GETDATE(),'{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','1'," +
-                    "'{16}','{17}',null,'{19}',null,'null','{22}','{23}','{24}','{25}');SET IDENTITY_INSERT t_Palletdetail off ;", detailID, ID, PalletNo, itemBarCode.MaterialNo, itemBarCode.MaterialDesc, itemBarCode.SerialNo, user.UserNo,
+                    "'{16}','{17}',null,'{19}',null,'null','{22}','{23}','{24}','{25}','{26}');SET IDENTITY_INSERT t_Palletdetail off ;", detailID, ID, PalletNo, itemBarCode.MaterialNo, itemBarCode.MaterialDesc, itemBarCode.SerialNo, user.UserNo,
                     itemBarCode.RowNo, itemBarCode.VoucherNo, itemBarCode.ErpVoucherNo, itemBarCode.MaterialNoID, itemBarCode.Qty, itemBarCode.BarCode,
                     itemBarCode.StrongHoldCode, itemBarCode.StrongHoldName, itemBarCode.CompanyCode, itemBarCode.BatchNo, itemBarCode.RowNoDel,
-                    itemBarCode.ProductDate, itemBarCode.SupPrdBatch, itemBarCode.SupPrdDate, itemBarCode.ProductBatch, GetStrDateTime(itemBarCode.EDate), itemBarCode.SupCode, itemBarCode.SupName, itemBarCode.Unit);
+                    itemBarCode.ProductDate, itemBarCode.SupPrdBatch, itemBarCode.SupPrdDate, itemBarCode.ProductBatch, GetStrDateTime(itemBarCode.EDate), itemBarCode.SupCode, itemBarCode.SupName, itemBarCode.Unit, item.MaterialDoc);
 
                     lstSql.Add(strSql5);
 
@@ -204,7 +204,7 @@ namespace BILWeb.Product
                 for (int i = 0; i < outboxnum; i++)
                 {
                     T_Product_DB ProductDB = new T_Product_DB();
-                    T_Product product = new T_Product() { ErpVoucherNo = modeljson.ErpVoucherNo };
+                    T_Product product = new T_Product() { ErpVoucherNo = modeljson.HeadErpVoucherNo };
                     T_Product Newproduct = ProductDB.GetModelListADF(user, product)[0];
 
                     Barcode_Model model = new Barcode_Model();
@@ -229,7 +229,7 @@ namespace BILWeb.Product
                     model.departmentname = Newproduct.PubDescSeg10_Name;
                     model.erpwarehouseno = Newproduct.PrivateDescSeg20_Code;
                     model.erpwarehousename = Newproduct.PrivateDescSeg20_Name;
-
+                    model.BarcodeMType = Newproduct.Customer_PrivateDescSeg5;
                     model.Qty = Convert.ToDecimal(modeljson.PackQty);
 
                     var seed = Guid.NewGuid().GetHashCode();
@@ -273,6 +273,7 @@ namespace BILWeb.Product
                     model.departmentname = Newproduct.PubDescSeg10_Name;
                     model.erpwarehouseno = Newproduct.PrivateDescSeg20_Code;
                     model.erpwarehousename = Newproduct.PrivateDescSeg20_Name;
+                    model.BarcodeMType = Newproduct.Customer_PrivateDescSeg5;
 
                     model.Qty = Convert.ToDecimal(tailnum);
 

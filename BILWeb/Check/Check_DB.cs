@@ -2429,6 +2429,28 @@ namespace BILWeb.Query
                     return j;
                 }
                 Barcode_Model bar = list[0];
+                //校验据点和仓库
+                bool ischeck = true;
+                if (bar.StrongHoldCode != "0403" && bar.StrongHoldCode != "0401" && bar.StrongHoldCode != "0402" && bar.StrongHoldCode != "0403" && bar.StrongHoldCode != "0300")
+                    ischeck = false;
+                if (string.IsNullOrEmpty(bar.warehouseno) || string.IsNullOrEmpty(bar.StrongHoldCode))
+                    ischeck = false;
+                if (bar.StrongHoldCode== "0300" && bar.warehouseno.Substring(0,1)!="G")
+                    ischeck = false;
+                if (bar.StrongHoldCode == "0401" && bar.warehouseno.Substring(0, 2) != "C1")
+                    ischeck = false;
+                if (bar.StrongHoldCode == "0402" && bar.warehouseno.Substring(0, 2) != "C2")
+                    ischeck = false;
+                if (bar.StrongHoldCode == "0403" && bar.warehouseno.Substring(0, 2) != "C3")
+                    ischeck = false;
+                if (!ischeck)
+                {
+                    BaseMessage_Model<Barcode_Model> bm = new BaseMessage_Model<Barcode_Model>();
+                    bm.HeaderStatus = "E";
+                    bm.Message = "仓库【"+ bar.warehouseno + "】不属于该据点【"+ bar.StrongHoldCode + "】！";
+                    string j = Check_Func.SerializeObject(bm);
+                    return j;
+                }
 
                 //if (bar.EDate == DateTime.MinValue)
                 //{

@@ -9,6 +9,7 @@ using BILWeb.Login.User;
 using BILBasic.JSONUtil;
 using BILWeb.Stock;
 using BILBasic.User;
+using static BILWeb.OutBarCode.T_OutBarcode_DB;
 
 namespace BILWeb.OutBarCode
 {
@@ -760,7 +761,35 @@ namespace BILWeb.OutBarCode
                 return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
             }
         }
-        
+
+
+       
+
+        public string GetOffList(string ErpVoucherno)
+        {
+            LogNet.LogInfo("发货清单："+ErpVoucherno);
+            BaseMessage_Model<List<OffList>> model = new BaseMessage_Model<List<OffList>>();
+            try
+            {
+                List<OffList> list = new List<OffList>();
+                T_OutBarcode_DB _db = new T_OutBarcode_DB();
+                if (!_db.GetOffList(ErpVoucherno, ref list))
+                {
+                    model.HeaderStatus = "E";
+                    model.Message = "获取数据失败！";
+                    return JSONHelper.ObjectToJson<BaseMessage_Model<List<OffList>>>(model);
+                }
+                model.HeaderStatus = "S";
+                model.ModelJson = list;
+                return JSONHelper.ObjectToJson<BaseMessage_Model<List<OffList>>>(model);
+            }
+            catch (Exception ex)
+            {
+                model.HeaderStatus = "E";
+                model.Message = ex.Message;
+                return JSONHelper.ObjectToJson<BaseMessage_Model<List<OffList>>>(model);
+            }
+        }
 
     }
 }

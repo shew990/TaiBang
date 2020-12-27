@@ -118,6 +118,8 @@ namespace BILWeb.OutStockTask
                             //杂出没有单据来源和调出单直接出库
                             if (item.VoucherType == 53 || item.VoucherType == 31)
                             {
+                                lstSql.Add("update t_outbarcode set dimension='" + item.ErpVoucherNo + "' where serialno='" + itemStock.SerialNo + "'");
+
                                 lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");
                                 if (item.VoucherType == 53)
                                     lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 211));
@@ -445,6 +447,8 @@ namespace BILWeb.OutStockTask
 
             string ToStrongHoldCode = dbFactory.ToModelValue(reader, "ToStrongHoldCode").ToDBString();
             t_taskdetails.ToStrongHoldCode = string.IsNullOrEmpty(ToStrongHoldCode) ? "" : ToStrongHoldCode;
+            t_taskdetails.EXCHNAME = dbFactory.ToModelValue(reader, "EXCHNAME").ToDBString();
+
 
             return t_taskdetails;
         }

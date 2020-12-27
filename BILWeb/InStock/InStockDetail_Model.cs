@@ -305,6 +305,11 @@ namespace BILWeb.InStock
         public string Customer_PrivateDescSeg5 { get; set; }//简称
 
         public string ToStrongHoldCode { get; set; }//
+        public string ErpWarehouseName { get; set; }//仓库
+        public string CustomerItemCode { get; set; }//客户型号
+        public string SUPPLIERSHORTNAME { get; set; }//客户简写
         
+
+
     }
 }

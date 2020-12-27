@@ -538,7 +538,7 @@ namespace BILWeb.OutStockTask
 
             lstSql.Add("update t_task  set  status = 1  WHERE id= '" + OutTaskInfo.ID + "'");
 
-            lstSql.Add("update t_taskdetails  set  Linestatus = 1,REMAINQTY=taskqty,  WHERE headerid= '" + OutTaskInfo.ID + "'");
+            lstSql.Add("update t_taskdetails  set  Linestatus = 1,REMAINQTY=taskqty,unshelveqty=0  WHERE headerid= '" + OutTaskInfo.ID + "'");
 
             foreach (T_OutStockTaskDetailsInfo itemModel in details)
             {

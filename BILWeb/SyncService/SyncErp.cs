@@ -526,7 +526,7 @@ namespace BILWeb.SyncService
             }
             BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
             string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"" + Type.VoucherType.ToString() + "\",\"max_code\":\"" + lastSyncErpVoucherNo + "\",\"edit_time\":\"";
-            //json += !String.IsNullOrEmpty(LastSyncTime)?DateTime.Parse(LastSyncTime).ToString("yyyy-MM-dd"):"";
+            json += !String.IsNullOrEmpty(LastSyncTime)?DateTime.Parse(LastSyncTime).ToString("yyyy-MM-dd"):"";
             json += "\",\"erp_vourcher_type\":\"" + Type.ErpVourcherType;
             json += "\",\"company_no\":\"" + Type.CompanyNo + "\"}";
             return TIF.GetModelListByInterface(json);
@@ -598,6 +598,7 @@ namespace BILWeb.SyncService
                             //     stopwatch.Reset(); stopwatch.Start();
                             result = db.SaveSqlList(SQList, ref ErrMsg);
                             iresult += 1;
+                            LogNet.LogInfo("-------------------------------------------------同步SQL执行结束:" + ErrMsg);
                             //    time += "插入SQL：" + stopwatch.Elapsed.TotalSeconds;
                             //   stopwatch.Reset(); stopwatch.Start();
                             //if (!result)
@@ -675,7 +676,7 @@ namespace BILWeb.SyncService
                                     {
                                         JToken detailJToken = JObject.Parse(detailJarray[j].ToString());
                                         string detailsql = GetSql(detailJToken, db, pmListbyType, Detailkeys, MatrtialKeys, detailTableName, false, ref headID, ref WmsVourcherNo, ref BeforeIDs, ref AfterIDs);
-                                        LogNet.LogInfo("-------------------------------------------------同步SQL语句:" + headsql);
+                                        LogNet.LogInfo("-------------------------------------------------同步SQL语句:" + detailsql);
                                         SQLIST.Add(detailsql);
                                     }
                                 }

@@ -177,7 +177,7 @@ namespace Web.WMS.Controllers.Task
                     return Json(new { state = false, obj = "当前单据已复核,不能撤销扫描!" }, JsonRequestBehavior.AllowGet);
                 }
                 string strmsg = ""; 
-                if (!tfunc_task.BackOutTask(currentUser, model, ref strmsg))
+                if (tfunc_task.BackOutTask(currentUser, model, ref strmsg))
                 {
                     return Json(new { state = true, obj = "当前任务撤销成功!" }, JsonRequestBehavior.AllowGet);
                 }

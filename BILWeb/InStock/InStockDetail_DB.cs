@@ -319,8 +319,11 @@ namespace BILWeb.InStock
             t_instockdetail.Customer_PrivateDescSeg5 = dbFactory.ToModelValue(reader, "Customer_PrivateDescSeg5").ToDBString();
             t_instockdetail.ProductBatch = dbFactory.ToModelValue(reader, "ProductBatch").ToDBString();
             t_instockdetail.ToStrongHoldCode = dbFactory.ToModelValue(reader, "ToStrongHoldCode").ToDBString();
-        
 
+            t_instockdetail.ErpWarehouseName = dbFactory.ToModelValue(reader, "ErpWarehouseName").ToDBString();
+            t_instockdetail.CustomerItemCode = dbFactory.ToModelValue(reader, "CustomerItemCode").ToDBString();
+            t_instockdetail.SUPPLIERSHORTNAME = dbFactory.ToModelValue(reader, "SUPPLIERSHORTNAME").ToDBString();
+            
             return t_instockdetail;
         }
 

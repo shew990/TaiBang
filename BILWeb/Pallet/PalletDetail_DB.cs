@@ -192,9 +192,10 @@ namespace BILWeb.Pallet
             t_palletdetail.SuppliernNo = dbFactory.ToModelValue(reader, "SupplierNo").ToDBString();
             t_palletdetail.SupplierName = dbFactory.ToModelValue(reader, "SupplierName").ToDBString();
             t_palletdetail.Unit = dbFactory.ToModelValue(reader, "Unit").ToDBString();
-
+            t_palletdetail.dimension = dbFactory.ToModelValue(reader, "SN").ToDBString();
+            
             //add by cym 2019-3-26 完工入库的时候需要传效期日！！！
-            t_palletdetail.EDate = dbFactory.ToModelValue(reader, "EDate").ToDateTime();
+             t_palletdetail.EDate = dbFactory.ToModelValue(reader, "EDate").ToDateTime();
             //t_palletdetail.EAN = dbFactory.ToModelValue(reader, "EAN").ToDBString();
 
 

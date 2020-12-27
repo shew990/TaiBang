@@ -725,7 +725,7 @@ namespace BILWeb.OutStock
                 model.BatchNo = item.FromBatchNo;
                 model.FromErpWareHouseName = item.FromErpWareHouseName;
                 model.ToErpWarehouseName = item.ToErpWareHouseName;
-
+                model.EXCHNAME = item.EXCHNAME;
                 outStockDetailList.Add(model);
             }
             return outStockDetailList;

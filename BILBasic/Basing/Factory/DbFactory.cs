@@ -30,13 +30,10 @@ namespace BILBasic.Basing
         //数据库工厂接口 每个需要操作数据库的操作界面需要添加该对象 
        public   IDBFactory dbF;
 
-        //server=180.166.173.214;database=ZTWMS;uid=sa;password=chinetek//server=192.168.45.2;database=SCG_ABH;uid=sa;password=SCG@123456;pooling=false
-        //   public readonly string ConnectionStringLocalTransaction = "server=192.168.45.2;database=ZTWMS;uid=sa;password=SCG@123456";
-        //server=192.168.100.86;database=ABH_SCG;uid=sa;password=chinetek
-       
+  
+       //public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=192.168.250.71; Initial Catalog = WMSDB; Persist Security Info = True; User ID = sa; Password = GPGsec2020; Persist Security Info = True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ToString();
         public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"]==null? "Data Source=192.168.250.37;Initial Catalog=WMSDB;Persist Security Info=True;User ID=sa;Password=chinetek;Persist Security Info=True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ToString();
-        //   public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = 180.166.173.214)(PORT = 1521))(CONNECT_DATA =(SERVER = DEDICATED)(SERVICE_NAME = dswms)));Persist Security Info=True;User ID=c##dswms;Password=c##dswms;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ConnectionString;//防止空引用异常 modify by gzw 181227
-
+       
         /// <summary>
         /// 数据库工厂构造函数
         /// </summary>

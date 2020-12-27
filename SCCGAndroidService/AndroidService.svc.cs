@@ -893,6 +893,12 @@ namespace SCCGAndroidService
             return tfunc.GetBarCodeSerialno(Serialno);
         }
 
+        public string GetOffList(string ErpVoucherno)
+        {
+            T_OutBarCode_Func tfunc = new T_OutBarCode_Func();
+            return tfunc.GetOffList(ErpVoucherno);
+        }
+
 
         #endregion
 

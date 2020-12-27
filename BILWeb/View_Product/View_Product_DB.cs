@@ -44,17 +44,17 @@ namespace BILWeb.View_Product
             //string strSql = base.GetFilterSql(user, model);
             string strSql = "where 1=1 ";
             string strAnd = " and ";
-            if (!string.IsNullOrEmpty(model.ErpVoucherNo))
+            if (!string.IsNullOrEmpty(model.HeadErpVoucherNo))
             {
 
                 //同步单据
                 string strMsg = "";
                 ParamaterFiled_DB PDB = new ParamaterFiled_DB();
-                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg, "1");
+                PDB.GetVoucherNo(model.HeadErpVoucherNo, ref strMsg, "1");
 
 
                 strSql += strAnd;
-                strSql += " headerpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
+                strSql += " headerpvoucherno like '%" + model.HeadErpVoucherNo.Trim() + "%' ";
             }
             
             strSql += " and (substring(materialno,1,1)='J' or substring(materialno,1,1)='M' or materialno='') ";

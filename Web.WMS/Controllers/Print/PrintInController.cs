@@ -191,6 +191,13 @@ namespace Web.WMS.Controllers.Print
 
                     model.ProtectWay = objT_InStockDetailInfo.sale_vouchertypename;
                     model.LABELMARK = objT_InStockDetailInfo.Customer_voucherno;
+
+
+                    model.CusCode = objT_InStockDetailInfo.SupplierNo;
+                    model.CusName = objT_InStockDetailInfo.SUPPLIERSHORTNAME;
+                    model.erpwarehousename = objT_InStockDetailInfo.ErpWarehouseName;
+                    model.StoreCondition = objT_InStockDetailInfo.CustomerItemCode;
+
                     listbarcode.Add(model);
                 }
                 if (inboxnum == 1)
@@ -226,6 +233,11 @@ namespace Web.WMS.Controllers.Print
 
                     model.ProtectWay = objT_InStockDetailInfo.sale_vouchertypename;
                     model.LABELMARK = objT_InStockDetailInfo.Customer_voucherno;
+
+                    model.CusCode = objT_InStockDetailInfo.SupplierNo;
+                    model.CusName = objT_InStockDetailInfo.SUPPLIERSHORTNAME;
+                    model.erpwarehousename = objT_InStockDetailInfo.ErpWarehouseName;
+                    model.StoreCondition = objT_InStockDetailInfo.CustomerItemCode;
                     listbarcode.Add(model);
                 }
                 if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))

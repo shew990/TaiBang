@@ -808,6 +808,9 @@ namespace BILWeb.OutStockTask
 
         public string ToStrongHoldCode { get; set; }
         public string ToUser { get; set; }
+
+        public string EXCHNAME { get; set; }
         
+
     }
 }

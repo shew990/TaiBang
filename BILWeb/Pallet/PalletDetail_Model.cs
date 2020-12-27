@@ -127,5 +127,7 @@ namespace BILWeb.Pallet
         public int HouseProp { get; set; }
 
         public int BarCodeType { get; set; }
+        public string dimension { get; set; }
+        
     }
 }
