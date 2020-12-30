@@ -98,7 +98,13 @@
                         @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
                     </div>
                 </td>
-                <td></td>
+                <td>
+                    @*@Html.LabelFor(model => model.StrongHoldCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("StrongHoldCode", Commom.GetStrongHoldcodeList as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.StrongHoldCode, "", new { @class = "text-danger" })
+                    </div>*@
+                </td>
             </tr>
 
         </table>

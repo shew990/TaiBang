@@ -10,6 +10,7 @@ using BILBasic.Common;
 using Oracle.ManagedDataAccess.Client;
 using BILWeb.Area;
 using System.Data;
+using BILWeb.Warehouse;
 
 namespace BILWeb.InStock
 {
@@ -53,6 +54,11 @@ namespace BILWeb.InStock
 
         protected override List<string> GetSaveModelListSql(UserModel user, List<T_InStockDetailInfo> modelList, string strPost = "")
         {
+            string StrongHoldCode = "";
+            string StrongHoldCodeName = "";
+            T_WareHouse_DB TWareHouseDB = new T_WareHouse_DB();
+            TWareHouseDB.Getstrongholdcode(user.ReceiveWareHouseNo, ref StrongHoldCode, ref StrongHoldCodeName);
+
             string strSql1 = string.Empty;
             string strSql2 = string.Empty;
             string strSql3 = string.Empty;
@@ -123,8 +129,8 @@ namespace BILWeb.InStock
                         "values ('" + itemBarCode.SerialNo + "','" + itemBarCode.MaterialNo + "','" + itemBarCode.MaterialDesc + "','" + itemBarCode.Qty + "','" + item.IsQuality + "','1'" +
                         ",'" + user.UserNo + "',getdate(),'" + itemBarCode.BatchNo + "','" + item.Unit + "','" + item.UnitName + "'" +
                         ",(select palletno from t_Palletdetail where serialno = '" + itemBarCode.SerialNo + "'),'1','" + itemBarCode.MaterialNoID + "'" +
-                        ", '" + user.WarehouseID + "','" + user.ReceiveHouseID + "','" + user.ReceiveAreaID + "','1','" + itemBarCode.BarCode + "','" + item.StrongHoldCode + "', " +
-                        "  '" + itemBarCode.StrongHoldName + "','" + itemBarCode.CompanyCode + "','" + itemBarCode.EDate + "','" + item.SupplierNo + "','" + item.SupplierName + "'," +
+                        ", '" + user.WarehouseID + "','" + user.ReceiveHouseID + "','" + user.ReceiveAreaID + "','1','" + itemBarCode.BarCode + "','" + StrongHoldCode + "', " +
+                        "  '" + StrongHoldCodeName + "','" + itemBarCode.CompanyCode + "','" + itemBarCode.EDate + "','" + item.SupplierNo + "','" + item.SupplierName + "'," +
                         "'" + itemBarCode.SupPrdBatch + "','3' ,'1','" + itemBarCode.EAN + "','" + itemBarCode.BarcodeType + "','" + (itemBarCode.ProjectNo == null ? "" : itemBarCode.ProjectNo) + "','" + (itemBarCode.TracNo == null ? "" : itemBarCode.TracNo) + "','"+ modelList[0].MaterialDoc + "' )";
 
                     }
@@ -141,7 +147,7 @@ namespace BILWeb.InStock
                             "'" + user.ReceiveAreaID + "','" + itemBarCode.MaterialNo + "','" + itemBarCode.MaterialDesc + "','" + item.SupplierNo + "','" + item.SupplierName + "'," +
                             " '" + itemBarCode.Qty + "','4',(select  top 1  vouchertype from t_Instock where voucherno = '" + item.VoucherNo + "') ,'" + user.UserName + "',getdate(),'" + item.ID + "'," +
                             "'" + item.Unit + "','" + item.UnitName + "','" + itemBarCode.MaterialNoID + "','" + item.ErpVoucherNo + "','" + item.VoucherNo + "','" + itemBarCode.BarCode + "'," +
-                            "'" + item.StrongHoldCode + "','" + item.StrongHoldName + "','" + item.CompanyCode + "','" + itemBarCode.SupPrdBatch + "'" +
+                            "'" + StrongHoldCode + "','" + StrongHoldCodeName + "','" + item.CompanyCode + "','" + itemBarCode.SupPrdBatch + "'" +
                             " ,'" + itemBarCode.EDate + "','" + TaskNo + "','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') SET IDENTITY_INSERT t_tasktrans off";
                     lstSql.Add(strSql10);
 

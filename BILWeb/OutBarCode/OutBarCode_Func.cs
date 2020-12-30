@@ -481,6 +481,38 @@ namespace BILWeb.OutBarCode
             }
         }
 
+
+
+        /// <summary>
+        /// 根据序列号获取条码信息
+        /// </summary>
+        /// <param name="BarCode"></param>
+        /// <param name="model"></param>
+        /// <param name="strErrMsg"></param>
+        /// <returns></returns>
+        public bool GetOutBarCodeInfoBySerialNos(string SerialNos, ref List<T_OutBarCodeInfo> models, ref string strErrMsg)
+        {
+            try
+            {
+                string strError = string.Empty;
+                T_OutBarcode_DB _db = new T_OutBarcode_DB();
+                models = _db.GetModelListByFilter(""," serialno in ("+ SerialNos + ")","*");
+
+                if (models == null)
+                {
+                    strErrMsg = "您扫描的条码不存在！请确认是否已经打印！";
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                strErrMsg = ex.Message;
+                return false;
+            }
+        }
+
+
         public string GetBarcodeModelForJADF(string SerialNo)
         {
             BaseMessage_Model<List<T_StockInfo>> messageModel = new BaseMessage_Model<List<T_StockInfo>>();

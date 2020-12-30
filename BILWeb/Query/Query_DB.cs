@@ -1007,6 +1007,10 @@ namespace BILWeb.Query
                 {
                     TMM.tasktypename = "转换出";
                 }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 212)
+                {
+                    TMM.tasktypename = "直发分公司";
+                }
             }
             qtyall += (decimal)TMM.QTY;
             return TMM;

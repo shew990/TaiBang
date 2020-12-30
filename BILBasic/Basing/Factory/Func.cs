@@ -560,7 +560,7 @@ namespace BILBasic.Basing.Factory
  
 
                 //是否过账
-                if (string.IsNullOrEmpty(strPost)|| (strPost == "下架"&& modelList[0].VoucherType==31)|| strPost == "复核")
+                if (string.IsNullOrEmpty(strPost)|| (strPost == "下架"&& (modelList[0].VoucherType == 31|| modelList[0].VoucherType == 53))|| strPost == "复核")
                 {
                     T_Interface_Func tfunc = new T_Interface_Func();
                     string ERPJson = GetModelListByJsonToERP(user, modelList);//JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList);

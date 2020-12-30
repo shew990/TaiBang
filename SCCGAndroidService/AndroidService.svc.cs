@@ -966,6 +966,14 @@ namespace SCCGAndroidService
             return tfunc.GetInfoList(id, StrongHoldCode);
         }
 
+        //三级查询
+        public string GetInfoListThree(string id, string StrongHoldCode,string DeparMentNo)
+        {
+            LogNet.LogInfo("三级查询:" + id + "D:" + DeparMentNo);
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            return tfunc.GetInfoListThree(id, StrongHoldCode, DeparMentNo);
+        }
+
         #endregion
 
         #region 转换单
@@ -985,5 +993,13 @@ namespace SCCGAndroidService
             return tfunc.PostZh(UserJson,  ModelJson, Guid);
         }
         #endregion
+
+        //根据成品入库单删除库存=>U9生成调入和调出单
+        public string DelStockForU9(string ErpVoucherNo, string ErpVoucherNoIn, string Guid)
+        {
+            T_OutTaskDetails_Func func = new T_OutTaskDetails_Func();
+            return func.DelStockForU9(ErpVoucherNo, ErpVoucherNoIn, Guid);
+        }
+
     }
 }

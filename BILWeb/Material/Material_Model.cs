@@ -380,7 +380,7 @@ namespace BILWeb.Material
         public string PlaceArea { get; set; }
 
         public string LifeCycle { get; set; }
-
+        [Display(Name = "包装量")]
         public decimal PackQty { get; set; }
 
         public decimal PalletVolume { get; set; }

@@ -1048,7 +1048,6 @@ namespace BILBasic.Basing.Factory
                 {
                     sql += "  " + OrderBy;
                 }
-
                 using (IDataReader reader = dbFactory.ExecuteReader(sql))
                 {
                     return ToModels(reader);

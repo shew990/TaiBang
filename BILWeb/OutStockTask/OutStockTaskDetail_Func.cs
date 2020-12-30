@@ -188,6 +188,7 @@ namespace BILWeb.OutStockTask
             List<T_OutStockTaskDetailsInfo> modelList = new List<T_OutStockTaskDetailsInfo>();
             modelList = JSONHelper.JsonToObject<List<T_OutStockTaskDetailsInfo>>(ModelListJson);
             modelList = modelList.Where(t => t.ScanQty > 0).ToList();
+            modelList.ForEach(t => t.ToUser = t.PostUser);
             modelList.ForEach(t => t.PostUser= userModel.UserNo);
             //modelList.ForEach(t => t.VoucherType = 9996);
             LogNet.LogInfo("SaveT_OutStockTaskDetailADF---" + JSONHelper.ObjectToJson<List<T_OutStockTaskDetailsInfo>>(modelList));
@@ -222,6 +223,16 @@ namespace BILWeb.OutStockTask
             {
                 foreach (var item in modelList)
                 {
+                    if (item.lstStockInfo != null)
+                    {
+                        lstStock.AddRange(item.lstStockInfo);
+                    }
+
+                }
+                NewLstStock = GroupInstockDetailList(modelList[0].VoucherType, lstStock);
+
+                foreach (var item in modelList)
+                {
                     T_OutStockTaskDetailsInfo model = new T_OutStockTaskDetailsInfo();
                     model.ErpVoucherNo = item.ErpVoucherNo;
                     model.CompanyCode = item.CompanyCode;
@@ -233,7 +244,7 @@ namespace BILWeb.OutStockTask
                     model.WareHouseNo = NewLstStock[0].FromErpWarehouse;//
                     model.ToStrongHoldCode = item.ToStrongHoldCode;//调拨出的调入据点
                                                                    //model.ToErpAreaNo = user.PickAreaNo; //
-                    model.ToUser = user.UserNo;//人
+                    model.ToUser = item.ToUser;//人
                     model.PostUser = item.PostUser;//人
                     model.VoucherType = item.VoucherType;
                     model.ScanQty = item.ScanQty;
@@ -855,6 +866,53 @@ namespace BILWeb.OutStockTask
 
             return newModelList.ToList();
         }
+
+
+
+        #region 成品入库单删除库存
+        public string DelStockForU9(string ErpVoucherNo,string ErpVoucherNoIn, string Guid)
+        {
+            LogNet.LogInfo("ErpVoucherNo:"+ ErpVoucherNo + ",ErpVoucherNoIn:"+ ErpVoucherNoIn + ",Guid:"+ Guid);
+            BaseMessage_Model<string> messageModel = new BaseMessage_Model<string>();
+
+            try
+            {
+                string strError = string.Empty;
+                if (string.IsNullOrEmpty(ErpVoucherNo) || string.IsNullOrEmpty(Guid)|| string.IsNullOrEmpty(ErpVoucherNoIn))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "成品入库单，调入单和Guid不能为空！";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+                if (!CheckGuid(Guid, ref strError))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "GUID已经存在，不能重复提交-" + strError;
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+                T_OutTaskDetails_DB _db = new T_OutTaskDetails_DB();
+                if (_db.DelStockForU9(ErpVoucherNo, ErpVoucherNoIn, ref strError) == false)
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = strError;
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+                else
+                {
+                    messageModel.HeaderStatus = "S";
+                    messageModel.Message = "操作成功！";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.Message;
+                return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+            }
+        }
+        #endregion
 
     }
 }

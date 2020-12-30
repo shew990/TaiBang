@@ -263,7 +263,7 @@ namespace BILWeb.Quality
                             "Inner_Id, Abatchqty, Isdel, Creater, Createtime, Materialnoid, Strongholdcode, " +
                             "Strongholdname, Companycode, Productdate, Supprdbatch, Supprddate, Productbatch, Edate, Storecondition," +
                             "Specialrequire, Batchno, Barcodemtype, Rownodel, Protectway, Boxweight, Unit, Labelmark, Boxdetail, Matebatch," +
-                            "Mixdate, Relaweight,Ean,ProjectNo,TracNo)" +
+                            "Mixdate, Relaweight,Ean,ProjectNo,TracNo,erpwarehousename)" +
                             "select voucherno,rowno,erpvoucherno,vouchertype, Materialno, Materialdesc, Cuscode," +
                             "Cusname, Supcode, Supname, Outpackqty, Innerpackqty, Voucherqty, '" + model.AmountQty + "',Nopack, Printqty," +
                             "'" + BarCode + "'," +
@@ -271,7 +271,7 @@ namespace BILWeb.Quality
                             "Abatchqty, Isdel, Creater, getdate(), Materialnoid, Strongholdcode, " +
                             "Strongholdname, Companycode, Productdate, Supprdbatch, Supprddate, Productbatch, Edate, Storecondition," +
                             "Specialrequire, Batchno, Barcodemtype, Rownodel, Protectway, Boxweight, Unit, Labelmark, Boxdetail, Matebatch," +
-                            "Mixdate, Relaweight,ean,ProjectNo,TracNo from t_Outbarcode where serialno = '" + model.SerialNo + "'";
+                            "Mixdate, Relaweight,ean,ProjectNo,TracNo,erpwarehousename from t_Outbarcode where serialno = '" + model.SerialNo + "'";
 
             lstSql.Add(strSql);
 

@@ -13,6 +13,7 @@ using System.Data;
 using BILWeb.Print;
 using BILWeb.View_Product;
 using BILWeb.SyncService;
+using BILWeb.Area;
 
 namespace BILWeb.Product
 {
@@ -36,6 +37,18 @@ namespace BILWeb.Product
 
         protected override List<string> GetSaveModelListSql(UserModel user, List<T_Product> modelList, string strPost = "")
         {
+            //完工入库 入库到默认库位
+            T_Area_DB TAreaDB = new T_Area_DB();
+            T_AreaInfo area = TAreaDB.GetAreaModelForPro(user.ReceiveWareHouseNo);
+            if (area != null)
+            {
+                user.ReceiveAreaID = area.ID;
+                user.ReceiveAreaNo = area.AreaNo;
+                user.ReceiveHouseID = area.HouseID;
+                user.ReceiveHouseNo = area.HouseNo;
+                user.ReceiveWareHouseNo = area.WarehouseNo;
+                user.ReceiveWareHouseName = area.WarehouseName;
+            }
 
             if (modelList == null || modelList.Count == 0)
             {
@@ -58,7 +71,7 @@ namespace BILWeb.Product
             {
                 string strSql1 = "update T_Product  set   Receiveqty = (isnull( Receiveqty,0) + '" + item.ScanQty + "'),postqty = (isnull( postqty,0) + '" + item.ScanQty + "')  where ErpVoucherNo  ='" + item.ErpVoucherNo + "'";
                 lstSql.Add(strSql1);// remainqty = (case when (isnull( remainqty,0) - '" + item.ScanQty + "') <= 0 then 0 else isnull( remainqty,0) - '" + item.ScanQty + "' end),
-
+                
                 foreach (var itemBarCode in item.lstBarCode)
                 {
 

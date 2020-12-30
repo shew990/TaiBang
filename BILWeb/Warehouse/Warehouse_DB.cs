@@ -236,5 +236,61 @@ namespace BILWeb.Warehouse
             return GetModelListBySql(strSql);
         }
 
+
+
+        
+        public bool Getstrongholdcode(string checkno,ref string strongholdcode,ref string strongholdname)
+        {
+            string strsql = "select top 1 b.warehouseno from t_checkdetails a left join v_area b on a.areaid=b.id where a.CHECKNO= '" + checkno + "'";
+            string WarehouseNo= base.GetScalarBySql(strsql).ToDBString();
+            return GetStrongholdcode(WarehouseNo, ref strongholdcode, ref strongholdname);
+        }
+
+
+        //仓库与据点的对照关系
+        public bool GetStrongholdcode(string warehouseno, ref string strongholdcode,ref string strongholdname)
+        {
+            try
+            {
+                if (warehouseno.Substring(0, 1) == "G")
+                {
+                    strongholdcode = "0300";
+                    strongholdname = "营销中心";
+                }
+                else
+                {
+                    if (warehouseno.Substring(0, 2) == "C1")
+                    {
+                        strongholdcode = "0401";
+                        strongholdname = "事业一部";
+                    }
+                    if (warehouseno.Substring(0, 2) == "C2")
+                    {
+                        strongholdcode = "0402";
+                        strongholdname = "事业二部";
+                    }
+                    if (warehouseno.Substring(0, 2) == "C3")
+                    {
+                        strongholdcode = "0403";
+                        strongholdname = "事业三部";
+                    }
+                }
+                if (strongholdcode == "")
+                {
+                    return false;
+
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
     }
 }

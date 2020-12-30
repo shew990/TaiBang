@@ -40,10 +40,10 @@
         <th>@Html.DisplayNameFor(model => model.Weight)</th>*@
                     <th>@Html.DisplayNameFor(model => model.NetWeight)</th>
                     <th>@Html.DisplayNameFor(model => model.Unit)</th>
-                    <th>@Html.DisplayNameFor(model => model.sku)</th>
+                    <th>@Html.DisplayNameFor(model => model.PackQty)</th>
                     <th>@Html.DisplayNameFor(model => model.StrongHoldCode)</th>
                     <th>@Html.DisplayNameFor(model => model.CreateTime)</th>
-                    <th>@Html.DisplayNameFor(model => model.strdEDate)</th>
+                    @*<th>@Html.DisplayNameFor(model => model.strdEDate)</th>*@
                     <th>编辑</th>
                 </tr>
             </thead>
@@ -69,10 +69,10 @@
         <td>@t_MaterialInfo.Weight</td>*@
                                     <td>@t_MaterialInfo.NetWeight</td>
                                     <td>@t_MaterialInfo.Unit</td>
-                                    <td>@t_MaterialInfo.sku</td>
+                                    <td>@t_MaterialInfo.PackQty</td>
                                     <td>@t_MaterialInfo.StrongHoldCode</td>
                                     <td>@t_MaterialInfo.CreateTime</td>
-                                    <td>@t_MaterialInfo.strdEDate</td>
+                                    @*<td>@t_MaterialInfo.strdEDate</td>*@
                                     <td>
 
                                         <a title="编辑" href="/material/getmodel?ID=@t_MaterialInfo.ID">

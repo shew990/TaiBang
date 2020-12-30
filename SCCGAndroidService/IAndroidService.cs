@@ -471,12 +471,23 @@ namespace SCCGAndroidService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetInfoList", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string GetInfoList(string id, string StrongHoldCode);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetInfoListThree", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetInfoListThree(string id, string StrongHoldCode, string DeparMentNo);
+       
+
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetZh", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string GetZh(string ErpVoucherNo);
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "PostZh", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string PostZh(string UserJson, string ModelJson, string Guid);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "DelStockForU9", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string DelStockForU9(string ErpVoucherNo, string ErpVoucherNoIn, string Guid);
+
 
         #endregion
 

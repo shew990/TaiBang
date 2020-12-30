@@ -235,7 +235,7 @@ namespace WMSSyncService
                     {
                         using (StreamWriter sw = new StreamWriter(syncBaseTimeFile))
                         {
-                            sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd"));
+                            sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                             sw.Close();
                         }
                     }

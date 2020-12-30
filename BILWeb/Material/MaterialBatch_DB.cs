@@ -12,6 +12,8 @@ using BILBasic.JSONUtil;
 using BILWeb.Stock;
 using SqlSugarDAL.barcode;
 using BILWeb.T00L;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace BILWeb.Material
 {
@@ -204,6 +206,7 @@ namespace BILWeb.Material
             try
             {
                 BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+                //string json = "{\"company_no\":\"" + 1001909046618667 + "\",\"data_no\":\"0300\",\"VoucherType\":\"9997\"}";
                 string json = "{\"company_no\":\"" + id + "\",\"data_no\":\"" + StrongHoldCode + "\",\"VoucherType\":\"9997\"}";
                 string ERPJson = TIF.GetModelListByInterface(json);
                 LogNet.LogInfo("转换单接口返回的JSON:" + ERPJson);
@@ -216,6 +219,25 @@ namespace BILWeb.Material
 
 
         }
+
+        public U9BaseInfo GetInfoListThree(string id, string StrongHoldCode, string DeparMentNo)
+        {
+            try
+            {
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+                //string json = "{\"company_no\":\"" + 1001909046618667 + "\",\"max_code\":\"" + DeparMentNo + "\",\"data_no\":\"0300\",\"VoucherType\":\"9997\"}";
+
+                string json = "{\"company_no\":\"" + id + "\",\"max_code\":\"" + DeparMentNo + "\",\"data_no\":\"" + StrongHoldCode + "\",\"VoucherType\":\"9997\"}";
+                string ERPJson = TIF.GetModelListByInterface(json);
+                LogNet.LogInfo("转换单接口返回的JSON:" + ERPJson);
+                return BILBasic.JSONUtil.JSONHelper.JsonToObject<U9BaseInfo>(ERPJson);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        
 
 
         //SOP列表
@@ -273,10 +295,12 @@ namespace BILWeb.Material
         //    }
         //}
 
-        public bool PostZh(UserModel user, List<U9Zh> list, ref string Msg)
+        public bool PostZh(UserModel user, List<U9Zh> list, ref string Msg,ref string SerialNos)
         {
             try
             {
+                SerialNos = string.Empty;
+
                 if (list.Count==0)
                 {
                     Msg = "提交的参数不能为空！";
@@ -299,7 +323,7 @@ namespace BILWeb.Material
 
                         U9ZhDetail model = list[i].detail[0];
                         //新条码
-                        T_StockInfo t_Stock = list[i].barcodeList[0];
+                        T_StockInfo t_Stock = DeepCopyByXml<T_StockInfo>(list[i].barcodeList[0]);
                         t_Stock.MaterialNo = model.MaterialNo;
                         t_Stock.MaterialDesc = model.MaterialDesc;
                         t_Stock.Qty = model.Qty;
@@ -322,6 +346,12 @@ namespace BILWeb.Material
                         string update = string.Format("update T_STOCK set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5}  where barcode='{6}' ",
                             model.MaterialNo, model.MaterialDesc, model.Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, list[i].barcodeList[0].Barcode);//两种模式都只会扫描一次所以条码集合肯定只能是一个
                         sqls.Add(update);
+
+                        string update1 = string.Format("update T_outbarcode set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5}  where barcode='{6}' ",
+                       model.MaterialNo, model.MaterialDesc, model.Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, list[i].barcodeList[0].Barcode);//两种模式都只会扫描一次所以条码集合肯定只能是一个
+                        sqls.Add(update1);
+
+                        SerialNos = SerialNos + "'" + t_Stock.SerialNo + "',";
                         //生成一个条码加进去
                         jilv.AddRange(GetTaskTransSqlList(user, t_Stock, list[i], 209));
                         t_Stocks.Add(t_Stock);
@@ -330,7 +360,7 @@ namespace BILWeb.Material
                             for (int d = 1; d < list[i].detail.Count; d++)
                             {
                                 U9ZhDetail modeld = list[i].detail[d];
-                                T_StockInfo t_Stockd = list[i].barcodeList[0];
+                                T_StockInfo t_Stockd = DeepCopyByXml<T_StockInfo>(list[i].barcodeList[0]);
                                 t_Stockd.MaterialNo = modeld.MaterialNo;
                                 t_Stockd.MaterialDesc = modeld.MaterialDesc;
                                 t_Stockd.Qty = modeld.Qty;
@@ -338,7 +368,7 @@ namespace BILWeb.Material
                                 t_Stockd.Barcode = "2@" + t_Stockd.MaterialNo + "@" + t_Stockd.Qty + "@" + t_Stockd.SerialNo;
 
                      
-                                int Materialnoid1 = MDB.GetMaterialNoid(t_Stock.MaterialNo, list[i].StrongHoldCode);
+                                int Materialnoid1 = MDB.GetMaterialNoid(modeld.MaterialNo, list[i].StrongHoldCode);
                                 if (Materialnoid1 == 0)
                                 {
                                     Msg = "据点【" + list[i].StrongHoldCode + "】物料主数据没有物料【" + t_Stock.MaterialNo + "】信息！";
@@ -359,6 +389,20 @@ namespace BILWeb.Material
                                              "  '" + t_Stockd.StrongHoldName + "','" + t_Stockd.CompanyCode + "',null,'" + t_Stockd.SupCode + "','" + t_Stockd.SupName + "'," +
                                              "'" + t_Stockd.SupPrdBatch + "','3' ,'1','" + t_Stockd.EAN + "','" + t_Stockd.BarCodeType + "','" + (t_Stockd.ProjectNo == null ? "" : t_Stockd.ProjectNo) + "','" + (t_Stockd.TracNo == null ? "" : t_Stockd.TracNo) + "' )";
                                 sqls.Add(strSql8);
+
+                                string strSql9 = "INSERT INTO T_OUTBARCODE(voucherno,rowno,erpvoucherno,vouchertype,materialno,materialdesc,spec,cuscode,cusname,supcode,supname,outpackqty,innerpackqty,"+
+                                    "voucherqty,qty,nopack,printqty,barcode,barcodetype,serialno,barcodeno,outcount,innercount,mantissaqty,isrohs,outbox_id,abatchqty,isdel,creater,createtime,modifyer," +
+                                    "modifytime, materialnoid,strongholdcode,strongholdname,companycode,productdate,supprdbatch,supprddate,productbatch,edate,storecondition,specialrequire,batchno,barcodemtype," +
+                                    "rownodel, protectway,boxweight,unit,labelmark,boxdetail,matebatch,mixdate,relaweight,productclass,itemqty,workno,mtypef,prorowno,prorownodel,boxcount,dimension,ean,fserialno," + 
+                                    "standard, erpmateid,subiarrsid,originalCode,status,ReceiveTime,Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname,erpwarehousename) "+
+                                    "select  voucherno,rowno,erpvoucherno,vouchertype,'" + t_Stockd.MaterialNo + "','" + t_Stockd.MaterialDesc + "',spec,cuscode,cusname,supcode,supname,outpackqty,innerpackqty,voucherqty,'" + t_Stockd.Qty + "',nopack,printqty,'" + t_Stockd.Barcode + "',barcodetype," +
+                                    "'" + t_Stockd.SerialNo + "',barcodeno,outcount,innercount,mantissaqty,isrohs,outbox_id,abatchqty,isdel,creater,createtime,modifyer,modifytime," + t_Stockd.MaterialNoID + ",strongholdcode,strongholdname,companycode,productdate,supprdbatch," +
+                                    "supprddate, productbatch,edate,storecondition,specialrequire,batchno,barcodemtype,rownodel,protectway,boxweight,unit,labelmark,boxdetail,matebatch,mixdate,relaweight,productclass,itemqty," +
+                                    "workno, mtypef,prorowno,prorownodel,boxcount,dimension,ean,fserialno,standard,erpmateid,subiarrsid,originalCode,status,ReceiveTime,Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname," + 
+                                    "erpwarehousename from t_outbarcode where serialno= '"+ t_Stock.SerialNo + "'";
+                                sqls.Add(strSql9);
+
+                                SerialNos = SerialNos + "'"+ t_Stockd.SerialNo + "',";
                                 jilv.AddRange(GetTaskTransSqlList(user, t_Stockd, list[i], 209));
                                 t_Stocks.Add(t_Stockd);
                             }
@@ -386,7 +430,7 @@ namespace BILWeb.Material
                         t_Stock.Barcode = "2@" + t_Stock.MaterialNo + "@" + t_Stock.Qty + "@" + t_Stock.SerialNo;
 
                         T_Material_DB MDB = new T_Material_DB();
-                        int Materialnoid1 = MDB.GetMaterialNoid(t_Stock.MaterialNo, list[i].StrongHoldCode);
+                        int Materialnoid1 = MDB.GetMaterialNoid(list[i].MaterialNo, list[i].StrongHoldCode);
                         if (Materialnoid1 == 0)
                         {
                             Msg = "据点【" + list[i].StrongHoldCode + "】物料主数据没有物料【" + t_Stock.MaterialNo + "】信息！";
@@ -401,6 +445,11 @@ namespace BILWeb.Material
                         string onesql = string.Format("update T_STOCK set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5}  where barcode='{6}' "
                         , list[i].MaterialNo, list[i].MaterialDesc, list[i].Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, list[i].barcodeList[0].Barcode);
                         sqls.Add(onesql);
+
+                        string onesql1 = string.Format("update T_outbarcode set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5}  where barcode='{6}' ",
+                        list[i].MaterialNo, list[i].MaterialDesc, list[i].Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, list[i].barcodeList[0].Barcode);//两种模式都只会扫描一次所以条码集合肯定只能是一个
+                        sqls.Add(onesql1);
+                        SerialNos = SerialNos + "'" + t_Stock.SerialNo + "',";
                         //生成一个条码加进去
                         jilv.AddRange(GetTaskTransSqlList(user, t_Stock, list[i], 209));
                         t_Stocks.Add(t_Stock);
@@ -408,6 +457,7 @@ namespace BILWeb.Material
 
                 }
                 sqls.AddRange(jilv);
+                sqls.ForEach(item=> { LogNet.LogInfo(item);});
                 bool istrue = UpdateModelListStatusBySql(sqls, ref Msg);
                 return istrue;
 
@@ -418,6 +468,20 @@ namespace BILWeb.Material
                 return false;
             }
 
+        }
+        
+        public static T DeepCopyByXml<T>(T obj)
+        {
+            object retval;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                XmlSerializer xml = new XmlSerializer(typeof(T));
+                xml.Serialize(ms, obj);
+                ms.Seek(0, SeekOrigin.Begin);
+                retval = xml.Deserialize(ms);
+                ms.Close();
+            }
+            return (T)retval;
         }
 
 

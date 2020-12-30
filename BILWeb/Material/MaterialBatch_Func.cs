@@ -118,6 +118,51 @@ namespace BILWeb.Material
             }
         }
 
+        public string GetInfoListThree(string id, string StrongHoldCode, string DeparMentNo)
+        {
+            BaseMessage_Model<U9BaseInfo> messageModel = new BaseMessage_Model<U9BaseInfo>();
+
+            try
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "参数不能为空";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<U9BaseInfo>>(messageModel);
+                }
+                if (string.IsNullOrEmpty(StrongHoldCode))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = " 参数不能为空";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<U9BaseInfo>>(messageModel);
+                }
+
+                T_Material_Batch_DB _db = new T_Material_Batch_DB();
+                U9BaseInfo BaseInfo = new U9BaseInfo();
+                BaseInfo = _db.GetInfoListThree(id, StrongHoldCode, DeparMentNo);
+                if (BaseInfo == null)
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "获取失败";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<U9BaseInfo>>(messageModel);
+                }
+                else
+                {
+                    messageModel.HeaderStatus = "S";
+                    messageModel.ModelJson = BaseInfo;
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<U9BaseInfo>>(messageModel);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.Message;
+                return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<U9BaseInfo>>(messageModel);
+            }
+        }
+        
+
 
         public string GetZhList(string ErpVoucherNo)
         {
@@ -210,7 +255,7 @@ namespace BILWeb.Material
                         }
                     }
 
-                }); 
+                });
 
 
                 string ERPJson = BILBasic.JSONUtil.JSONHelper.ObjectToJson<List<U9Zh>>(modelList);
@@ -234,8 +279,8 @@ namespace BILWeb.Material
                 }
 
                 LogNet.LogInfo("ymh：ERPtoWMS-" + BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel));
-
-                if (db.PostZh(user,modelList,ref strError) == false)
+                string SerialNos = "";
+                if (db.PostZh(user,modelList,ref strError,ref SerialNos) == false)
                 {
                     messageModel.HeaderStatus = "E";
                     messageModel.Message = strError;
@@ -243,9 +288,13 @@ namespace BILWeb.Material
                 }
                 else
                 {
+                    SerialNos = SerialNos.Substring(0, SerialNos.Length - 1);
+                    T_OutBarCode_Func fuc = new T_OutBarCode_Func();
+                    List<T_OutBarCodeInfo> models = new List<T_OutBarCodeInfo>();
+                    fuc.GetOutBarCodeInfoBySerialNos(SerialNos,ref models,ref strError);
                     messageModel.HeaderStatus = "S";
-                    messageModel.Message = messageModel.MaterialDoc;
                     messageModel.Message = "转换操作成功！";
+                    messageModel.ModelJson = models;
                     LogNet.LogInfo("ymh：WMS-成功");
                 }
 
@@ -267,3 +316,7 @@ namespace BILWeb.Material
     }
 
 }
+
+
+
+

@@ -12,6 +12,7 @@ using BILWeb.Stock;
 using BILBasic.XMLUtil;
 using System.Data;
 using BILWeb.OutStock;
+using BILWeb.OutBarCode;
 
 namespace BILWeb.OutStockTask
 {
@@ -46,7 +47,7 @@ namespace BILWeb.OutStockTask
             return lstSql;
         }
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_OutStockTaskDetailsInfo> modelList,string strPost="")
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_OutStockTaskDetailsInfo> modelList, string strPost = "")
         {
             string strSql1 = string.Empty;
             string strSql2 = string.Empty;
@@ -58,7 +59,7 @@ namespace BILWeb.OutStockTask
 
             foreach (var item in modelList)
             {
-                if (strPost=="复核")
+                if (strPost == "复核")
                 {
                     #region 复核
                     lstSql.Add("update t_task  set  Status = 6 where id = '" + item.HeaderID + "'");
@@ -262,7 +263,7 @@ namespace BILWeb.OutStockTask
             return strSql;
         }
 
-        private List<string> GetTaskTransSqlList(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel,int Tasktype )
+        private List<string> GetTaskTransSqlList(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel, int Tasktype)
         {
             int id = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
             List<string> lstSql = new List<string>();
@@ -270,7 +271,7 @@ namespace BILWeb.OutStockTask
             "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
             "Strongholdcode,Strongholdname,Companycode,Supprdbatch,taskno,batchno,barcode,status,materialdoc,houseprop,ean,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo,IsPalletOrBox)" +
             " values ('" + id + "' , '" + model.SerialNo + "'," +
-            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty + "','"+ Tasktype + "'," +
+            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty + "','" + Tasktype + "'," +
             " (select vouchertype from t_task where id = '" + detailModel.HeaderID + "') ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
             "'" + detailModel.Unit + "','" + detailModel.UnitName + "','" + detailModel.PartNo + "','" + detailModel.MaterialNoID + "','" + detailModel.ErpVoucherNo + "'," +
             "  '" + detailModel.VoucherNo + "','" + detailModel.StrongHoldCode + "','" + detailModel.StrongHoldName + "','" + detailModel.CompanyCode + "'," +
@@ -886,10 +887,10 @@ namespace BILWeb.OutStockTask
 
         public string GetRow(int TaskDetailesID)
         {
-            string strSql = "select RowNo from t_taskdetails where id="+ TaskDetailesID + "";
+            string strSql = "select RowNo from t_taskdetails where id=" + TaskDetailesID + "";
             return base.GetScalarBySql(strSql).ToDBString();
         }
-        
+
 
         #region 拣选小车操作
 
@@ -959,5 +960,50 @@ namespace BILWeb.OutStockTask
             return true;
         }
         #endregion
+
+
+        public bool DelStockForU9(string ErpVoucherNo,string ErpVoucherNoIn, ref string strError)
+        {
+
+            List<T_StockInfo> StockInfos = new List<T_StockInfo>();
+            List<string> lstSql = new List<string>();
+            string strSql = string.Empty;
+            //获取所有属于成品入库单的库存信息
+            T_OutBarcode_DB OutBarcodeDB = new T_OutBarcode_DB();
+            List<T_OutBarCodeInfo> OutBarCodeInfos = OutBarcodeDB.GetModelListByFilter("", " dimension='" + ErpVoucherNo + "'", " * ");
+            if (OutBarCodeInfos == null || OutBarCodeInfos.Count == 0)
+            {
+                strError = "WMS不存在属于该成品入库单【" + ErpVoucherNo + "】的条码！";
+                return false;
+            }
+            string strSerialnos = "";
+            OutBarCodeInfos.ForEach(item => { strSerialnos = strSerialnos + "'" + item.SerialNo + "',"; });
+            strSerialnos = strSerialnos.Substring(0, strSerialnos.Length - 1);
+            T_Stock_DB StockDB = new T_Stock_DB();
+            StockInfos = StockDB.GetModelListByFilter("", " serialno in (" + strSerialnos + ") ", " * ");
+
+
+            //成品入库单的库存信息操作
+            foreach (var itemModel in StockInfos)
+            {
+                //删除库存
+                lstSql.Add("delete t_stock where serialno = '" + itemModel.SerialNo + "'");
+                //增加记录表
+                UserModel user = new UserModel() { UserNo = "U9", UserName = "U9" };
+                T_OutStockTaskDetailsInfo detailModel = new T_OutStockTaskDetailsInfo()
+                {
+                    StrongHoldCode = itemModel.StrongHoldCode,
+                    StrongHoldName = itemModel.StrongHoldName,
+                    MaterialDoc = ErpVoucherNo,
+                    CompanyCode = "TB",
+                    VoucherNo = ErpVoucherNoIn,
+                    ErpVoucherNo = ErpVoucherNo
+                };
+                lstSql.AddRange(GetTaskTransSqlList(user, itemModel, detailModel, 212));
+            }
+            lstSql.Add("update t_outbarcode set dimension='' where dimension = '" + ErpVoucherNo + "'");
+
+            return base.SaveModelListBySqlToDB(lstSql, ref strError);
+        }
     }
 }

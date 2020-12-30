@@ -41,11 +41,11 @@ namespace BILWeb.Pallet
                 return false;
             }
 
-            if (String.IsNullOrEmpty(modelList[0].PrintIPAdress))
-            {
-                strError = "请设置打印机IP地址！";
-                return false;
-            }
+            //if (String.IsNullOrEmpty(modelList[0].PrintIPAdress))
+            //{
+            //    strError = "请设置打印机IP地址！";
+            //    return false;
+            //}
 
             //if (!Print_DB.isConnected(modelList[0].PrintIPAdress))
             //{

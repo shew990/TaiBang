@@ -310,5 +310,37 @@ namespace BILWeb.Area
             return GetScalarBySql(strSql).ToInt32();
         }
 
+
+       
+        public T_AreaInfo GetAreaModelForPro(string WareHouseNo)
+        {
+            T_AreaInfo areainfo = new T_AreaInfo();
+            try
+            {
+                string sql = " select * from v_AREA where AREANO=(select DefaultAreaNo from T_WAREHOUSE where WAREHOUSENO = '" + WareHouseNo + "') and WAREHOUSENO = '" + WareHouseNo + "'";
+                using (IDataReader dr = dbFactory.ExecuteReader(sql))
+                {
+                    while (dr.Read())
+                    {
+                        areainfo.ID = dr["ID"].ToInt32();
+                        areainfo.AreaNo = dr["AreaNo"].ToString();
+                        areainfo.AreaName = dr["AreaName"].ToString();
+                        areainfo.HouseName = dr["HouseName"].ToString();
+                        areainfo.HouseNo = dr["HouseNo"].ToString();
+                        areainfo.HouseID = dr["HouseID"].ToInt32();
+                        areainfo.WarehouseID = dr["WarehouseID"].ToInt32();
+                        areainfo.WarehouseName = dr["WarehouseName"].ToString();
+                        areainfo.WarehouseNo = dr["WarehouseNo"].ToString();
+                    }
+                }
+                return areainfo;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+
     }
 }

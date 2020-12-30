@@ -242,8 +242,7 @@ namespace BILWeb.OutStockTask
         }
 
         #endregion
-
-
+        
         #region 关闭发货单
         
         public bool PostCloseOutStockVoucherNo(List<T_OutStockInfo> modelList, ref string strError)
@@ -296,10 +295,15 @@ namespace BILWeb.OutStockTask
 
         #endregion
 
+        #region 撤销任务
         public bool BackOutTask(UserModel user, T_OutStockTaskInfo OutTaskInfo, ref string strError)
         {
             T_OutStockTask_DB _db = new T_OutStockTask_DB();
             return _db.BackOutTask(user, OutTaskInfo, ref strError);
         }
+        #endregion
+
+
+ 
     }
 }

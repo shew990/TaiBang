@@ -64,7 +64,8 @@ namespace Web.WMS.Common
                 new SelectListItem(){Value="208",Text="调拨出"},
                 new SelectListItem(){Value="209",Text="转换入"},
                 new SelectListItem(){Value="210",Text="转换出"},
-                new SelectListItem(){Value="5",Text="完工入库"}
+                new SelectListItem(){Value="5",Text="完工入库"},
+                new SelectListItem(){Value="212",Text="直发分公司"}
 
         };
 

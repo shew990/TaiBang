@@ -676,6 +676,13 @@ namespace BILWeb.Query
         {
             try
             {
+                //获取据点根据仓库
+                string StrongHoldCode = "";
+                string StrongHoldCodeName = "";
+                T_WareHouse_DB TWareHouseDB = new T_WareHouse_DB();
+                TWareHouseDB.Getstrongholdcode(checkno,ref StrongHoldCode,ref StrongHoldCodeName);
+
+
                 List<string> sqls = new List<string>();
                 string sql = "";
                 if (type == 0)
@@ -779,7 +786,7 @@ namespace BILWeb.Query
                                 {
                                     sql = OutTrans(username, sql, item, 204, item.SERIALNO, checkno);
                                     sqls.Add(sql);
-                                    sql = "update T_stock set MODIFYER = '" + username + "',MODIFYTIME = getdate(),qty = " + item.QTY + ",AREAID = " + item.AREAID + ",WAREHOUSEID =" + item.warehouseid + ",HOUSEID =" + item.houseid + ",  status = 3 where SERIALNO = '" + item.SERIALNO + "'";
+                                    sql = "update T_stock set strongholdcode='"+StrongHoldCode+"',strongholdname='"+ StrongHoldCodeName+ "', MODIFYER = '" + username + "',MODIFYTIME = getdate(),qty = " + item.QTY + ",AREAID = " + item.AREAID + ",WAREHOUSEID =" + item.warehouseid + ",HOUSEID =" + item.houseid + ",  status = 3 where SERIALNO = '" + item.SERIALNO + "'";
                                     sqls.Add(sql);
                                     sql = InTrans(username, sql, item, 203, item.SERIALNO, checkno);
                                     sqls.Add(sql);
@@ -794,7 +801,7 @@ namespace BILWeb.Query
                                        ",COMPANYCODE,EDATE,SUPCODE,SUPNAME,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,RECEIVESTATUS,ISLIMITSTOCK,EAN,ProjectNo,TracNo)" +
                                        "VALUES('" + item.BARCODE + "','" + item.SERIALNO + "','" + item.MATERIALNO + "','" + item.MATERIALDESC + "'" +
                                        "," + item.MATERIALID + "," + item.warehouseid + "," + item.houseid + "," + item.AREAID +
-                                       "," + item.QTY + ",3,1,'" + username + "',getdate(),'" + item.BatchNo + "','" + item.unit + "','" + item.PALLETNO + "','" + item.STRONGHOLDCODE + "','" + item.STRONGHOLDNAME + "'" +
+                                       "," + item.QTY + ",3,1,'" + username + "',getdate(),'" + item.BatchNo + "','" + item.unit + "','" + item.PALLETNO + "','" + StrongHoldCode + "','" + StrongHoldCodeName + "'" +
                                        ",'10',"+ (item.EDATE < date1 ? "'2119-10-10'" : ("'"+ item.EDATE.ToString("yyyy-MM-dd")) + "'") + ",'" + item.SUPCODE + "','" + item.SUPNAME + "'" +
                                        ",null,null,null,2,2,'" + item.ean + "','"+item.ProjectNo+"','"+item.TracNo+"')";
                                     sqls.Add(sql);
