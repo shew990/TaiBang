@@ -32,7 +32,7 @@ namespace BILBasic.Basing
 
   
        public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=192.168.250.71; Initial Catalog = WMSDB; Persist Security Info = True; User ID = sa; Password = GPGsec2020; Persist Security Info = True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ToString();
-        //public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"]==null? "Data Source=192.168.250.37;Initial Catalog=WMSDB;Persist Security Info=True;User ID=sa;Password=chinetek;Persist Security Info=True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ToString();
+       //public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"]==null? "Data Source=192.168.250.37;Initial Catalog=WMSDB;Persist Security Info=True;User ID=sa;Password=chinetek;Persist Security Info=True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ToString();
        
         /// <summary>
         /// 数据库工厂构造函数

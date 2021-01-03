@@ -162,7 +162,7 @@ namespace BILWeb.Product
                     string date = DateTime.Now.ToString("yyyyMMddHHmmss");
                     BarcodeModel.PrintName = PrintIP;
                     string data = JsonConvert.SerializeObject(BarcodeModel);
-                    HttpTool.Post("http://192.168.250.37:8022/api/print/PrintOuterBox", data, date);
+                    //HttpTool.Post("http://192.168.250.37:8022/api/print/PrintOuterBox", data, date);
                     if (true)
                     {
                         messageModel.HeaderStatus = "S";
