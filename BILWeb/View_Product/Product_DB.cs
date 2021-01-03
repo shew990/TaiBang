@@ -14,6 +14,7 @@ using BILWeb.Print;
 using BILWeb.View_Product;
 using BILWeb.SyncService;
 using BILWeb.Area;
+using BILWeb.Material;
 
 namespace BILWeb.Product
 {
@@ -71,11 +72,11 @@ namespace BILWeb.Product
             {
                 string strSql1 = "update T_Product  set   Receiveqty = (isnull( Receiveqty,0) + '" + item.ScanQty + "'),postqty = (isnull( postqty,0) + '" + item.ScanQty + "')  where ErpVoucherNo  ='" + item.ErpVoucherNo + "'";
                 lstSql.Add(strSql1);// remainqty = (case when (isnull( remainqty,0) - '" + item.ScanQty + "') <= 0 then 0 else isnull( remainqty,0) - '" + item.ScanQty + "' end),
-                
+
                 foreach (var itemBarCode in item.lstBarCode)
                 {
 
-                    lstSql.Add("update t_outbarcode set dimension='"+ item.MaterialDoc + "' where serialno='"+ itemBarCode.SerialNo + "'");
+                    lstSql.Add("update t_outbarcode set dimension='" + item.MaterialDoc + "' where serialno='" + itemBarCode.SerialNo + "'");
 
                     string strSql2 = "insert into t_stock(serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
                              "islimitstock,materialnoid,warehouseid,houseid,areaid,Receivestatus,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,EDATE,SUPCODE,SUPNAME," +
@@ -118,7 +119,7 @@ namespace BILWeb.Product
 
             }
 
-            modelList.ForEach(pro=> { pro.TaskNo = PalletNo + "," + pro.MaterialDoc; });
+            modelList.ForEach(pro => { pro.TaskNo = PalletNo + "," + pro.MaterialDoc; });
 
             return lstSql;
         }
@@ -203,7 +204,7 @@ namespace BILWeb.Product
         }
 
         //PC打印外箱码
-        public bool SaveBarcodeForPro(UserModel user, View_Product_Model modeljson, DateTime time1,ref string err)
+        public bool SaveBarcodeForPro(UserModel user, View_Product_Model modeljson, DateTime time1, ref string err)
         {
             try
             {
@@ -258,10 +259,10 @@ namespace BILWeb.Product
                     listbarcode.Add(model);
                 }
                 //处理尾箱
-                if (inboxnum!=0)
+                if (inboxnum != 0)
                 {
                     T_Product_DB ProductDB = new T_Product_DB();
-                    T_Product product = new T_Product() { ErpVoucherNo = modeljson.ErpVoucherNo };
+                    T_Product product = new T_Product() { ErpVoucherNo = modeljson.HeadErpVoucherNo };
                     T_Product Newproduct = ProductDB.GetModelListADF(user, product)[0];
 
                     Barcode_Model model = new Barcode_Model();
@@ -303,7 +304,7 @@ namespace BILWeb.Product
                     listbarcode.Add(model);
                 }
                 Print_DB print_DB = new Print_DB();
-               
+
                 if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
                 {
                     return true;
@@ -318,7 +319,7 @@ namespace BILWeb.Product
                 err = ex.ToString();
                 return false;
             }
-            
+
 
         }
 
@@ -341,49 +342,43 @@ namespace BILWeb.Product
 
 
         //专门给U9用
-        public bool SaveBarcode(List<Barcode_Model> backmodels,ref string strMsg)
+        public bool SaveBarcode(List<Barcode_Model> backmodels, ref string strMsg)
         {
             try
             {
+                T_Material_DB MDB = new T_Material_DB();
                 Print_DB print_DB = new Print_DB();
-                List<Barcode_Model> listbarcode = new List<Barcode_Model>();
-                foreach (var backmodel in backmodels)
+                bool flag = false;
+                string info = "";
+                backmodels.ForEach(item =>
                 {
+                    
+                    int Materialnoid = MDB.GetMaterialNoid(item.MaterialNo, item.StrongHoldCode);
+                    if (Materialnoid == 0)
+                    {
+                        info = "据点【" + item.StrongHoldCode + "】物料主数据没有物料【" + item.MaterialNo + "】信息！";
+                        flag = true;
+                    }
+                    else
+                    {
+                        item.MaterialNoID = Materialnoid;
+                    }
 
-                    Barcode_Model model = new Barcode_Model();
-                    model.CompanyCode = "";
-                    model.ErpVoucherNo = backmodel.ErpVoucherNo;
-                    model.VoucherType = "51";
-                    model.StrongHoldCode = backmodel.StrongHoldCode;
-                    model.StrongHoldName = backmodel.StrongHoldName;
-                    model.MaterialNoID = backmodel.MaterialNoID;
-                    model.MaterialNo = backmodel.MaterialNo;
-                    model.MaterialDesc = backmodel.MaterialDesc;
-                    model.spec = backmodel.spec;
-                    model.BatchNo = backmodel.BatchNo;
-                    model.ProductBatch = backmodel.ProductBatch;//给批号加密成8位
-                    model.ErpVoucherNo = backmodel.ErpVoucherNo;
-                    model.Qty = backmodel.Qty;
-                    model.CusCode = backmodel.CusCode;
-                    model.CusName = backmodel.CusName;
-                    model.StoreCondition = backmodel.StoreCondition;
-                    model.ProtectWay = backmodel.ProtectWay;
-                    model.LABELMARK = backmodel.LABELMARK;
+                    item.CompanyCode = "";
+                    item.VoucherType = "51";
+                    item.Creater = "U9";
+                    item.RowNo = "1";
+                    item.RowNoDel = "1";
+                    item.BarcodeType = 1;
+                });
 
-                    var seed = Guid.NewGuid().GetHashCode();
-                    string code = DateTime.Now.ToString("MMdd") + getSqu(Guid.NewGuid().ToString("N"));
-
-                    model.SerialNo = code;
-                    model.Creater = "U9";
-                    model.ReceiveTime = DateTime.Now;
-                    model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
-                    model.RowNo = "1";
-                    model.RowNoDel = "1";
-                    model.BarcodeType = 1;
-                    listbarcode.Add(model);
+                if (flag)
+                {
+                    strMsg = info;
+                    return false;
                 }
 
-                if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref strMsg))
+                if (print_DB.SubBarcodes(backmodels, "sup", 1, ref strMsg))
                 {
                     return true;
                 }
@@ -391,6 +386,47 @@ namespace BILWeb.Product
                 {
                     return false;
                 }
+                //List<Barcode_Model> listbarcode = new List<Barcode_Model>();
+                //foreach (var backmodel in backmodels)
+                //{
+
+                //    Barcode_Model model = new Barcode_Model();
+                //    model.CompanyCode = "";
+                //    model.ErpVoucherNo = backmodel.ErpVoucherNo;
+                //    model.VoucherType = "51";
+                //    model.StrongHoldCode = backmodel.StrongHoldCode;
+                //    model.StrongHoldName = backmodel.StrongHoldName;
+                //    model.MaterialNoID = backmodel.MaterialNoID;
+                //    model.MaterialNo = backmodel.MaterialNo;
+                //    model.MaterialDesc = backmodel.MaterialDesc;
+                //    model.spec = backmodel.spec;
+                //    model.BatchNo = backmodel.BatchNo;
+                //    model.ProductBatch = backmodel.ProductBatch;//给批号加密成8位
+                //    model.ErpVoucherNo = backmodel.ErpVoucherNo;
+                //    model.Qty = backmodel.Qty;
+                //    model.CusCode = backmodel.CusCode;
+                //    model.CusName = backmodel.CusName;
+                //    model.StoreCondition = backmodel.StoreCondition;
+                //    model.ProtectWay = backmodel.ProtectWay;
+                //    model.LABELMARK = backmodel.LABELMARK;
+                //    model.SerialNo = backmodel.SerialNo;
+                //    model.Creater = "U9";
+                //    model.ReceiveTime = DateTime.Now;
+                //    model.BarCode = "2@" + model.MaterialNo + "@" + model.Qty + "@" + model.SerialNo;
+                //    model.RowNo = "1";
+                //    model.RowNoDel = "1";
+                //    model.BarcodeType = 1;
+                //    listbarcode.Add(model);
+                //}
+
+                //if (print_DB.SubBarcodes(backmodels, "sup", 1, ref strMsg))
+                //{
+                //    return true;
+                //}
+                //else
+                //{
+                //    return false;
+                //}
 
             }
             catch (Exception ex)
@@ -519,7 +555,7 @@ namespace BILWeb.Product
                 string strMsg = "";
                 ParamaterFiled_DB PDB = new ParamaterFiled_DB();
                 PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg);
-                
+
                 strSql += strAnd;
                 strSql += " erpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";
             }
