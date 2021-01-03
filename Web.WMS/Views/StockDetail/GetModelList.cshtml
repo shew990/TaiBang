@@ -52,7 +52,8 @@
         </div>
         <table class="layui-hide" id="detailTable" lay-filter="init"></table>
         <script type="text/html" id="barDemo">
-            <a class="layui-btn layui-btn-xs" lay-event="stamp">打印</a>
+            <a class="layui-btn layui-btn-xs" lay-event="stamppallet">打印托盘</a>
+            <a class="layui-btn layui-btn-xs" lay-event="stamp">打印外箱</a>
         </script>
     </div>
 </div>
@@ -122,15 +123,18 @@
                     , { field: 'StatusName', title: '状态', width: 80 }
                     , { field: 'StrIsAmount', title: '标记', width: 100 }
                     , { field: 'CreateTime', title: '时间', width: 150 }
-                    , { fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo' }
+                    , { fixed: 'right', width: 200, align: 'center', toolbar: '#barDemo' }
                 ]]
             });
         }
 
         //监听行工具事件
         table.on('tool(init)', function (obj) {
-            if (obj.event === 'stamp')
+            if (obj.event === 'stamp') {
                 openPostWindow($("#printIP").val() + "Main.aspx", "serialno", obj.data.SerialNo);
+                return false;
+            }
+            openPostWindow($("#printIP").val() + "Main.aspx", "pallet", obj.data.PalletNo);
         });
 
         //分页
