@@ -13,6 +13,14 @@ namespace SqlSugarDAL.station
     {
         public int Id { get; set; }
 
+        /// <summary>
+        /// 工位名称
+        /// </summary>
         public String StationName { get; set; }
+
+        /// <summary>
+        /// pdf文件地址
+        /// </summary>
+        public String PDFAddress { get; set; }
     }
 }
