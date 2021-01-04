@@ -29,15 +29,21 @@
         //生产单号回车监听事件
         $("#ErpVoucherNo").keypress(function (even) {
             if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
-                $.post("/SeePallet/PdfInit", { ErpVoucherNo: $("#ErpVoucherNo").val(), ipAddress: returnCitySN.cip }, function (res) {
-                    //显示pdf文件
-                    $('#handout_wrap_inner').media({
-                        width: '100%',
-                        height: '550',
-                        autoplay: true,
-                        src: res[0].Sop1
+                $.post("/SeePallet/PdfInit",
+                    { ErpVoucherNo: $("#ErpVoucherNo").val(), ipAddress: returnCitySN.cip }
+                    , function (res) {
+                        if (!res.Success) {
+                            layer.alert(res.Msg);
+                            return false;
+                        }
+                        //显示pdf文件
+                        $('#handout_wrap_inner').media({
+                            width: '100%',
+                            height: '550',
+                            autoplay: true,
+                            src: res[0].Sop1
+                        });
                     });
-                });
             }
         });
     });
