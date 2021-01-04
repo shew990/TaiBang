@@ -53,6 +53,7 @@
     <Compile Include="barcode\OutBarcodeService.cs" />
     <Compile Include="checkrecord\CheckRecord.cs" />
     <Compile Include="checkrecord\CheckRecordService.cs" />
+    <Compile Include="compter\Compter.cs" />
     <Compile Include="DBHelper\DbContext.cs" />
     <Compile Include="material\Material.cs" />
     <Compile Include="material\MaterialService.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="remark\RemarkService.cs" />
     <Compile Include="seepalletinfo\SeePalletInfo.cs" />
     <Compile Include="seepalletinfo\SeePalletInfoService.cs" />
+    <Compile Include="station\Station.cs" />
     <Compile Include="Until\SuccessResult.cs" />
     <Compile Include="view_checkrecord\View_CheckRecord.cs" />
     <Compile Include="view_checkrecord\View_CheckRecordService.cs" />
