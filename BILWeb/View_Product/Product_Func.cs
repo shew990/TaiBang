@@ -203,7 +203,7 @@ namespace BILWeb.Product
 
         public string SaveT_BarcodeADF(string BarcodeJson)
         {
-
+            LogNet.LogInfo("U9生成条码类BarcodeJson:" + BarcodeJson);
             BaseMessage_Model<string> messageModel = new BaseMessage_Model<string>();
             try
             {
