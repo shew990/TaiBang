@@ -13,12 +13,11 @@ namespace SqlSugarDAL.compter
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns></returns>
-        public bool IsFirstStation(string ipAddress)
+        public int GetStationIndex(string ipAddress)
         {
-            var firstIp = GetSugarQueryable().OrderBy(x => x.Id).First();
-            if (firstIp.IpAddress == ipAddress)
-                return true;
-            return false;
+            var compters = GetSugarQueryable().OrderBy(x => x.Id).ToList();
+            int index = compters.FindIndex(x => x.IpAddress == ipAddress);
+            return index;
         }
 
         public T_Compter GetCompter(string ipAddress)

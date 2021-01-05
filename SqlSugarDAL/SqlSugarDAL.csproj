@@ -56,6 +56,8 @@
     <Compile Include="compter\Compter.cs" />
     <Compile Include="compter\CompterService.cs" />
     <Compile Include="DBHelper\DbContext.cs" />
+    <Compile Include="line\Line.cs" />
+    <Compile Include="line\LineService.cs" />
     <Compile Include="material\Material.cs" />
     <Compile Include="material\MaterialService.cs" />
     <Compile Include="product\Product.cs" />

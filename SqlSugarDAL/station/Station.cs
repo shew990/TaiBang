@@ -22,5 +22,10 @@ namespace SqlSugarDAL.station
         /// pdf文件地址
         /// </summary>
         public String PDFAddress { get; set; }
+
+        /// <summary>
+        /// 产线id
+        /// </summary>
+        public int LineId { get; set; }
     }
 }
