@@ -98,7 +98,7 @@ namespace SqlSugarDAL.checkrecord
                 {
                     Insert(queryData);
 
-                    var product = productService.GetById(orderId);
+                    var product = productService.GetById(Convert.ToInt32(orderId));
                     product.QulityQty += Convert.ToDecimal(qualityQty);
                     product.Remark = remark;
                     productService.Update(product);

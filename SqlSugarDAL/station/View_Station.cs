@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace SqlSugarDAL.station
 {
-    /// <summary>
-    /// 工位表
-    /// </summary>
-    public class T_Station
+    public class View_Station
     {
-        public int Id { get; set; }
+        public Int32? Id { get; set; }
+
+        /// <summary>
+        /// 产线名称
+        /// </summary>
+        public String LineName { get; set; }
 
         /// <summary>
         /// 工位名称
@@ -35,7 +38,25 @@ namespace SqlSugarDAL.station
 
         public DateTime? CreateTime { get; set; }
 
+        [SugarColumn(IsIgnore = true)]
+        public string CreateTimeString
+        {
+            get
+            {
+                return this.CreateTime == null ? "" : ((DateTime)this.CreateTime).ToString("yyyy/MM/dd");
+            }
+        }
+
         public DateTime? UpdateTime { get; set; }
+
+        [SugarColumn(IsIgnore = true)]
+        public string UpdateTimeString
+        {
+            get
+            {
+                return this.UpdateTime == null ? "" : ((DateTime)this.UpdateTime).ToString("yyyy/MM/dd");
+            }
+        }
 
         /// <summary>
         /// 产线id

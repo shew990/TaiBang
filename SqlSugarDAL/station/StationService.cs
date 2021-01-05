@@ -13,5 +13,11 @@ namespace SqlSugarDAL.station
             var stations = GetSugarQueryable().OrderBy(x => x.Id).ToList();
             return stations;
         }
+
+        public int GetStationIndex(string ipAddress)
+        {
+            var index = GetList().FindIndex(x => x.IpAddress == ipAddress);
+            return index;
+        }
     }
 }
