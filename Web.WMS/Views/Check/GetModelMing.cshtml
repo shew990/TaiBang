@@ -2,6 +2,16 @@
     ViewBag.Title = "GetModelMing";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
+<style type="text/css">
+    .layui-form-item {
+        margin-bottom:0px;
+    }
+
+        .layui-form-item .layui-inline {
+            margin-bottom:0px;
+        }
+</style>
+
 <div style="margin:10px auto 10px 10px;">
     <i class="layui-icon layui-icon-return" style="font-size: 16px;color: #428bca"></i>
     <a href="/Check/GetModelList"><span style="font-size:16px;color: #428bca">返回</span></a>
@@ -69,7 +79,7 @@
             table.render({
                 elem: '#checkTable'
                 , height: 520
-                , url: '/Check/SaveCheck'
+                , url: '/Check/GetCheckStock'
                 , method: 'post'
                 , contentType: 'application/json'
                 , where: {

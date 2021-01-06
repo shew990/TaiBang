@@ -9,13 +9,13 @@
 <div style="margin:0px auto 10px 10px;">
     <div class="layui-row">
         <div class="layui-col-md4">
-            物料编号<input type="text" readonly />
+            物料编号<input type="text" id="materialNo" readonly />
         </div>
         <div class="layui-col-md4">
-            产线<input type="text" readonly />
+            产线<input type="text" id="line" readonly />
         </div>
         <div class="layui-col-md4">
-            工序<input type="text" readonly />
+            工序<input type="text" id="procedure" readonly />
         </div>
     </div>
 </div>
@@ -35,12 +35,17 @@
                         layer.alert(res.Msg);
                         return false;
                     }
+                    //显示生产订单信息
+                    $("#materialNo").val(res.productOrder.HeadMaterialNo);
+                    $("#line").val(res.productOrder.LineName);
+                    $("#procedure").val("");
+
                     //显示pdf文件
                     $('#handout_wrap_inner').media({
                         width: '100%',
                         height: '550',
                         autoplay: true,
-                        src: res.Data
+                        src: res.Data.pdfAddress
                     });
                 });
             }
