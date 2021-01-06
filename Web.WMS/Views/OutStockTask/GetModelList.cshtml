@@ -283,6 +283,33 @@
         });
     });
 
+    $(".shanchu").click(function () {
+        if ($("#ErpVoucherNo").val() == "") {
+            alert("先输入ERP单号！");
+            return;
+        }
+        var index = layer.load(1);
+        $.ajax({
+            type: "GET",
+            url: "/Instock/DeleteNo?ErpVoucherno=" + $("#ErpVoucherNo").val()+"&flag=出库",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.state) {
+                    alert("删除成功！");
+                } else {
+                    alert(data.obj);
+                }
+                layer.close(index);
+            },
+            fail: function () {
+                alert("提交失败！");
+                layer.close(index);
+            }
+
+        });
+    })
+
     //弹出模态框
     function printModel(index) {
         $("#checkInfo").val(JSON.stringify(JSON.parse($("#pageDataJson").val()).data[index]));

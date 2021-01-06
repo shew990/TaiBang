@@ -122,5 +122,28 @@ namespace Web.WMS.Controllers
 
         }
 
+
+        //关闭单据
+        [HttpGet]
+        public JsonResult DeleteNo(string ErpVoucherno,string flag)
+        {
+            string strError = "";
+            List<string> list = new List<string>();
+            try
+            {
+                T_InStock_Func inStockFunc = new T_InStock_Func();
+                if (inStockFunc.DeleteNo(ErpVoucherno, flag, ref strError)) {
+                    return Json(new { state = true, obj = "删除成功！" }, JsonRequestBehavior.AllowGet);
+                } else {
+                    return Json(new { state = false, obj = strError }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { state = false, obj = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
     }
 }

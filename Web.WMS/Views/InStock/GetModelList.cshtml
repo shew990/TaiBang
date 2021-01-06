@@ -31,6 +31,7 @@
             <div class="layui-inline layui-show-xs-block">
                 <button type="submit" class="btn btn-primary" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
             </div>
+ 
             @Html.HiddenFor(model => model.VoucherType)
         </form>
         @{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}
@@ -213,5 +214,34 @@
             });
         }
     })
+
+    $(".shanchu").click(function () {
+        if ($("#ErpVoucherNo").val() == "") {
+            alert("先输入ERP单号！");
+            return;
+        }
+        var index = layer.load(1);
+        $.ajax({
+            type: "GET",
+            url: "DeleteNo?ErpVoucherno=" + $("#ErpVoucherNo").val()+"&flag=入库",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.state) {
+                    alert("删除成功！");
+                } else {
+                    alert(data.obj);
+                }
+                layer.close(index);
+            },
+            fail: function () {
+                alert("提交失败！");
+                layer.close(index);
+            }
+
+        });
+    })
+
+
 
 </script>

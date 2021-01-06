@@ -276,6 +276,20 @@ namespace BILWeb.InStock
 
         #endregion
 
+
+            /// <summary>
+            /// 删除新建的单号
+            /// </summary>
+            /// <param name="Erpvoucherno"></param>
+            /// <param name="flag"></param>
+            /// <returns></returns>
+        public bool DeleteNo(string Erpvoucherno, string flag, ref string strError)
+        {
+            T_InStock_DB _db = new T_InStock_DB();
+            return _db.DeleteNo(Erpvoucherno, flag,ref strError);
+        }
+
+
     }
 }
 

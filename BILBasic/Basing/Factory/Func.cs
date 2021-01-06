@@ -592,7 +592,7 @@ namespace BILBasic.Basing.Factory
                 {
                     model.HeaderStatus = "E";
                     model.Message = strError;
-                    LogNet.LogInfo("------------------ymh：WMS-失败");
+                    LogNet.LogInfo("------------------ymh：WMS-失败"+ strError);
                 }
                 else
                 {

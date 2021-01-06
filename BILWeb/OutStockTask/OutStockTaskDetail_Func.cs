@@ -264,7 +264,7 @@ namespace BILWeb.OutStockTask
                                 model.ToUser = user.UserNo;//人
                                 model.PostUser = itemERP.PostUser;//人
                                 model.VoucherType = itemERP.VoucherType;
-                                model.ScanQty = itemWMS.Qty;
+                                model.ScanQty = itemWMS.AmountQty;
                                 itemWMS.AmountQty = 0;
                                 model.ERPVoucherType = itemERP.ERPVoucherType;
                                 model.RowNo = itemERP.RowNo;

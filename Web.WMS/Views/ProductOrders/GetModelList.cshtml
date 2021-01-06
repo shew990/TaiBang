@@ -40,6 +40,10 @@
                 <button id="Query" class="btn btn-primary">
                     查询<i class="layui-icon layui-icon-search" style="padding-left:5px;"></i>
                 </button>
+                <button id="shanchu" class="btn btn-primary shanchu">
+                    删除<i class="layui-icon fa fa-times" style="padding-left:5px;"></i>
+                </button>
+
             </div>
 
         </div>
@@ -93,6 +97,7 @@
             <div class="layui-inline" style="margin-left:60px;">
                 <button id="Print" class="btn btn-primary" style="margin-top: -15px;">打 印</button>
             </div>
+       
         </div>
     </div>
 </div>
@@ -258,6 +263,34 @@
 
             });
         });
+
+        $(".shanchu").click(function () {
+            if ($("#ErpVoucherNo").val() == "") {
+                alert("先输入ERP单号！");
+                return;
+            }
+            var index = layer.load(1);
+            $.ajax({
+                type: "GET",
+                url: "/Instock/DeleteNo?ErpVoucherno=" + $("#ErpVoucherNo").val() + "&flag=生产",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.state) {
+                        alert("删除成功！");
+                    } else {
+                        alert(data.obj);
+                    }
+                    layer.close(index);
+                },
+                fail: function () {
+                    alert("提交失败！");
+                    layer.close(index);
+                }
+
+            });
+        })
+
 
         //打印
         $('#Print').click(function () {

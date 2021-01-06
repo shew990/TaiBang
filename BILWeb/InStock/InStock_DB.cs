@@ -338,7 +338,59 @@ namespace BILWeb.InStock
         }
 
 
-       
+        public bool DeleteNo(string ErpVoucherno, string flag,ref string  strError)
+        {
+            List<string> list = new List<string>();
+            try
+            {
+                string tablename = "";
+                string tabeldetail = "";
+                string status = "";
+                switch (flag)
+                {
+                    case "入库":
+                        tablename = "T_INSTOCK";
+                        tabeldetail = "t_instockdetail";
+                        status = "status";
+                        break;
+                    case "出库":
+                        tablename = "T_TASK";
+                        tabeldetail = "T_TASKDETAILS";
+                        status = "status";
+                        break;
+                    case "生产":
+                        tablename = "t_product";
+                        tabeldetail = "t_productdetail";
+                        status = "POSTQTY";
+                        break;
+
+                }
+                T_InStock_Func tfunc = new T_InStock_Func();
+                string sql = string.Format(@"select [{0}] from {1} where erpvoucherno='{2}'", status, tablename, ErpVoucherno);
+                string istrue = GetScalarBySql(sql).ToString();//是否status等于新建
+                if (istrue == "1" || (flag == "生产" && Convert.ToDecimal(istrue) == 0))
+                {
+                    list.Add(string.Format("delete {0} where erpvoucherno='{1}'", tablename, ErpVoucherno));
+                    list.Add(string.Format("delete {0} where erpvoucherno='{1}'", tabeldetail, ErpVoucherno));
+                    return base.SaveModelListBySqlToDB(list, ref strError);
+                }
+                else
+                {
+                    strError = "该订单状态不是新建，请确认";
+                    return false;  // Json(new { state = false, obj = strError }, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+
+
 
     }
 }
