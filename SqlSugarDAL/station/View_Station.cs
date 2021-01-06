@@ -38,6 +38,9 @@ namespace SqlSugarDAL.station
 
         public DateTime? CreateTime { get; set; }
 
+        /// <summary>
+        /// 创建时间显示
+        /// </summary>
         [SugarColumn(IsIgnore = true)]
         public string CreateTimeString
         {
@@ -49,6 +52,9 @@ namespace SqlSugarDAL.station
 
         public DateTime? UpdateTime { get; set; }
 
+        /// <summary>
+        /// 修改时间显示
+        /// </summary>
         [SugarColumn(IsIgnore = true)]
         public string UpdateTimeString
         {

@@ -31,7 +31,18 @@ namespace Web.WMS.Controllers.Station
         }
 
         /// <summary>
-        /// 跳转新增页面
+        /// 删除
+        /// </summary>
+        /// <param name="station"></param>
+        /// <returns></returns>
+        public ActionResult DeleteSave(View_Station station)
+        {
+            var successResult = new View_StationService().DeleteSave(station);
+            return Json(successResult, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 跳转保存页面
         /// </summary>
         /// <returns></returns>
         public ActionResult Form()

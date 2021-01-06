@@ -31,7 +31,7 @@ namespace SqlSugarDAL.station
 
         public List<View_Station> GetStationsByWhere(string lineName, string stationName, string ipAddress)
         {
-            var records = GetSugarQueryable();
+            var records = GetSugarQueryable(x => x.IsDel == 0);
             if (!string.IsNullOrEmpty(lineName))
                 records = records.Where(x => x.LineName.Contains(lineName));
             if (!string.IsNullOrEmpty(stationName))
@@ -39,6 +39,26 @@ namespace SqlSugarDAL.station
             if (!string.IsNullOrEmpty(ipAddress))
                 records = records.Where(x => x.IpAddress.Contains(ipAddress));
             return records.ToList();
+        }
+
+        public SuccessResult DeleteSave(View_Station view_Station)
+        {
+            SuccessResult successResult = new SuccessResult();
+            successResult.Success = false;
+            try
+            {
+                StationService stationService = new StationService();
+                var station = stationService.GetById((int)view_Station.Id);
+                station.IsDel = 1;
+                stationService.Update(station);
+
+                successResult.Success = true;
+            }
+            catch (Exception ex)
+            {
+                successResult.Msg = ex.Message;
+            }
+            return successResult;
         }
 
         public SuccessResult Submit(View_Station view_Station)
