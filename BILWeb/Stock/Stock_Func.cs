@@ -2148,7 +2148,7 @@ namespace BILWeb.Stock
         /// <param name="user"></param>
         /// <param name="modelList"></param>
         /// <returns></returns>
-        protected override string GetModelListByJsonToERP(UserModel user, List<T_StockInfo> modelList)
+        protected override string GetModelListByJsonToERP(UserModel user, List<T_StockInfo> modelList, string strpost = "")
         {
             List<T_StockInfo> NewLstStock = new List<T_StockInfo>();
 
@@ -2236,7 +2236,7 @@ namespace BILWeb.Stock
                     return JSONHelper.ObjectToJson<BaseMessage_Model<List<Barcode_Model>>>(messageModel);
                 }
                 //根据序列号获取条码信息
-                return new Check_DB().GetScanInfo(serialno);
+                return new Check_DB().GetScanInfo(serialno,"");
             }
             catch (Exception ex)
             {

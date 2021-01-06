@@ -653,10 +653,10 @@ namespace SCCGAndroidService
             return db.GetCheck();
         }
 
-        public string GetScanInfo(string barcode)
+        public string GetScanInfo(string barcode,string CheckNo)
         {
             Check_DB db = new Check_DB();
-            return db.GetScanInfo(barcode);
+            return db.GetScanInfo(barcode, CheckNo);
         }
         public string CheckSerialno(string EAN, string areaid, string batchno, string materialno)
         {
@@ -999,6 +999,12 @@ namespace SCCGAndroidService
         {
             T_OutTaskDetails_Func func = new T_OutTaskDetails_Func();
             return func.DelStockForU9(ErpVoucherNo, ErpVoucherNoIn, Guid);
+        }
+
+        public string PostForU9(string ErpVoucherNo, string Remark, string Guid,string Creater)
+        {
+            T_Material_Batch_Func func = new T_Material_Batch_Func();
+            return func.Post(ErpVoucherNo, Remark, Guid, Creater);
         }
 
     }

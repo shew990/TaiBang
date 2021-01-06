@@ -251,7 +251,7 @@ namespace BILBasic.Interface
                 object[] obj = new object[1];
                 obj[0] = VoucherJson;
                 var method = type.GetMethod(model.FunctionName);
-                LogNet.LogInfo("葛志伟:" + model.ClassName + model.FunctionName+"参数："+ VoucherJson);
+                LogNet.LogInfo("---------------------调用ERP接口:" + model.ClassName + model.FunctionName+"参数："+ VoucherJson);
                 return method.Invoke(instance, obj).ToString();
             }
             catch (Exception ex)

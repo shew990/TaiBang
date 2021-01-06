@@ -292,7 +292,7 @@ namespace SCCGAndroidService
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetScanInfo", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string GetScanInfo(string barcode);
+        string GetScanInfo(string barcode, string CheckNo);
 
 
         [OperationContract]
@@ -488,7 +488,9 @@ namespace SCCGAndroidService
         [WebInvoke(Method = "POST", UriTemplate = "DelStockForU9", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string DelStockForU9(string ErpVoucherNo, string ErpVoucherNoIn, string Guid);
 
-
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "PostForU9", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string PostForU9(string ErpVoucherNo, string Remark, string Guid, string Creater);
         #endregion
 
     }

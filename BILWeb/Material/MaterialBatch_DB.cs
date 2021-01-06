@@ -274,6 +274,25 @@ namespace BILWeb.Material
             }
         }
 
+
+       
+        public string Post(string ErpVoucherNo,string Remark,string Guid,string Creater)
+        {
+            try
+            {
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func(); 
+                string json = "{\"company_no\":\"" + ErpVoucherNo + "\",\"max_code\":\"" + Remark + "\",\"erp_vourcher_type\":\"" + Creater + "\",\"data_no\":\"" + Guid + "\",\"VoucherType\":\"9992\"}";   
+                string ERPJson = TIF.GetModelListByInterface(json);
+                
+                 LogNet.LogInfo("-------------------------------------------直发公司ERP返回："+ ERPJson);
+                return ERPJson;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         ////提交转换单
         //public bool PostZh(U9Zh model, UserModel user, string Guid, ref string receive,ref string Message)
         //{

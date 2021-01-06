@@ -1221,7 +1221,7 @@ namespace BILWeb.OutStock
         /// <param name="user"></param>
         /// <param name="modelList"></param>
         /// <returns></returns>
-        protected override string GetModelListByJsonToERP(UserModel user, List<T_OutStockDetailInfo> modelList) 
+        protected override string GetModelListByJsonToERP(UserModel user, List<T_OutStockDetailInfo> modelList, string strPost = "")
         {
             List<T_OutStockDetailInfo> lstDetail = new List<T_OutStockDetailInfo>();
             List<T_StockInfo> lstStock = new List<T_StockInfo>();            
@@ -1900,8 +1900,22 @@ namespace BILWeb.OutStock
                 T_OutTaskDetails_DB otb = new T_OutTaskDetails_DB();
                 otb.GetOutTaskDetailByErpVoucherNo(ErpVoucherNo, ref modelList, ref strError);
 
-                modelList.FirstOrDefault().lstStockInfo = lstStock;
-               
+                //modelList.FirstOrDefault().lstStockInfo = lstStock;
+
+                modelList.ForEach(item=> {
+                    lstStock.ForEach(itemstock => {
+                        if (item.ID== itemstock.TaskDetailesID)
+                        {
+                            if (item.lstStockInfo==null)
+                            {
+                                item.lstStockInfo = new List<T_StockInfo>();
+                            }
+                            item.lstStockInfo.Add(itemstock);
+                        }
+                    });
+                });
+
+
                 T_OutStockTask_Func outfunc = new T_OutStockTask_Func();
                 var rrr = new T_OutStockTaskInfo() { ID = modelList[0].HeaderID };
                 var rtt = outfunc.GetModelByID(ref rrr, ref strError);

@@ -662,7 +662,7 @@ namespace BILWeb.SyncService
                         List<int> BeforeIDs = new List<int>();  //同步前表体ID集合
                         List<int> AfterIDs = new List<int>();  //同步后表体ID集合
                         string headsql = GetSql(headJToken, db, pmListbyType, Headkeys, MatrtialKeys, headTableName, true, ref headID, ref WmsVourcherNo, ref BeforeIDs, ref AfterIDs);
-                        LogNet.LogInfo("-------------------------------------------------同步SQL语句:" + headsql);
+                        //LogNet.LogInfo("-------------------------------------------------同步SQL语句:" + headsql);
                         SQLIST.Add(headsql);
                         foreach (JProperty hjp in headJToken)
                         {
@@ -676,7 +676,7 @@ namespace BILWeb.SyncService
                                     {
                                         JToken detailJToken = JObject.Parse(detailJarray[j].ToString());
                                         string detailsql = GetSql(detailJToken, db, pmListbyType, Detailkeys, MatrtialKeys, detailTableName, false, ref headID, ref WmsVourcherNo, ref BeforeIDs, ref AfterIDs);
-                                        LogNet.LogInfo("-------------------------------------------------同步SQL语句:" + detailsql);
+                                        //LogNet.LogInfo("-------------------------------------------------同步SQL语句:" + detailsql);
                                         SQLIST.Add(detailsql);
                                     }
                                 }

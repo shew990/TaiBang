@@ -1810,8 +1810,21 @@ namespace BILWeb.Stock
             {
                 throw ex;
             }
-
         }
+
+        public decimal GetStockQty(string serialno)
+        {
+            try
+            {
+                string strFilter = "select qty from t_stock a where a.serialno='"+ serialno + "'";
+                return base.GetScalarBySql(strFilter).ToDecimal();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
 
     }

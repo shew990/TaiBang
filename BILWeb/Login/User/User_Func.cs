@@ -54,6 +54,52 @@ namespace BILWeb.Login.User
                 strError = "登陆密码和确认密码不能为空！";
                 return false;
             }
+            //判断据点和仓库的关系
+            T_WareHouse_Func Wfunc = new T_WareHouse_Func();
+            string Msg = "";
+            string[] warehousenos = model.WarehouseCode.Split(',');
+            for (int i = 0; i < warehousenos.Length; i++)
+            {
+                T_WareHouseInfo warehouse = new T_WareHouseInfo() { ID = Convert.ToInt16(warehousenos[i]) };
+                Wfunc.GetModelByID(ref warehouse,ref Msg);
+                if (model.StrongHoldCode == "0300")
+                {
+                    if (warehouse.WareHouseNo.Substring(0, 1) != "G") {
+
+                        strError = "仓库和据点没有对应关系！";
+                        return false;
+                    }
+
+                }
+                if (model.StrongHoldCode == "0401")
+                {
+                    if (warehouse.WareHouseNo.Substring(0, 2) != "C1")
+                    {
+
+                        strError = "仓库和据点没有对应关系！";
+                        return false;
+                    }
+                }
+                if (model.StrongHoldCode == "0402")
+                {
+                    if (warehouse.WareHouseNo.Substring(0, 2) != "C2")
+                    {
+
+                        strError = "仓库和据点没有对应关系！";
+                        return false;
+                    }
+                }
+                if (model.StrongHoldCode == "0403")
+                {
+                    if (warehouse.WareHouseNo.Substring(0, 2) != "C3")
+                    {
+
+                        strError = "仓库和据点没有对应关系！";
+                        return false;
+                    }
+                }
+            }
+
             
             //if (Common_Func.IsNullOrEmpty(model.GroupCode))
             //{
