@@ -142,6 +142,12 @@ namespace BILWeb.OutStock
                 string strmsg = "";
                 var rrr = new T_OutStockTaskInfo() { ID = modelListTaskDetail[0].HeaderID };
                 var rtt = outfunc.GetModelByID(ref rrr, ref strmsg);
+                if (rrr.Status == 6) {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "该单子已经复核，不能重复复核！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+                    
 
                 outStockDetailList.ForEach(t => t.ERPNote = rrr.ERPNote);
 
