@@ -12,6 +12,7 @@ using BILWeb.Warehouse;
 using BILWeb.OutStock;
 using BILBasic.User;
 using BILBasic.Basing;
+using BILWeb.Product;
 
 namespace BILWeb.Query
 {
@@ -680,7 +681,7 @@ namespace BILWeb.Query
                 string StrongHoldCode = "";
                 string StrongHoldCodeName = "";
                 T_WareHouse_DB TWareHouseDB = new T_WareHouse_DB();
-                TWareHouseDB.Getstrongholdcode(checkno,ref StrongHoldCode,ref StrongHoldCodeName);
+                TWareHouseDB.GetstrongholdcodeForCheck(checkno,ref StrongHoldCode,ref StrongHoldCodeName);
 
 
                 List<string> sqls = new List<string>();
@@ -2044,7 +2045,7 @@ namespace BILWeb.Query
 
         //盘点扫描条码获取内容
 
-        public string GetScanInfo(string barcode)
+        public string GetScanInfo(string barcode,string CheckNo)
         {
             //验证条码正确性
             T_OutBarCode_Func tf = new T_OutBarCode_Func();
@@ -2069,6 +2070,9 @@ namespace BILWeb.Query
             //    return j;
             //}
 
+            T_Product_DB ProductDB = new T_Product_DB();
+            string Num =ProductDB.GetNum(SerialNo, CheckNo);
+
             List<Barcode_Model> returnlist = new List<Barcode_Model>();
 
             //外箱
@@ -2081,7 +2085,7 @@ namespace BILWeb.Query
                 {
                     if (dr.Read())
                     {
-                        Barcode_Model bm = MakeQInfo(dr);
+                        Barcode_Model bm = MakeQInfo(dr, Num);
                         //bm.PALLETNO = dr["PALLETNO"].ToDBString();
                         returnlist.Add(bm);
                     }
@@ -2093,7 +2097,7 @@ namespace BILWeb.Query
                     {
                         if (dr.Read())
                         {
-                            Barcode_Model bm = MakeQInfo(dr);
+                            Barcode_Model bm = MakeQInfo(dr, Num);
                             returnlist.Add(bm);
                         }
                     }
@@ -2167,7 +2171,7 @@ namespace BILWeb.Query
 
         }
 
-        private static Barcode_Model MakeQInfo(IDataReader dr)
+        private static Barcode_Model MakeQInfo(IDataReader dr,string strFlag)
         {
             Barcode_Model bm = new Barcode_Model();
             bm.SerialNo = dr["SerialNo"].ToDBString();
@@ -2180,6 +2184,7 @@ namespace BILWeb.Query
             bm.MaterialNoID = dr["MATERIALNOID"].ToInt32();
             bm.StrongHoldCode = dr["StrongHoldCode"].ToDBString();
             bm.StrongHoldName = dr["StrongHoldName"].ToString();
+            bm.Unit = strFlag;
             return bm;
         }
 
@@ -2577,7 +2582,7 @@ namespace BILWeb.Query
                                           ",COMPANYCODE,SUPCODE,SUPNAME,SUPPRDBATCH,RECEIVESTATUS,ISLIMITSTOCK,ean,barcodetype,TracNo)" +
                                           "VALUES('" + item.BarCode + "','" + item.SerialNo + "','" + item.MaterialNo + "','" + item.MaterialDesc + "'" +
                                           "," + item.MaterialNoID + "," + warehouseid + "," + houseid + "," + areaid +
-                                          "," + item.Qty + "," + bar.STATUS + ",1,'" + man + "',GETDATE(),'" + item.BatchNo + "','" + item.Unit + "','" + item.PalletNo + "','" + item.StrongHoldCode + "','" + item.StrongHoldName + "'" +
+                                          "," + item.Qty + "," + bar.STATUS + ",1,'" + man + "',GETDATE(),'" + item.BatchNo + "','" + item.Unit + "','" + item.PalletNo + "','" + bar.StrongHoldCode + "','" + bar.StrongHoldName + "'" +
                                           ",'10','" + item.SupCode + "','" + item.SupName + "'" +
                                           ",'" + item.SupPrdBatch + "',2,2,'" + item.EAN + "',1,'"+item.TracNo + "')";
                     sqls.Add(sql);
@@ -2702,7 +2707,7 @@ namespace BILWeb.Query
             dbFactory.ExecuteNonQueryList(sqls);
         }
 
-
+        
 
     }
 }

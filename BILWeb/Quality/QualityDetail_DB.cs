@@ -338,7 +338,7 @@ namespace BILWeb.Quality
                                 "Edate, Supcode, Supname, Productdate, Supprdbatch, Supprddate, Isquality,Stocktype,ean,BARCODETYPE,ProjectNo,TracNo,IsAmount)" +
                                 "select barcode,serialno,materialno,Materialdesc,'" + model.WareHouseID + "', '" + model.HouseID + "', '" + model.AreaID + "', Qty ,'" + model.Status + "','1'," +
                                 "'" + user.UserNo + "',getdate(),batchno,'" + model.ID + "',unit,'" + model.UnitName + "','" + model.ReceiveStatus + "','" + model.IsLimitStock + "','"+model.MaterialNoID+"'," +
-                                "Strongholdcode, Strongholdname, Companycode,Edate, Supcode, Supname, Productdate, Supprdbatch,Supprddate, '3',1,ean,BARCODETYPE,ProjectNo,TracNo,2 from t_Outbarcode where serialno = '" + NewSerialNo + "'";
+                                "'"+model.StrongHoldCode+ "', '" + model.StrongHoldName + "', Companycode,Edate, Supcode, Supname, Productdate, Supprdbatch,Supprddate, '3',1,ean,BARCODETYPE,ProjectNo,TracNo,2 from t_Outbarcode where serialno = '" + NewSerialNo + "'";
 
             return strSql;
         }

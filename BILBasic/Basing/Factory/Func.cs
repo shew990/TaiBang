@@ -557,22 +557,20 @@ namespace BILBasic.Basing.Factory
                         return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model);
                     }
                 }
- 
+
 
                 //是否过账
-                if (string.IsNullOrEmpty(strPost)|| (strPost == "下架"&& (modelList[0].VoucherType == 31|| modelList[0].VoucherType == 53))|| strPost == "复核")
+                if (string.IsNullOrEmpty(strPost) || (strPost == "下架" && (modelList[0].VoucherType == 31 || modelList[0].VoucherType == 53)) || strPost == "复核")
                 {
                     T_Interface_Func tfunc = new T_Interface_Func();
-                    string ERPJson = GetModelListByJsonToERP(user, modelList);//JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList);
-
-                    LogNet.LogInfo("----------------------------------------------------------------------");
-                    LogNet.LogInfo("ERPJsonBefore:" + ERPJson);
+                    string ERPJson = GetModelListByJsonToERP(user, modelList, strPost);//JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList);
+                    
+                    LogNet.LogInfo("-----------------------ERPJsonBefore:" + ERPJson);
                     string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
 
                     model = JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<TBase_Model>>>(interfaceJson);
-
-                    LogNet.LogInfo("----------------------------------------------------------------------");
-                    LogNet.LogInfo("ERPJsonAfter:" + JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model));
+                    
+                    LogNet.LogInfo("-----------------------ERPJsonAfter:" + JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model));
 
                     //过账失败直接返回
                     if (model.HeaderStatus == "E" && !string.IsNullOrEmpty(model.Message))
@@ -587,24 +585,21 @@ namespace BILBasic.Basing.Factory
 
 
                 //LogNet.LogInfo("ERPJson:" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
-                LogNet.LogInfo("----------------------------------------------------------------------");
-                LogNet.LogInfo("ymh：ERPtoWMS-" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
+                LogNet.LogInfo("------------------------ymh：ERPtoWMS-" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
                 bSucc = db.SaveModelListBySqlToDB(user, ref modelList, ref strError, strPost);
                 
                 if (bSucc == false)
                 {
                     model.HeaderStatus = "E";
                     model.Message = strError;
-                    LogNet.LogInfo("----------------------------------------------------------------------");
-                    LogNet.LogInfo("ymh：WMS-失败");
+                    LogNet.LogInfo("------------------ymh：WMS-失败");
                 }
                 else
                 {
                     model.HeaderStatus = "S";
                     model.TaskNo = modelList[0].TaskNo;
                     model.Message = GetSuccessMessage(model.MaterialDoc, modelList[0].TaskNo);
-                    LogNet.LogInfo("----------------------------------------------------------------------");
-                    LogNet.LogInfo("ymh：WMS-成功");
+                    LogNet.LogInfo("-----------------ymh：WMS-成功");
                 }
 
                 return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model);
@@ -815,7 +810,7 @@ namespace BILBasic.Basing.Factory
             return true;
         }
 
-        protected virtual string GetModelListByJsonToERP(User.UserModel user, List<TBase_Model> modelList)
+        protected virtual string GetModelListByJsonToERP(User.UserModel user, List<TBase_Model> modelList,string strpost="")
         {
             return JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList);
         }

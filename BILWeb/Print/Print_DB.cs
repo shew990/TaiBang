@@ -1144,7 +1144,9 @@ namespace BILWeb.Print
                     string strSql1 = Common_DB2.GetInertSqlCache(item, "t_outbarcode", "");
                     lstSql.Add(strSql1);
                 }
+                LogNet.LogInfo("sql处理后");
                 int i = dbFactory.ExecuteNonQueryList(lstSql, ref ErrMsg);
+                LogNet.LogInfo("sql执行后");
                 if (i > 0)
                 {
                     return true;

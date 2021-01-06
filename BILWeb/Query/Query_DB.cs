@@ -318,9 +318,9 @@ namespace BILWeb.Query
                         }
 
                     }
-                    T_StockInfoEX TMM = new T_StockInfoEX();
-                    TMM.Qty = qtyall;
-                    lsttask.Add(TMM);
+                    //T_StockInfoEX TMM = new T_StockInfoEX();
+                    //TMM.Qty = qtyall;
+                    //lsttask.Add(TMM);
                     return true;
                 }
             }
@@ -707,9 +707,9 @@ namespace BILWeb.Query
                 }
                 else
                 {
-                    TaskTrans_Model TMM = new TaskTrans_Model();
-                    TMM.QTY = qtyall;
-                    lsttask.Add(TMM);
+                    //TaskTrans_Model TMM = new TaskTrans_Model();
+                    //TMM.QTY = qtyall;
+                    //lsttask.Add(TMM);
                     return true;
                 }
             }

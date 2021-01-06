@@ -192,7 +192,7 @@ namespace BILWeb.Product
 
         }
 
-        protected override string GetModelListByJsonToERP(UserModel user, List<T_Product> modelList)
+        protected override string GetModelListByJsonToERP(UserModel user, List<T_Product> modelList, string strPost = "")
         {
             modelList.ForEach(item=>item.PostQty=item.ScanQty);
             modelList.ForEach(item => item.GUID = user.GUID);

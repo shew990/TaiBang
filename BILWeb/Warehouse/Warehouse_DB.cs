@@ -239,7 +239,7 @@ namespace BILWeb.Warehouse
 
 
         
-        public bool Getstrongholdcode(string checkno,ref string strongholdcode,ref string strongholdname)
+        public bool GetstrongholdcodeForCheck(string checkno,ref string strongholdcode,ref string strongholdname)
         {
             string strsql = "select top 1 b.warehouseno from t_checkdetails a left join v_area b on a.areaid=b.id where a.CHECKNO= '" + checkno + "'";
             string WarehouseNo= base.GetScalarBySql(strsql).ToDBString();

@@ -88,7 +88,7 @@ namespace BILWeb.YS
         /// <param name="user"></param>
         /// <param name="modelList"></param>
         /// <returns></returns>
-        protected override string GetModelListByJsonToERP(UserModel user, List<T_YSDetailInfo> modelList)
+        protected override string GetModelListByJsonToERP(UserModel user, List<T_YSDetailInfo> modelList, string strpost = "")
         {
             List<T_YSDetailInfo> lstDetail = new List<T_YSDetailInfo>();
             T_YSDetailInfo stockDetailInfo = null;

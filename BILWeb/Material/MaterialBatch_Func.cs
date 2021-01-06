@@ -2,6 +2,7 @@
 using BILBasic.JSONUtil;
 using BILBasic.User;
 using BILWeb.OutBarCode;
+using BILWeb.OutStockTask;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -309,6 +310,59 @@ namespace BILWeb.Material
             }
         }
 
+        public string Post(string ErpVoucherNo, string Remark,string Guid,string Creater)
+        {
+            LogNet.LogInfo("-------------------------------------------直发公司ErpVoucherNo:【" + ErpVoucherNo + "】,  Remark:【"+ Remark + "】, Guid:【"+ Guid + "】, Creater::【"+ Creater + "】");
+            BaseMessage_Model<string> messageModel = new BaseMessage_Model<string>();
+
+            try
+            {
+                T_OutBarcode_DB OutBarcodeDB = new T_OutBarcode_DB();
+                List<T_OutBarCodeInfo> OutBarCodeInfos = OutBarcodeDB.GetModelListByFilter("", " dimension='" + ErpVoucherNo + "'", " * ");
+                if (OutBarCodeInfos == null || OutBarCodeInfos.Count == 0)
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "WMS不存在属于该成品入库单【" + ErpVoucherNo + "】的条码！";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+
+
+                T_Material_Batch_DB _db = new T_Material_Batch_DB();
+                string strERP  = _db.Post(ErpVoucherNo, Remark ,Guid, Creater);
+                if (strERP.Substring(0,1)=="0")
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = strERP;
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+
+                string strError = "";
+                T_OutTaskDetails_DB _dbOutTaskDetails = new T_OutTaskDetails_DB();
+                LogNet.LogInfo("-------------------------------------------直发公司ERP成功凭证号："+ strERP.Substring(1, strERP.Length - 1));
+                if (_dbOutTaskDetails.DelStockForU9(ErpVoucherNo, strERP.Substring(1, strERP.Length-1), ref strError) == false)
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "ERP操作成功，ERP凭证号：" + strERP.Substring(1, strERP.Length - 1)+"WMS失败："+ strError;
+                    LogNet.LogInfo("-------------------------------------------直发公司ERP成功凭证号：" + messageModel.Message);
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+                else
+                {
+                    messageModel.HeaderStatus = "S";
+                    messageModel.Message = "操作成功！ERP凭证号："+ strERP.Substring(1, strERP.Length - 1);
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.Message;
+                return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+            }
+        }
 
 
 

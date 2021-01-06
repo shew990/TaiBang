@@ -87,7 +87,7 @@ namespace BILWeb.InStock
         /// <param name="user"></param>
         /// <param name="modelList"></param>
         /// <returns></returns>
-        protected override string GetModelListByJsonToERP(UserModel user, List<T_InStockDetailInfo> modelList)
+        protected override string GetModelListByJsonToERP(UserModel user, List<T_InStockDetailInfo> modelList,string strPost="")
         {
             List<T_InStockDetailInfo> lstDetail = new List<T_InStockDetailInfo>();
             T_InStockDetailInfo stockDetailInfo = null;
@@ -650,3 +650,6 @@ namespace BILWeb.InStock
     }
 
 }
+
+
+

@@ -99,7 +99,6 @@ namespace BILWeb.InStockTask
                         strErrMsg = "上架库区 物料" + item.MaterialNo + " 存在非" + item.StrongHoldCode + " 组织库存";
                         return false;
                     }
-
                 }
             }
             return true;
@@ -209,7 +208,7 @@ namespace BILWeb.InStockTask
         /// <param name="user"></param>
         /// <param name="modelList"></param>
         /// <returns></returns>
-        protected override string GetModelListByJsonToERP(UserModel user, List<T_InStockTaskDetailsInfo> modelList)
+        protected override string GetModelListByJsonToERP(UserModel user, List<T_InStockTaskDetailsInfo> modelList,string strpost="")
         {
             modelList.ForEach(t => t.PostUser = user.UserNo);
             modelList.ForEach(t => t.PassWord = user.PassWord);

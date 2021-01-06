@@ -215,11 +215,16 @@ namespace BILWeb.Product
                 GetBoxInfo(ref outboxnum, ref tailnum, ref inboxnum, modeljson.ProductQty.ToDecimal(), modeljson.PackQty);
 
                 List<Barcode_Model> listbarcode = new List<Barcode_Model>();
+
+                T_Product_DB ProductDB = new T_Product_DB();
+                T_Product product = new T_Product() { ErpVoucherNo = modeljson.HeadErpVoucherNo };
+                T_Product Newproduct = ProductDB.GetModelListADF(user, product)[0];
+
                 for (int i = 0; i < outboxnum; i++)
                 {
-                    T_Product_DB ProductDB = new T_Product_DB();
-                    T_Product product = new T_Product() { ErpVoucherNo = modeljson.HeadErpVoucherNo };
-                    T_Product Newproduct = ProductDB.GetModelListADF(user, product)[0];
+                    //T_Product_DB ProductDB = new T_Product_DB();
+                    //T_Product product = new T_Product() { ErpVoucherNo = modeljson.HeadErpVoucherNo };
+                    //T_Product Newproduct = ProductDB.GetModelListADF(user, product)[0];
 
                     Barcode_Model model = new Barcode_Model();
                     model.CompanyCode = "";
@@ -261,9 +266,9 @@ namespace BILWeb.Product
                 //处理尾箱
                 if (inboxnum != 0)
                 {
-                    T_Product_DB ProductDB = new T_Product_DB();
-                    T_Product product = new T_Product() { ErpVoucherNo = modeljson.HeadErpVoucherNo };
-                    T_Product Newproduct = ProductDB.GetModelListADF(user, product)[0];
+                    //T_Product_DB ProductDB = new T_Product_DB();
+                    //T_Product product = new T_Product() { ErpVoucherNo = modeljson.HeadErpVoucherNo };
+                    //T_Product Newproduct = ProductDB.GetModelListADF(user, product)[0];
 
                     Barcode_Model model = new Barcode_Model();
                     model.CompanyCode = "";
@@ -304,7 +309,7 @@ namespace BILWeb.Product
                     listbarcode.Add(model);
                 }
                 Print_DB print_DB = new Print_DB();
-
+  
                 if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))
                 {
                     return true;
@@ -660,6 +665,13 @@ namespace BILWeb.Product
 
         }
         #endregion
+
+
+        public string GetNum(string serialno, string CheckNo)
+        {
+            string strSql = "select count(1) from T_CHECKDETAILS where checkno = '" + CheckNo + "' and serialno = '" + serialno + "'";
+            return base.GetScalarBySql(strSql).ToDBString();
+        }
 
     }
 }

@@ -265,14 +265,19 @@ namespace Web.WMS.Controllers.Print
         [HttpPost]
         public ActionResult SaveBarcodePro(string data)
         {
+            LogNet.LogInfo("外箱打印开始");
+            LogNet.LogInfo("外箱打印:" + data);
+
             var objT_InStockDetailInfo = JsonConvert.DeserializeObject<View_Product_Model>(data);
             string err = "";
             T_Product_DB print_DB = new T_Product_DB();
             DateTime time1=DateTime.Now;
             try
             {
+                LogNet.LogInfo("外箱打印开始SaveBarcodeForPro前");
                 if (print_DB.SaveBarcodeForPro(currentUser, objT_InStockDetailInfo, time1, ref err))
                 {
+                    LogNet.LogInfo("外箱打印开始SaveBarcodeForPro后");
                     return Json(new { state = true, obj = time1.ToString("yyyy/MM/dd HH:mm:ss") }, JsonRequestBehavior.AllowGet);
                 }
                 return Json(new { state = false, obj = err }, JsonRequestBehavior.AllowGet);

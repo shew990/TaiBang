@@ -11,6 +11,7 @@ using Oracle.ManagedDataAccess.Client;
 using BILWeb.Area;
 using System.Data;
 using BILWeb.Warehouse;
+using BILWeb.Material;
 
 namespace BILWeb.InStock
 {
@@ -57,7 +58,7 @@ namespace BILWeb.InStock
             string StrongHoldCode = "";
             string StrongHoldCodeName = "";
             T_WareHouse_DB TWareHouseDB = new T_WareHouse_DB();
-            TWareHouseDB.Getstrongholdcode(user.ReceiveWareHouseNo, ref StrongHoldCode, ref StrongHoldCodeName);
+            TWareHouseDB.GetStrongholdcode(user.ReceiveWareHouseNo, ref StrongHoldCode, ref StrongHoldCodeName);
 
             string strSql1 = string.Empty;
             string strSql2 = string.Empty;
@@ -119,7 +120,10 @@ namespace BILWeb.InStock
                     //成品入库单做一个调拨的操作
                     if (modelList[0].VoucherType == 50)
                     {
-                        strSql8 = "update t_stock set status='" + item.IsQuality + "', warehouseid= '" + user.WarehouseID + "',houseid='" + user.ReceiveHouseID + "',areaid='" + user.ReceiveAreaID + "',STRONGHOLDCODE='0300',STRONGHOLDNAME='营销中心' where serialno='" + itemBarCode.SerialNo + "'";
+                        T_Material_DB MaterialDB = new T_Material_DB();
+                        int intMaterialnoid = MaterialDB.GetMaterialNoid(itemBarCode.MaterialNo, "0300");
+
+                        strSql8 = "update t_stock set status='" + item.IsQuality + "', warehouseid= '" + user.WarehouseID + "',houseid='" + user.ReceiveHouseID + "',areaid='" + user.ReceiveAreaID + "',STRONGHOLDCODE='0300',STRONGHOLDNAME='营销中心',MATERIALNOID=" + intMaterialnoid + " where serialno='" + itemBarCode.SerialNo + "'";
                     }
                     else
                     {
