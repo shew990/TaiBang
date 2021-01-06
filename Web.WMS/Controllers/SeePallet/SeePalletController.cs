@@ -38,7 +38,11 @@ namespace Web.WMS.Controllers.SeePallet
                 //根据生产订单获取SOP地址
                 //string ErpVoucherNo = "MO04012012090002";
                 var moReport = new T_Material_Batch_DB().GetSopList(ErpVoucherNo).FirstOrDefault();
-
+                if (moReport == null)
+                {
+                    successResult.Msg = "没有pdf地址数据,请联系管理员!";
+                    return Json(successResult, JsonRequestBehavior.AllowGet);
+                }
                 var index = stationService.GetStationIndex(ipAddress);
                 var stations = stationService.GetStations();
                 string pdaAddress = index == 0 ? moReport.Sop1 : index == 1
