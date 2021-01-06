@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutLayui.cshtml";
+}
+
+<div class="box">
+    <div class="layui-card-body layui-table-body layui-table-main">
+        <div class="layui-card-body">
+            <div class="layui-inline layui-show-xs-block">
+                <input id="LineName" class="layui-input" placeholder="产线名称">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="StationName" class="layui-input" placeholder="工位名称">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <input id="IpAddress" class="layui-input" placeholder="IP地址">
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <button id="Query" class="btn btn-primary">查询</button>
+                <a id="add" href="###" class="btn btn-primary">新增</a>
+                <a id="refresh" href="###" class="hidden">刷新</a>
+            </div>
+        </div>
+        <table class="layui-hide" id="stationTable" lay-filter="init"></table>
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+        </script>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['laypage', 'layer', 'table'], function () {
+        table = layui.table
+            , laypage = layui.laypage
+            , layer = layui.layer
+
+        tableInit();
+
+        //表格初始化
+        function tableInit() {
+            table.render({
+                elem: '#stationTable'
+                , height: 520
+                , url: '/Station/List'
+                , method: 'post'
+                , contentType: 'application/json'
+                , where: {
+                    lineName: $("#LineName").val().trim(),
+                    stationName: $("#StationName").val().trim(),
+                    ipAddress: $("#IpAddress").val().trim()
+                }
+                , response: {
+                    statusCode: 1
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.Result,
+                        "msg": res.ResultValue,
+                        "count": res.PageData.totalCount,
+                        "data": res.Data
+                    };
+                }
+                , title: '库位'
+                , page: true
+                , cols: [
+                    [
+                        { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
+                        , { field: 'StationName', title: '工位名称', width: 100, }
+                        , { field: 'LineName', title: '产线名称', width: 100, }
+                        , { field: 'PDFAddress', title: 'PDF地址', width: 100, }
+                        , { field: 'IpAddress', title: 'IP地址', width: 100, }
+                        , { field: 'CreateTimeString', title: '创建时间', width: 100, }
+                        , { field: 'UpdateTimeString', title: '修改时间', width: 100, }
+                        , { fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo' }
+                    ]
+                ]
+            });
+        }
+
+        //监听行工具事件
+        table.on('tool(init)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                layer.open({
+                    type: 2,
+                    title: "工位信息新增",
+                    area: ['45%', '55%'],
+                    content: "/Station/Form",
+                    success: function (layero, index) {
+                        var body = layer.getChildFrame('body', index);
+                        //初始化表单数据的值
+                        let keyArray = Object.keys(data);
+                        let valueArray = Object.values(data);
+                        $.each(body.find(".layui-input"), function (index, item) {
+                            for (let i = 0; i < keyArray.length; i++) {
+                                if ($(item).attr("name") == keyArray[i]) {
+                                    $(item).val(valueArray[i]);
+                                    break;
+                                }
+                            }
+                        });
+                        body.find("#station").val(JSON.stringify(data));
+                    }
+                });
+            }
+        });
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo'
+            , count: 100
+            , skin: '#1E9FFF'
+            , jump: function (obj, first) {
+                if (!first)
+                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
+            }
+        });
+
+        //查询
+        $('#Query').click(function () {
+            tableInit();
+        });
+
+        //新增
+        $('#add').click(function () {
+            layer.open({
+                type: 2,
+                title: "工位信息新增",
+                area: ['45%', '55%'],
+                content: "/Station/Form"
+            });
+        });
+
+        //刷新
+        $("#refresh").click(function () {
+            table.reload('stationTable', {});
+        });
+
+        //回车事件绑定
+        $("input").bind('keyup', function (event) {
+            if (event.keyCode == "13")
+                tableInit();
+        });
+    });
+</script>
+

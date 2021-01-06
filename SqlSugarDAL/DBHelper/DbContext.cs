@@ -50,7 +50,7 @@ namespace SqlSugarDAL
         /// 根据ID查询
         /// </summary>
         /// <returns></returns>
-        public virtual T GetById(string Id)
+        public virtual T GetById(int Id)
         {
             return CurrentDb.GetById(Id);
         }

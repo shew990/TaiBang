@@ -1,0 +1,77 @@
+﻿@using SqlSugarDAL.line;
+@model List<T_Line>
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_LayoutLayui.cshtml";
+}
+
+<div style="padding:10px;">
+    <form class="layui-form" action="">
+        <input type="hidden" id="station" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">产线名称</label>
+            <div class="layui-input-block">
+                <select name="LineName" lay-verify="required">
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.Id">@item.LineName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工位名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="StationName" required lay-verify="required" placeholder="请输入工位名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">PDF地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="PDFAddress" required lay-verify="required" placeholder="请输入pdf文件地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">IP地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="IpAddress" required lay-verify="required" placeholder="请输入ip地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+                <button type="reset" id="cancle" class="layui-btn layui-btn-primary">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form'], function () {
+        var form = layui.form;
+
+        //提交
+        form.on('submit(formDemo)', function (data) {
+            let index = parent.layer.getFrameIndex(window.name);
+            let station = $("#station").val() == "" ? {} : JSON.parse($("#station").val());
+            station.LineId = $('select[name="LineName"]').val();
+            station.StationName = $('input[name="StationName"]').val();
+            station.PDFAddress = $('input[name="PDFAddress"]').val();
+            station.IpAddress = $('input[name="IpAddress"]').val();
+            $.post("/Station/Submit", station, function (res) {
+                layer.alert(res.Msg);
+                if (!res.Success)
+                    return false;
+                parent.layer.close(index);
+                parent.$("#refresh").click();
+            });
+        });
+
+        //取消
+        $("#cancle").click(function () {
+            let index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+    });
+</script>
+
