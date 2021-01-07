@@ -70,7 +70,7 @@
         function tableInit() {
             table.render({
                 elem: '#detailTable'
-                , height: 450
+                , height: 560
                 , url: '/StockDetail/GetData' //数据接口
                 , method: 'post'
                 , contentType: 'application/json'
@@ -104,7 +104,10 @@
                 }
                 , title: '库位'
                 , page: true //开启分页
+                  , totalRow: true //开启合计行
                 , toolbar: 'false' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                 , limits: [100, 200, 500, 1000]
+                   , limit: 100 //每页默认显示的数量
                 //, totalRow: true //开启合计行
                 , cols: [[ //表头
                     { type: 'numbers', title: '序号', width: 60, fixed: 'left' }//序号列
@@ -114,7 +117,7 @@
                     , { field: 'MaterialDesc', title: '物料名称', width: 200 }
                     , { field: 'BatchNo', title: '番号', width: 120, sort: true }
                     , { field: 'StrongHoldCode', title: '据点', width: 100 }
-                    , { field: 'Unit', title: '单位', width: 80 }
+                    , { field: 'Unit', title: '单位', width: 80, totalRowText: '合计汇总:' }
                     , { field: 'Qty', title: '数量', width: 80, totalRow: true }
                     , { field: 'WarehouseNo', title: '仓库', width: 80 }
                     , { field: 'HouseNo', title: '库区', width: 80 }

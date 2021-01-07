@@ -52,7 +52,7 @@
         function tableInit() {
             table.render({
                 elem: '#combineTable'
-                , height: 540
+                , height: 550
                 , url: '/StockCombine/GetData'
                 , method: 'post'
                 , contentType: 'application/json'
@@ -72,17 +72,19 @@
                 }
                 , title: '库存合并明细'
                 , page: true
-                , toolbar: 'false'
+                 , totalRow: true //开启合计行
+                      , limits: [100, 200, 500, 1000]
+                   ,limit: 100 //每页默认显示的数量
                 , cols: [
                     [
                         { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
-                        , { field: 'MaterialNo', title: '物料号', width: 100 }
-                        , { field: 'MaterialDesc', title: '物料名', width: 100, sort: false }
-                        , { field: 'BatchNo', title: '批次', width: 100, sort: false }
-                        , { field: 'Qty', title: '数量', width: 100, sort: true }
+                        , { field: 'MaterialNo', title: '物料号', width: 150 }
+                        , { field: 'MaterialDesc', title: '物料名', width: 200, sort: false }
+                        , { field: 'BatchNo', title: '批次', width: 100, sort: false, totalRowText: '合计汇总:' }
+                        , { field: 'Qty', title: '数量', width: 100, sort: true, totalRow: true }
                         , { field: 'AreaNo', title: '库位', width: 100, sort: false }
                         , { field: 'HouseNo', title: '库区', width: 100, sort: true }
-                        , { field: 'WarehouseNo', title: '仓库', width: 1000, sort: false }
+                        , { field: 'WarehouseNo', title: '仓库', width: 100, sort: false }
                     ]
                 ]
                 , response: {
