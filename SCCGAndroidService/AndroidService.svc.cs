@@ -644,6 +644,12 @@ namespace SCCGAndroidService
             return tfunc.PostT_OutStockReviewDetailADF(UserJson, ErpVoucherNo,Guid, Remark);
         }
 
+        public string GetStockPickByErpNoGroup(string ErpVoucherNo)
+        {
+            T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
+            return tfunc.GetStockPickByErpNoGroup(ErpVoucherNo);
+        }
+
         #endregion
 
         #region 盘点

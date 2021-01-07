@@ -1826,6 +1826,33 @@ namespace BILWeb.Stock
         }
 
 
+        public List<T_StockInfo> GetStockPickByErpNoGroup(string strErpVoucherNo)
+        {
+            try
+            {
+                List<T_StockInfo> modelList = new List<T_StockInfo>();
+                string strFilter = "select a.MATERIALNO,a.BATCHNO,sum(a.QTY) sumqty from t_stock a left join t_Taskdetails b on a.Taskdetailesid = b.Id where b.Erpvoucherno = '"+ strErpVoucherNo + "' group by a.MATERIALNO,a.BATCHNO";
+                using (IDataReader dr = dbFactory.ExecuteReader(System.Data.CommandType.Text, strFilter))
+                {
+                    while (dr.Read())
+                    {
+                        T_StockInfo stockModel = new T_StockInfo();
+                        stockModel.MaterialNo = dr["MATERIALNO"].ToDBString();
+                        stockModel.BatchNo = dr["BATCHNO"].ToDBString();
+                        stockModel.Qty = dr["sumqty"].ToDecimal();
+                        modelList.Add(stockModel);
+                    }
+                }
+                return modelList;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+
 
     }
 }

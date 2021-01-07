@@ -142,6 +142,12 @@ namespace BILWeb.OutStock
                 string strmsg = "";
                 var rrr = new T_OutStockTaskInfo() { ID = modelListTaskDetail[0].HeaderID };
                 var rtt = outfunc.GetModelByID(ref rrr, ref strmsg);
+                if (rrr.Status == 6) {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "该单子已经复核，不能重复复核！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+                    
 
                 outStockDetailList.ForEach(t => t.ERPNote = rrr.ERPNote);
 
@@ -1841,6 +1847,41 @@ namespace BILWeb.OutStock
                 }                
             }
         }
+
+        public string GetStockPickByErpNoGroup(string ErpVoucherNo)
+        {
+            BaseMessage_Model<List<T_StockInfo>> messageModel = new BaseMessage_Model<List<T_StockInfo>>();
+            try
+            {
+                if (string.IsNullOrEmpty(ErpVoucherNo))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "传入单号为空！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+                T_Stock_DB tdb = new T_Stock_DB();
+                List<T_StockInfo> lstStock = tdb.GetStockPickByErpNoGroup(ErpVoucherNo);
+                if (lstStock!=null&& lstStock.Count!=0)
+                {
+                    messageModel.HeaderStatus = "S";
+                    messageModel.ModelJson = lstStock;
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+                else
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "获取数据为空！";
+                    return JsonConvert.SerializeObject(messageModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.Message;
+                return JsonConvert.SerializeObject(messageModel);
+            }
+        }
+
 
         #region PDA复核过账
         public string PostT_OutStockReviewDetailADF(string UserJson, string ErpVoucherNo, string Guid, string Remark)

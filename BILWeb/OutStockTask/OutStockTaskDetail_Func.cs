@@ -225,58 +225,101 @@ namespace BILWeb.OutStockTask
             List<T_StockInfo> lstStock = new List<T_StockInfo>();
             List<T_StockInfo> NewLstStock = new List<T_StockInfo>();
             List<T_OutStockTaskDetailsInfo> lstDetail = new List<T_OutStockTaskDetailsInfo>();
+            List<T_StockInfo> NewLstStockWMS = new List<T_StockInfo>();
 
             if (strPost == "复核")
             {
                 foreach (var item in modelList)
                 {
-                    if (item.lstStockInfo == null || item.lstStockInfo.Count == 0)
+                    if (item.lstStockInfo != null)
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        NewLstStock = GroupInstockDetailListForhe(modelList[0].VoucherType, item.lstStockInfo);
-                        foreach (var Newitem in NewLstStock)
-                        {
-                            T_OutStockTaskDetailsInfo model = new T_OutStockTaskDetailsInfo();
-                            model.ErpVoucherNo = item.ErpVoucherNo;
-                            model.CompanyCode = item.CompanyCode;
-                            model.StrongHoldCode = item.StrongHoldCode;
-                            model.MaterialNo = item.MaterialNo;
-                            model.FromBatchNo = Newitem.FromBatchNo;//
-                            model.FromErpWarehouse = Newitem.FromErpWarehouse;//
-                                                                              //model.FromErpAreaNo = Newitem.FromErpAreaNo;//
-                            model.WareHouseNo = Newitem.FromErpWarehouse;//
-                            model.ToStrongHoldCode = item.ToStrongHoldCode;//调拨出的调入据点
-                                                                           //model.ToErpAreaNo = user.PickAreaNo; //
-                            model.ToUser = user.UserNo;//人
-                            model.PostUser = item.PostUser;//人
-                            model.VoucherType = item.VoucherType;
-                            model.ScanQty = Newitem.Qty;
-                            model.ERPVoucherType = item.ERPVoucherType;
-                            model.RowNo = item.RowNo;
-                            if (modelList[0].VoucherType == 46)
-                            {
-                                //直接复核的查出行号
-                                T_OutTaskDetails_DB db = new T_OutTaskDetails_DB();
-                                model.RowNo = db.GetRow(Newitem.TaskDetailesID);
-                            }
-
-                            model.DepartmentCode = item.DepartmentCode; //收益部门
-                            model.StrVoucherType = item.StrVoucherType; //收益单据类型
-                            model.ToStrongHoldCode = item.ToStrongHoldCode; //收益据点
-                            model.ToErpWarehouse = item.ToErpWarehouse; //收益仓库
-                            model.Remark = item.Remark; //收益备注
-                            model.PassWord = user.PassWord;
-                            model.ErpId = item.ErpId;
-                            model.GUID = user.GUID;
-
-                            lstDetail.Add(model);
-                        }
+                        lstStock.AddRange(item.lstStockInfo);
                     }
 
                 }
+                NewLstStockWMS = GroupInstockDetailListForhe1(modelList[0].VoucherType, lstStock);
+
+
+                for (int i = 0; i < modelList.Count; i++)
+                {
+                    var itemERP = modelList[i];
+                    for (int j = 0; j < NewLstStockWMS.Count; j++)
+                    {
+                        var itemWMS = NewLstStockWMS[j];
+                        if (itemERP.MaterialNo == itemWMS.MaterialNo && itemWMS.AmountQty > 0)
+                        {
+                            if (itemERP.TaskQty > itemWMS.AmountQty)
+                            {
+
+                                T_OutStockTaskDetailsInfo model = new T_OutStockTaskDetailsInfo();
+                                model.ErpVoucherNo = itemERP.ErpVoucherNo;
+                                model.CompanyCode = itemERP.CompanyCode;
+                                model.StrongHoldCode = itemERP.StrongHoldCode;
+                                model.MaterialNo = itemERP.MaterialNo;
+                                model.FromBatchNo = itemWMS.FromBatchNo;//
+                                model.FromErpWarehouse = itemWMS.FromErpWarehouse;//model.FromErpAreaNo = Newitem.FromErpAreaNo;//
+                                model.WareHouseNo = itemWMS.FromErpWarehouse;//
+                                model.ToStrongHoldCode = itemERP.ToStrongHoldCode;//调拨出的调入据点
+                                                                                  //model.ToErpAreaNo = user.PickAreaNo; //
+                                model.ToUser = user.UserNo;//人
+                                model.PostUser = itemERP.PostUser;//人
+                                model.VoucherType = itemERP.VoucherType;
+                                model.ScanQty = itemWMS.AmountQty;
+                                itemWMS.AmountQty = 0;
+                                model.ERPVoucherType = itemERP.ERPVoucherType;
+                                model.RowNo = itemERP.RowNo;
+
+                                model.DepartmentCode = itemERP.DepartmentCode; //收益部门
+                                model.StrVoucherType = itemERP.StrVoucherType; //收益单据类型
+                                model.ToStrongHoldCode = itemERP.ToStrongHoldCode; //收益据点
+                                model.ToErpWarehouse = itemERP.ToErpWarehouse; //收益仓库
+                                model.Remark = itemERP.Remark; //收益备注
+                                model.PassWord = user.PassWord;
+                                model.ErpId = itemERP.ErpId;
+                                model.GUID = user.GUID;
+
+                                lstDetail.Add(model);
+                            }
+                            else
+                            {
+                                T_OutStockTaskDetailsInfo model = new T_OutStockTaskDetailsInfo();
+                                model.ErpVoucherNo = itemERP.ErpVoucherNo;
+                                model.CompanyCode = itemERP.CompanyCode;
+                                model.StrongHoldCode = itemERP.StrongHoldCode;
+                                model.MaterialNo = itemERP.MaterialNo;
+                                model.FromBatchNo = itemWMS.FromBatchNo;//
+                                model.FromErpWarehouse = itemWMS.FromErpWarehouse;//model.FromErpAreaNo = Newitem.FromErpAreaNo;//
+                                model.WareHouseNo = itemWMS.FromErpWarehouse;//
+                                model.ToStrongHoldCode = itemERP.ToStrongHoldCode;//调拨出的调入据点
+                                                                                  //model.ToErpAreaNo = user.PickAreaNo; //
+                                model.ToUser = user.UserNo;//人
+                                model.PostUser = itemERP.PostUser;//人
+                                model.VoucherType = itemERP.VoucherType;
+                                model.ScanQty = (decimal)itemERP.TaskQty;
+                                itemWMS.AmountQty = itemWMS.AmountQty - (decimal)itemERP.TaskQty;
+                                model.ERPVoucherType = itemERP.ERPVoucherType;
+                                model.RowNo = itemERP.RowNo;
+
+                                model.DepartmentCode = itemERP.DepartmentCode; //收益部门
+                                model.StrVoucherType = itemERP.StrVoucherType; //收益单据类型
+                                model.ToStrongHoldCode = itemERP.ToStrongHoldCode; //收益据点
+                                model.ToErpWarehouse = itemERP.ToErpWarehouse; //收益仓库
+                                model.Remark = itemERP.Remark; //收益备注
+                                model.PassWord = user.PassWord;
+                                model.ErpId = itemERP.ErpId;
+                                model.GUID = user.GUID;
+
+                                lstDetail.Add(model);
+                                break;
+                            }
+
+                        }
+
+
+                    }
+                }
+
+                
             }
             else
             {
@@ -418,6 +461,27 @@ namespace BILWeb.OutStockTask
 
             return JSONHelper.ObjectToJson<List<T_OutStockTaskDetailsInfo>>(lstDetail);
 
+        }
+
+        private List<T_StockInfo> GroupInstockDetailListForhe1(int VoucherType, List<T_StockInfo> modelList)
+        {
+            var newModelList = from t in modelList
+                               group t by new { t1 = t.MaterialNo, t2 = t.FromBatchNo, t3 = t.WarehouseNo } into m //t4 = t.AreaNo
+                               select new T_StockInfo
+                               {
+                                   MaterialNo = m.Key.t1,
+                                   Qty = m.Sum(item => item.Qty),
+                                   AmountQty = m.Sum(item => item.Qty),
+                                   FromBatchNo = m.Key.t2,
+                                   FromErpWarehouse = m.Key.t3,
+                                   VoucherType = VoucherType,
+                                   CompanyCode = m.FirstOrDefault().CompanyCode,
+                                   StrongHoldCode = m.FirstOrDefault().StrongHoldCode,
+                                   ErpVoucherNo = m.FirstOrDefault().ErpVoucherNo
+
+                               };
+
+            return newModelList.ToList();
         }
 
 
