@@ -519,6 +519,10 @@
                 layer.alert("合格数量不能大于订单数量!");
                 return false;
             }
+            if (Number($("#RecordQualityQty").val()) + Number(objOrder.QulityQty) == Number(objOrder.ProductQty)) {
+                layer.alert("合格数量已满，不合格数量应为0!");
+                return false;
+            }
             $.post("/QualityDetail/Submit",
                 {
                     formJson: formSerialize($('#formRecord').serializeArray()),
