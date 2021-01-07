@@ -55,7 +55,7 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetOrderList(int limit, int page, string OrderNo, string StartDate, string EndDate)
         {
-            var ordersObj = view_CheckRecordService.GetOrderList(limit, page, OrderNo, StartDate, EndDate);
+            var ordersObj = view_CheckRecordService.GetOrderList(limit, page, OrderNo, StartDate, EndDate, strongHoldCode);
             return Json(ordersObj, JsonRequestBehavior.AllowGet);
         }
 
@@ -131,7 +131,7 @@ namespace Web.WMS.Controllers
                 row1.CreateCell(29).SetCellValue("处置");
                 row1.CreateCell(30).SetCellValue("备注");
             }
-            var orders = view_CheckRecordService.GetRecords(orderNo, startDate, endDate);
+            var orders = view_CheckRecordService.GetRecords(orderNo, startDate, endDate, strongHoldCode);
             for (int i = 0; i < orders.Count(); i++)
             {
                 IRow row = sheet.CreateRow(i + 1);//给sheet添加一行
@@ -261,20 +261,17 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetModel(string orderNo)
         {
-            var model = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
-            T_CheckRecord checkRecord = new T_CheckRecord();
-            if (model != null)
-                checkRecord = checkRecordService.GetList(x => x.ProductOrderId == model.id).FirstOrDefault();
-            return Json(new { product = model, record = checkRecord }, JsonRequestBehavior.AllowGet);
+            var product = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
+            return Json(product, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
         /// 提交
         /// </summary>
         /// <returns></returns>
-        public ActionResult Submit(string formJson, string orderId, string qualityQty, string remark)
+        public ActionResult Submit(string formJson, string orderId, string remark)
         {
-            var successResult = checkRecordService.Submit(formJson, orderId, qualityQty, remark);
+            var successResult = checkRecordService.Submit(formJson, orderId, remark, Commom.ReadUserInfo().UserNo);
             return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 

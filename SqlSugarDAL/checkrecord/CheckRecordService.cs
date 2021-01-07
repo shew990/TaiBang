@@ -39,7 +39,7 @@ namespace SqlSugarDAL.checkrecord
             return successResult;
         }
 
-        public SuccessResult Submit(string formJson, string orderId, string qualityQty, string remark)
+        public SuccessResult Submit(string formJson, string orderId, string remark,string userNo)
         {
             SuccessResult successResult = new SuccessResult();
             successResult.Success = false;
@@ -92,14 +92,17 @@ namespace SqlSugarDAL.checkrecord
                 queryData.NotInPlace = checkRecord.NotInPlace;
                 queryData.Others = checkRecord.Others;
                 queryData.Minute = checkRecord.Minute;
+                queryData.Checker = userNo;
+
                 queryData.QualityQty = checkRecord.QualityQty;
+                queryData.NoQualityQty = checkRecord.NoQualityQty;
 
                 var result = Db.Ado.UseTran(() =>
                 {
                     Insert(queryData);
 
                     var product = productService.GetById(Convert.ToInt32(orderId));
-                    product.QulityQty += Convert.ToDecimal(qualityQty);
+                    product.QulityQty += Convert.ToDecimal(checkRecord.QualityQty);
                     product.Remark = remark;
                     productService.Update(product);
                 });
