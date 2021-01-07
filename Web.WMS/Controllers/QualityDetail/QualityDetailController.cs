@@ -261,11 +261,11 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetModel(string orderNo)
         {
-            var model = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
+            var product = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
             T_CheckRecord checkRecord = new T_CheckRecord();
-            if (model != null)
-                checkRecord = checkRecordService.GetList(x => x.ProductOrderId == model.id).FirstOrDefault();
-            return Json(new { product = model, record = checkRecord }, JsonRequestBehavior.AllowGet);
+            if (product != null)
+                checkRecord = checkRecordService.GetList(x => x.ProductOrderId == product.id).FirstOrDefault();
+            return Json(new { product = product, record = checkRecord }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

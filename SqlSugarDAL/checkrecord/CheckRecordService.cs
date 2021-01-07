@@ -92,6 +92,7 @@ namespace SqlSugarDAL.checkrecord
                 queryData.NotInPlace = checkRecord.NotInPlace;
                 queryData.Others = checkRecord.Others;
                 queryData.Minute = checkRecord.Minute;
+
                 queryData.QualityQty = checkRecord.QualityQty;
 
                 var result = Db.Ado.UseTran(() =>
