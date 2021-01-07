@@ -511,16 +511,8 @@
                 layer.alert("请先输入查询订单获取订单数据,再提交!");
                 return false;
             }
-            if (Number($("#RecordQualityQty").val()) + Number($("#RecordNoQualityQty").val()) > Number(objOrder.ProductQty)) {
-                layer.alert("合格数量+不合格数量不能大于订单数量!");
-                return false;
-            }
-            if (Number($("#RecordQualityQty").val()) + Number(objOrder.QulityQty) > Number(objOrder.ProductQty)) {
-                layer.alert("合格数量不能大于订单数量!");
-                return false;
-            }
-            if (Number($("#RecordQualityQty").val()) + Number(objOrder.QulityQty) == Number(objOrder.ProductQty)) {
-                layer.alert("合格数量已满，不合格数量应为0!");
+            if (Number($("#RecordQualityQty").val()) + Number($("#RecordNoQualityQty").val()) > Number(objOrder.NoQualityQty)) {
+                layer.alert("合格数量+不合格数量不能大于 未检验数量" + objOrder.NoQualityQty + "!");
                 return false;
             }
             $.post("/QualityDetail/Submit",
