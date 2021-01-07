@@ -8,9 +8,9 @@ namespace SqlSugarDAL.view_checkrecord
 {
     public class View_CheckRecordService : DbContext<View_CheckRecord>
     {
-        public object GetOrderList(int limit, int page, string OrderNo, string StartDate, string EndDate)
+        public object GetOrderList(int limit, int page, string OrderNo, string StartDate, string EndDate, string strongHoldCode)
         {
-            var records = GetRecords(OrderNo, StartDate, EndDate);
+            var records = GetRecords(OrderNo, StartDate, EndDate, strongHoldCode);
             return new
             {
                 Result = 1,
@@ -35,9 +35,9 @@ namespace SqlSugarDAL.view_checkrecord
         /// <param name="StartDate"></param>
         /// <param name="EndDate"></param>
         /// <returns></returns>
-        public List<View_CheckRecord> GetRecords(string OrderNo, string StartDate, string EndDate)
+        public List<View_CheckRecord> GetRecords(string OrderNo, string StartDate, string EndDate, string strongHoldCode)
         {
-            var records = GetSugarQueryable();
+            var records = GetSugarQueryable(x => x.StrongHoldCode == strongHoldCode);
             if (!string.IsNullOrEmpty(OrderNo))
                 records = records.Where(x => x.ErpVoucherNo.Contains(OrderNo));
             if (!string.IsNullOrEmpty(StartDate))

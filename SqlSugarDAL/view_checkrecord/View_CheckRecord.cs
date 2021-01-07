@@ -394,5 +394,22 @@ namespace SqlSugarDAL.view_checkrecord
         [SugarColumn(IsIgnore = true)]
         public Decimal CheckQty { get { return this.RecordQualityQty + this.RecordNoQualityQty; } }
 
+        /// <summary>
+        /// 合格率
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public String PassRate
+        {
+            get
+            {
+                return (this.RecordQualityQty / this.CheckQty * 100).ToString("0.00");
+            }
+        }
+
+        /// <summary>
+        /// 据点
+        /// </summary>
+        public String StrongHoldCode { get; set; }
+
     }
 }

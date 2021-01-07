@@ -477,30 +477,15 @@
         $("#Query").click(function () {
             $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
                 objOrder = data;
-                $("#orderNo").val(data.product.ErpVoucherNo);
-                $("#batchNo").val(data.product.BatchNo);
+                $("#orderNo").val(data.ErpVoucherNo);
+                $("#batchNo").val(data.BatchNo);
                 $("#moudle").val("");
-                $("#materialNo").val(data.product.MaterialNo);
-                $("#line").val(data.product.LineName);
-                $("#qty").val(data.product.ProductQty);
-                $("#alreadyQulaityQty").val(data.product.QulityQty);
-                $("#noQulaityQty").val(data.product.NoQualityQty);
-                $("#QualityQty").val(data.product.QulityQty == 0 ? "" : data.product.QulityQty);
-                $("#remark").val(data.product.Remark);
-
-                //赋值checkrecord表单
-                if (data.record != null) {
-                    let keyArray = Object.keys(data.record);
-                    let valueArray = Object.values(data.record);
-                    $(".record").each(function () {
-                        for (let i = 0; i < keyArray.length; i++) {
-                            if ($(this).attr("name") == keyArray[i]) {
-                                $(this).val(valueArray[i]);
-                                break;
-                            }
-                        }
-                    });
-                }
+                $("#materialNo").val(data.MaterialNo);
+                $("#line").val(data.LineName);
+                $("#qty").val(data.ProductQty);
+                $("#alreadyQulaityQty").val(data.QulityQty);
+                $("#noQulaityQty").val(data.NoQualityQty);
+                $("#remark").val(data.Remark);
             });
         });
 
@@ -526,7 +511,7 @@
                 layer.alert("请先输入查询订单获取订单数据,再提交!");
                 return false;
             }
-            if (Number($("#QualityQty").val()) + Number(objOrder.product.QulityQty) > Number(objOrder.product.ProductQty)) {
+            if (Number($("#RecordQualityQty").val()) + Number(objOrder.QulityQty) > Number(objOrder.ProductQty)) {
                 layer.alert("合格数量不能大于订单数量!");
                 return false;
             }
