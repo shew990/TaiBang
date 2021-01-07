@@ -226,7 +226,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">合格数量</label>
                         <div class="layui-input-block">
-                            <input type="text" name="QualityQty" placeholder="请输入合格数量" class="layui-input record">
+                            <input type="number" id="RecordQualityQty" name="QualityQty" placeholder="请输入合格数量" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不合格数量</label>
+                        <div class="layui-input-block">
+                            <input type="number" id="RecordNoQualityQty" name="NoQualityQty" placeholder="请输入不合格数量" class="layui-input record">
                         </div>
                     </div>
                 </div>
@@ -379,7 +385,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">合格数量</label>
                         <div class="layui-input-block">
-                            <input id="QualityQty" type="text" name="QualityQty" placeholder="请输入合格数量" class="layui-input record">
+                            <input type="number" id="RecordQualityQty" name="QualityQty" placeholder="请输入合格数量" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不合格数量</label>
+                        <div class="layui-input-block">
+                            <input type="number" id="RecordNoQualityQty" name="NoQualityQty" placeholder="请输入不合格数量" class="layui-input record">
                         </div>
                     </div>
                 </div>
@@ -423,7 +435,6 @@
                 $("#qty").val(data.ProductQty);
                 $("#alreadyQulaityQty").val(data.QulityQty);
                 $("#noQulaityQty").val(data.NoQualityQty);
-                $("#QualityQty").val(data.QulityQty);
                 $("#remark").val(data.Remark);
 
                 //赋值checkrecord表单
@@ -437,6 +448,10 @@
                         }
                     }
                 });
+
+                //视图字段 转 表字段
+                $("#RecordQualityQty").val(data.RecordQualityQty);
+                $("#RecordNoQualityQty").val(data.RecordNoQualityQty);
             }
         });
 
@@ -494,16 +509,17 @@
             if (confirm("是否确认删除?")) {
                 $.post("/QualityDetail/Delete", { checkRecordId: $("#checkRecordId").val() }, function (data) {
                     layer.alert(data.Msg);
-                    if (data.Success)
+                    if (data.Success) {
                         location.href = "/QualityDetail/CheckRecordOut";
+                    }
                 });
             }
         });
 
         //确定
         $("#ok").click(function () {
-            if ($("#QualityQty").val() == "") {
-                layer.alert("合格数量不能为空!");
+            if ($("#RecordQualityQty").val() == "" || $("#RecordNoQualityQty").val() == "") {
+                layer.alert("合格数量和不合格数量不能为空!");
                 return false;
             }
             if (objOrder == null || objOrder == "") {
@@ -518,7 +534,6 @@
                 {
                     formJson: formSerialize($('#formRecord').serializeArray()),
                     orderId: objOrder.product.id,
-                    qualityQty: $("#QualityQty").val(),
                     remark: $("#remark").val()
                 },
                 function (data) {

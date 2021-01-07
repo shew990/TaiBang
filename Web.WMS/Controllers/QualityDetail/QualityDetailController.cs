@@ -272,9 +272,9 @@ namespace Web.WMS.Controllers
         /// 提交
         /// </summary>
         /// <returns></returns>
-        public ActionResult Submit(string formJson, string orderId, string qualityQty, string remark)
+        public ActionResult Submit(string formJson, string orderId, string remark)
         {
-            var successResult = checkRecordService.Submit(formJson, orderId, qualityQty, remark);
+            var successResult = checkRecordService.Submit(formJson, orderId, remark);
             return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 

@@ -383,5 +383,16 @@ namespace SqlSugarDAL.view_checkrecord
         /// </summary>
         public Decimal RecordQualityQty { get; set; }
 
+        /// <summary>
+        /// 质检记录不合格数量
+        /// </summary>
+        public Decimal RecordNoQualityQty { get; set; }
+
+        /// <summary>
+        /// 送检数量
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public Decimal CheckQty { get { return this.RecordQualityQty + this.RecordNoQualityQty; } }
+
     }
 }

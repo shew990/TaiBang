@@ -227,5 +227,10 @@ namespace SqlSugarDAL.checkrecord
         /// 合格数量
         /// </summary>
         public Decimal QualityQty { get; set; }
+
+        /// <summary>
+        /// 不合格数量
+        /// </summary>
+        public Decimal NoQualityQty { get; set; }
     }
 }
