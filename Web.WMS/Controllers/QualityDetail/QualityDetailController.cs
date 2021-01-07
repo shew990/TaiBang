@@ -271,7 +271,7 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult Submit(string formJson, string orderId, string remark)
         {
-            var successResult = checkRecordService.Submit(formJson, orderId, remark);
+            var successResult = checkRecordService.Submit(formJson, orderId, remark, Commom.ReadUserInfo().UserNo);
             return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 

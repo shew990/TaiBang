@@ -39,7 +39,7 @@ namespace SqlSugarDAL.checkrecord
             return successResult;
         }
 
-        public SuccessResult Submit(string formJson, string orderId, string remark)
+        public SuccessResult Submit(string formJson, string orderId, string remark,string userNo)
         {
             SuccessResult successResult = new SuccessResult();
             successResult.Success = false;
@@ -92,6 +92,7 @@ namespace SqlSugarDAL.checkrecord
                 queryData.NotInPlace = checkRecord.NotInPlace;
                 queryData.Others = checkRecord.Others;
                 queryData.Minute = checkRecord.Minute;
+                queryData.Checker = userNo;
 
                 queryData.QualityQty = checkRecord.QualityQty;
                 queryData.NoQualityQty = checkRecord.NoQualityQty;

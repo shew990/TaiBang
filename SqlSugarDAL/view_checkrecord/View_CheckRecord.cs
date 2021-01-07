@@ -411,5 +411,10 @@ namespace SqlSugarDAL.view_checkrecord
         /// </summary>
         public String StrongHoldCode { get; set; }
 
+        /// <summary>
+        /// 检验人
+        /// </summary>
+        public String Checker { get; set; }
+
     }
 }

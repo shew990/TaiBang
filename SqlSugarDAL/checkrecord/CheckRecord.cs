@@ -232,5 +232,10 @@ namespace SqlSugarDAL.checkrecord
         /// 不合格数量
         /// </summary>
         public Decimal NoQualityQty { get; set; }
+
+        /// <summary>
+        /// 检验人
+        /// </summary>
+        public String Checker { get; set; }
     }
 }
