@@ -518,7 +518,7 @@
             $.post("/QualityDetail/Submit",
                 {
                     formJson: formSerialize($('#formRecord').serializeArray()),
-                    orderId: objOrder.product.id,
+                    orderId: objOrder.id,
                     remark: $("#remark").val()
                 },
                 function (data) {
