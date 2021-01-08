@@ -422,21 +422,31 @@ namespace BILWeb.Query
         //库存汇总查询
         private string getsqlinStockCombine(T_StockInfoEX mo)
         {
-            string sql = " (select 1 as ID,  MaterialNo, MaterialDesc, WAREHOUSENAME, HouseNAME, AreaNAME, QTY, batchno, edate, EAN from  ( ";
+            string sql = " (select 1 as ID,  MaterialNo, MaterialDesc, WAREHOUSENAME, HouseNAME, AreaNAME, QTY, batchno from  ( ";
             sql += " select max(s.ID) as ID,m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.HouseNAME,a.AreaNAME,sum(s.qty) as QTY,s.batchno, ";
-            sql += " CONVERT(varchar(12), s.edate, 111) as edate,s.EAN from T_STOCK s ";
+            sql += "  from T_STOCK s ";
             sql += " left join t_material m on s.materialnoid = m.id left join v_area a on s.areaid = a.id ";
             sql += " where s.ISDEL = 1  and s.batchno != '' ";
-            sql += " group by  CONVERT(varchar(12), s.edate, 111),m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.HouseNAME,a.AreaNAME,s.batchno,s.EAN ";
-            sql += " union ";
-            sql += " select max(s.ID) as ID, MaterialNo, MaterialDesc, a.WAREHOUSENAME, a.HouseNAME, a.AreaNAME, sum(s.qty) as QTY, s.batchno, ";
-            sql += " CONVERT(varchar(12), s.edate, 111) as edate, s.EAN from( ";
-            sql += " select T_OUTBARCODE.*, t_stock.areaid from T_OUTBARCODE ";
-            sql += "  left join t_stock on T_OUTBARCODE.fserialno = t_stock.barcode ";
-            sql += " where fserialno in (select barcode from T_STOCK where ISDEL = 1  and batchno = ''))  s ";
-            sql += "   left join v_area a on s.areaid = a.id ";
-            sql += " group by  CONVERT(varchar(12), s.edate, 111),MaterialNo,MaterialDesc,a.WAREHOUSENAME,a.HouseNAME,a.AreaNAME,s.batchno,s.EAN ";
-            sql += " ) a group by MaterialNo, MaterialDesc, WAREHOUSENAME, HouseNAME, AreaNAME, QTY, batchno, edate, EAN)N";
+            sql += " group by  m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.HouseNAME,a.AreaNAME,s.batchno";
+            sql += " )N";
+
+
+
+            //string sql = " (select 1 as ID,  MaterialNo, MaterialDesc, WAREHOUSENAME, HouseNAME, AreaNAME, QTY, batchno, edate, EAN from  ( ";
+            //sql += " select max(s.ID) as ID,m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.HouseNAME,a.AreaNAME,sum(s.qty) as QTY,s.batchno, ";
+            //sql += " CONVERT(varchar(12), s.edate, 111) as edate,s.EAN from T_STOCK s ";
+            //sql += " left join t_material m on s.materialnoid = m.id left join v_area a on s.areaid = a.id ";
+            //sql += " where s.ISDEL = 1  and s.batchno != '' ";
+            //sql += " group by  CONVERT(varchar(12), s.edate, 111),m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.HouseNAME,a.AreaNAME,s.batchno,s.EAN ";
+            //sql += " union ";
+            //sql += " select max(s.ID) as ID, MaterialNo, MaterialDesc, a.WAREHOUSENAME, a.HouseNAME, a.AreaNAME, sum(s.qty) as QTY, s.batchno, ";
+            //sql += " CONVERT(varchar(12), s.edate, 111) as edate, s.EAN from( ";
+            //sql += " select T_OUTBARCODE.*, t_stock.areaid from T_OUTBARCODE ";
+            //sql += "  left join t_stock on T_OUTBARCODE.fserialno = t_stock.barcode ";
+            //sql += " where fserialno in (select barcode from T_STOCK where ISDEL = 1  and batchno = ''))  s ";
+            //sql += "   left join v_area a on s.areaid = a.id ";
+            //sql += " group by  CONVERT(varchar(12), s.edate, 111),MaterialNo,MaterialDesc,a.WAREHOUSENAME,a.HouseNAME,a.AreaNAME,s.batchno,s.EAN ";
+            //sql += " ) a group by MaterialNo, MaterialDesc, WAREHOUSENAME, HouseNAME, AreaNAME, QTY, batchno, edate, EAN)N";
 
 
 

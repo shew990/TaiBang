@@ -264,6 +264,11 @@ namespace Web.WMS.Controllers
             //参数=>tm.MaterialNo //tm.StrongHoldCode  //tm.HouseNo //tm.AreaNo //tm.WarehouseNo //tm.BatchNo
             try
             {
+                if (string.IsNullOrEmpty(model.StrongHoldCode)|| string.IsNullOrEmpty(model.WarehouseNo) || string.IsNullOrEmpty(model.MaterialNo) )
+                {
+                    return Json(new { Result = 0, ResultValue = "组织，仓库，物料不能为空！" }, JsonRequestBehavior.AllowGet);
+                }
+
                 string strErrMsg = string.Empty;
                 List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
@@ -286,6 +291,11 @@ namespace Web.WMS.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(model.StrongHoldCode) || string.IsNullOrEmpty(model.WarehouseNo) || string.IsNullOrEmpty(model.MaterialNo))
+                {
+                    return Json(new { state = false }, JsonRequestBehavior.AllowGet);
+                }
+
                 string strErrMsg = string.Empty;
                 List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
