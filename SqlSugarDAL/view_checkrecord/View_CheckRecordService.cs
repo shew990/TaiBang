@@ -11,6 +11,14 @@ namespace SqlSugarDAL.view_checkrecord
         public object GetOrderList(int limit, int page, string OrderNo, string StartDate, string EndDate, string strongHoldCode)
         {
             var records = GetRecords(OrderNo, StartDate, EndDate, strongHoldCode);
+            var recordsItem = new List<View_CheckRecord>();
+            records.ForEach(x =>
+            {
+                recordsItem = records.FindAll(y => y.ErpVoucherNo == y.ErpVoucherNo);
+                var sumQualityQty = recordsItem.Sum(z => z.RecordQualityQty);
+                var sumCheckQty = recordsItem.Sum(a => a.CheckQty);
+                x.PassRateAll = (sumQualityQty / sumCheckQty * 100).ToString("0.00");
+            });
             return new
             {
                 Result = 1,

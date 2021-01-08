@@ -33,7 +33,8 @@ namespace SqlSugarDAL
         /// <returns></returns>
         public virtual List<T> GetList(Expression<Func<T, bool>> whereExpression = null)
         {
-            return whereExpression == null ? CurrentDb.GetList() : CurrentDb.GetList(whereExpression);
+            return whereExpression == null
+                ? CurrentDb.GetList() : Db.Queryable<T>().Where(whereExpression).ToList();
         }
 
         /// <summary>

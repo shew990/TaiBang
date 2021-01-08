@@ -261,8 +261,28 @@ namespace Web.WMS.Controllers
         /// <returns></returns>
         public ActionResult GetModel(string orderNo)
         {
-            var product = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
-            return Json(product, JsonRequestBehavior.AllowGet);
+            SuccessResult successResult = new SuccessResult();
+            successResult.Success = false;
+            try
+            {
+                var product = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
+                if (product == null)
+                {
+                    successResult.Msg = "没有该订单!";
+                    return Json(successResult, JsonRequestBehavior.AllowGet);
+                }
+                var records = new CheckRecordService().GetList(x => x.ProductOrderId == product.id);
+                product.BackQualityQty = (records == null || records.Count() == 0)
+                                         ? 0 : records.Sum(x => x.BackQualityQty);
+
+                successResult.Data = product;
+                successResult.Success = true;
+            }
+            catch (Exception ex)
+            {
+                successResult.Msg = ex.Message;
+            }
+            return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

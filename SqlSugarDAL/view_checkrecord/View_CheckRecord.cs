@@ -407,6 +407,12 @@ namespace SqlSugarDAL.view_checkrecord
         }
 
         /// <summary>
+        /// 总合格率
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public String PassRateAll { get; set; }
+
+        /// <summary>
         /// 据点
         /// </summary>
         public String StrongHoldCode { get; set; }
@@ -415,6 +421,11 @@ namespace SqlSugarDAL.view_checkrecord
         /// 检验人
         /// </summary>
         public String Checker { get; set; }
+
+        /// <summary>
+        /// 复检数量
+        /// </summary>
+        public Decimal BackQualityQty { get; set; }
 
     }
 }

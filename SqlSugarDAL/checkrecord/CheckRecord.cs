@@ -237,5 +237,10 @@ namespace SqlSugarDAL.checkrecord
         /// 检验人
         /// </summary>
         public String Checker { get; set; }
+
+        /// <summary>
+        /// 复检数量
+        /// </summary>
+        public Decimal BackQualityQty { get; set; }
     }
 }

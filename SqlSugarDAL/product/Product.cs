@@ -151,5 +151,11 @@ namespace SqlSugarDAL.product
         /// </summary>
         [SugarColumn(IsIgnore = true)]
         public Decimal NoQualityQty { get { return this.ProductQty - this.QulityQty; } }
+
+        /// <summary>
+        /// 复检合格总数量
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public Decimal BackQualityQty { get; set; }
     }
 }

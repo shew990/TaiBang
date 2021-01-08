@@ -39,7 +39,7 @@ namespace SqlSugarDAL.checkrecord
             return successResult;
         }
 
-        public SuccessResult Submit(string formJson, string orderId, string remark,string userNo)
+        public SuccessResult Submit(string formJson, string orderId, string remark, string userNo)
         {
             SuccessResult successResult = new SuccessResult();
             successResult.Success = false;
@@ -47,6 +47,24 @@ namespace SqlSugarDAL.checkrecord
             {
                 ProductService productService = new ProductService();
                 var checkRecord = JsonConvert.DeserializeObject<T_CheckRecord>(formJson);
+
+                var product = productService.GetById(Convert.ToInt32(orderId));
+                var records = new View_CheckRecordService()
+                    .GetSugarQueryable(x => x.ErpVoucherNo == product.ErpVoucherNo);
+                var sumNoQualituQty = records.Sum(x => x.RecordNoQualityQty);
+                var sumQualityQty = records.Sum(x => x.RecordQualityQty);
+                var sumBackQualityQty = records.Sum(x => x.BackQualityQty);
+                if (product.ProductQty == sumQualityQty && sumNoQualituQty - sumBackQualityQty == 0)
+                {
+                    successResult.Msg = "该订单已检验完成,不能再检验!";
+                    return successResult;
+                }
+                if (checkRecord.BackQualityQty + sumBackQualityQty > sumNoQualituQty)
+                {
+                    var shenyu = sumNoQualituQty - sumBackQualityQty;
+                    successResult.Msg = "复检合格数量 不能大于 未复检不合格数量" + shenyu + "";
+                    return successResult;
+                }
 
                 T_CheckRecord queryData = new T_CheckRecord();
                 //一部/二部
@@ -94,6 +112,7 @@ namespace SqlSugarDAL.checkrecord
                 queryData.Minute = checkRecord.Minute;
                 queryData.Checker = userNo;
 
+                queryData.BackQualityQty = checkRecord.BackQualityQty;
                 queryData.QualityQty = checkRecord.QualityQty;
                 queryData.NoQualityQty = checkRecord.NoQualityQty;
 
@@ -101,7 +120,6 @@ namespace SqlSugarDAL.checkrecord
                 {
                     Insert(queryData);
 
-                    var product = productService.GetById(Convert.ToInt32(orderId));
                     product.QulityQty += Convert.ToDecimal(checkRecord.QualityQty);
                     product.Remark = remark;
                     productService.Update(product);
