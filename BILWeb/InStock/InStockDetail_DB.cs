@@ -333,6 +333,7 @@ namespace BILWeb.InStock
             t_instockdetail.ErpWarehouseName = dbFactory.ToModelValue(reader, "ErpWarehouseName").ToDBString();
             t_instockdetail.CustomerItemCode = dbFactory.ToModelValue(reader, "CustomerItemCode").ToDBString();
             t_instockdetail.SUPPLIERSHORTNAME = dbFactory.ToModelValue(reader, "SUPPLIERSHORTNAME").ToDBString();
+            t_instockdetail.PONO = dbFactory.ToModelValue(reader, "PONO").ToDBString();
             
             return t_instockdetail;
         }

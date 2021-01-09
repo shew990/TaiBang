@@ -3,6 +3,7 @@ using BILBasic.JSONUtil;
 using BILBasic.User;
 using BILWeb.OutBarCode;
 using BILWeb.OutStockTask;
+using BILWeb.Stock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -163,8 +164,6 @@ namespace BILWeb.Material
             }
         }
         
-
-
         public string GetZhList(string ErpVoucherNo)
         {
             BaseMessage_Model<List<U9Zh>> messageModel = new BaseMessage_Model<List<U9Zh>>();
@@ -364,6 +363,55 @@ namespace BILWeb.Material
             }
         }
 
+        public List<U9Stock> GetStockInfo(string WareHouseNo, string StrongHoldCode,string MaterialNo)
+        {
+            try
+            {
+                if(string.IsNullOrEmpty(WareHouseNo)|| string.IsNullOrEmpty(StrongHoldCode)|| string.IsNullOrEmpty(MaterialNo))
+                {
+                    return null;
+                }
+                
+                T_Material_Batch_DB _db = new T_Material_Batch_DB();
+                List<U9Stock> U9Stocks = new List<U9Stock>();
+                U9Stocks = _db.GetStockInfo(WareHouseNo,StrongHoldCode,MaterialNo);
+                if (U9Stocks == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return U9Stocks;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public bool SaveCheckToU9(List<T_StockInfoEX> list, ref string ErrorMsg)
+        {
+            try
+            {
+                T_Material_Batch_DB _db = new T_Material_Batch_DB();
+                if (_db.SaveCheckToU9(list, ref ErrorMsg))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        
 
 
 

@@ -26,6 +26,18 @@
                 </div>
             </div>
         </form>
+        <form class="layui-form" method="post" enctype="multipart/form-data" action="/PrintFirst/ImportMaterial">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <input name="file" type="file" id="file" />
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="layui-inline">
+                    <input type="submit" class="btn btn-primary" value="物料导入">
+                </div>
+            </div>
+        </form>
         @{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}
         <table class="layui-table layui-form">
             <thead>

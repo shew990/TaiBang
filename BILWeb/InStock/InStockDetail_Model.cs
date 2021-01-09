@@ -308,8 +308,8 @@ namespace BILWeb.InStock
         public string ErpWarehouseName { get; set; }//仓库
         public string CustomerItemCode { get; set; }//客户型号
         public string SUPPLIERSHORTNAME { get; set; }//客户简写
+        public string PONO { get; set; }
         
-
 
     }
 }

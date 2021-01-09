@@ -237,7 +237,68 @@ namespace BILWeb.Material
                 return null;
             }
         }
-        
+
+        public bool SaveCheckToU9(List<T_StockInfoEX> stocks,ref string strMsg)
+        {
+            try
+            {
+                List<U9StockTo> U9StockTos = new List<U9StockTo>();
+                //简化实体类
+                stocks.ForEach(item=> {
+                    U9StockTos.Add(new U9StockTo() {
+                        MaterialNo = item.MaterialNo,
+                        BatchNo = item.BatchNo,
+                        ErpWarehouseNo = item.WarehouseNo,
+                        FromErpWarehouse = item.WarehouseNo,
+                        PostQty = item.Qty,
+                        ScanQty = item.ScanQty,
+                        PostUser = "admin",
+                        StrongHoldCode = "0300",
+                        GUID = "132",
+                        StrVoucherType = "InvSheet001",
+                        Unit="S001"
+                    });
+                });
+
+
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+                string JSONU9 = JSONHelper.ObjectToJson<List<U9StockTo>>(U9StockTos);
+                LogNet.LogInfo("提交U9盘点单json:" + JSONU9);
+                string ERPJson = TIF.PostCheck(JSONU9);
+                LogNet.LogInfo("提交U9盘点单返回json:" + ERPJson);
+                if (ERPJson.Substring(0,1)=="1")
+                {
+                    return true;
+                }
+                else
+                {
+                    strMsg = ERPJson.Substring(1, ERPJson.Length - 1);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                strMsg = ex.ToString();
+                return false;
+            }
+        }
+
+        public List<U9Stock> GetStockInfo(string WareHouseNo, string StrongHoldCode, string MaterialNo)
+        {
+            try
+            {
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+
+                string json = "{\"company_no\":\"" + StrongHoldCode + "\",\"edit_time\":\"" + WareHouseNo + "\",\"data_no\":\"" + MaterialNo + "\",\"VoucherType\":\"8888\"}";
+                string ERPJson = TIF.GetModelListByInterface(json);
+                LogNet.LogInfo("盘点单接口返回的JSON:" + ERPJson);
+                return BILBasic.JSONUtil.JSONHelper.JsonToObject<List<U9Stock>>(ERPJson);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
 
         //SOP列表
@@ -554,6 +615,40 @@ namespace BILWeb.Material
         public List<CommonInfo> DocTypes { get; set; }
 
     }
+
+    public class U9Stock
+    {
+        public string StrongHoldCode { get; set; }
+        public string StrongHoldName { get; set; }
+        public string MaterialNo { get; set; }
+        public string MaterialName { get; set; }
+        public string MaterialDesc { get; set; }
+        public string Spec { get; set; }
+        public string BatchNo { get; set; }
+        public string ErpWareHouseNo { get; set; }
+        public string ErpWareHouseName { get; set; }
+        public decimal Qty { get; set; }
+        public string Unit { get; set; }
+        public int IsAmount { get; set; }
+    }
+
+    public class U9StockTo
+    {
+        public string StrongHoldCode { get; set; }
+        public string MaterialNo { get; set; }
+        public string BatchNo { get; set; }
+        public string ErpWarehouseNo { get; set; }
+        public decimal PostQty { get; set; }
+        public decimal ScanQty { get; set; }
+
+        public string PostUser { get; set; }
+        public string StrVoucherType { get; set; }
+        public string GUID { get; set; }
+        public string FromErpWarehouse { get; set; }
+        public string Unit { get; set; }
+
+}
+
     public class U9Zh
     {
         public string MaterialDoc { get; set; }//凭证

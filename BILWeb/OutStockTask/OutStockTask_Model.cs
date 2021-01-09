@@ -501,7 +501,8 @@ namespace BILWeb.OutStockTask
         public string CUSTOMERCODE { get; set; }
         [Display(Name = "客户名称")]
         public string CUSTOMERNAME { get; set; }
-      
+        public string City { get; set; }
 
+        
     }
 }

@@ -528,23 +528,23 @@ namespace BILWeb.Query
                     "(" + id + ",'" + checkno + "','" + "明盘" + "','" + model.CHECKDESC + "','" + model.CHECKSTATUS + "','" + model.REMARKS + "',1,'" + model.CREATER + "',getdate()) SET IDENTITY_INSERT T_CHECK off ";
                 sqls.Add(sqlhead);
                 string sql = "";
-                //合并重复项
-                list = list
-                   .GroupBy(x => new { x.MaterialNo, x.WarehouseNo, x.HouseNo, x.AreaNo, x.StrongHoldCode, x.BatchNo })
-                   .Select(group => new T_StockInfoEX
-                   {
-                       MaterialNo = group.Key.MaterialNo,
-                       WarehouseNo = group.Key.WarehouseNo,
-                       HouseNo = group.Key.HouseNo,
-                       AreaNo = group.Key.AreaNo,
-                       StrongHoldCode = group.Key.StrongHoldCode,
-                       BatchNo = group.Key.BatchNo,
-                       Qty = group.Sum(p => p.Qty),
-                   }).ToList();
+                ////合并重复项
+                //list = list
+                //   .GroupBy(x => new { x.MaterialNo, x.WarehouseNo, x.HouseNo, x.AreaNo, x.StrongHoldCode, x.BatchNo })
+                //   .Select(group => new T_StockInfoEX
+                //   {
+                //       MaterialNo = group.Key.MaterialNo,
+                //       WarehouseNo = group.Key.WarehouseNo,
+                //       HouseNo = group.Key.HouseNo,
+                //       AreaNo = group.Key.AreaNo,
+                //       StrongHoldCode = group.Key.StrongHoldCode,
+                //       BatchNo = group.Key.BatchNo,
+                //       Qty = group.Sum(p => p.Qty),
+                //   }).ToList();
                 foreach (var item in list)
                 {
                     sql = "insert into T_checkrefstock (voucherno,MaterialNo,WAREHOUSENO,HouseNo,AreaNo,qty,STRONGHOLDCODE,BATCHNO,sqty) " +
-                        "values('" + checkno + "','" + item.MaterialNo + "','" + item.WarehouseNo + "','" + item.HouseNo + "','" + item.AreaNo + "'," + item.Qty + ",'" + item.StrongHoldCode + "','" + item.BatchNo + "',0)";
+                        "values('" + checkno + "','" + item.MaterialNo + "','" + item.WarehouseNo + "','',''," + item.Qty + ",'','" + item.BatchNo + "',0)";
                     sqls.Add(sql);
                 }
                 int i = dbFactory.ExecuteNonQueryList(sqls);
@@ -1759,7 +1759,7 @@ namespace BILWeb.Query
                 }
 
                 //判断条码是否在列表中
-                bool res = minlist.Exists(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.areano == sb.areano && p.StrongHoldCode == sb.StrongHoldCode && p.BatchNo == sb.BatchNo);
+                bool res = minlist.Exists(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno  && p.BatchNo == sb.BatchNo);
                 if (!res)
                 {
                     BaseMessage_Model<List<CheckDet_Model>> bm = new BaseMessage_Model<List<CheckDet_Model>>();
@@ -1770,7 +1770,7 @@ namespace BILWeb.Query
                 }
 
                 //得到表头id
-                int id = minlist.Find(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.areano == sb.areano && p.StrongHoldCode == sb.StrongHoldCode && p.BatchNo == sb.BatchNo).id;
+                int id = minlist.Find(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno  && p.BatchNo == sb.BatchNo).id;
 
                 //判断该序列号是否已经扫描
                 sql = "select count(1) from T_CHECKREFSERIAL where VOUCHERNO = '" + checkno + "' and SERIALNO = '" + SerialNo + "'";
@@ -1838,7 +1838,7 @@ namespace BILWeb.Query
                 //判断条码是否是列表中的属性
                 foreach (var sb in lsb)
                 {
-                    bool res = minlist.Exists(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.areano == sb.areano && p.StrongHoldCode == sb.StrongHoldCode && p.BatchNo == sb.BatchNo);
+                    bool res = minlist.Exists(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.BatchNo == sb.BatchNo);
                     if (!res)
                     {
                         BaseMessage_Model<List<CheckDet_Model>> bm = new BaseMessage_Model<List<CheckDet_Model>>();
@@ -1854,7 +1854,7 @@ namespace BILWeb.Query
                 foreach (var sb in lsb)
                 {
                     //得到表头id
-                    int id = minlist.Find(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.areano == sb.areano && p.StrongHoldCode == sb.StrongHoldCode && p.BatchNo == sb.BatchNo).id;
+                    int id = minlist.Find(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.BatchNo == sb.BatchNo).id;
 
                     //判断该序列号是否已经扫描
                     sql = "select count(1) from T_CHECKREFSERIAL where VOUCHERNO = '" + checkno + "' and SERIALNO = '" + sb.SerialNo + "'";
@@ -2678,7 +2678,7 @@ namespace BILWeb.Query
         //查看明盘状态
         public bool GetCheckStock2(string checkno, ref List<T_StockInfoEX> list)
         {
-            string sql = "select t.*, t.rowid from T_CHECKREFSTOCK t where voucherno = '" + checkno + "'";
+            string sql = "select t.* from T_CHECKREFSTOCK t where voucherno = '" + checkno + "'";
             DataTable dt = dbFactory.ExecuteDataSet(CommandType.Text, sql).Tables[0];
             list = ModelConvertHelper<T_StockInfoEX>.ConvertToModel(dt);
             for (int i = 0; i < list.Count; i++)
@@ -2690,6 +2690,18 @@ namespace BILWeb.Query
             else
                 return true;
         }
+
+        public bool GetCheckSerialno(string checkno, ref List<T_StockInfoEX> list)
+        {
+            string sql = "select MATERIALNO,WAREHOUSENO,BATCHNO,STRONGHOLDCODE,SUM(QTY) QTY from  T_CHECKREFSERIAL where VOUCHERNO= '" + checkno + "' group  by MATERIALNO,STRONGHOLDCODE,WAREHOUSENO,BATCHNO";
+            DataTable dt = dbFactory.ExecuteDataSet(CommandType.Text, sql).Tables[0];
+            list = ModelConvertHelper<T_StockInfoEX>.ConvertToModel(dt);
+            if (list.Count == 0)
+                return false;
+            else
+                return true;
+        }
+
 
         public void dbTest()
         {

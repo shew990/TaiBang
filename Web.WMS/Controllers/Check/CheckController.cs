@@ -1,6 +1,7 @@
 ﻿using BILBasic.Common;
 using BILWeb.Check;
 using BILWeb.Login.User;
+using BILWeb.Material;
 using BILWeb.Query;
 using BILWeb.Stock;
 using System;
@@ -244,41 +245,112 @@ namespace Web.WMS.Controllers
 
 
         #region 物料盘点
-
-        /// <summary>
-        /// 跳转新建明盘单页面
-        /// </summary>
-        /// <returns></returns>
+        // 跳转新建明盘单页面
         public ActionResult GetModelMing()
         {
             return View();
         }
 
-        /// <summary>
-        /// 获取盘点库存信息
-        /// </summary>
-        /// <param name="tm"></param>
-        /// <returns></returns>
-        public JsonResult GetCheckStock(T_StockInfoEX model)
+        // 获取盘点库存信息
+        public JsonResult GetCheckStock(T_StockInfoEX model, string CheckNo= "P21010885")
         {
-            //参数=>tm.MaterialNo //tm.StrongHoldCode  //tm.HouseNo //tm.AreaNo //tm.WarehouseNo //tm.BatchNo
             try
             {
-                if (string.IsNullOrEmpty(model.StrongHoldCode)|| string.IsNullOrEmpty(model.WarehouseNo) || string.IsNullOrEmpty(model.MaterialNo) )
+                if (string.IsNullOrEmpty(model.WarehouseNo))
                 {
-                    return Json(new { Result = 0, ResultValue = "组织，仓库，物料不能为空！" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { Result = 0, ResultValue = "仓库不能为空！" }, JsonRequestBehavior.AllowGet);
                 }
-
                 string strErrMsg = string.Empty;
-                List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
+                List<T_StockInfoEX> wms_stock = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
-                if (db.GetStockCombineInfo2(model, ref lsttask, ref strErrMsg)) {
-                    return Json(new { Result = 1, Data = lsttask }, JsonRequestBehavior.AllowGet);
-                } else {
+                //T_StockInfoEX model = new T_StockInfoEX() { MaterialNo = WarehouseNo, WarehouseNo = MaterialNo, StrongHoldCode = StrongHoldCode };
+                if (db.GetStockCombineInfo2(model, ref wms_stock, ref strErrMsg))
+                {
+                    if (wms_stock == null || wms_stock.Count == 0)
+                    {
+                        return Json(new { Result = 0, ResultValue = "查询库存为空！" }, JsonRequestBehavior.AllowGet);
+                    }
+                    //List<T_StockInfoEX> erp_stock = new List<T_StockInfoEX>();
+                    T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
+                    model.StrongHoldCode = "0300";
+                    List<U9Stock> erp_stock = FUNC.GetStockInfo(model.WarehouseNo, model.StrongHoldCode, model.MaterialNo);
+                    //wms数据和erp数据对账
+                    for (int i = 0; i < erp_stock.Count; i++)
+                    {
+                        if (erp_stock != null && erp_stock.Count > 0)
+                        {
+                            for (int j = 0; j < erp_stock.Count; j++)
+                            {
+                                if (wms_stock[i].MaterialNo == erp_stock[j].MaterialNo && wms_stock[i].BatchNo == erp_stock[j].BatchNo)
+                                {
+                                    wms_stock[i].U9MaterialNo = erp_stock[i].MaterialNo;
+                                    wms_stock[i].U9BatchNo = erp_stock[i].BatchNo;
+                                    wms_stock[i].U9Qty = erp_stock[j].Qty;
+                                    erp_stock[j].IsAmount = 1;
+                                }
+                            }
+                        }
+
+                    }
+
+                    if (erp_stock != null && erp_stock.Count > 0)
+                    {
+                        //没匹配的u9数据
+                        for (int i = 0; i < erp_stock.Count; i++)
+                        {
+                            if (erp_stock[i].IsAmount != 1)
+                            {
+                                wms_stock.Add(new T_StockInfoEX()
+                                {
+                                    U9MaterialNo = erp_stock[i].MaterialNo,
+                                    U9BatchNo = erp_stock[i].BatchNo,
+                                    U9Qty = erp_stock[i].Qty,
+                                    Qty = 0
+                                });
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(CheckNo))
+                    {
+                        List<T_StockInfoEX> Scanlist = new List<T_StockInfoEX>();
+                        Check_DB CheckDB = new Check_DB();
+                        CheckDB.GetCheckSerialno(CheckNo, ref Scanlist); //实盘结果
+                        //实际扫描数量
+                        wms_stock.ForEach(wms_item => {
+                            Scanlist.ForEach(scan_item => {
+                                if (wms_item.MaterialNo == scan_item.MaterialNo && wms_item.BatchNo == scan_item.BatchNo)
+                                {
+                                    wms_item.ScaMaterialNo = scan_item.MaterialNo;
+                                    wms_item.ScaBatchNo = scan_item.BatchNo;
+                                    wms_item.ScanQty = scan_item.Qty;
+                                    scan_item.IsAmount = 1;
+                                }
+                            });
+                        });
+                        Scanlist.ForEach(scan_item => {
+                            if (scan_item.IsAmount != 1)
+                            {
+                                wms_stock.Add(new T_StockInfoEX()
+                                {
+                                    ScaMaterialNo = scan_item.MaterialNo,
+                                    ScaBatchNo = scan_item.BatchNo,
+                                    U9Qty = 0,
+                                    Qty = 0,
+                                    ScanQty = scan_item.Qty,
+                                });
+                            }
+                        });
+                    }
+                    
+                    return Json(new { Result = 1, Data = wms_stock }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
                     return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
                 }
                 //BaseModel<List<Tmodel>> returnmodel = new BaseModel<List<Tmodel>>() { Result = 1, ResultValue = strError, Data = modelList, PageData = new R_Pagedata() { totalCount = page.RecordCounts, pageSize = page.CurrentPageShowCounts, currentPage = page.CurrentPageNumber, totalPages = page.PagesCount } };
-               
+
             }
             catch (Exception ex)
             {
@@ -291,7 +363,7 @@ namespace Web.WMS.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(model.StrongHoldCode) || string.IsNullOrEmpty(model.WarehouseNo) || string.IsNullOrEmpty(model.MaterialNo))
+                if (string.IsNullOrEmpty(model.WarehouseNo))
                 {
                     return Json(new { state = false }, JsonRequestBehavior.AllowGet);
                 }
@@ -303,7 +375,7 @@ namespace Web.WMS.Controllers
                 {
                     return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
                 }
-                
+
                 Check_Model cm = new Check_Model();
                 //cm.REMARKS = strremark + txt_remarkD.Text + txt_remark.Text;
                 cm.CHECKSTATUS = "新建";
@@ -321,6 +393,65 @@ namespace Web.WMS.Controllers
             }
         }
 
+        //提交U9盘点信息
+        public JsonResult SaveCheckToU9(string CheckNo)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(CheckNo))
+                {
+                    return Json(new { state = false }, JsonRequestBehavior.AllowGet);
+                }
+                Check_DB CheckDB = new Check_DB();
+                List<T_StockInfoEX> Checklist = new List<T_StockInfoEX>();
+                List<T_StockInfoEX> Scanlist = new List<T_StockInfoEX>();
+                CheckDB.GetCheckStock2(CheckNo, ref Checklist); //盘点单
+                CheckDB.GetCheckSerialno(CheckNo, ref Scanlist); //实盘结果
+                if (Checklist.Count == 0 || Scanlist.Count == 0)
+                {
+                    return Json(new { state = false }, JsonRequestBehavior.AllowGet);
+                }
+
+                //wms数据和erp数据对账
+                for (int i = 0; i < Checklist.Count; i++)
+                {
+                    for (int j = 0; j < Scanlist.Count; j++)
+                    {
+                        if (Checklist[i].MaterialNo == Scanlist[j].MaterialNo && Checklist[i].BatchNo == Scanlist[j].BatchNo)
+                        {
+                            Checklist[i].U9Qty = Scanlist[j].Qty;
+                            Scanlist[j].IsAmount = 1;
+                        }
+                    }
+                }
+                //没匹配的数据
+                for (int i = 0; i < Scanlist.Count; i++)
+                {
+                    if (Scanlist[i].IsAmount != 1)
+                    {
+                        Checklist.Add(new T_StockInfoEX()
+                        {
+                            U9MaterialNo = Scanlist[i].MaterialNo,
+                            U9BatchNo = Scanlist[i].BatchNo,
+                            U9Qty = Scanlist[i].Qty,
+                            Qty = 0
+                        });
+                    }
+                }
+                T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
+                string strMsg = "";
+                if (FUNC.SaveCheckToU9(Checklist, ref strMsg)) {
+                    return Json(new { state = true }, JsonRequestBehavior.AllowGet);
+                } else {
+                    return Json(new { state = false }, JsonRequestBehavior.AllowGet);
+                }
+                    
+            }
+            catch (Exception ex)
+            {
+                return Json(new { state = false, Msg = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
         #endregion
     }
 }

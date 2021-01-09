@@ -294,5 +294,60 @@ namespace BILBasic.Interface
         }
 
 
+        public string PostCheck(string Json)
+        {
+            JsonModel jsonModel = new JsonModel();
+            jsonModel.payload = new PayLoad();
+            jsonModel.payload.std_data = new Std();
+            jsonModel.payload.std_data.execution = new Exe();
+
+            try
+            {
+                List<T_InterfaceInfo> lstModel = GetInterface("8887");
+                if (lstModel == null || lstModel.Count == 0)
+                {
+                    //jsonModel.payload.std_data.execution.code = "1";
+                    //jsonModel.payload.std_data.execution.description = "没有配置获取数据二开接口！";
+                    jsonModel.result = "0";
+                    jsonModel.resultValue = "没有配置获取数据二开接口！";
+                    return JSONUtil.JSONHelper.ObjectToJson<JsonModel>(jsonModel);
+                }
+
+                T_InterfaceInfo model = lstModel.Find(t => t.Function == "3");
+
+                if (model == null)
+                {
+                    jsonModel.result = "0";
+                    jsonModel.resultValue = "没有配置获取数据二开接口！";
+                    return JSONUtil.JSONHelper.ObjectToJson<JsonModel>(jsonModel);
+                }
+
+                JsonModel jsonModel1 = new JsonModel();
+                jsonModel1.payload = new PayLoad();
+                jsonModel1.payload.std_data = new Std();
+                jsonModel1.payload.std_data.execution = new Exe();
+
+                LogNet.LogInfo("VoucherJson:" + Json);
+                var assembly = Assembly.LoadFile(@model.Route);
+                var type = assembly.GetType(model.ClassName);
+                var instance = assembly.CreateInstance(model.ClassName);
+                object[] obj = new object[1];
+                obj[0] = Json;
+                var method = type.GetMethod(model.FunctionName);
+                LogNet.LogInfo("---------------------调用ERP接口:" + model.ClassName + model.FunctionName + "参数：" + Json);
+                return method.Invoke(instance, obj).ToString();
+
+            }
+            catch (Exception ex)
+            {
+                //jsonModel.payload.std_data.execution.code = "1";
+                //jsonModel.payload.std_data.execution.description = ex.Message;
+                jsonModel.result = "0";
+                jsonModel.resultValue = ex.Message;
+                return JSONUtil.JSONHelper.ObjectToJson<JsonModel>(jsonModel);
+            }
+        }
+
+
     }
 }

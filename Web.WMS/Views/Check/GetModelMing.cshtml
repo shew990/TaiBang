@@ -20,12 +20,6 @@
     <form class="layui-form" action="">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">据点编号</label>
-                <div class="layui-input-block">
-                    <input type="text" id="StrongHoldCode" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
                 <label class="layui-form-label">产品编号</label>
                 <div class="layui-input-block">
                     <input type="text" id="MaterialNo" class="layui-input">
@@ -37,32 +31,16 @@
                     <input type="text" id="WarehouseNo" class="layui-input">
                 </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">库区编号</label>
-                <div class="layui-input-block">
-                    <input type="text" id="HouseNo" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">库位编号</label>
-                <div class="layui-input-block">
-                    <input type="text" id="AreaNo" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">场内批号</label>
-                <div class="layui-input-block">
-                    <input type="text" id="BatchNo" class="layui-input">
-                </div>
-            </div>
             <div class="layui-inline">
                 <input type="button" class="btn btn-primary" value="查 询" id="query" style="margin-bottom:15px;">
             </div>
             <div class="layui-inline">
                 <input type="button" class="btn btn-primary" value="保 存" id="save" style="margin-bottom:15px;">
             </div>
+            <div class="layui-inline">
+                <input type="button" class="btn btn-primary" value="SaveCheckToU9" id="SaveCheckToU9" style="margin-bottom:15px;">
+            </div>
+            
         </div>
     </form>
 </div>
@@ -85,11 +63,7 @@
                 , where: {
                     model: {
                         MaterialNo: $("#MaterialNo").val().trim(),
-                        StrongHoldCode: $("#StrongHoldCode").val().trim(),
-                        WarehouseNo: $("#WarehouseNo").val().trim(),
-                        HouseNo: $("#HouseNo").val().trim(),
-                        AreaNo: $("#AreaNo").val().trim(),
-                        BatchNo: $("#BatchNo").val().trim()
+                        WarehouseNo: $("#WarehouseNo").val().trim()
                     }
                 }
                 , request: {
@@ -112,19 +86,29 @@
                 , toolbar: false
                 , cols: [
                     [
-                        { type: 'checkbox', width: 60, fixed: 'left' }
-                        , { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
-                        , { field: 'StrongHoldCode', title: '据点编号', width: 120, fixed: 'left' }
-                        , { field: 'MaterialNo', title: '产品编号', width: 120 }
-                        , { field: 'MaterialName', title: '产品名称', width: 120 }
-                        , { field: 'BatchNo', title: '场内批号', width: 120 }
+                        { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
+                      , { field: 'WarehouseNo', title: '仓库', width: 120 }
+                      , { field: 'MaterialNo', title: '物料号', width: 120 }
+                      , { field: 'BatchNo', title: '番号', width: 120 }
+                      , { field: 'Qty', title: 'WMS数量', width: 120 }
+                      , { field: 'U9MaterialNo', title: 'U9物料', width: 120 }
+                      , { field: 'U9BatchNo', title: 'U9番号', width: 120 }
+                      , { field: 'U9Qty', title: 'ERP数量', width: 120 }
+                      , { field: 'ScaMaterialNo', title: '扫描物料', width: 120 }
+                      , { field: 'ScaBatchNo', title: '扫描番号', width: 120 }
+                      , { field: 'ScanQty', title: '扫描数量', width: 120 }
+
+                        //, { field: 'StrongHoldCode', title: '据点编号', width: 120, fixed: 'left' }
+           
+                        //, { field: 'MaterialName', title: '产品名称', width: 120 }
+                        
                         //, { field: '', title: '到期时间', width: 200 }
-                        , { field: 'Qty', title: '数量', width: 120 }
+                 
                         //, { field: '', title: '序列号数', width: 80 }
                         //, { field: '', title: '检验状态', width: 80 }
-                        , { field: 'AreaNo', title: '库位', width: 120 }
-                        , { field: 'HouseNo', title: '库区', width: 120 }
-                        , { field: 'WarehouseNo', title: '仓库', width: 120 }
+                        //, { field: 'AreaNo', title: '库位', width: 120 }
+                        //, { field: 'HouseNo', title: '库区', width: 120 }
+                        
                     ]
                 ]
             });
@@ -153,10 +137,45 @@
             tableInit();
         });
 
-        //查询
+        //保存
         $('#save').click(function () {
-            tableInit();
+            var ID = "";
+            if (confirm("确定保存盘点单?")) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Check/SaveCheck?MaterialNo=" + $("#MaterialNo").val().trim() + "&WarehouseNo=" + $("#WarehouseNo").val().trim(),
+                    date: null,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        alert(data.obj);
+                    },
+                    fail: function () {
+                        alert("提交失败！");
+                    }
+                });
+            }
         });
+
+        $('#SaveCheckToU9').click(function () {
+            var ID = "";
+            if (confirm("确定保存盘点单?")) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Check/SaveCheckToU9?CheckNo=P21010885",
+                    date: null,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        alert(data.obj);
+                    },
+                    fail: function () {
+                        alert("提交失败！");
+                    }
+                });
+            }
+        });
+
 
         //回车事件绑定
         $("input").bind('keyup', function (event) {
