@@ -85,6 +85,12 @@
                         <input type="text" id="noQulaityQty" readonly class="layui-input">
                     </div>
                 </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">复检合格数</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="BackProQulaityQty" readonly class="layui-input">
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -233,6 +239,12 @@
                         <label class="layui-form-label">不合格数量</label>
                         <div class="layui-input-block">
                             <input type="number" id="RecordNoQualityQty" name="NoQualityQty" placeholder="请输入不合格数量" class="layui-input record">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">复检合格数</label>
+                        <div class="layui-input-block">
+                            <input type="number" id="BackQualityQty" name="BackQualityQty" placeholder="请输入复检合格数" class="layui-input record">
                         </div>
                     </div>
                 </div>
@@ -395,6 +407,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">复检合格数</label>
+                        <div class="layui-input-block">
+                            <input type="number" id="BackQualityQty" name="BackQualityQty" placeholder="请输入复检合格数" class="layui-input record">
+                        </div>
+                    </div>
+                </div>
             }
         </form>
     </div>
@@ -452,6 +472,7 @@
                 //视图字段 转 表字段
                 $("#RecordQualityQty").val(data.RecordQualityQty);
                 $("#RecordNoQualityQty").val(data.RecordNoQualityQty);
+                $("#BackQualityQty").val(data.BackQualityQty);
             }
         });
 
@@ -475,17 +496,22 @@
         //查询
         var objOrder;
         $("#Query").click(function () {
-            $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (data) {
-                objOrder = data;
-                $("#orderNo").val(data.ErpVoucherNo);
-                $("#batchNo").val(data.BatchNo);
+            $.post("/QualityDetail/GetModel", { orderNo: $("#ErpVoucherNo").val() }, function (res) {
+                if (!res.Success) {
+                    layer.alert(res.Msg);
+                    return false;
+                }
+                objOrder = res.Data;
+                $("#orderNo").val(objOrder.ErpVoucherNo);
+                $("#batchNo").val(objOrder.BatchNo);
                 $("#moudle").val("");
-                $("#materialNo").val(data.MaterialNo);
-                $("#line").val(data.LineName);
-                $("#qty").val(data.ProductQty);
-                $("#alreadyQulaityQty").val(data.QulityQty);
-                $("#noQulaityQty").val(data.NoQualityQty);
-                $("#remark").val(data.Remark);
+                $("#materialNo").val(objOrder.MaterialNo);
+                $("#line").val(objOrder.LineName);
+                $("#qty").val(objOrder.ProductQty);
+                $("#alreadyQulaityQty").val(objOrder.QulityQty);
+                $("#noQulaityQty").val(objOrder.NoQualityQty);
+                $("#BackProQulaityQty").val(objOrder.BackQualityQty);
+                $("#remark").val(objOrder.Remark);
             });
         });
 
@@ -503,8 +529,16 @@
 
         //确定
         $("#ok").click(function () {
-            if ($("#RecordQualityQty").val() == "" || $("#RecordNoQualityQty").val() == "") {
-                layer.alert("合格数量和不合格数量不能为空!");
+            if ($("#RecordQualityQty").val() == "") {
+                layer.alert("合格数量不能为空!");
+                return false;
+            }
+            if ($("#RecordNoQualityQty").val() == "") {
+                layer.alert("不合格数量不能为空!");
+                return false;
+            }
+            if ($("#BackQualityQty").val() == "") {
+                layer.alert("复检合格数量不能为空!");
                 return false;
             }
             if (objOrder == null || objOrder == "") {
