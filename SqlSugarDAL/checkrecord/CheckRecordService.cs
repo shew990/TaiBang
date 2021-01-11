@@ -65,6 +65,12 @@ namespace SqlSugarDAL.checkrecord
                     successResult.Msg = "复检合格数量 不能大于 未复检不合格数量" + shenyu + "";
                     return successResult;
                 }
+                var shengyu = product.ProductQty - (sumQualityQty + sumNoQualituQty);
+                if (checkRecord.QualityQty + checkRecord.NoQualityQty > shengyu)
+                {
+                    successResult.Msg = "合格数量+不合格数量不能大于 订单剩余数量" + shengyu + "!";
+                    return successResult;
+                }
 
                 T_CheckRecord queryData = new T_CheckRecord();
                 //一部/二部

@@ -74,13 +74,13 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">已检合格数</label>
+                    <label class="layui-form-label">首检合格数</label>
                     <div class="layui-input-block">
                         <input type="text" id="alreadyQulaityQty" readonly class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">未检合格数</label>
+                    <label class="layui-form-label">首检不合格数</label>
                     <div class="layui-input-block">
                         <input type="text" id="noQulaityQty" readonly class="layui-input">
                     </div>
@@ -435,7 +435,6 @@
     </div>
 </div>
 <input type="hidden" id="checkRecordId" value="@ViewBag.checkRecordId" />
-
 <script src="~/Scripts/jquery-ui.js"></script>
 <script type="text/javascript">
     $(function () {
@@ -543,10 +542,6 @@
             }
             if (objOrder == null || objOrder == "") {
                 layer.alert("请先输入查询订单获取订单数据,再提交!");
-                return false;
-            }
-            if (Number($("#RecordQualityQty").val()) + Number($("#RecordNoQualityQty").val()) > Number(objOrder.NoQualityQty)) {
-                layer.alert("合格数量+不合格数量不能大于 未检验数量" + objOrder.NoQualityQty + "!");
                 return false;
             }
             $.post("/QualityDetail/Submit",

@@ -389,7 +389,7 @@ namespace SqlSugarDAL.view_checkrecord
         public Decimal RecordNoQualityQty { get; set; }
 
         /// <summary>
-        /// 送检数量
+        /// 首检送检数量
         /// </summary>
         [SugarColumn(IsIgnore = true)]
         public Decimal CheckQty { get { return this.RecordQualityQty + this.RecordNoQualityQty; } }
@@ -402,7 +402,8 @@ namespace SqlSugarDAL.view_checkrecord
         {
             get
             {
-                return (this.RecordQualityQty / this.CheckQty * 100).ToString("0.00");
+                return this.CheckQty == 0 ?
+                    "100.00" : (this.RecordQualityQty / this.CheckQty * 100).ToString("0.00");
             }
         }
 
