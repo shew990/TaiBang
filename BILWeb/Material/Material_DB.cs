@@ -268,5 +268,10 @@ namespace BILWeb.Material
             }
  
         }
+
+        public int GetCount(string  strsql)
+        {
+            return base.GetScalarBySql(strsql).ToInt32();
+        }
     }
 }

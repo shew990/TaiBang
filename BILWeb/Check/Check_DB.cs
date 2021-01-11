@@ -13,6 +13,7 @@ using BILWeb.OutStock;
 using BILBasic.User;
 using BILBasic.Basing;
 using BILWeb.Product;
+using BILWeb.Material;
 
 namespace BILWeb.Query
 {
@@ -528,24 +529,26 @@ namespace BILWeb.Query
                     "(" + id + ",'" + checkno + "','" + "明盘" + "','" + model.CHECKDESC + "','" + model.CHECKSTATUS + "','" + model.REMARKS + "',1,'" + model.CREATER + "',getdate()) SET IDENTITY_INSERT T_CHECK off ";
                 sqls.Add(sqlhead);
                 string sql = "";
-                //合并重复项
-                list = list
-                   .GroupBy(x => new { x.MaterialNo, x.WarehouseNo, x.HouseNo, x.AreaNo, x.StrongHoldCode, x.BatchNo })
-                   .Select(group => new T_StockInfoEX
-                   {
-                       MaterialNo = group.Key.MaterialNo,
-                       WarehouseNo = group.Key.WarehouseNo,
-                       HouseNo = group.Key.HouseNo,
-                       AreaNo = group.Key.AreaNo,
-                       StrongHoldCode = group.Key.StrongHoldCode,
-                       BatchNo = group.Key.BatchNo,
-                       Qty = group.Sum(p => p.Qty),
-                   }).ToList();
+                ////合并重复项
+                //list = list
+                //   .GroupBy(x => new { x.MaterialNo, x.WarehouseNo, x.HouseNo, x.AreaNo, x.StrongHoldCode, x.BatchNo })
+                //   .Select(group => new T_StockInfoEX
+                //   {
+                //       MaterialNo = group.Key.MaterialNo,
+                //       WarehouseNo = group.Key.WarehouseNo,
+                //       HouseNo = group.Key.HouseNo,
+                //       AreaNo = group.Key.AreaNo,
+                //       StrongHoldCode = group.Key.StrongHoldCode,
+                //       BatchNo = group.Key.BatchNo,
+                //       Qty = group.Sum(p => p.Qty),
+                //   }).ToList();
                 foreach (var item in list)
                 {
                     sql = "insert into T_checkrefstock (voucherno,MaterialNo,WAREHOUSENO,HouseNo,AreaNo,qty,STRONGHOLDCODE,BATCHNO,sqty) " +
-                        "values('" + checkno + "','" + item.MaterialNo + "','" + item.WarehouseNo + "','" + item.HouseNo + "','" + item.AreaNo + "'," + item.Qty + ",'" + item.StrongHoldCode + "','" + item.BatchNo + "',0)";
+                        "values('" + checkno + "','" + item.MaterialNo + "','" + item.WarehouseNo + "','',''," + item.Qty + ",'','" + item.BatchNo + "',0)";
                     sqls.Add(sql);
+
+                    sqls.Add("uupdate t_stock set checkid="+ id + " where serialno in (select SERIALNO from v_stock where WAREHOUSENO='"+ item.WarehouseNo + "'  and MATERIALNO='"+ item.MaterialNo + "' and BATCHNO='"+ item.BatchNo + "') ");
                 }
                 int i = dbFactory.ExecuteNonQueryList(sqls);
                 if (i == -2)
@@ -1759,7 +1762,7 @@ namespace BILWeb.Query
                 }
 
                 //判断条码是否在列表中
-                bool res = minlist.Exists(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.areano == sb.areano && p.StrongHoldCode == sb.StrongHoldCode && p.BatchNo == sb.BatchNo);
+                bool res = minlist.Exists(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno  && p.BatchNo == sb.BatchNo);
                 if (!res)
                 {
                     BaseMessage_Model<List<CheckDet_Model>> bm = new BaseMessage_Model<List<CheckDet_Model>>();
@@ -1770,7 +1773,7 @@ namespace BILWeb.Query
                 }
 
                 //得到表头id
-                int id = minlist.Find(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.areano == sb.areano && p.StrongHoldCode == sb.StrongHoldCode && p.BatchNo == sb.BatchNo).id;
+                int id = minlist.Find(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno  && p.BatchNo == sb.BatchNo).id;
 
                 //判断该序列号是否已经扫描
                 sql = "select count(1) from T_CHECKREFSERIAL where VOUCHERNO = '" + checkno + "' and SERIALNO = '" + SerialNo + "'";
@@ -1838,7 +1841,7 @@ namespace BILWeb.Query
                 //判断条码是否是列表中的属性
                 foreach (var sb in lsb)
                 {
-                    bool res = minlist.Exists(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.areano == sb.areano && p.StrongHoldCode == sb.StrongHoldCode && p.BatchNo == sb.BatchNo);
+                    bool res = minlist.Exists(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.BatchNo == sb.BatchNo);
                     if (!res)
                     {
                         BaseMessage_Model<List<CheckDet_Model>> bm = new BaseMessage_Model<List<CheckDet_Model>>();
@@ -1854,7 +1857,7 @@ namespace BILWeb.Query
                 foreach (var sb in lsb)
                 {
                     //得到表头id
-                    int id = minlist.Find(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.areano == sb.areano && p.StrongHoldCode == sb.StrongHoldCode && p.BatchNo == sb.BatchNo).id;
+                    int id = minlist.Find(p => p.MaterialNo == sb.MaterialNo && p.warehouseno == sb.warehouseno && p.BatchNo == sb.BatchNo).id;
 
                     //判断该序列号是否已经扫描
                     sql = "select count(1) from T_CHECKREFSERIAL where VOUCHERNO = '" + checkno + "' and SERIALNO = '" + sb.SerialNo + "'";
@@ -2678,7 +2681,7 @@ namespace BILWeb.Query
         //查看明盘状态
         public bool GetCheckStock2(string checkno, ref List<T_StockInfoEX> list)
         {
-            string sql = "select t.*, t.rowid from T_CHECKREFSTOCK t where voucherno = '" + checkno + "'";
+            string sql = "select t.* from T_CHECKREFSTOCK t where voucherno = '" + checkno + "'";
             DataTable dt = dbFactory.ExecuteDataSet(CommandType.Text, sql).Tables[0];
             list = ModelConvertHelper<T_StockInfoEX>.ConvertToModel(dt);
             for (int i = 0; i < list.Count; i++)
@@ -2690,6 +2693,18 @@ namespace BILWeb.Query
             else
                 return true;
         }
+
+        public bool GetCheckSerialno(string checkno, ref List<T_StockInfoEX> list)
+        {
+            string sql = "select MATERIALNO,WAREHOUSENO,BATCHNO,STRONGHOLDCODE,SUM(QTY) QTY from  T_CHECKREFSERIAL where VOUCHERNO= '" + checkno + "' group  by MATERIALNO,STRONGHOLDCODE,WAREHOUSENO,BATCHNO";
+            DataTable dt = dbFactory.ExecuteDataSet(CommandType.Text, sql).Tables[0];
+            list = ModelConvertHelper<T_StockInfoEX>.ConvertToModel(dt);
+            if (list.Count == 0)
+                return false;
+            else
+                return true;
+        }
+
 
         public void dbTest()
         {
@@ -2707,7 +2722,89 @@ namespace BILWeb.Query
             dbFactory.ExecuteNonQueryList(sqls);
         }
 
-        
+
+
+        public bool MingTiaozheng(string CheckNo ,string username, ref string ErrMsg)
+        {
+            try
+            {
+                T_Material_DB MaterialDB = new T_Material_DB();
+                int checkid = MaterialDB.GetCount("select id from t_check where checkno='"+ CheckNo + "'");
+
+                List<string> sqls = new List<string>();
+                string sql = "";
+                    //盘点明细表链接库位视图和托盘表，当完全盘盈时插入要使用这些字段
+                    sql = "select a.SERIALNO,a.QTY,b.qty SQTY,'' SWAREHOUSENOID,'' SHOUSENOID,'' SAREANOID  from (select * from t_stock  where CHECKID=" + checkid + ") a left join T_CHECKREFSERIAL b on a.SERIALNO=b.SERIALNO and a.CHECKID=b.HEADERID"
+                            +"union"
+                            + "select SERIALNO,0 as QTY,qty as SQTY,SWAREHOUSENOID,SHOUSENOID,SAREANOID from T_CHECKREFSERIAL where HEADERID = " + checkid + " and SERIALNO not in (select SERIALNO from t_stock where CHECKID = " + checkid + ")";
+                    DataTable dt = dbFactory.ExecuteDataSet(System.Data.CommandType.Text, sql).Tables[0];
+                    List<CheckAnalyze> listshow = ModelConvertHelper<CheckAnalyze>.ConvertToModel(dt);
+                    if (listshow.Count == 0)
+                    {
+                        ErrMsg = "没有获取处理信息";
+                        return false;
+                    }
+                listshow.ForEach(item=> {
+                    if (item.QTY==0&& item.SQTY!=0)
+                    {
+                        //完全盘盈,盘到默认库位
+                        //库存中没有，全部从条码表中拉数据，再从托盘表中拉托盘
+                        sql = "insert into T_STOCK (BARCODE,SERIALNO,MATERIALNO,MATERIALDESC,MATERIALNOID,WAREHOUSEID," +
+                           "HOUSEID,AREAID,QTY,STATUS,ISDEL,CREATER,CREATETIME,BATCHNO,UNIT,PALLETNO,STRONGHOLDCODE,STRONGHOLDNAME" +
+                           ",COMPANYCODE,EDATE,SUPCODE,SUPNAME,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,RECEIVESTATUS,ISLIMITSTOCK,EAN,ProjectNo,TracNo)" +
+                           "select BARCODE,SERIALNO,MATERIALNO,MATERIALDESC,MATERIALNOID,"+ item.SWAREHOUSENOID + "," +
+                           "" + item.SHOUSENOID + "," + item.SAREANOID + "," + item.SQTY+",STATUS,ISDEL,CREATER,CREATETIME,BATCHNO,UNIT,'',STRONGHOLDCODE,STRONGHOLDNAME" +
+                           ",COMPANYCODE,EDATE,SUPCODE,SUPNAME,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,0,0,EAN,ProjectNo,TracNo from T_OUTBARCODE where serialno = '"+ item.SERIALNO + "'";
+                        sqls.Add(sql);
+                        sql = InTrans(username, sql, item, 203, item.SERIALNO, CheckNo);
+                        sqls.Add(sql);
+                    }
+                    else
+                    {
+                        if (item.QTY != 0 && item.SQTY == 0)
+                        {
+                            //完全盘亏
+                            sqls.Add("delete  from t_stock where serialno ='"+ item.SERIALNO + "'");
+                            sql = OutTrans(username, sql, item, 204, item.SSERIALNO, CheckNo);
+                            sqls.Add(sql);
+                        }
+                        else
+                        {
+                            //更新数量
+                            sqls.Add("update t_stock set qty=" + item.SQTY + "  where serialno ='" + item.SERIALNO + "'");
+                            sql = InTrans(username, sql, item, 203, item.SSERIALNO, CheckNo);
+                            sqls.Add(sql);
+                        }
+                    }
+
+                });
+                
+                    //修改盘点单状态
+                    sql = "update t_check set CHECKSTATUS = '完成' where checkno = '" + CheckNo + "'";
+                    sqls.Add(sql);
+                
+                //解锁库存
+                sqls.Add("update T_stock set checkid=0 where checkid="+checkid);
+
+                //执行
+                int i = dbFactory.ExecuteNonQueryList(sqls, ref ErrMsg);
+                if (i == -2)
+                    return false;
+                else
+                    return true;
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.ToString();
+                return false;
+            }
+
+        }
+
+
+
+       
+
 
     }
 }

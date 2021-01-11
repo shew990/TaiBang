@@ -102,5 +102,12 @@ namespace BILWeb.Query
         public string TracNo { get; set; }
 
         public string sTracNo { get; set; }
+
+        public string SWAREHOUSENOID { get; set; }
+        public string SHOUSENOID { get; set; }
+        public string SAREANOID { get; set; }
+        
+
+            
     }
 }

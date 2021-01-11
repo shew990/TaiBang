@@ -125,8 +125,8 @@ namespace BILWeb.OutStockTask
             t_task.address = dbFactory.ToModelValue(reader, "address").ToDBString();
             t_task.CUSTOMERCODE = dbFactory.ToModelValue(reader, "CUSTOMERCODE").ToDBString();
             t_task.CUSTOMERNAME = dbFactory.ToModelValue(reader, "CUSTOMERNAME").ToDBString();
+            t_task.City = dbFactory.ToModelValue(reader, "City")==null?"":dbFactory.ToModelValue(reader, "City").ToDBString();
             
-
 
             return t_task;
         }

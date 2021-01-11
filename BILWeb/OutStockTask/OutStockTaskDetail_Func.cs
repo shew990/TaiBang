@@ -278,7 +278,7 @@ namespace BILWeb.OutStockTask
                                 model.PassWord = user.PassWord;
                                 model.ErpId = itemERP.ErpId;
                                 model.GUID = user.GUID;
-
+                                model.EXCHNAME = itemERP.EXCHNAME;
                                 lstDetail.Add(model);
                             }
                             else
@@ -309,7 +309,7 @@ namespace BILWeb.OutStockTask
                                 model.PassWord = user.PassWord;
                                 model.ErpId = itemERP.ErpId;
                                 model.GUID = user.GUID;
-
+                                model.EXCHNAME = itemERP.EXCHNAME;
                                 lstDetail.Add(model);
                                 break;
                             }

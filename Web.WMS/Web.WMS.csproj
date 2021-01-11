@@ -1271,6 +1271,7 @@
     <Content Include="Views\SystemSet\Index.cshtml" />
     <Content Include="Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1376,6 +1377,7 @@
     <Content Include="Views\QualityDetail\CheckRecordOut.cshtml" />
     <Content Include="Views\Station\Index.cshtml" />
     <Content Include="Views\Station\Form.cshtml" />
+    <Content Include="Views\Check\CheckMingAnalyze.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

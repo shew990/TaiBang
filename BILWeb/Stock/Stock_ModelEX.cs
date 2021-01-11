@@ -87,5 +87,20 @@ namespace BILWeb.Stock
 
         [Display(Name = "拆/原")]
         public string StrIsAmount { get; set; }
+
+        [Display(Name = "U9物料号")]
+        public string U9MaterialNo { get; set; }
+
+        [Display(Name = "U9番号")]
+        public string U9BatchNo { get; set; }
+
+        [Display(Name = "U9数量")]
+        public decimal U9Qty { get; set; }
+
+        [Display(Name = "扫描物料号")]
+        public string ScaMaterialNo { get; set; }
+
+        [Display(Name = "扫描番号")]
+        public string ScaBatchNo { get; set; }
     }
 }

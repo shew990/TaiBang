@@ -313,7 +313,8 @@ namespace BILWeb.Query
                         {
                             lsttask[i - 1].StrIsAmount = "拆";
                         }
-                        else {
+                        else
+                        {
                             lsttask[i - 1].StrIsAmount = "原";
                         }
 
@@ -399,13 +400,16 @@ namespace BILWeb.Query
 
             if (mo.IsAmount != 0)
             {
-                if (mo.IsAmount==2) {
+                if (mo.IsAmount == 2)
+                {
                     sql += " and IsAmount = 2 ";
-                } else {
+                }
+                else
+                {
                     sql += " and IsAmount is null ";
-                }  
+                }
             }
-            
+
 
             if (!string.IsNullOrEmpty(mo.PalletNo))
                 sql += " and PalletNo = '" + mo.PalletNo + "'";
@@ -422,13 +426,13 @@ namespace BILWeb.Query
         //库存汇总查询
         private string getsqlinStockCombine(T_StockInfoEX mo)
         {
-            string sql = " (select 1 as ID,  MaterialNo, MaterialDesc, WAREHOUSENAME, HouseNAME, AreaNAME, QTY, batchno from  ( ";
-            sql += " select max(s.ID) as ID,m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.HouseNAME,a.AreaNAME,sum(s.qty) as QTY,s.batchno, ";
+            string sql = " (select 1 as ID,  MaterialNo, MaterialDesc, WAREHOUSENO, QTY, batchno from  ( ";
+            sql += " select max(s.ID) as ID,m.MaterialNo,m.MaterialDesc,a.WAREHOUSENO,sum(s.qty) as QTY,s.batchno ";
             sql += "  from T_STOCK s ";
             sql += " left join t_material m on s.materialnoid = m.id left join v_area a on s.areaid = a.id ";
-            sql += " where s.ISDEL = 1  and s.batchno != '' ";
-            sql += " group by  m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.HouseNAME,a.AreaNAME,s.batchno";
-            sql += " )N";
+            sql += " where s.ISDEL = 1 ";
+            sql += " group by  m.MaterialNo,m.MaterialDesc,a.WAREHOUSENO,s.batchno";
+            sql += " )a)N";
 
 
 
@@ -510,7 +514,15 @@ namespace BILWeb.Query
                 {
                     while (dr.Read())
                     {
-                        lsttask.Add(StockC_GetModelFromDataReader(dr));
+                        lsttask.Add(new T_StockInfoEX()
+                        {
+                            WarehouseNo = (dr["WarehouseNo"] ?? "").ToString(),
+                            MaterialNo = (dr["MaterialNo"] ?? "").ToString(),
+                            BatchNo = (dr["BatchNo"] ?? "").ToString(),
+                            Qty = (decimal)dr["Qty"]
+                        });
+
+                        //lsttask.Add(StockC_GetModelFromDataReader(dr));
                     }
                 }
                 if (lsttask == null || lsttask.Count == 0)
@@ -542,11 +554,12 @@ namespace BILWeb.Query
         {
             string sql = "where 1=1 ";
 
-            if (!string.IsNullOrEmpty(mo.MaterialNo) && !mo.MaterialNo.Contains(',')) {
+            if (!string.IsNullOrEmpty(mo.MaterialNo) && !mo.MaterialNo.Contains(','))
+            {
                 mo.MaterialNo = mo.MaterialNo.Trim();
                 sql += " and MaterialNo like '" + mo.MaterialNo + "%'";
             }
-            else if (!string.IsNullOrEmpty(mo.MaterialNo)  && mo.MaterialNo.Contains(','))
+            else if (!string.IsNullOrEmpty(mo.MaterialNo) && mo.MaterialNo.Contains(','))
             {
                 mo.MaterialNo = mo.MaterialNo.Trim();
                 string MaterialNo = mo.MaterialNo;
@@ -556,16 +569,16 @@ namespace BILWeb.Query
 
             if (!string.IsNullOrEmpty(mo.AreaNo) && !mo.AreaNo.Contains(','))
                 sql += " and AreaNAME like '" + mo.AreaNo + "%'";
-            else if (!string.IsNullOrEmpty(mo.AreaNo)&& mo.AreaNo.Contains(','))
+            else if (!string.IsNullOrEmpty(mo.AreaNo) && mo.AreaNo.Contains(','))
             {
                 string AreaNo = mo.AreaNo;
                 Query_Func.ChangeQuery(ref AreaNo);
                 sql += " and AreaNAME in(" + AreaNo + ")";
             }
 
-            if (!string.IsNullOrEmpty(mo.BatchNo)  && !mo.BatchNo.Contains(','))
+            if (!string.IsNullOrEmpty(mo.BatchNo) && !mo.BatchNo.Contains(','))
                 sql += " and BatchNo like '" + mo.BatchNo + "%'";
-            else if (!string.IsNullOrEmpty(mo.BatchNo)  && mo.BatchNo.Contains(','))
+            else if (!string.IsNullOrEmpty(mo.BatchNo) && mo.BatchNo.Contains(','))
             {
                 string BatchNo = mo.BatchNo;
                 Query_Func.ChangeQuery(ref BatchNo);
@@ -736,7 +749,7 @@ namespace BILWeb.Query
         {
             string sql = "where 1=1 ";
 
-            if (mo.MATERIALNO!=null)
+            if (mo.MATERIALNO != null)
             {
                 if (mo.MATERIALNO != "" && !mo.MATERIALNO.Contains(','))
                     sql += " and MATERIALNO like '" + mo.MATERIALNO + "%'";
@@ -1513,7 +1526,7 @@ namespace BILWeb.Query
 
         #region 代理商
         //插入出入库记录表 tasktype 13:收 14：发  EXCHNAME:标识符号
-        public T_OutBarCodeInfo InsetTaskTrans(string UserName,string barcode,string tasktype,string EXCHNAME, ref string StrMsg)
+        public T_OutBarCodeInfo InsetTaskTrans(string UserName, string barcode, string tasktype, string EXCHNAME, ref string StrMsg)
         {
             try
             {
@@ -1523,14 +1536,15 @@ namespace BILWeb.Query
                     StrMsg = "未能获取条码信息！";
                     return null;
                 }
-                else {
+                else
+                {
                     List<string> lstSql = new List<string>();
                     string strSql = "insert into t_tasktrans(Serialno, Materialno, Materialdesc,Qty, Tasktype, Creater, Createtime,Unit,materialnoid,Strongholdcode,Strongholdname,Companycode,Edate,Batchno,Barcode,FromWarehouseNo,ToWarehouseName,EXCHNAME)" +
-                            " values ('"+model.SerialNo+ "'Serialno,'" + model.MaterialNo + "','" + model.MaterialDesc + "'," + model.Qty + ", '"+ tasktype + "','" + model.SerialNo + 
-                            "' ,'"+ UserName + "', GETDATE(),'" + model.Unit + "'," + model.MaterialNoID + ",'" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "','" + model.EDate + "','" + model.BatchNo + "','" + model.BarCode + "','','','" + EXCHNAME+ "')";
+                            " values ('" + model.SerialNo + "'Serialno,'" + model.MaterialNo + "','" + model.MaterialDesc + "'," + model.Qty + ", '" + tasktype + "','" + model.SerialNo +
+                            "' ,'" + UserName + "', GETDATE(),'" + model.Unit + "'," + model.MaterialNoID + ",'" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "','" + model.EDate + "','" + model.BatchNo + "','" + model.BarCode + "','','','" + EXCHNAME + "')";
                     lstSql.Add(strSql);
                     int count = dbFactory.ExecuteNonQueryList(lstSql, ref StrMsg);
-                    if (count<=0)
+                    if (count <= 0)
                         return null;
                     else
                         return model;
@@ -1541,7 +1555,7 @@ namespace BILWeb.Query
                 StrMsg = ex.ToString();
                 return null;
             }
-            
+
         }
 
         //检查条码是否在本次扫描里面
@@ -1575,7 +1589,7 @@ namespace BILWeb.Query
             try
             {
                 T_OutBarCodeInfo model = new T_OutBarCodeInfo();
-                string strSql = "select Serialno,Materialno, Materialdesc,Qty,Unit,materialnoid,Strongholdcode,Strongholdname,Companycode,Edate,Batchno from  t_outbarcode  where barcode='"+barcode+"'";
+                string strSql = "select Serialno,Materialno, Materialdesc,Qty,Unit,materialnoid,Strongholdcode,Strongholdname,Companycode,Edate,Batchno from  t_outbarcode  where barcode='" + barcode + "'";
                 using (IDataReader reader = dbFactory.ExecuteReader(strSql))
                 {
                     if (reader.Read())
@@ -1613,7 +1627,7 @@ namespace BILWeb.Query
             List<TaskTransModel> lsttask = new List<TaskTransModel>();
             try
             {
-                string strb="select MATERIALNO,MATERIALDESC,BATCHNO,SUM(QTY) QTY from  T_TASKTRANS where EXCHNAME='"+ EXCHNAME + "' group by MATERIALNO,MATERIALDESC,BATCHNO";
+                string strb = "select MATERIALNO,MATERIALDESC,BATCHNO,SUM(QTY) QTY from  T_TASKTRANS where EXCHNAME='" + EXCHNAME + "' group by MATERIALNO,MATERIALDESC,BATCHNO";
                 DataTable dt = dbFactory.ExecuteDataSet(CommandType.Text, strb).Tables[0];
                 return Print_DB.ConvertToModel<TaskTransModel>(dt);
             }
@@ -1630,7 +1644,7 @@ namespace BILWeb.Query
             List<HistoryModel> lsttask = new List<HistoryModel>();
             try
             {
-                string strb = "select MATERIALNO,MATERIALDESC,BATCHNO,QTY,CREATER,CREATETIME,TASKTYPE from T_TASKTRANS where BARCODE='"+ BARCODE + "'";
+                string strb = "select MATERIALNO,MATERIALDESC,BATCHNO,QTY,CREATER,CREATETIME,TASKTYPE from T_TASKTRANS where BARCODE='" + BARCODE + "'";
                 DataTable dt = dbFactory.ExecuteDataSet(CommandType.Text, strb).Tables[0];
                 return Print_DB.ConvertToModel<HistoryModel>(dt);
             }

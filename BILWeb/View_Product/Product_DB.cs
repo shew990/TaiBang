@@ -559,7 +559,7 @@ namespace BILWeb.Product
                 //同步单据
                 string strMsg = "";
                 ParamaterFiled_DB PDB = new ParamaterFiled_DB();
-                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg);
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref strMsg,"1");
 
                 strSql += strAnd;
                 strSql += " erpvoucherno like '%" + model.ErpVoucherNo.Trim() + "%' ";

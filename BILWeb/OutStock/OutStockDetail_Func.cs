@@ -147,9 +147,9 @@ namespace BILWeb.OutStock
                     messageModel.Message = "该单子已经复核，不能重复复核！";
                     return JsonConvert.SerializeObject(messageModel);
                 }
-                    
 
-                outStockDetailList.ForEach(t => t.ERPNote = rrr.ERPNote);
+       
+                outStockDetailList.ForEach(t => t.ERPNote = rrr.address);
 
                 messageModel.HeaderStatus = "S";
                 messageModel.ModelJson = outStockDetailList;
@@ -1964,7 +1964,9 @@ namespace BILWeb.OutStock
                 modelList.ForEach(t => t.ScanQty = t.TaskQty.Value);
                 modelList.ForEach(t => t.ERPNote = rrr.ERPNote);
                 modelList.ForEach(t => t.VouUser = rrr.VouUser);
-                
+                modelList.ForEach(t => t.EXCHNAME =Remark);
+
+
                 string ModelJson = JsonConvert.SerializeObject(modelList);
                 T_OutTaskDetails_Func tfunc = new T_OutTaskDetails_Func();
                

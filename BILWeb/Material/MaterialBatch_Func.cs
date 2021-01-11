@@ -3,8 +3,10 @@ using BILBasic.JSONUtil;
 using BILBasic.User;
 using BILWeb.OutBarCode;
 using BILWeb.OutStockTask;
+using BILWeb.Stock;
 using System;
 using System.Collections.Generic;
+using BILWeb.Query;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -163,8 +165,6 @@ namespace BILWeb.Material
             }
         }
         
-
-
         public string GetZhList(string ErpVoucherNo)
         {
             BaseMessage_Model<List<U9Zh>> messageModel = new BaseMessage_Model<List<U9Zh>>();
@@ -364,6 +364,64 @@ namespace BILWeb.Material
             }
         }
 
+        public List<U9Stock> GetStockInfo(string WareHouseNo, string StrongHoldCode,string MaterialNo)
+        {
+            try
+            {
+                if(string.IsNullOrEmpty(WareHouseNo)|| string.IsNullOrEmpty(StrongHoldCode)|| string.IsNullOrEmpty(MaterialNo))
+                {
+                    return null;
+                }
+                
+                T_Material_Batch_DB _db = new T_Material_Batch_DB();
+                List<U9Stock> U9Stocks = new List<U9Stock>();
+                U9Stocks = _db.GetStockInfo(WareHouseNo,StrongHoldCode,MaterialNo);
+                if (U9Stocks == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return U9Stocks;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public bool SaveCheckToU9(List<T_StockInfoEX> list,string CheckNo,string UserNo, ref string ErrorMsg)
+        {
+            try
+            {
+                T_Material_Batch_DB _db = new T_Material_Batch_DB();
+                if (_db.SaveCheckToU9(list, CheckNo, UserNo, ref ErrorMsg))
+                {
+                    //WMS开始调整
+                    Check_DB Check_DB = new Check_DB();
+                    if (Check_DB.MingTiaozheng(CheckNo, UserNo, ref ErrorMsg)) {
+                        return true;
+                    }
+                    else
+                    {
+                        ErrorMsg = "U9过账成功，WMS失败：" + ErrorMsg;
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        
 
 
 

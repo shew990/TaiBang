@@ -5,8 +5,8 @@
     ViewBag.Title = "物料管理";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
     PageData<T_MaterialInfo> pageData = (PageData<T_MaterialInfo>)ViewData["PageData"];
-
 }
+
 
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
@@ -23,6 +23,18 @@
                 </div>
                 <div class="layui-inline layui-show-xs-block">
                     <button type="submit" class="btn btn-primary" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                </div>
+            </div>
+        </form>
+        <form class="layui-form" method="post" enctype="multipart/form-data" action="/Material/ImportMaterial">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <input name="file" type="file" id="file" />
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="layui-inline">
+                    <input type="submit" class="btn btn-primary" value="物料导入">
                 </div>
             </div>
         </form>
