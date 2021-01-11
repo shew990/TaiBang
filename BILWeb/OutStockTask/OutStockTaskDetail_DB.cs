@@ -92,23 +92,23 @@ namespace BILWeb.OutStockTask
                     "else 0 end ), unshelveqty = isnull( unshelveqty,0) + '{0}', operatoruserno = '{1}', operatordatetime = getdate() where id  = '{2}'",
                     item.ScanQty, user.UserNo, item.ID);
                         lstSql.Add(strSql1);
-                        LogNet.LogInfo(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>下架JSON:" + strSql1);
+                      
                         strSql1 = string.Format("update t_Outstockdetail set pickqty = isnull(pickqty,0) + '{0}' where erpvoucherno = '{1}' and materialnoid = '{2}' and rowno = '{3}' and VOUCHERNO='{4}'",
                                         item.ScanQty, item.ErpVoucherNo, item.MaterialNoID, item.RowNo, item.VoucherNo);
                         lstSql.Add(strSql1);
-                        LogNet.LogInfo(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>下架JSON:" + strSql1);
+
                         strSql2 = string.Format("update t_taskdetails  set  Linestatus =(case when isnull( remainqty,0)< isnull( taskqty,0) and isnull( remainqty,0)<>0 then 2 when isnull( remainqty,0)  = 0  then 3 end )" +
                                 "where id ={0}", item.ID);
                         lstSql.Add(strSql2);
-                        LogNet.LogInfo(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>下架JSON:" + strSql2);
+                 
                         strSql3 = "update t_task  set  Status = 2 where id = '" + item.HeaderID + "'";
                         lstSql.Add(strSql3);
-                        LogNet.LogInfo(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>下架JSON:" + strSql3);
+            
                         strSql4 = string.Format(" update t_task set status = 3 where id in(select HeaderID from t_taskdetails group by HeaderID having(max(isnull(linestatus,1)) = 3 and min(isnull(linestatus,1))=3) and HeaderID = '{0}')" +
                                                 "and id = '{1}'", item.HeaderID, item.HeaderID);
                         lstSql.Add(strSql4);
 
-                        LogNet.LogInfo(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>下架JSON:" + strSql4);
+             
 
                     }
 

@@ -317,17 +317,20 @@ namespace BILWeb.Material
 
             try
             {
-                T_OutBarcode_DB OutBarcodeDB = new T_OutBarcode_DB();
-                List<T_OutBarCodeInfo> OutBarCodeInfos = OutBarcodeDB.GetModelListByFilter("", " dimension='" + ErpVoucherNo + "'", " * ");
-                if (OutBarCodeInfos == null || OutBarCodeInfos.Count == 0)
-                {
-                    messageModel.HeaderStatus = "E";
-                    messageModel.Message = "WMS不存在属于该成品入库单【" + ErpVoucherNo + "】的条码！";
-                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
-                }
-
 
                 T_Material_Batch_DB _db = new T_Material_Batch_DB();
+                //成品需要检验库存
+                if (_db.isChengpin(ErpVoucherNo)) {
+                    T_OutBarcode_DB OutBarcodeDB = new T_OutBarcode_DB();
+                    List<T_OutBarCodeInfo> OutBarCodeInfos = OutBarcodeDB.GetModelListByFilter("", " dimension='" + ErpVoucherNo + "'", " * ");
+                    if (OutBarCodeInfos == null || OutBarCodeInfos.Count == 0)
+                    {
+                        messageModel.HeaderStatus = "E";
+                        messageModel.Message = "WMS不存在属于该成品入库单【" + ErpVoucherNo + "】的条码！";
+                        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                    }
+                }
+                
                 string strERP  = _db.Post(ErpVoucherNo, Remark ,Guid, Creater);
                 if (strERP.Substring(0,1)=="0")
                 {

@@ -293,6 +293,11 @@ namespace Web.WMS.Controllers.Material
                                         formaterCell(row.GetCell(5), ref PALLETPACKQTY);
                                         formaterCell(row.GetCell(2), ref spec);
                                         formaterCell(row.GetCell(1), ref materialdesc);
+                                        formaterCell(row.GetCell(4), ref packqty);
+                                        if (materialno == "error" || strongholcode == "error" || packqty == "error" || PALLETPACKQTY == "error" || spec == "error" || materialdesc == "error" || packqty == "error")
+                                        {
+                                            return String.Format("Excel{0}行格式解析失败", i);
+                                        }
                                         string sql = string.Format("select id from T_MATERIAL where materialno='{0}'  and STRONGHOLDCODE='{1}'", materialno, strongholcode);
                                         object o = t_System_DB.dbFactory.ExecuteScalar(CommandType.Text, sql);
                                         if (o != null)
@@ -330,13 +335,13 @@ namespace Web.WMS.Controllers.Material
                                         dataRow["ISBOND"] = 0;
                                         dataRow["ISQUALITY"] = 0;
                                         dataRow["CREATER"] = "";
-                                        //dataRow["CREATETIME"] = typeof(DateTime));
+                                        dataRow["CREATETIME"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                                         //dataRow["MODIFYER"] = typeof(DateTime));
                                         //dataRow["MODIFYTIME"] = typeof(DateTime));
                                         dataRow["ISDEL"] = 1;
                                         dataRow["PARTNO"] = "";
-                                        dataRow["STRONGHOLDCODE"] = "";
-                                        dataRow["STRONGHOLDNAME"] = strongholcode;
+                                        dataRow["STRONGHOLDCODE"] = strongholcode;
+                                        dataRow["STRONGHOLDNAME"] = "";
                                         dataRow["COMPANYCODE"] = "";
                                         dataRow["MAINTYPECODE"] = "";
                                         dataRow["MAINTYPENAME"] = "";
@@ -400,7 +405,7 @@ namespace Web.WMS.Controllers.Material
                             {
                                 return strError;
                             }
-                            if (arr == -2)
+                            if (arr == -2 && updateList.Count > 0)
                             {
                                 return "修改失败";
                             }

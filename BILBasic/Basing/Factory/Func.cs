@@ -564,12 +564,12 @@ namespace BILBasic.Basing.Factory
                 {
                     T_Interface_Func tfunc = new T_Interface_Func();
                     string ERPJson = GetModelListByJsonToERP(user, modelList, strPost);//JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList);
-                    
+
                     LogNet.LogInfo("-----------------------ERPJsonBefore:" + ERPJson);
                     string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
 
                     model = JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<TBase_Model>>>(interfaceJson);
-                    
+
                     LogNet.LogInfo("-----------------------ERPJsonAfter:" + JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model));
 
                     //过账失败直接返回
@@ -582,7 +582,7 @@ namespace BILBasic.Basing.Factory
                         modelList.ForEach(t => t.MaterialDoc = model.MaterialDoc);
                     }
                 }
-
+                //modelList.ForEach(t => t.MaterialDoc = "");
 
                 //LogNet.LogInfo("ERPJson:" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
                 LogNet.LogInfo("------------------------ymh：ERPtoWMS-" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));

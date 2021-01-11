@@ -340,7 +340,7 @@ namespace SCCGAndroidService
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetMinBarocde", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string GetMinBarocde(string barcode, string checkno);
+        string GetMinBarocde(string barcode, string checkno, string Qty);
         
         #endregion
 

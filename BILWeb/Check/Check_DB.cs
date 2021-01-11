@@ -548,7 +548,7 @@ namespace BILWeb.Query
                         "values('" + checkno + "','" + item.MaterialNo + "','" + item.WarehouseNo + "','',''," + item.Qty + ",'','" + item.BatchNo + "',0)";
                     sqls.Add(sql);
 
-                    sqls.Add("uupdate t_stock set checkid="+ id + " where serialno in (select SERIALNO from v_stock where WAREHOUSENO='"+ item.WarehouseNo + "'  and MATERIALNO='"+ item.MaterialNo + "' and BATCHNO='"+ item.BatchNo + "') ");
+                    sqls.Add("update t_stock set checkid="+ id + " where serialno in (select SERIALNO from v_stock where WAREHOUSENO='"+ item.WarehouseNo + "'  and MATERIALNO='"+ item.MaterialNo + "' and BATCHNO='"+ item.BatchNo + "') ");
                 }
                 int i = dbFactory.ExecuteNonQueryList(sqls);
                 if (i == -2)
@@ -1712,7 +1712,7 @@ namespace BILWeb.Query
         }
 
         //接收徐鑫明盘外箱条码
-        public string GetMinBarocde(string barcode, string checkno)
+        public string GetMinBarocde(string barcode, string checkno,string Qty)
         {
             //验证条码正确性
             T_OutBarCode_Func tf = new T_OutBarCode_Func();
@@ -1790,9 +1790,9 @@ namespace BILWeb.Query
                 //插入序列号，修改数量
                 List<string> sqls = new List<string>();
                 sql = "insert into T_CHECKREFSERIAL (VOUCHERNO,MATERIALNO,WAREHOUSENO,HOUSENO,AREANO,QTY,STRONGHOLDCODE,BATCHNO,SERIALNO,HEADERID) values " +
-                    "('" + checkno + "','" + sb.MaterialNo + "','" + sb.warehouseno + "','" + sb.houseno + "','" + sb.areano + "'," + sb.Qty + ",'" + sb.StrongHoldCode + "','" + sb.BatchNo + "','" + SerialNo + "'," + id + ")";
+                    "('" + checkno + "','" + sb.MaterialNo + "','" + sb.warehouseno + "','" + sb.houseno + "','" + sb.areano + "'," + Qty + ",'" + sb.StrongHoldCode + "','" + sb.BatchNo + "','" + SerialNo + "'," + id + ")";
                 sqls.Add(sql);
-                sql = "update T_CHECKREFSTOCK set SQTY = SQTY+" + sb.Qty + " where ID=" + id;
+                sql = "update T_CHECKREFSTOCK set SQTY = SQTY+" + Qty + " where ID=" + id;
                 sqls.Add(sql);
                 dbFactory.ExecuteNonQueryList(sqls);
 
@@ -1880,6 +1880,9 @@ namespace BILWeb.Query
                     sqls.Add(sql);
                     qtyall += sb.Qty;
                 }
+
+                
+                sqls.Add("update t_check set CHECKSTATUS = '开始' where checkno = '"+checkno+"'");
                 dbFactory.ExecuteNonQueryList(sqls);
 
                 //返回徐鑫类
@@ -2808,3 +2811,5 @@ namespace BILWeb.Query
 
     }
 }
+
+

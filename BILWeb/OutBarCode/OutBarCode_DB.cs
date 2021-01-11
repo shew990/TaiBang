@@ -121,6 +121,17 @@ namespace BILWeb.OutBarCode
             return base.GetScalarBySql(strSql).ToDBString();
         }
 
+        public string GetCusCode(string serialno)
+        {
+            string strSql = "select CusCode from T_outbarcode where serialno = '" + serialno + "'";
+            return base.GetScalarBySql(strSql).ToDBString();
+        }
+        public string GetTaskCusCode(string id)
+        {
+            string strSql = "select CUSTOMERCODE from T_Task where id = "+ id;
+            return base.GetScalarBySql(strSql).ToDBString();
+        }
+        
         protected override string GetViewName()
         {
             return "V_OUTBARCODE";
