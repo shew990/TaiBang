@@ -26,12 +26,6 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">PDF地址</label>
-            <div class="layui-input-block">
-                <input type="text" name="PDFAddress" required lay-verify="required" placeholder="请输入pdf文件地址" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
             <label class="layui-form-label">IP地址</label>
             <div class="layui-input-block">
                 <input type="text" name="IpAddress" required lay-verify="required" placeholder="请输入ip地址" autocomplete="off" class="layui-input">
@@ -51,12 +45,11 @@
         var form = layui.form;
 
         //提交
-        form.on('submit(formDemo)', function (data) {
+        form.on('submit(formDemo)', function () {
             let index = parent.layer.getFrameIndex(window.name);
             let station = $("#station").val() == "" ? {} : JSON.parse($("#station").val());
             station.LineId = $('select[name="LineName"]').val();
             station.StationName = $('input[name="StationName"]').val();
-            station.PDFAddress = $('input[name="PDFAddress"]').val();
             station.IpAddress = $('input[name="IpAddress"]').val();
             $.post("/Station/Submit", station, function (res) {
                 layer.alert(res.Msg);
