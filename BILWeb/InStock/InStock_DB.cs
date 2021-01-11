@@ -231,10 +231,10 @@ namespace BILWeb.InStock
                     //strongholdcode = '" + user.StrongHoldCode + "' and
                     strSql += "  (fromerpwarehouse ='" + user.WarehouseCode + "' or isnull(fromerpwarehouse,'')='' ";
                     //G102  G202 G301 成品入库单 除了这三个仓库默认收到 集团成品仓G001
-                    if (user.WarehouseCode == "G001")
-                    {
-                        strSql += " or fromerpwarehouse not in ('G102','G202','G301') ";
-                    }
+                    //if (user.WarehouseCode == "G001")
+                    //{
+                    //    strSql += " or fromerpwarehouse not in ('G102','G202','G301') ";
+                    //}
                     strSql += " )";
                     
 

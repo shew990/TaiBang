@@ -317,7 +317,6 @@ namespace BILWeb.Material
 
             try
             {
-
                 T_Material_Batch_DB _db = new T_Material_Batch_DB();
                 //成品需要检验库存
                 if (_db.isChengpin(ErpVoucherNo)) {
