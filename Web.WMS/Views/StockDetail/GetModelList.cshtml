@@ -140,6 +140,13 @@
             openPostWindow($("#printIP").val() + "Main.aspx", "pallet", obj.data.PalletNo);
         });
 
+        //单击行变色
+        table.on('row(init)', function (obj) {
+            $(".layui-table-body tr ").attr({ "style": "background:#FFFFFF" });//其他tr恢复原样
+            $(obj.tr.selector).attr({ "style": "background:orange" });//改变当前tr颜色
+
+        });
+
         //分页
         laypage.render({
             elem: 'pageDemo' //分页容器的id
