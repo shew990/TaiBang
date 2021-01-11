@@ -159,7 +159,12 @@ function fenxi() {
                     return;
                 } else {
                     var CHECKNO = $(this).find('td:eq(1)').text();
-                    window.location.href = "/Check/CheckAnalyze?CHECKNO=" + CHECKNO + "&remark=全部";
+	if(CHECKNO.length>10){
+		window.location.href = "/Check/CheckAnalyze?CHECKNO=" + CHECKNO + "&remark=全部";
+	}else{
+		window.location.href = "/Check/CheckMingAnalyze?CHECKNO=" + CHECKNO;
+                }
+                    
                 }
 
             }

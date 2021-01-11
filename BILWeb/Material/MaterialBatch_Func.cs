@@ -6,6 +6,7 @@ using BILWeb.OutStockTask;
 using BILWeb.Stock;
 using System;
 using System.Collections.Generic;
+using BILWeb.Query;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -391,14 +392,23 @@ namespace BILWeb.Material
             }
         }
 
-        public bool SaveCheckToU9(List<T_StockInfoEX> list, ref string ErrorMsg)
+        public bool SaveCheckToU9(List<T_StockInfoEX> list,string CheckNo,string UserNo, ref string ErrorMsg)
         {
             try
             {
                 T_Material_Batch_DB _db = new T_Material_Batch_DB();
-                if (_db.SaveCheckToU9(list, ref ErrorMsg))
+                if (_db.SaveCheckToU9(list, CheckNo, UserNo, ref ErrorMsg))
                 {
-                    return true;
+                    //WMS开始调整
+                    Check_DB Check_DB = new Check_DB();
+                    if (Check_DB.MingTiaozheng(CheckNo, UserNo, ref ErrorMsg)) {
+                        return true;
+                    }
+                    else
+                    {
+                        ErrorMsg = "U9过账成功，WMS失败：" + ErrorMsg;
+                        return false;
+                    }
                 }
                 else
                 {

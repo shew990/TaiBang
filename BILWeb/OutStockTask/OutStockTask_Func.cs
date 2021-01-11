@@ -42,7 +42,7 @@ namespace BILWeb.OutStockTask
                 //BILWeb.SyncService.ParamaterField_Func PFunc = new BILWeb.SyncService.ParamaterField_Func();
                 //PFunc.Sync(10, string.Empty, model.ErpVoucherNo, -1, ref errorMsg, "ERP", -1, null);
                 ParamaterFiled_DB PDB = new ParamaterFiled_DB();
-                PDB.GetVoucherNo(model.ErpVoucherNo, ref errorMsg);
+                PDB.GetVoucherNo(model.ErpVoucherNo, ref errorMsg,"2");
             }
             return JSONHelper.JsonToObject<T_OutStockTaskInfo>(ModelJson);
         }

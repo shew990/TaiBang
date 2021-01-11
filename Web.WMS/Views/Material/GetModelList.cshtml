@@ -5,8 +5,8 @@
     ViewBag.Title = "物料管理";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
     PageData<T_MaterialInfo> pageData = (PageData<T_MaterialInfo>)ViewData["PageData"];
-
 }
+
 
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </form>
-        <form class="layui-form" method="post" enctype="multipart/form-data" action="/PrintFirst/ImportMaterial">
+        <form class="layui-form" method="post" enctype="multipart/form-data" action="/Material/ImportMaterial">
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <input name="file" type="file" id="file" />

@@ -467,7 +467,9 @@ namespace BILWeb.OutBarCode
                 model.SerialNo = SerialNo;
                 T_Stock_DB _sdb = new T_Stock_DB();
                 model = _db.GetModelBySql(model);
-                model.Qty = _sdb.GetStockQty(SerialNo);
+                if (_sdb.GetStockQty(SerialNo) != 0) {
+                    model.Qty = _sdb.GetStockQty(SerialNo);
+                }
                 if (model == null)
                 {
                     strErrMsg = "您扫描的条码不存在！请确认是否已经打印！";

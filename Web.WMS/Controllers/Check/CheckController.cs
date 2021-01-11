@@ -4,6 +4,7 @@ using BILWeb.Login.User;
 using BILWeb.Material;
 using BILWeb.Query;
 using BILWeb.Stock;
+using BILWeb.Warehouse;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -251,8 +252,16 @@ namespace Web.WMS.Controllers
             return View();
         }
 
+        // 跳转明盘单分析页面
+        public ActionResult CheckMingAnalyze(string CHECKNO)
+        {
+            ViewData["checkno"] = CHECKNO;
+            
+            return View();
+        }
+
         // 获取盘点库存信息
-        public JsonResult GetCheckStock(T_StockInfoEX model, string CheckNo= "P21010885")
+        public JsonResult GetCheckStock(T_StockInfoEX model)
         {
             try
             {
@@ -260,20 +269,22 @@ namespace Web.WMS.Controllers
                 {
                     return Json(new { Result = 0, ResultValue = "仓库不能为空！" }, JsonRequestBehavior.AllowGet);
                 }
+                T_WareHouse_DB TWareHouseDB = new T_WareHouse_DB();
+                string StrongHoldCode = "";
+                string StrongHoldCodeName = "";
+                TWareHouseDB.GetStrongholdcode(model.WarehouseNo, ref StrongHoldCode, ref StrongHoldCodeName);
+          
                 string strErrMsg = string.Empty;
                 List<T_StockInfoEX> wms_stock = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
-                //T_StockInfoEX model = new T_StockInfoEX() { MaterialNo = WarehouseNo, WarehouseNo = MaterialNo, StrongHoldCode = StrongHoldCode };
                 if (db.GetStockCombineInfo2(model, ref wms_stock, ref strErrMsg))
                 {
                     if (wms_stock == null || wms_stock.Count == 0)
                     {
                         return Json(new { Result = 0, ResultValue = "查询库存为空！" }, JsonRequestBehavior.AllowGet);
                     }
-                    //List<T_StockInfoEX> erp_stock = new List<T_StockInfoEX>();
                     T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
-                    model.StrongHoldCode = "0300";
-                    List<U9Stock> erp_stock = FUNC.GetStockInfo(model.WarehouseNo, model.StrongHoldCode, model.MaterialNo);
+                    List<U9Stock> erp_stock = FUNC.GetStockInfo(model.WarehouseNo, StrongHoldCode, model.MaterialNo);
                     //wms数据和erp数据对账
                     for (int i = 0; i < erp_stock.Count; i++)
                     {
@@ -310,39 +321,6 @@ namespace Web.WMS.Controllers
                             }
                         }
                     }
-
-                    if (!string.IsNullOrEmpty(CheckNo))
-                    {
-                        List<T_StockInfoEX> Scanlist = new List<T_StockInfoEX>();
-                        Check_DB CheckDB = new Check_DB();
-                        CheckDB.GetCheckSerialno(CheckNo, ref Scanlist); //实盘结果
-                        //实际扫描数量
-                        wms_stock.ForEach(wms_item => {
-                            Scanlist.ForEach(scan_item => {
-                                if (wms_item.MaterialNo == scan_item.MaterialNo && wms_item.BatchNo == scan_item.BatchNo)
-                                {
-                                    wms_item.ScaMaterialNo = scan_item.MaterialNo;
-                                    wms_item.ScaBatchNo = scan_item.BatchNo;
-                                    wms_item.ScanQty = scan_item.Qty;
-                                    scan_item.IsAmount = 1;
-                                }
-                            });
-                        });
-                        Scanlist.ForEach(scan_item => {
-                            if (scan_item.IsAmount != 1)
-                            {
-                                wms_stock.Add(new T_StockInfoEX()
-                                {
-                                    ScaMaterialNo = scan_item.MaterialNo,
-                                    ScaBatchNo = scan_item.BatchNo,
-                                    U9Qty = 0,
-                                    Qty = 0,
-                                    ScanQty = scan_item.Qty,
-                                });
-                            }
-                        });
-                    }
-                    
                     return Json(new { Result = 1, Data = wms_stock }, JsonRequestBehavior.AllowGet);
                 }
                 else
@@ -357,7 +335,7 @@ namespace Web.WMS.Controllers
                 return Json(new { Result = 0, ResultValue = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
-
+        
         //保存盘点单
         public JsonResult SaveCheck(T_StockInfoEX model)
         {
@@ -367,7 +345,11 @@ namespace Web.WMS.Controllers
                 {
                     return Json(new { state = false }, JsonRequestBehavior.AllowGet);
                 }
-
+                T_WareHouse_DB TWareHouseDB = new T_WareHouse_DB();
+                string StrongHoldCode = "";
+                string StrongHoldCodeName = "";
+                TWareHouseDB.GetStrongholdcode(model.WarehouseNo, ref StrongHoldCode, ref StrongHoldCodeName);
+  
                 string strErrMsg = string.Empty;
                 List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
@@ -375,7 +357,21 @@ namespace Web.WMS.Controllers
                 {
                     return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
                 }
+                //检验WMS库存和U9是否一致
+                T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
+                List<U9Stock> erp_stock = FUNC.GetStockInfo(model.WarehouseNo, StrongHoldCode, model.MaterialNo);
+                bool isOk = true;
+                lsttask.ForEach(itemWMS=> {
+                    if (erp_stock.FindAll(itemerp => { return itemerp.MaterialNo == itemWMS.MaterialNo&& itemerp.BatchNo == itemWMS.BatchNo && itemerp.Qty == itemWMS.Qty; }).Count != 1) {
+                        isOk = false;
+                    }
+                });
+                if (!isOk)
+                {
+                    return Json(new { state = false ,ErrMsg="WMS库存和U9不匹配不能生成盘点单！"}, JsonRequestBehavior.AllowGet);
+                }
 
+                
                 Check_Model cm = new Check_Model();
                 //cm.REMARKS = strremark + txt_remarkD.Text + txt_remark.Text;
                 cm.CHECKSTATUS = "新建";
@@ -389,10 +385,67 @@ namespace Web.WMS.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { state = false, Msg = ex.ToString() }, JsonRequestBehavior.AllowGet);
+                return Json(new { state = false, ErrMsg = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
 
+        // 物料盘点分析
+        public JsonResult GetCheckStockA(string CheckNo)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(CheckNo))
+                {
+                    return Json(new { state = false }, JsonRequestBehavior.AllowGet);
+                }
+                Check_DB CheckDB = new Check_DB();
+                List<T_StockInfoEX> Checklist = new List<T_StockInfoEX>();
+                List<T_StockInfoEX> Scanlist = new List<T_StockInfoEX>();
+                CheckDB.GetCheckStock2(CheckNo, ref Checklist); //盘点单
+                CheckDB.GetCheckSerialno(CheckNo, ref Scanlist); //实盘结果
+                if (Checklist.Count == 0 || Scanlist.Count == 0)
+                {
+                    return Json(new { state = false }, JsonRequestBehavior.AllowGet);
+                }
+
+                //wms数据和erp数据对账
+                for (int i = 0; i < Checklist.Count; i++)
+                {
+                    for (int j = 0; j < Scanlist.Count; j++)
+                    {
+                        if (Checklist[i].MaterialNo == Scanlist[j].MaterialNo && Checklist[i].BatchNo == Scanlist[j].BatchNo)
+                        {
+                            Checklist[i].ScaMaterialNo = Scanlist[i].MaterialNo;
+                            Checklist[i].ScaBatchNo = Scanlist[i].BatchNo;
+                            Checklist[i].ScanQty = Scanlist[j].Qty;
+                            Scanlist[j].IsAmount = 1;
+                        }
+                    }
+                }
+                //没匹配的数据
+                for (int i = 0; i < Scanlist.Count; i++)
+                {
+                    if (Scanlist[i].IsAmount != 1)
+                    {
+                        Checklist.Add(new T_StockInfoEX()
+                        {
+                            ScaMaterialNo = Scanlist[i].MaterialNo,
+                            ScaBatchNo = Scanlist[i].BatchNo,
+                            ScanQty = Scanlist[i].Qty,
+                            Qty = 0
+                        });
+                    }
+                }
+
+                return Json(new { Result = 1, Data = Checklist }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = 0, ResultValue = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        
         //提交U9盘点信息
         public JsonResult SaveCheckToU9(string CheckNo)
         {
@@ -419,7 +472,7 @@ namespace Web.WMS.Controllers
                     {
                         if (Checklist[i].MaterialNo == Scanlist[j].MaterialNo && Checklist[i].BatchNo == Scanlist[j].BatchNo)
                         {
-                            Checklist[i].U9Qty = Scanlist[j].Qty;
+                            Checklist[i].ScanQty = Scanlist[j].Qty;
                             Scanlist[j].IsAmount = 1;
                         }
                     }
@@ -433,17 +486,17 @@ namespace Web.WMS.Controllers
                         {
                             U9MaterialNo = Scanlist[i].MaterialNo,
                             U9BatchNo = Scanlist[i].BatchNo,
-                            U9Qty = Scanlist[i].Qty,
+                            ScanQty = Scanlist[i].Qty,
                             Qty = 0
                         });
                     }
                 }
                 T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
                 string strMsg = "";
-                if (FUNC.SaveCheckToU9(Checklist, ref strMsg)) {
+                if (FUNC.SaveCheckToU9(Checklist, CheckNo,  currentUser.UserNo, ref strMsg)) {
                     return Json(new { state = true }, JsonRequestBehavior.AllowGet);
                 } else {
-                    return Json(new { state = false }, JsonRequestBehavior.AllowGet);
+                    return Json(new { state = false, ErrorMsg = strMsg }, JsonRequestBehavior.AllowGet);
                 }
                     
             }

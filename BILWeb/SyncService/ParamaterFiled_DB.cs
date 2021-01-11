@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System.Data.SqlClient;
 using BILBasic.Basing.Factory;
 using System.Data;
+using BILWeb.Material;
 
 namespace BILWeb.SyncService
 {
@@ -234,8 +235,7 @@ namespace BILWeb.SyncService
         {
             throw new NotImplementedException();
         }
-
-
+        
         #region 同步单据  
         //物料：flag= "0" 入库单：1  出库单 2
         public bool GetVoucherNo(string Erpvoucherno,ref string ErrorMsg,string flag= "0")
@@ -311,13 +311,19 @@ namespace BILWeb.SyncService
             if (flag!="0")
             {
                 //查看单据是否存在
-                using (var db = SqlSugarBase.GetInstance())
+                T_Material_DB DB = new T_Material_DB();
+                if (DB.GetCount("SELECT count(1) FROM " + tableName + " WHERE erpvoucherno ='" + Erpvoucherno + "'") > 0)
                 {
-                    if (db.Ado.GetInt("SELECT count(1) FROM " + tableName + " WHERE erpvoucherno ='" + Erpvoucherno + "'") > 0)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
+               
+                //using (var db = SqlSugarBase.GetInstance())
+                //{
+                //    if (db.Ado.GetInt("SELECT count(1) FROM " + tableName + " WHERE erpvoucherno ='" + Erpvoucherno + "'") > 0)
+                //    {
+                //        return true;
+                //    }
+                //}
             }
 
             //同步单据
@@ -332,7 +338,6 @@ namespace BILWeb.SyncService
             
         }
         #endregion
-
-
+        
     }
 }

@@ -14,6 +14,7 @@ using SqlSugarDAL.barcode;
 using BILWeb.T00L;
 using System.IO;
 using System.Xml.Serialization;
+using BILWeb.Warehouse;
 
 namespace BILWeb.Material
 {
@@ -238,10 +239,15 @@ namespace BILWeb.Material
             }
         }
 
-        public bool SaveCheckToU9(List<T_StockInfoEX> stocks,ref string strMsg)
+        public bool SaveCheckToU9(List<T_StockInfoEX> stocks,string CheckNo,string UserNo,ref string strMsg)
         {
             try
             {
+                T_WareHouse_DB TWareHouseDB = new T_WareHouse_DB();
+                string StrongHoldCode = "";
+                string StrongHoldCodeName = "";
+                TWareHouseDB.GetStrongholdcode(stocks[0].WarehouseNo, ref StrongHoldCode, ref StrongHoldCodeName);
+
                 List<U9StockTo> U9StockTos = new List<U9StockTo>();
                 //简化实体类
                 stocks.ForEach(item=> {
@@ -251,10 +257,10 @@ namespace BILWeb.Material
                         ErpWarehouseNo = item.WarehouseNo,
                         FromErpWarehouse = item.WarehouseNo,
                         PostQty = item.Qty,
-                        ScanQty = item.ScanQty,
-                        PostUser = "admin",
-                        StrongHoldCode = "0300",
-                        GUID = "132",
+                        ScanQty = item.Qty,
+                        PostUser = UserNo,
+                        StrongHoldCode = StrongHoldCode,
+                        GUID = CheckNo,
                         StrVoucherType = "InvSheet001",
                         Unit="S001"
                     });
