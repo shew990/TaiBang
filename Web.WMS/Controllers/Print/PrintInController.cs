@@ -117,14 +117,21 @@ namespace Web.WMS.Controllers.Print
         {
             var objT_InStockDetailInfo = JsonConvert.DeserializeObject<T_InStockDetailInfo>(data);
 
-            string EveryQty = objT_InStockDetailInfo.EveryQty, num = objT_InStockDetailInfo.num,
-                Userno = objT_InStockDetailInfo.Userno, erpvoucherno = objT_InStockDetailInfo.ErpVoucherNo,
+            string EveryQty = objT_InStockDetailInfo.EveryQty, 
+                num = objT_InStockDetailInfo.num,
+                Userno = objT_InStockDetailInfo.Userno, 
+                erpvoucherno = objT_InStockDetailInfo.ErpVoucherNo,
                 materialno = objT_InStockDetailInfo.MaterialNo,
-                materialdesc = objT_InStockDetailInfo.MaterialDesc, RowNO = objT_InStockDetailInfo.RowNo,
-                RowNODel = objT_InStockDetailInfo.RowNoDel, MaterialNoID = objT_InStockDetailInfo.MaterialNoID.ToString(),
-                StrongHoldCode = objT_InStockDetailInfo.StrongHoldCode, CompanyCode = objT_InStockDetailInfo.CompanyCode,
-                Createname = objT_InStockDetailInfo.Creater, WarehouseName = objT_InStockDetailInfo.WareHouseNo,
-                TracNo = objT_InStockDetailInfo.TracNo, ProjectNo = objT_InStockDetailInfo.ProjectNo,
+                materialdesc = objT_InStockDetailInfo.MaterialDesc, 
+                RowNO = objT_InStockDetailInfo.RowNo,
+                RowNODel = objT_InStockDetailInfo.RowNoDel, 
+                MaterialNoID = objT_InStockDetailInfo.MaterialNoID.ToString(),
+                StrongHoldCode = objT_InStockDetailInfo.StrongHoldCode, 
+                CompanyCode = objT_InStockDetailInfo.CompanyCode,
+                Createname = objT_InStockDetailInfo.Creater, 
+                WarehouseName = objT_InStockDetailInfo.WareHouseNo,
+                TracNo = objT_InStockDetailInfo.TracNo, 
+                ProjectNo = objT_InStockDetailInfo.ProjectNo,
                 BatchNo = objT_InStockDetailInfo.FromBatchNo;
 
             T_InStock_Func InFunc = new T_InStock_Func();
@@ -197,6 +204,9 @@ namespace Web.WMS.Controllers.Print
                     model.CusName = objT_InStockDetailInfo.SUPPLIERSHORTNAME;
                     model.erpwarehousename = objT_InStockDetailInfo.ErpWarehouseName;
                     model.StoreCondition = objT_InStockDetailInfo.CustomerItemCode;
+                    if (erpvoucherno.Substring(0, 3) == "DCY") {
+                        model.dimension = erpvoucherno;
+                    }
 
                     listbarcode.Add(model);
                 }
@@ -238,6 +248,10 @@ namespace Web.WMS.Controllers.Print
                     model.CusName = objT_InStockDetailInfo.SUPPLIERSHORTNAME;
                     model.erpwarehousename = objT_InStockDetailInfo.ErpWarehouseName;
                     model.StoreCondition = objT_InStockDetailInfo.CustomerItemCode;
+                    if (erpvoucherno.Substring(0, 3) == "DCY")
+                    {
+                        model.dimension = erpvoucherno;
+                    }
                     listbarcode.Add(model);
                 }
                 if (print_DB.SubBarcodes(listbarcode, "sup", 1, ref err))

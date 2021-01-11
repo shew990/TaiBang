@@ -688,10 +688,10 @@ namespace SCCGAndroidService
             return db.GetMinDetail(checkno);
         }
 
-        public string GetMinBarocde(string barcode, string checkno)
+        public string GetMinBarocde(string barcode, string checkno,string Qty)
         {
             Check_DB db = new Check_DB();
-            return db.GetMinBarocde(barcode, checkno);
+            return db.GetMinBarocde(barcode, checkno ,Qty);
         }
 
         public string GetMinSerialno(int id)

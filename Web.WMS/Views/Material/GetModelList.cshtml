@@ -6,8 +6,6 @@
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
     PageData<T_MaterialInfo> pageData = (PageData<T_MaterialInfo>)ViewData["PageData"];
 }
-
-
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
         <form action="/Material/GetModelList" method="post">
@@ -75,10 +73,10 @@
                                     <td>@t_MaterialInfo.MaterialNo</td>
                                     <td>@t_MaterialInfo.MaterialDesc</td>
                                     @*<td>@t_MaterialInfo.Length</td>
-        <td>@t_MaterialInfo.Wide</td>
-        <td>@t_MaterialInfo.Hight</td>
-        <td>@t_MaterialInfo.Volume</td>
-        <td>@t_MaterialInfo.Weight</td>*@
+                                    <td>@t_MaterialInfo.Wide</td>
+                                    <td>@t_MaterialInfo.Hight</td>
+                                    <td>@t_MaterialInfo.Volume</td>
+                                    <td>@t_MaterialInfo.Weight</td>*@
                                     <td>@t_MaterialInfo.NetWeight</td>
                                     <td>@t_MaterialInfo.Unit</td>
                                     <td>@t_MaterialInfo.PackQty</td>

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BILBasic.Common;
+using BILWeb.OutBarCode;
 
 namespace BILWeb.OutStockTask
 {
@@ -66,11 +67,7 @@ namespace BILWeb.OutStockTask
                 //}
                 modelList = CreateNewListByPickRuleAreaNo(modelList, stockList);
             }
-                       
-
-            
             return true;
-            
         }
 
 
@@ -81,11 +78,25 @@ namespace BILWeb.OutStockTask
             List<T_StockInfo> stockModelListSum = new List<T_StockInfo>();
             string strAreaNo = string.Empty;
 
+            //单据客编码
+            T_OutBarcode_DB OutBarcodeDB = new T_OutBarcode_DB();
+            string CUSTOMERCODE = OutBarcodeDB.GetTaskCusCode(modelList[0].HeaderID.ToString());
+
+            //库存里面客户加上
+            stockList.ForEach(item=> {
+                item.CusCode = OutBarcodeDB.GetCusCode(item.SerialNo);
+            });
+            
             foreach (var item in modelList)
             {
                 //查找物料可分配库存
-                stockModelList = stockList.FindAll(t => t.MaterialNoID == item.MaterialNoID && t.StrongHoldCode == item.StrongHoldCode && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
+                stockModelList = stockList.FindAll(t => t.CusCode == CUSTOMERCODE && t.MaterialNoID == item.MaterialNoID && t.StrongHoldCode == item.StrongHoldCode && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
                 //stockModelList = stockList.FindAll(t => t.MaterialNoID == item.MaterialNoID && t.StrongHoldCode==item.StrongHoldCode && t.WarehouseNo==item.FromErpWarehouse && t.HouseProp==item.HouseProp && t.Qty>0 && t.BatchNo==item.FromBatchNo ).OrderBy(t=>t.EDate).OrderBy(t=>t.SortArea).ToList();
+                if (stockModelList.Count==0|| stockModelList==null)
+                {
+                    stockModelList = stockList.FindAll(t => t.MaterialNoID == item.MaterialNoID && t.StrongHoldCode == item.StrongHoldCode && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
+                }
+
                 stockModelListSum = CreateNewStockInfoSum(stockModelList);
 
                 if (stockModelListSum != null && stockModelListSum.Count > 0) 

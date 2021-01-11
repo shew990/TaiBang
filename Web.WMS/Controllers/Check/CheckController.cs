@@ -286,7 +286,7 @@ namespace Web.WMS.Controllers
                     T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
                     List<U9Stock> erp_stock = FUNC.GetStockInfo(model.WarehouseNo, StrongHoldCode, model.MaterialNo);
                     //wms数据和erp数据对账
-                    for (int i = 0; i < erp_stock.Count; i++)
+                    for (int i = 0; i < wms_stock.Count; i++)
                     {
                         if (erp_stock != null && erp_stock.Count > 0)
                         {

@@ -360,6 +360,34 @@ namespace BILWeb.Material
             }
         }
 
+
+        //获取成品入库单是成品还是原料
+        public bool isChengpin(string ErpVoucherNo)
+        {
+            try
+            {
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+                //string json = "{\"company_no\":\"" + 1001909046618667 + "\",\"data_no\":\"0300\",\"VoucherType\":\"9997\"}";
+                string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"7777\"}";
+                string ERPJson = TIF.GetModelListByInterface(json);
+                LogNet.LogInfo("成品入库单是成品还是原料:" + ERPJson);
+                if (ERPJson.Substring(0, 1) == "1")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return true;
+            }
+
+
+        }
+
         ////提交转换单
         //public bool PostZh(U9Zh model, UserModel user, string Guid, ref string receive,ref string Message)
         //{
