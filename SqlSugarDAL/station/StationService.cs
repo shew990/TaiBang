@@ -10,19 +10,19 @@ namespace SqlSugarDAL.station
     {
         public List<T_Station> GetStations()
         {
-            var stations = GetSugarQueryable().OrderBy(x => x.Id).ToList();
+            var stations = GetList(x => x.IsDel == 0).OrderBy(x => x.Id).ToList();
             return stations;
         }
 
         public int GetStationIndex(string ipAddress)
         {
-            var index = GetList().FindIndex(x => x.IpAddress == ipAddress);
+            var index = GetList(x => x.IsDel == 0).FindIndex(x => x.IpAddress == ipAddress);
             return index;
         }
 
         public T_Station GetStation(string ipAddress)
         {
-            var station = GetSugarQueryable(x => x.IpAddress == ipAddress).First();
+            var station = GetSugarQueryable(x => x.IpAddress == ipAddress && x.IsDel == 0).First();
             return station;
         }
     }

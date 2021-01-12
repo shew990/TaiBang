@@ -22,6 +22,11 @@ namespace Web.WMS.Controllers.SeePallet
             return View();
         }
 
+        /// <summary>
+        /// 获取该工位pdf地址
+        /// </summary>
+        /// <param name="ipAddress"></param>
+        /// <returns></returns>
         public ActionResult IsHaveAddress(string ipAddress)
         {
             SuccessResult successResult = new SuccessResult();
@@ -29,8 +34,8 @@ namespace Web.WMS.Controllers.SeePallet
             try
             {
                 var station = new StationService().GetStation(ipAddress);
-                if (station==null)
-                    return Json(successResult,JsonRequestBehavior.AllowGet);
+                if (station == null)
+                    return Json(successResult, JsonRequestBehavior.AllowGet);
 
                 successResult.Data = station.PDFAddress;
                 successResult.Success = true;
