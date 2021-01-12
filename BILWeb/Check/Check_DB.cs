@@ -1794,12 +1794,15 @@ namespace BILWeb.Query
                 sqls.Add(sql);
                 sql = "update T_CHECKREFSTOCK set SQTY = SQTY+" + Qty + " where ID=" + id;
                 sqls.Add(sql);
+
+                sqls.Add("update t_check set CHECKSTATUS = '开始' where checkno = '" + checkno + "'");
                 dbFactory.ExecuteNonQueryList(sqls);
 
                 //返回徐鑫类
                 BaseMessage_Model<Barcode_Model> bm2 = new BaseMessage_Model<Barcode_Model>();
                 bm2.HeaderStatus = "S";
                 bm2.Message = "";
+                sb.Qty = Qty.ToDecimal();
                 bm2.ModelJson = sb;
                 string j2 = Check_Func.SerializeObject(bm2);
                 return j2;
@@ -2737,8 +2740,8 @@ namespace BILWeb.Query
                 List<string> sqls = new List<string>();
                 string sql = "";
                     //盘点明细表链接库位视图和托盘表，当完全盘盈时插入要使用这些字段
-                    sql = "select a.SERIALNO,a.QTY,b.qty SQTY,'' SWAREHOUSENOID,'' SHOUSENOID,'' SAREANOID  from (select * from t_stock  where CHECKID=" + checkid + ") a left join T_CHECKREFSERIAL b on a.SERIALNO=b.SERIALNO and a.CHECKID=b.HEADERID"
-                            +"union"
+                    sql = "select a.SERIALNO,a.QTY,b.qty SQTY,'' SWAREHOUSENOID,'' SHOUSENOID,'' SAREANOID  from (select * from t_stock  where CHECKID=" + checkid + ") a left join (select aa.*,bb.ID checkid from T_CHECKREFSERIAL aa left join T_CHECK bb on aa.VOUCHERNO=bb.CHECKNO ) b on a.SERIALNO=b.SERIALNO and a.CHECKID=b.checkid"
+                            + " union "
                             + "select SERIALNO,0 as QTY,qty as SQTY,SWAREHOUSENOID,SHOUSENOID,SAREANOID from T_CHECKREFSERIAL where HEADERID = " + checkid + " and SERIALNO not in (select SERIALNO from t_stock where CHECKID = " + checkid + ")";
                     DataTable dt = dbFactory.ExecuteDataSet(System.Data.CommandType.Text, sql).Tables[0];
                     List<CheckAnalyze> listshow = ModelConvertHelper<CheckAnalyze>.ConvertToModel(dt);
@@ -2768,14 +2771,14 @@ namespace BILWeb.Query
                         {
                             //完全盘亏
                             sqls.Add("delete  from t_stock where serialno ='"+ item.SERIALNO + "'");
-                            sql = OutTrans(username, sql, item, 204, item.SSERIALNO, CheckNo);
+                            sql = OutTrans(username, sql, item, 204, item.SERIALNO, CheckNo);
                             sqls.Add(sql);
                         }
                         else
                         {
                             //更新数量
                             sqls.Add("update t_stock set qty=" + item.SQTY + "  where serialno ='" + item.SERIALNO + "'");
-                            sql = InTrans(username, sql, item, 203, item.SSERIALNO, CheckNo);
+                            sql = InTrans(username, sql, item, 203, item.SERIALNO, CheckNo);
                             sqls.Add(sql);
                         }
                     }

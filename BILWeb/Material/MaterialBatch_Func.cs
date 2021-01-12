@@ -319,7 +319,15 @@ namespace BILWeb.Material
             {
                 T_Material_Batch_DB _db = new T_Material_Batch_DB();
                 //成品需要检验库存
-                if (_db.isChengpin(ErpVoucherNo)) {
+                string Msg = "";
+                if (_db.isChengpin(ErpVoucherNo,ref Msg)) {
+                    if (!string.IsNullOrEmpty(Msg))
+                    {
+                        messageModel.HeaderStatus = "E";
+                        messageModel.Message = Msg;
+                        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                    }
+
                     T_OutBarcode_DB OutBarcodeDB = new T_OutBarcode_DB();
                     List<T_OutBarCodeInfo> OutBarCodeInfos = OutBarcodeDB.GetModelListByFilter("", " dimension='" + ErpVoucherNo + "'", " * ");
                     if (OutBarCodeInfos == null || OutBarCodeInfos.Count == 0)

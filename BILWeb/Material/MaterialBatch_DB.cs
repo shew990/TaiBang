@@ -257,7 +257,7 @@ namespace BILWeb.Material
                         ErpWarehouseNo = item.WarehouseNo,
                         FromErpWarehouse = item.WarehouseNo,
                         PostQty = item.Qty,
-                        ScanQty = item.Qty,
+                        ScanQty = item.ScanQty,
                         PostUser = UserNo,
                         StrongHoldCode = StrongHoldCode,
                         GUID = CheckNo,
@@ -362,10 +362,11 @@ namespace BILWeb.Material
 
 
         //获取成品入库单是成品还是原料
-        public bool isChengpin(string ErpVoucherNo)
+        public bool isChengpin(string ErpVoucherNo,ref string msg)
         {
             try
             {
+                msg = "";
                 BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
                 //string json = "{\"company_no\":\"" + 1001909046618667 + "\",\"data_no\":\"0300\",\"VoucherType\":\"9997\"}";
                 string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"7777\"}";
@@ -375,13 +376,16 @@ namespace BILWeb.Material
                 {
                     return true;
                 }
-                else
+                if (ERPJson.Substring(0, 1) == "0")
                 {
                     return false;
                 }
+                return true;
+                msg = ERPJson;
             }
             catch (Exception ex)
             {
+                msg = ex.ToString();
                 return true;
             }
 
