@@ -345,7 +345,6 @@ namespace UnitTestProject1
         {
             T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
             string json = tfunc.GetT_OutStockReviewDetailListByHeaderIDADF("SM210104298");
-
         }
 
 

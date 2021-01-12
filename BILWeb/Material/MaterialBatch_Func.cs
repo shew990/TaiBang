@@ -320,7 +320,8 @@ namespace BILWeb.Material
                 T_Material_Batch_DB _db = new T_Material_Batch_DB();
                 //成品需要检验库存
                 string Msg = "";
-                if (_db.isChengpin(ErpVoucherNo,ref Msg)) {
+                bool isOK = _db.isChengpin(ErpVoucherNo, ref Msg);
+                if (isOK) {
                     if (!string.IsNullOrEmpty(Msg))
                     {
                         messageModel.HeaderStatus = "E";
@@ -346,22 +347,33 @@ namespace BILWeb.Material
                     return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
                 }
 
-                string strError = "";
-                T_OutTaskDetails_DB _dbOutTaskDetails = new T_OutTaskDetails_DB();
-                LogNet.LogInfo("-------------------------------------------直发公司ERP成功凭证号："+ strERP.Substring(1, strERP.Length - 1));
-                if (_dbOutTaskDetails.DelStockForU9(ErpVoucherNo, strERP.Substring(1, strERP.Length-1), ref strError) == false)
+                if (isOK)
                 {
-                    messageModel.HeaderStatus = "E";
-                    messageModel.Message = "ERP操作成功，ERP凭证号：" + strERP.Substring(1, strERP.Length - 1)+"WMS失败："+ strError;
-                    LogNet.LogInfo("-------------------------------------------直发公司ERP成功凭证号：" + messageModel.Message);
-                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                    string strError = "";
+                    T_OutTaskDetails_DB _dbOutTaskDetails = new T_OutTaskDetails_DB();
+                    LogNet.LogInfo("-------------------------------------------直发公司ERP成功凭证号：" + strERP.Substring(1, strERP.Length - 1));
+                    if (_dbOutTaskDetails.DelStockForU9(ErpVoucherNo, strERP.Substring(1, strERP.Length - 1), ref strError) == false)
+                    {
+                        messageModel.HeaderStatus = "E";
+                        messageModel.Message = "ERP操作成功，ERP凭证号：" + strERP.Substring(1, strERP.Length - 1) + "WMS失败：" + strError;
+                        LogNet.LogInfo("-------------------------------------------直发公司ERP成功凭证号：" + messageModel.Message);
+                        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                    }
+                    else
+                    {
+                        messageModel.HeaderStatus = "S";
+                        messageModel.Message = "操作成功！ERP凭证号：" + strERP.Substring(1, strERP.Length - 1);
+                        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                    }
                 }
                 else
                 {
                     messageModel.HeaderStatus = "S";
-                    messageModel.Message = "操作成功！ERP凭证号："+ strERP.Substring(1, strERP.Length - 1);
+                    messageModel.Message = "操作成功！ERP凭证号：" + strERP.Substring(1, strERP.Length - 1);
                     return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
                 }
+
+
 
 
 

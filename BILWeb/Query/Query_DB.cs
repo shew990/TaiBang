@@ -277,7 +277,7 @@ namespace BILWeb.Query
             lsttask = new List<T_StockInfoEX>();
             try
             {
-                string sql = "select ROW_NUMBER() OVER(Order by ID desc) AS PageRowNumber ,b.* from V_StockDet b where  " + StockD_GetFilterSql(model);
+                string sql = "select ROW_NUMBER() OVER(Order by ID desc) AS PageRowNumber ,b.* from V_StockDet b where  " + StockD_GetFilterSql1(model);
                 Common_FactoryDB fbd = new Common_FactoryDB();
                 DataTable dt = fbd.QueryByDividPage(ref dividpage, sql);
                 dividpage.CurrentPageRecordCounts = dt.Rows.Count;
@@ -420,7 +420,93 @@ namespace BILWeb.Query
         }
 
 
+        private string StockD_GetFilterSql1(T_StockInfoEX mo)
+        {
+            string sql = " ISDEL = 1 ";
+            if (mo.MaterialNo != null)
+            {
+                mo.MaterialNo = mo.MaterialNo.Trim();
+                if (mo.MaterialNo != "" && !mo.MaterialNo.Contains(','))
+                    sql += " and MaterialNo like '" + mo.MaterialNo + "%'";
+                else if (mo.MaterialNo != "" && mo.MaterialNo.Contains(','))
+                {
+                    string MaterialNo = mo.MaterialNo;
+                    Query_Func.ChangeQuery(ref MaterialNo);
+                    sql += " and MaterialNo like '%" + MaterialNo + "%'";
+                }
+            }
 
+            if (mo.AreaNo != null)
+            {
+                if (mo.AreaNo != "" && !mo.AreaNo.Contains(','))
+                    sql += " and AreaNo like '" + mo.AreaNo + "%'";
+                else if (mo.AreaNo != "" && mo.AreaNo.Contains(','))
+                {
+                    string AreaNo = mo.AreaNo;
+                    Query_Func.ChangeQuery(ref AreaNo);
+                    sql += " and AreaNo in(" + AreaNo + ")";
+                }
+            }
+
+            if (mo.BatchNo != null)
+            {
+                if (mo.BatchNo != "" && !mo.BatchNo.Contains(','))
+                    sql += " and BatchNo like '" + mo.BatchNo + "%'";
+                else if (mo.BatchNo != "" && mo.BatchNo.Contains(','))
+                {
+                    string BatchNo = mo.BatchNo;
+                    Query_Func.ChangeQuery(ref BatchNo);
+                    sql += " and BatchNo in(" + BatchNo + ")";
+                }
+            }
+
+
+
+            if (!string.IsNullOrEmpty(mo.fserialno))
+                sql += " and fserialno = '" + mo.fserialno + "'";
+
+            if (!string.IsNullOrEmpty(mo.MaterialDesc))
+                sql += " and MaterialDesc like '%" + mo.MaterialDesc + "%'";
+
+            if (!string.IsNullOrEmpty(mo.StrongHoldCode))
+                sql += " and StrongHoldCode = '" + mo.StrongHoldCode + "'";
+
+            if (!string.IsNullOrEmpty(mo.SerialNo))
+                sql += " and SerialNo = '" + mo.SerialNo + "'";
+
+            if (!string.IsNullOrEmpty(mo.HouseNo))
+                sql += " and HouseNo like '%" + mo.HouseNo + "%'";
+
+            if (!string.IsNullOrEmpty(mo.WarehouseNo))
+                sql += " and (WarehouseNo like '%" + mo.WarehouseNo + "%' or WarehouseName like '%" + mo.WarehouseNo + "%') ";
+
+
+
+            if (mo.Status != 0)
+            {
+                sql += " and Status =" + mo.Status;
+            }
+
+            if (mo.IsAmount != 0)
+            {
+                if (mo.IsAmount == 2)
+                {
+                    sql += " and IsAmount = 2 ";
+                }
+                else
+                {
+                    sql += " and IsAmount is null ";
+                }
+            }
+
+
+            if (!string.IsNullOrEmpty(mo.PalletNo))
+                sql += " and PalletNo = '" + mo.PalletNo + "'";
+
+
+            return sql;
+
+        }
 
 
         //库存汇总查询
@@ -593,7 +679,7 @@ namespace BILWeb.Query
             if (!string.IsNullOrEmpty(mo.MaterialNo) && !mo.MaterialNo.Contains(','))
             {
                 mo.MaterialNo = mo.MaterialNo.Trim();
-                sql += " and MaterialNo like '" + mo.MaterialNo + "%'";
+                sql += " and MaterialNo like '%" + mo.MaterialNo + "%'";
             }
             else if (!string.IsNullOrEmpty(mo.MaterialNo) && mo.MaterialNo.Contains(','))
             {
@@ -647,6 +733,8 @@ namespace BILWeb.Query
             return sql;
 
         }
+
+
 
         private string StockC_GetFilterSql2(T_StockInfoEX mo)
         {
@@ -751,7 +839,7 @@ namespace BILWeb.Query
             try
             {
                 Common_FactoryDB fbd = new Common_FactoryDB();
-                using (IDataReader dr = fbd.QueryByDividPage(ref dividpage, "V_TaskTran", TASKTRANS_GetFilterSql(taskmo), " * ", "Order by ID Desc"))
+                using (IDataReader dr = fbd.QueryByDividPage(ref dividpage, "V_TaskTran", TASKTRANS_GetFilterSql1(taskmo), " * ", "Order by ID Desc"))
                 {
                     while (dr.Read())
                     {
@@ -794,6 +882,140 @@ namespace BILWeb.Query
                     string MaterialNo = mo.MATERIALNO;
                     Query_Func.ChangeQuery(ref MaterialNo);
                     sql += " and MATERIALNO in(" + MaterialNo + ")";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(mo.MATERIALDESC))
+                sql += " and MATERIALDESC like '%" + mo.MATERIALDESC + "%'";
+
+            if (!string.IsNullOrEmpty(mo.SERIALNO))
+                sql += " and SERIALNO = '" + mo.SERIALNO + "'";
+
+            //if (mo.PalletNo != "")
+            //    sql += " and PalletNo like '%" + mo.PalletNo + "%'";
+
+            if (!string.IsNullOrEmpty(mo.FROMHOUSENO))
+                sql += " and (FROMHOUSENO like '%" + mo.FROMHOUSENO + "%' or TOHOUSENO like '%" + mo.FROMHOUSENO + "%')";
+
+            if (!string.IsNullOrEmpty(mo.FROMAREANO))
+                sql += " and (FROMAREANO like '%" + mo.FROMAREANO + "%' or TOAREANO like '%" + mo.FROMAREANO + "%')";
+
+            if (!string.IsNullOrEmpty(mo.FROMWAREHOUSENO))
+                sql += " and (FROMWAREHOUSENO like '%" + mo.FROMWAREHOUSENO + "%' or TOWAREHOUSENO like '%" + mo.FROMWAREHOUSENO + "%')";
+
+            if (!string.IsNullOrEmpty(mo.BATCHNO))
+                sql += " and BATCHNO = '" + mo.BATCHNO + "'";
+
+            if (!string.IsNullOrEmpty(mo.CREATER))
+                sql += " and CREATER = '" + mo.CREATER + "'";
+
+            if (!string.IsNullOrEmpty(mo.ERPVOUCHERNO))
+                sql += " and ERPVOUCHERNO like '%" + mo.ERPVOUCHERNO + "%'";
+
+            if (mo.TASKTYPE != 0)
+            {
+                sql += " and TASKTYPE =" + mo.TASKTYPE;
+            }
+
+            if (mo.VOUCHERTYPE != 0)
+            {
+                sql += " and VOUCHERTYPE =" + mo.VOUCHERTYPE;
+            }
+            if (!string.IsNullOrEmpty(mo.SUPCUSCODE))
+                sql += " and SUPCUSCODE like '%" + mo.SUPCUSCODE + "%'";
+
+            if (!string.IsNullOrEmpty(mo.StrongHoldCode))
+                sql += " and StrongHoldCode = '" + mo.StrongHoldCode + "'";
+            //if (mo.SUPCUSNAME != "")
+            //    sql += " and SUPCUSNAME like '%" + mo.SUPCUSNAME + "%'";
+
+            if (mo.begintime != null)
+            {
+                sql += " and CREATETIME>='" + mo.begintime + "'";
+            }
+            if (mo.endtime != null)
+            {
+                sql += " and CREATETIME<='" + mo.endtime + "'";
+            }
+
+            //用于存放任务类型查找条件
+            if (!string.IsNullOrEmpty(mo.StatusName))
+            {
+                string strTaskType = string.Empty;
+                string[] strSplit = mo.StatusName.Split(',');
+                int sLen = strSplit.Length;
+
+                foreach (var item in strSplit)
+                {
+                    switch (item.Trim())
+                    {
+                        case "收货":
+                            strTaskType += "4" + (sLen > 1 ? "," : "");
+                            break;
+                        case "上架":
+                            strTaskType += "1" + (sLen > 1 ? "," : "");
+                            break;
+                        case "下架":
+                            strTaskType += "2" + (sLen > 1 ? "," : "");
+                            break;
+                        case "移库":
+                            strTaskType += "3" + (sLen > 1 ? "," : "");
+                            break;
+                        case "完工入库":
+                            strTaskType += "5" + (sLen > 1 ? "," : "");
+                            break;
+                        case "退料入库":
+                            strTaskType += "6" + (sLen > 1 ? "," : "");
+                            break;
+                        case "交接入库":
+                            strTaskType += "7" + (sLen > 1 ? "," : "");
+                            break;
+                        case "齐套":
+                            strTaskType += "8" + (sLen > 1 ? "," : "");
+                            break;
+                        case "领料出库":
+                            strTaskType += "9" + (sLen > 1 ? "," : "");
+                            break;
+                        case "制成检":
+                            strTaskType += "10" + (sLen > 1 ? "," : "");
+                            break;
+                        case "复核":
+                            strTaskType += "12" + (sLen > 1 ? "," : "");
+                            break;
+                        case "包材接收":
+                            strTaskType += "13" + (sLen > 1 ? "," : "");
+                            break;
+                        case "法规检":
+                            strTaskType += "18" + (sLen > 1 ? "," : "");
+                            break;
+                        default:
+                            strTaskType += "0" + (sLen > 1 ? "," : "");
+                            break;
+                    }
+                }
+                strTaskType = strTaskType.TrimEnd(',');
+                sql += " and TASKTYPE in (" + strTaskType + ")";
+
+            }
+            return sql;
+
+        }
+
+
+
+        private string TASKTRANS_GetFilterSql1(TaskTrans_Model mo)
+        {
+            string sql = "where 1=1 ";
+
+            if (mo.MATERIALNO != null)
+            {
+                if (mo.MATERIALNO != "" && !mo.MATERIALNO.Contains(','))
+                    sql += " and MATERIALNO like '" + mo.MATERIALNO + "%'";
+                else if (mo.MATERIALNO != "" && mo.MATERIALNO.Contains(','))
+                {
+                    string MaterialNo = mo.MATERIALNO;
+                    Query_Func.ChangeQuery(ref MaterialNo);
+                    sql += " and MATERIALNO like '%" + MaterialNo + "%'";
                 }
             }
 
