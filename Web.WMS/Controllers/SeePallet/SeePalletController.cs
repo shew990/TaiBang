@@ -22,6 +22,11 @@ namespace Web.WMS.Controllers.SeePallet
             return View();
         }
 
+        /// <summary>
+        /// 该工位是否有pdf地址，如有显示
+        /// </summary>
+        /// <param name="ipAddress"></param>
+        /// <returns></returns>
         public ActionResult IsHaveAddress(string ipAddress)
         {
             SuccessResult successResult = new SuccessResult();
