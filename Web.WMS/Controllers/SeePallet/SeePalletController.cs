@@ -23,7 +23,7 @@ namespace Web.WMS.Controllers.SeePallet
         }
 
         /// <summary>
-        /// 该工位是否有pdf地址，如有显示
+        /// 获取该工位pdf地址
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns></returns>
@@ -34,8 +34,8 @@ namespace Web.WMS.Controllers.SeePallet
             try
             {
                 var station = new StationService().GetStation(ipAddress);
-                if (station==null)
-                    return Json(successResult,JsonRequestBehavior.AllowGet);
+                if (station == null)
+                    return Json(successResult, JsonRequestBehavior.AllowGet);
 
                 successResult.Data = station.PDFAddress;
                 successResult.Success = true;
