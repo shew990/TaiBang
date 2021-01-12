@@ -19,5 +19,11 @@ namespace SqlSugarDAL.station
             var index = GetList().FindIndex(x => x.IpAddress == ipAddress);
             return index;
         }
+
+        public T_Station GetStation(string ipAddress)
+        {
+            var station = GetSugarQueryable(x => x.IpAddress == ipAddress).First();
+            return station;
+        }
     }
 }

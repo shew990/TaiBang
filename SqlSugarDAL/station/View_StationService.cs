@@ -73,7 +73,6 @@ namespace SqlSugarDAL.station
                     T_Station station = new T_Station();
                     station.LineId = view_Station.LineId;
                     station.StationName = view_Station.StationName;
-                    station.PDFAddress = view_Station.PDFAddress;
                     station.IpAddress = view_Station.IpAddress;
                     station.CreateTime = DateTime.Now;
                     stationService.Insert(station);//新增
@@ -83,7 +82,6 @@ namespace SqlSugarDAL.station
                     var station = stationService.GetById((int)view_Station.Id);
                     station.LineId = view_Station.LineId;
                     station.StationName = view_Station.StationName;
-                    station.PDFAddress = view_Station.PDFAddress;
                     station.IpAddress = view_Station.IpAddress;
                     station.UpdateTime = DateTime.Now;
                     stationService.Update(station);//修改
