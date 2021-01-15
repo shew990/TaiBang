@@ -102,5 +102,7 @@ namespace BILWeb.Stock
 
         [Display(Name = "扫描番号")]
         public string ScaBatchNo { get; set; }
+
+        public string isCheck { get; set; }
     }
 }
