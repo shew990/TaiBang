@@ -357,19 +357,24 @@ namespace Web.WMS.Controllers
                 {
                     return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
                 }
-                //检验WMS库存和U9是否一致
-                T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
-                List<U9Stock> erp_stock = FUNC.GetStockInfo(model.WarehouseNo, StrongHoldCode, model.MaterialNo);
-                bool isOk = true;
-                lsttask.ForEach(itemWMS=> {
-                    if (erp_stock.FindAll(itemerp => { return itemerp.MaterialNo == itemWMS.MaterialNo&& itemerp.BatchNo == itemWMS.BatchNo && itemerp.Qty == itemWMS.Qty; }).Count != 1) {
-                        isOk = false;
-                    }
-                });
-                if (!isOk)
+                if (model.IsCheck)
                 {
-                    return Json(new { state = false ,ErrMsg="WMS库存和U9不匹配不能生成盘点单！"}, JsonRequestBehavior.AllowGet);
+                    //检验WMS库存和U9是否一致
+                    T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
+                    List<U9Stock> erp_stock = FUNC.GetStockInfo(model.WarehouseNo, StrongHoldCode, model.MaterialNo);
+                    bool isOk = true;
+                    lsttask.ForEach(itemWMS => {
+                        if (erp_stock.FindAll(itemerp => { return itemerp.MaterialNo == itemWMS.MaterialNo && itemerp.BatchNo == itemWMS.BatchNo && itemerp.Qty == itemWMS.Qty; }).Count != 1)
+                        {
+                            isOk = false;
+                        }
+                    });
+                    if (!isOk)
+                    {
+                        return Json(new { state = false, ErrMsg = "WMS库存和U9不匹配不能生成盘点单！" }, JsonRequestBehavior.AllowGet);
+                    }
                 }
+
 
                 
                 Check_Model cm = new Check_Model();
