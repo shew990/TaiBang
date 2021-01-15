@@ -205,7 +205,8 @@ namespace BILWeb.OutStockTask
             modelList = JSONHelper.JsonToObject<List<T_OutStockTaskDetailsInfo>>(ModelListJson);
             modelList = modelList.Where(t => t.ScanQty > 0).ToList();
             modelList.ForEach(t => t.ToUser = t.PostUser);
-            modelList.ForEach(t => t.PostUser= userModel.UserNo);
+            //modelList.ForEach(t => t.PostUser= userModel.UserNo);
+            modelList.ForEach(t => t.PostUser = userModel.UserName);
             //modelList.ForEach(t => t.VoucherType = 9996);
             LogNet.LogInfo("SaveT_OutStockTaskDetailADF---" + JSONHelper.ObjectToJson<List<T_OutStockTaskDetailsInfo>>(modelList));
             //modelList.ForEach(t => t.PostUser = userModel.UserNo);

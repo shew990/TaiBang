@@ -128,7 +128,8 @@ namespace BILWeb.InStock
                             stockDetailInfo.ReceiveAreaNo = modelList[i].ReceiveAreaNo;
                             stockDetailInfo.BatchNo = item.BatchNo;
                             stockDetailInfo.ReceiveUserNo = user.UserNo;
-                            stockDetailInfo.PostUser = user.UserNo;
+                            //stockDetailInfo.PostUser = user.UserNo;
+                            stockDetailInfo.PostUser = user.UserName;
                             stockDetailInfo.StrSupPrdDate = modelList[i].StrSupPrdDate;
                             stockDetailInfo.PassWord = user.PassWord;
                             stockDetailInfo.FromErpWarehouse = modelList[i].FromErpWarehouse;
@@ -151,7 +152,8 @@ namespace BILWeb.InStock
                         else
                         {
                             stockDetailInfo.ScanQty = stockDetailInfo.ScanQty + Convert.ToDecimal(item.Qty);
-                            stockDetailInfo.PostUser = user.UserNo;
+                            //stockDetailInfo.PostUser = user.UserNo;
+                            stockDetailInfo.PostUser = user.UserName;
                             stockDetailInfo.GUID = modelList[i].GUID;
                         }
                     }
@@ -275,7 +277,8 @@ namespace BILWeb.InStock
                     item.FromErpWarehouse = user.ReceiveWareHouseNo;
                     item.ToErpAreaNo = string.Empty;
                     item.ToBatchNo = item.BatchNo;
-                    item.PostUser = user.UserNo;
+                    //item.PostUser = user.UserNo;
+                    item.PostUser = user.UserName;
                     item.StrEDate = item.lstBarCode.FirstOrDefault().EDate.ToString("yyyy/MM/dd");
                 }
                 

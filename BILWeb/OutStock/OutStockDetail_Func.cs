@@ -1889,7 +1889,7 @@ namespace BILWeb.OutStock
             BaseMessage_Model<List<T_OutStockDetailInfo>> messageModel = new BaseMessage_Model<List<T_OutStockDetailInfo>>();
             try
             {
-                LogNet.LogInfo("----------------------------------------------------------------------复核提交:" + ErpVoucherNo+",GUID:"+ Guid);
+                LogNet.LogInfo("----------------------------------------------------------------------复核提交:" + ErpVoucherNo+",GUID:"+ Guid+ Remark);
                 string strError = string.Empty;
 
                 if (string.IsNullOrEmpty(ErpVoucherNo))

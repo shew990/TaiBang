@@ -344,7 +344,7 @@ namespace UnitTestProject1
         public void 复核获取单据()
         {
             T_OutStockDetail_Func tfunc = new T_OutStockDetail_Func();
-            string json = tfunc.GetT_OutStockReviewDetailListByHeaderIDADF("SM210104298");
+            string json = tfunc.GetT_OutStockReviewDetailListByHeaderIDADF("SM210112002");
         }
 
 
