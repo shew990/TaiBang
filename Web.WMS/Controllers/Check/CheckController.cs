@@ -357,7 +357,7 @@ namespace Web.WMS.Controllers
                 {
                     return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
                 }
-                if (model.IsCheck)
+                if (model.Check=="0")
                 {
                     //检验WMS库存和U9是否一致
                     T_Material_Batch_Func FUNC = new T_Material_Batch_Func();

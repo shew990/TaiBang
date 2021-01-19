@@ -34,7 +34,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">校验U9</label>
                 <div class="layui-input-block">
-                    <select lay-verify="required" id="isCheck">
+                    <select lay-verify="required" id="Check">
                         <option value="0">是</option>
                         <option value="1">否</option>
                     </select>
@@ -70,7 +70,7 @@
                     model: {
                         MaterialNo: $("#MaterialNo").val().trim(),
                         WarehouseNo: $("#WarehouseNo").val().trim(),
-                        isCheck: $("#isCheck").val()
+                        Check: $("#Check").val()
                     }
                 }
                 , request: {
@@ -150,7 +150,7 @@
             if (confirm("确定保存盘点单?")) {
                 $.ajax({
                     type: "GET",
-                    url: "/Check/SaveCheck?MaterialNo=" + $("#MaterialNo").val().trim() + "&WarehouseNo=" + $("#WarehouseNo").val().trim() + "isCheck=" + $("#isCheck").val().trim(),
+                    url: "/Check/SaveCheck?MaterialNo=" + $("#MaterialNo").val().trim() + "&WarehouseNo=" + $("#WarehouseNo").val().trim() + "Check=" + $("#Check").val().trim(),
                     date: null,
                     dataType: "json",
                     async: false,
