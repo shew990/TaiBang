@@ -420,8 +420,8 @@ namespace Web.WMS.Controllers
                     {
                         if (Checklist[i].MaterialNo == Scanlist[j].MaterialNo && Checklist[i].BatchNo == Scanlist[j].BatchNo)
                         {
-                            Checklist[i].ScaMaterialNo = Scanlist[i].MaterialNo;
-                            Checklist[i].ScaBatchNo = Scanlist[i].BatchNo;
+                            Checklist[i].ScaMaterialNo = Scanlist[j].MaterialNo;
+                            Checklist[i].ScaBatchNo = Scanlist[j].BatchNo;
                             Checklist[i].ScanQty = Scanlist[j].Qty;
                             Scanlist[j].IsAmount = 1;
                         }
