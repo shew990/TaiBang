@@ -355,7 +355,7 @@ namespace Web.WMS.Controllers
                 Query_DB db = new Query_DB();
                 if (!db.GetStockCombineInfo2(model, ref lsttask, ref strErrMsg))
                 {
-                    return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
+                    return Json(new { Result = 0, ErrMsg = strErrMsg }, JsonRequestBehavior.AllowGet);
                 }
                 if (model.Check=="0")
                 {

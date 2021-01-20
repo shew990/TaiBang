@@ -150,7 +150,7 @@
             if (confirm("确定保存盘点单?")) {
                 $.ajax({
                     type: "GET",
-                    url: "/Check/SaveCheck?MaterialNo=" + $("#MaterialNo").val().trim() + "&WarehouseNo=" + $("#WarehouseNo").val().trim() + "Check=" + $("#Check").val().trim(),
+                    url: "/Check/SaveCheck?MaterialNo=" + $("#MaterialNo").val().trim() + "&WarehouseNo=" + $("#WarehouseNo").val().trim() + "&Check=" + $("#Check").val().trim(),
                     date: null,
                     dataType: "json",
                     async: false,
