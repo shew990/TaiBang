@@ -14,7 +14,7 @@ using Web.WMS.Models;
 
 namespace Web.WMS.Controllers
 {
-    public abstract class BaseController<Tmodel> : Controller 
+    public abstract class BaseController<Tmodel> : Controller
     {
         protected IBaseService<Tmodel> baseservice;
         protected UserInfo currentUser = Common.Commom.ReadUserInfo();
@@ -23,6 +23,13 @@ namespace Web.WMS.Controllers
             ViewData["dividPage"] = model.dividPage;
             ViewData["url"] = model.link;
             return View("_ViewPage");
+        }
+
+        public ActionResult GetModelList1(DividPage page, Tmodel model)
+        {
+            List<Tmodel> modelList = new List<Tmodel>();
+            ViewData["PageData"] = new PageData<Tmodel> { data = modelList, dividPage = page, link = Common.PageTag.ModelToUriParam(model, "/" + System.Web.HttpContext.Current.Session["Message"].ToString() + "/GetModelList") };
+            return View("GetModelList");
         }
 
         public ActionResult GetModelList(DividPage page, Tmodel model)
@@ -78,7 +85,7 @@ namespace Web.WMS.Controllers
             return View("_ViewErrorMsg");
         }
 
-       // [HttpPost]
+        // [HttpPost]
         public JsonResult Delete(string ID)
         {
             string strMsg = "";
