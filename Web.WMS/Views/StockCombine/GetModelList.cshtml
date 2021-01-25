@@ -30,7 +30,7 @@
                 </button>
             </div>
             <div class="layui-inline layui-show-xs-block">
-                <button id="Query" class="btn btn-primary">
+                <button id="OutExcel" class="btn btn-primary">
                     导出<i class="layui-icon layui-icon-release" style="padding-left:5px;"></i>
                 </button>
             </div>
@@ -72,19 +72,19 @@
                 }
                 , title: '库存合并明细'
                 , page: true
-                 , totalRow: true //开启合计行
-                      , limits: [100, 200, 500, 1000]
-                   ,limit: 100 //每页默认显示的数量
+                , totalRow: true //开启合计行
+                , limits: [100, 200, 500, 1000]
+                , limit: 100 //每页默认显示的数量
                 , cols: [
                     [
                         { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
                         , { field: 'MaterialNo', title: '物料号', width: 150 }
-                        , { field: 'MaterialDesc', title: '物料名', width: 200, sort: false }
-                        , { field: 'BatchNo', title: '批次', width: 100, sort: false, totalRowText: '合计汇总:' }
+                        , { field: 'Spec', title: '物料规格', width: 200 }
+                        , { field: 'BatchNo', title: '批次', width: 140, sort: false, totalRowText: '合计汇总:' }
                         , { field: 'Qty', title: '数量', width: 100, sort: true, totalRow: true }
                         , { field: 'AreaNo', title: '库位', width: 100, sort: false }
                         , { field: 'HouseNo', title: '库区', width: 100, sort: true }
-                        , { field: 'WarehouseNo', title: '仓库', width: 100, sort: false }
+                        , { field: 'WarehouseNo', title: '仓库', width: 140, sort: false }
                     ]
                 ]
                 , response: {
@@ -116,6 +116,19 @@
         //查询
         $('#Query').click(function () {
             tableInit();
+        });
+
+        //导出
+        $("#OutExcel").click(function () {
+            let model = {
+                MaterialNo: $("#MaterialNo").val().trim(),
+                MaterialDesc: $("#MaterialDesc").val().trim(),
+                WarehouseNo: $("#WarehouseNo").val().trim(),
+                HouseNo: $("#HouseNo").val().trim(),
+                AreaNo: $("#AreaNo").val().trim(),
+                BatchNo: $("#BatchNo").val().trim()
+            };
+            location.href = "/StockCombine/Excel?jsonString=" + JSON.stringify(model) + "";
         });
 
         //回车事件绑定

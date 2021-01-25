@@ -88,8 +88,9 @@ namespace Web.WMS.Controllers.Query
             return Json(returnmodel, JsonRequestBehavior.AllowGet);
         }
 
-        public FileResult Excel(T_StockInfoEX model)
+        public FileResult Excel(string jsonString)
         {
+            T_StockInfoEX model = JsonConvert.DeserializeObject<T_StockInfoEX>(jsonString);
             DividPage page = new DividPage();
             page.CurrentPageShowCounts = 1000000;
             List<T_StockInfoEX> list = new List<T_StockInfoEX>();
@@ -130,11 +131,18 @@ namespace Web.WMS.Controllers.Query
                 rowtemp.CreateCell(7).SetCellValue(list[i].WarehouseNo.ToString());
                 rowtemp.CreateCell(8).SetCellValue(list[i].EAN.ToString());
             }
+            string fileName = "库存合并列表" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls";
+            MemoryStream memoryStream = new MemoryStream();
+            book.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return File(memoryStream, "application/vnd.ms-excel", fileName);
+
             // 写入到客户端 
-            System.IO.MemoryStream ms = new System.IO.MemoryStream();
-            book.Write(ms);
-            ms.Seek(0, SeekOrigin.Begin);
-            return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
+            //System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            //book.Write(ms);
+            //ms.Seek(0, SeekOrigin.Begin);
+            //return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
 
         }
     }
