@@ -166,12 +166,20 @@ namespace BILWeb.InStock
             {
                 //strSql += strAnd;
                 //strSql += "isnull(status,1)= '" + model.Status + "'";
-
-                if (model.Status == 1 || model.Status == 2)
+                //0：PDA 1：PC
+                if (model.PcOrPda == "0")
                 {
-                    strSql += strAnd;
-                    strSql += "(isnull(status,1)=1 or isnull(status,1)=2)";
+                    if (model.Status == 1 || model.Status == 2)
+                    {
+                        strSql += strAnd;
+                        strSql += "(isnull(status,1)=1 or isnull(status,1)=2)";
 
+                    }
+                    else
+                    {
+                        strSql += strAnd;
+                        strSql += "isnull(status,1)= '" + model.Status + "'";
+                    }
                 }
                 else
                 {
