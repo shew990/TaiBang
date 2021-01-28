@@ -108,17 +108,27 @@ namespace BILWeb.InStockTask
 
             if (model.Status > 0) 
             {
-                if (model.Status == 1 || model.Status == 2)
+                if (model.PcOrPda == "0")
                 {
-                    strSql += strAnd;
-                    strSql += "(isnull(status,1)=1 or isnull(status,1)=2) ";
 
+                    if (model.Status == 1 || model.Status == 2)
+                    {
+                        strSql += strAnd;
+                        strSql += "(isnull(status,1)=1 or isnull(status,1)=2) ";
+
+                    }
+                    else
+                    {
+                        strSql += strAnd;
+                        strSql += "isnull(status,1)= '" + model.Status + "'";
+                    }
                 }
-                else 
+                else
                 {
                     strSql += strAnd;
-                    strSql += "isnull(status,1)= '"+model.Status+"'";
+                    strSql += "isnull(status,1)= '" + model.Status + "'";
                 }
+
             }
 
             if (!string.IsNullOrEmpty(model.StrStatus))

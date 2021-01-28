@@ -582,7 +582,7 @@ namespace BILBasic.Basing.Factory
                         modelList.ForEach(t => t.MaterialDoc = model.MaterialDoc);
                     }
                 }
-                //modelList.ForEach(t => t.MaterialDoc = "Wgr0402210120063");
+                //modelList.ForEach(t => t.MaterialDoc = "Wgr0401210120030");
 
                 //LogNet.LogInfo("ERPJson:" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
                 LogNet.LogInfo("------------------------ymh：ERPtoWMS-" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
