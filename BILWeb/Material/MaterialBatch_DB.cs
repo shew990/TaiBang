@@ -461,12 +461,12 @@ namespace BILWeb.Material
                         }
                         
                         //需要转换的类型
-                        string update = string.Format("update T_STOCK set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5}  where barcode='{6}' ",
-                            model.MaterialNo, model.MaterialDesc, model.Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, list[i].barcodeList[0].Barcode);//两种模式都只会扫描一次所以条码集合肯定只能是一个
+                        string update = string.Format("update T_STOCK set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5},batchno='{6}'  where barcode='{7}' ",
+                            model.MaterialNo, model.MaterialDesc, model.Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, model.BatchNo, list[i].barcodeList[0].Barcode);//两种模式都只会扫描一次所以条码集合肯定只能是一个
                         sqls.Add(update);
 
-                        string update1 = string.Format("update T_outbarcode set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5}  where barcode='{6}' ",
-                       model.MaterialNo, model.MaterialDesc, model.Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, list[i].barcodeList[0].Barcode);//两种模式都只会扫描一次所以条码集合肯定只能是一个
+                        string update1 = string.Format("update T_outbarcode set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5},batchno='{6}',ProductBatch='{7}'  where barcode='{8}' ",
+                       model.MaterialNo, model.MaterialDesc, model.Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, model.BatchNo, model.RandomCode, list[i].barcodeList[0].Barcode);//两种模式都只会扫描一次所以条码集合肯定只能是一个
                         sqls.Add(update1);
 
                         SerialNos = SerialNos + "'" + t_Stock.SerialNo + "',";
@@ -480,6 +480,7 @@ namespace BILWeb.Material
                                 U9ZhDetail modeld = list[i].detail[d];
                                 T_StockInfo t_Stockd = DeepCopyByXml<T_StockInfo>(list[i].barcodeList[0]);
                                 t_Stockd.MaterialNo = modeld.MaterialNo;
+                                t_Stockd.BatchNo = modeld.BatchNo;
                                 t_Stockd.MaterialDesc = modeld.MaterialDesc;
                                 t_Stockd.Qty = modeld.Qty;
                                 t_Stockd.SerialNo = SerialnoHelp.GetSerialnos(1)[0];
@@ -515,7 +516,7 @@ namespace BILWeb.Material
                                     "standard, erpmateid,subiarrsid,originalCode,status,ReceiveTime,Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname,erpwarehousename) "+
                                     "select  voucherno,rowno,erpvoucherno,vouchertype,'" + t_Stockd.MaterialNo + "','" + t_Stockd.MaterialDesc + "',spec,cuscode,cusname,supcode,supname,outpackqty,innerpackqty,voucherqty,'" + t_Stockd.Qty + "',nopack,printqty,'" + t_Stockd.Barcode + "',barcodetype," +
                                     "'" + t_Stockd.SerialNo + "',barcodeno,outcount,innercount,mantissaqty,isrohs,outbox_id,abatchqty,isdel,creater,createtime,modifyer,modifytime," + t_Stockd.MaterialNoID + ",strongholdcode,strongholdname,companycode,productdate,supprdbatch," +
-                                    "supprddate, productbatch,edate,storecondition,specialrequire,batchno,barcodemtype,rownodel,protectway,boxweight,unit,labelmark,boxdetail,matebatch,mixdate,relaweight,productclass,itemqty," +
+                                    "supprddate, '"+ modeld.RandomCode + "',edate,storecondition,specialrequire,'"+ t_Stockd.BatchNo + "',barcodemtype,rownodel,protectway,boxweight,unit,labelmark,boxdetail,matebatch,mixdate,relaweight,productclass,itemqty," +
                                     "workno, mtypef,prorowno,prorownodel,boxcount,dimension,ean,fserialno,standard,erpmateid,subiarrsid,originalCode,status,ReceiveTime,Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname," + 
                                     "erpwarehousename from t_outbarcode where serialno= '"+ t_Stock.SerialNo + "'";
                                 sqls.Add(strSql9);
@@ -542,6 +543,7 @@ namespace BILWeb.Material
                         //新条码
                         T_StockInfo t_Stock = list[i].barcodeList[0];
                         t_Stock.MaterialNo = list[i].MaterialNo;
+                        t_Stock.BatchNo = list[i].BatchNo;
                         t_Stock.MaterialDesc = list[i].MaterialDesc;
                         t_Stock.Qty = list[i].Qty;
                         t_Stock.SerialNo = SerialnoHelp.GetSerialnos(1)[0];
@@ -560,12 +562,12 @@ namespace BILWeb.Material
                         }
 
 
-                        string onesql = string.Format("update T_STOCK set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5}  where barcode='{6}' "
-                        , list[i].MaterialNo, list[i].MaterialDesc, list[i].Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, list[i].barcodeList[0].Barcode);
+                        string onesql = string.Format("update T_STOCK set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5},batchno='{6}'   where barcode='{7}' "
+                        , list[i].MaterialNo, list[i].MaterialDesc, list[i].Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, t_Stock.BatchNo, list[i].barcodeList[0].Barcode);
                         sqls.Add(onesql);
 
-                        string onesql1 = string.Format("update T_outbarcode set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5}  where barcode='{6}' ",
-                        list[i].MaterialNo, list[i].MaterialDesc, list[i].Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, list[i].barcodeList[0].Barcode);//两种模式都只会扫描一次所以条码集合肯定只能是一个
+                        string onesql1 = string.Format("update T_outbarcode set MATERIALNO='{0}',materialdesc='{1}',qty={2},barcode='{3}',serialno='{4}',MaterialNoID={5},batchno='{6}',ProductBatch='{7}'   where barcode='{8}' ",
+                        list[i].MaterialNo, list[i].MaterialDesc, list[i].Qty, t_Stock.Barcode, t_Stock.SerialNo, t_Stock.MaterialNoID, t_Stock.BatchNo, list[i].RandomCode, list[i].barcodeList[0].Barcode);//两种模式都只会扫描一次所以条码集合肯定只能是一个
                         sqls.Add(onesql1);
                         SerialNos = SerialNos + "'" + t_Stock.SerialNo + "',";
                         //生成一个条码加进去
@@ -718,6 +720,8 @@ namespace BILWeb.Material
         public int VoucherType { get; set; }
 
         public string BatchNo { get; set; }
+        
+        public string RandomCode { get; set; }
     }
     public class U9ZhDetail
     {
@@ -733,6 +737,8 @@ namespace BILWeb.Material
         public string Unit { get; set; }
 
         public string BatchNo { get; set; }
+        
+        public string RandomCode { get; set; }
 
     }
     public class MoReport

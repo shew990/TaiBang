@@ -99,66 +99,115 @@ namespace BILWeb.InStock
             {
 
             }
-            for (int i = 0; i < modelList.Count; i++)
+
+            if (modelList[0].VoucherType == 50)
             {
-                if (modelList[i].lstBarCode != null && modelList[i].lstBarCode.Count > 0)
+                for (int i = 0; i < modelList.Count; i++)
                 {
-                    foreach (var item in modelList[i].lstBarCode)
+                    if (modelList[i].ScanQty>0)
                     {
-                        stockDetailInfo = lstDetail.Find(p => p.MaterialNo == item.MaterialNo && p.BatchNo == item.BatchNo && p.RowNo == item.RowNo && p.RowNoDel == item.RowNoDel);
-                        if (stockDetailInfo == null)
+                        stockDetailInfo = new T_InStockDetailInfo();
+                        stockDetailInfo.Plant = modelList[i].Plant; //客户编码 ，
+                        stockDetailInfo.PlantName = modelList[i].PlantName;//客户型号，
+                        stockDetailInfo.SaleName = modelList[i].SaleName;//类型
+
+                        stockDetailInfo.VoucherType = modelList[i].VoucherType;
+                        stockDetailInfo.ErpVoucherNo = modelList[i].ErpVoucherNo;
+                        stockDetailInfo.RowNo = modelList[i].RowNo;
+                        stockDetailInfo.RowNoDel = modelList[i].RowNoDel;
+                        stockDetailInfo.MaterialNo = modelList[i].MaterialNo;
+                        stockDetailInfo.CompanyCode = modelList[i].CompanyCode;
+                        stockDetailInfo.StoreCondition = modelList[i].StoreCondition;
+                        stockDetailInfo.ScanQty = Convert.ToDecimal(modelList[i].ScanQty);
+                        stockDetailInfo.Unit = modelList[i].Unit;
+                        stockDetailInfo.SupPrdBatch = modelList[i].SupPrdBatch;
+                        stockDetailInfo.ReceiveWareHouseNo = modelList[i].ReceiveWareHouseNo;
+                        stockDetailInfo.WareHouseNo = stockDetailInfo.ReceiveWareHouseNo;
+                        stockDetailInfo.ReceiveAreaNo = modelList[i].ReceiveAreaNo;
+                        stockDetailInfo.BatchNo = modelList[i].BatchNo;
+                        stockDetailInfo.ReceiveUserNo = user.UserNo;
+                        //stockDetailInfo.PostUser = user.UserNo;
+                        stockDetailInfo.PostUser = user.UserName;
+                        stockDetailInfo.StrSupPrdDate = modelList[i].StrSupPrdDate;
+                        stockDetailInfo.PassWord = user.PassWord;
+                        stockDetailInfo.FromErpWarehouse = modelList[i].FromErpWarehouse;
+                        stockDetailInfo.ToErpWarehouse = modelList[i].ToErpWarehouse;
+                        stockDetailInfo.FromBatchNo = modelList[i].FromBatchNo;
+                        stockDetailInfo.ToErpAreaNo = "";
+                        stockDetailInfo.ToBatchNo = modelList[i].ToBatchNo;
+                        stockDetailInfo.ErpId = modelList[i].ErpId;
+                        stockDetailInfo.ToStrongHoldCode = modelList[i].ToStrongHoldCode;
+                        stockDetailInfo.GUID = modelList[i].GUID;
+                        stockDetailInfo.StrongHoldCode = modelList[i].StrongHoldCode;
+                        lstDetail.Add(stockDetailInfo);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < modelList.Count; i++)
+                {
+                    if (modelList[i].lstBarCode != null && modelList[i].lstBarCode.Count > 0)
+                    {
+                        foreach (var item in modelList[i].lstBarCode)
                         {
-                            stockDetailInfo = new T_InStockDetailInfo();
-                            stockDetailInfo.Plant = modelList[i].Plant; //客户编码 ，
-                            stockDetailInfo.PlantName = modelList[i].PlantName;//客户型号，
-                            stockDetailInfo.SaleName = modelList[i].SaleName;//类型
-
-                            stockDetailInfo.VoucherType = modelList[i].VoucherType;
-                            stockDetailInfo.ErpVoucherNo = modelList[i].ErpVoucherNo;
-                            stockDetailInfo.RowNo = modelList[i].RowNo;
-                            stockDetailInfo.RowNoDel = modelList[i].RowNoDel;
-                            stockDetailInfo.MaterialNo = item.MaterialNo;
-                            stockDetailInfo.CompanyCode = modelList[i].CompanyCode;
-                            stockDetailInfo.StoreCondition = modelList[i].StoreCondition;
-                            stockDetailInfo.ScanQty = Convert.ToDecimal(item.Qty);
-                            stockDetailInfo.Unit = modelList[i].Unit;
-                            stockDetailInfo.SupPrdBatch = modelList[i].SupPrdBatch;
-                            stockDetailInfo.ReceiveWareHouseNo = modelList[i].ReceiveWareHouseNo;
-                            stockDetailInfo.WareHouseNo = stockDetailInfo.ReceiveWareHouseNo;
-                            stockDetailInfo.ReceiveAreaNo = modelList[i].ReceiveAreaNo;
-                            stockDetailInfo.BatchNo = item.BatchNo;
-                            stockDetailInfo.ReceiveUserNo = user.UserNo;
-                            //stockDetailInfo.PostUser = user.UserNo;
-                            stockDetailInfo.PostUser = user.UserName;
-                            stockDetailInfo.StrSupPrdDate = modelList[i].StrSupPrdDate;
-                            stockDetailInfo.PassWord = user.PassWord;
-                            stockDetailInfo.FromErpWarehouse = modelList[i].FromErpWarehouse;
-                            stockDetailInfo.ToErpWarehouse = modelList[i].ToErpWarehouse;
-                            stockDetailInfo.FromBatchNo = modelList[i].FromBatchNo;
-                            stockDetailInfo.ToErpAreaNo = "";
-                            stockDetailInfo.ToBatchNo = modelList[i].ToBatchNo;
-                            stockDetailInfo.ErpId = modelList[i].ErpId;
-                            stockDetailInfo.ToStrongHoldCode = modelList[i].ToStrongHoldCode;
-
-                            stockDetailInfo.GUID = modelList[i].GUID;
-                            if (item.EDate != null)
+                            stockDetailInfo = lstDetail.Find(p => p.MaterialNo == item.MaterialNo && p.BatchNo == item.BatchNo && p.RowNo == item.RowNo && p.RowNoDel == item.RowNoDel);
+                            if (stockDetailInfo == null)
                             {
-                                item.StrEDate = item.EDate.ToString("yyyy/MM/dd");
+                                stockDetailInfo = new T_InStockDetailInfo();
+                                stockDetailInfo.Plant = modelList[i].Plant; //客户编码 ，
+                                stockDetailInfo.PlantName = modelList[i].PlantName;//客户型号，
+                                stockDetailInfo.SaleName = modelList[i].SaleName;//类型
+
+                                stockDetailInfo.VoucherType = modelList[i].VoucherType;
+                                stockDetailInfo.ErpVoucherNo = modelList[i].ErpVoucherNo;
+                                stockDetailInfo.RowNo = modelList[i].RowNo;
+                                stockDetailInfo.RowNoDel = modelList[i].RowNoDel;
+                                stockDetailInfo.MaterialNo = item.MaterialNo;
+                                stockDetailInfo.CompanyCode = modelList[i].CompanyCode;
+                                stockDetailInfo.StoreCondition = modelList[i].StoreCondition;
+                                stockDetailInfo.ScanQty = Convert.ToDecimal(item.Qty);
+                                stockDetailInfo.Unit = modelList[i].Unit;
+                                stockDetailInfo.SupPrdBatch = modelList[i].SupPrdBatch;
+                                stockDetailInfo.ReceiveWareHouseNo = modelList[i].ReceiveWareHouseNo;
+                                stockDetailInfo.WareHouseNo = stockDetailInfo.ReceiveWareHouseNo;
+                                stockDetailInfo.ReceiveAreaNo = modelList[i].ReceiveAreaNo;
+                                stockDetailInfo.BatchNo = item.BatchNo;
+                                stockDetailInfo.ReceiveUserNo = user.UserNo;
+                                //stockDetailInfo.PostUser = user.UserNo;
+                                stockDetailInfo.PostUser = user.UserName;
+                                stockDetailInfo.StrSupPrdDate = modelList[i].StrSupPrdDate;
+                                stockDetailInfo.PassWord = user.PassWord;
+                                stockDetailInfo.FromErpWarehouse = modelList[i].FromErpWarehouse;
+                                stockDetailInfo.ToErpWarehouse = modelList[i].ToErpWarehouse;
+                                stockDetailInfo.FromBatchNo = modelList[i].FromBatchNo;
+                                stockDetailInfo.ToErpAreaNo = "";
+                                stockDetailInfo.ToBatchNo = modelList[i].ToBatchNo;
+                                stockDetailInfo.ErpId = modelList[i].ErpId;
+                                stockDetailInfo.ToStrongHoldCode = modelList[i].ToStrongHoldCode;
+
+                                stockDetailInfo.GUID = modelList[i].GUID;
+                                if (item.EDate != null)
+                                {
+                                    item.StrEDate = item.EDate.ToString("yyyy/MM/dd");
+                                }
+                                stockDetailInfo.StrEDate = item.StrEDate;
+                                stockDetailInfo.StrongHoldCode = modelList[i].StrongHoldCode;
+                                lstDetail.Add(stockDetailInfo);
                             }
-                            stockDetailInfo.StrEDate = item.StrEDate;
-                            stockDetailInfo.StrongHoldCode = modelList[i].StrongHoldCode;
-                            lstDetail.Add(stockDetailInfo);
-                        }
-                        else
-                        {
-                            stockDetailInfo.ScanQty = stockDetailInfo.ScanQty + Convert.ToDecimal(item.Qty);
-                            //stockDetailInfo.PostUser = user.UserNo;
-                            stockDetailInfo.PostUser = user.UserName;
-                            stockDetailInfo.GUID = modelList[i].GUID;
+                            else
+                            {
+                                stockDetailInfo.ScanQty = stockDetailInfo.ScanQty + Convert.ToDecimal(item.Qty);
+                                //stockDetailInfo.PostUser = user.UserNo;
+                                stockDetailInfo.PostUser = user.UserName;
+                                stockDetailInfo.GUID = modelList[i].GUID;
+                            }
                         }
                     }
                 }
             }
+
+            
 
 
             return JSONHelper.ObjectToJson<List<T_InStockDetailInfo>>(lstDetail); 
