@@ -33,6 +33,7 @@ namespace Web.WMS.Controllers
         }
 
         public ActionResult GetModelList(DividPage page, Tmodel model)
+       
         {
             List<Tmodel> modelList = new List<Tmodel>();
             string strError = "";

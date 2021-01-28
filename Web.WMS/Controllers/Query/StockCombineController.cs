@@ -95,7 +95,7 @@ namespace Web.WMS.Controllers.Query
             page.CurrentPageShowCounts = 1000000;
             List<T_StockInfoEX> list = new List<T_StockInfoEX>();
             string str = "";
-            queryDB.GetStockCombineInfo(model, ref page, ref list, ref str);
+            queryDB.GetStockCombineInfo(model,ref page, ref list, ref str);
             //创建Excel文件的对象
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             //添加一个sheet
