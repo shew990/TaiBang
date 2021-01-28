@@ -105,7 +105,7 @@ namespace Web.WMS.Controllers.Query
             //row1.CreateCell(0).SetCellValue("序号");
             //row1.CreateCell(1).SetCellValue("据点编号");
             row1.CreateCell(0).SetCellValue("物料号");
-            row1.CreateCell(1).SetCellValue("物料规格");
+            row1.CreateCell(1).SetCellValue("客户型号");
             row1.CreateCell(2).SetCellValue("批次");
             row1.CreateCell(3).SetCellValue("到期日期");
             row1.CreateCell(4).SetCellValue("数量");
@@ -121,7 +121,7 @@ namespace Web.WMS.Controllers.Query
                 //rowtemp.CreateCell(0).SetCellValue(list[i].XH);
                 //rowtemp.CreateCell(1).SetCellValue(list[i].StrongHoldCode);
                 rowtemp.CreateCell(0).SetCellValue(list[i].MaterialNo);
-                rowtemp.CreateCell(1).SetCellValue(list[i].Spec);
+                rowtemp.CreateCell(1).SetCellValue(list[i].storecondition);
                 rowtemp.CreateCell(2).SetCellValue(list[i].BatchNo);
                 rowtemp.CreateCell(3).SetCellValue(list[i].EDate.ToString());
                 rowtemp.CreateCell(4).SetCellValue(list[i].Qty.ToString());
