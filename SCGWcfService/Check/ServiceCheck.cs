@@ -72,11 +72,11 @@ namespace SCGWcfService
             return db.GetCheckAnalyze2(taskmo, ref dividpage, ref lsttask, ref strErrMsg);
         }
 
-        public string GetScanInfo(string barcode)
-        {
-            Check_DB db = new Check_DB();
-            return db.GetScanInfo(barcode);
-        }
+        //public string GetScanInfo(string barcode)
+        //{
+        //    Check_DB db = new Check_DB();
+        //    return db.GetScanInfo(barcode);
+        //}
 
         public bool ReCheck(string checkno, string peo, ref string ErrMsg)
         {
