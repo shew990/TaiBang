@@ -352,7 +352,8 @@ namespace Web.WMS.Controllers
 
                 Check_DB checkdb = new Check_DB();
                 string ErrorMsg = "";
-                if (!checkdb.CheckIsSvae(model.MaterialNo, model.WarehouseNo,ref ErrorMsg)) {
+                if (!checkdb.CheckIsSvae(model.MaterialNo, model.WarehouseNo, ref ErrorMsg))
+                {
                     return Json(new { state = false, ErrMsg = "待发或者待收库区有该物料不能生成盘点单！【" + ErrorMsg + "】" }, JsonRequestBehavior.AllowGet);
                 }
 

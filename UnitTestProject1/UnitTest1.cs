@@ -50,7 +50,7 @@ namespace UnitTestProject1
         public void 转换单列表()
         {
             T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
-            string aaa= tfunc.GetZhList("TraY-20120004");
+            string aaa= tfunc.GetZhList("TraY-21010004");
         }
 
         public void 转换单提交()
@@ -780,7 +780,8 @@ namespace UnitTestProject1
             //if (8 != aaa)
             //{
             //}
-
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            string aaa = tfunc.GetZhList("TraY-21010004");
 
             T_Material_Batch_Func func = new T_Material_Batch_Func();
             string aa = func.Post("45646", "4654551", "12", "222");

@@ -333,6 +333,7 @@ namespace BILWeb.Material
                 BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
                 string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"52\"}";
                 string ERPJson = TIF.GetModelListByInterface(json);
+                LogNet.LogInfo("-------------------------------------------转换单ERP返回：" + ERPJson);
                 return BILBasic.JSONUtil.JSONHelper.JsonToObject<List<U9Zh>>(ERPJson);
             }
             catch (Exception ex)

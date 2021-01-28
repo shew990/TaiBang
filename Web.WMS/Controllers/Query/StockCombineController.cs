@@ -121,7 +121,7 @@ namespace Web.WMS.Controllers.Query
                 //rowtemp.CreateCell(0).SetCellValue(list[i].XH);
                 //rowtemp.CreateCell(1).SetCellValue(list[i].StrongHoldCode);
                 rowtemp.CreateCell(0).SetCellValue(list[i].MaterialNo);
-                rowtemp.CreateCell(1).SetCellValue(list[i].storecondition);
+                rowtemp.CreateCell(1).SetCellValue(list[i].StoreCondition);
                 rowtemp.CreateCell(2).SetCellValue(list[i].BatchNo);
                 rowtemp.CreateCell(3).SetCellValue(list[i].EDate.ToString());
                 rowtemp.CreateCell(4).SetCellValue(list[i].Qty.ToString());

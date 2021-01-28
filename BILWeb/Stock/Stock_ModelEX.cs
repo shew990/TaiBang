@@ -37,8 +37,6 @@ namespace BILWeb.Stock
         [Display(Name = "批次")]
         public string productbatch { get; set; }
 
-        public string storecondition { get; set; }
-
         public bool IsCheck { get; set; }
 
         public string specialrequire { get; set; }

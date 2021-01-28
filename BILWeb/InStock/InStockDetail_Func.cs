@@ -124,7 +124,7 @@ namespace BILWeb.InStock
                         stockDetailInfo.ReceiveWareHouseNo = modelList[i].ReceiveWareHouseNo;
                         stockDetailInfo.WareHouseNo = stockDetailInfo.ReceiveWareHouseNo;
                         stockDetailInfo.ReceiveAreaNo = modelList[i].ReceiveAreaNo;
-                        stockDetailInfo.BatchNo = modelList[i].BatchNo;
+                        stockDetailInfo.BatchNo = modelList[i].FromBatchNo;
                         stockDetailInfo.ReceiveUserNo = user.UserNo;
                         //stockDetailInfo.PostUser = user.UserNo;
                         stockDetailInfo.PostUser = user.UserName;
