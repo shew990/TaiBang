@@ -1319,6 +1319,11 @@ namespace BILWeb.Stock
                 List<T_StockInfo> lstModel = new List<T_StockInfo>();
                 lstModel = tdb.GetStockByMaterialNo(MaterialNoIDIN);
 
+                T_Material_DB db = new T_Material_DB();
+                lstModel.ForEach(item => {
+                    item.StoreCondition = db.Getstorecondition(item.MaterialNo);
+                });
+
                 if (lstModel == null || lstModel.Count == 0)
                 {
                     messageModel.HeaderStatus = "E";
@@ -1423,6 +1428,11 @@ namespace BILWeb.Stock
                 List<T_StockInfo> lstModel = new List<T_StockInfo>();
                 lstModel = tdb.materialnAndBatch(barcode);
 
+                T_Material_DB db = new T_Material_DB();
+                lstModel.ForEach(item => {
+                    item.StoreCondition = db.Getstorecondition(item.MaterialNo);
+                });
+
                 if (lstModel == null || lstModel.Count == 0)
                 {
                     messageModel.HeaderStatus = "E";
@@ -1470,6 +1480,11 @@ namespace BILWeb.Stock
                 List<T_StockInfo> lstModel = new List<T_StockInfo>();
                 lstModel = tdb.GetStockByBarcode(barcode);
 
+                T_Material_DB db = new T_Material_DB();
+                lstModel.ForEach(item => {
+                    item.StoreCondition = db.Getstorecondition(item.MaterialNo);
+                });
+
                 if (lstModel == null || lstModel.Count == 0)
                 {
                     messageModel.HeaderStatus = "E";
@@ -1511,6 +1526,11 @@ namespace BILWeb.Stock
 
                 List<T_StockInfo> lstModel = new List<T_StockInfo>();
                 lstModel = tdb.GetStockByAreaNo(AreaNo);
+
+                T_Material_DB db = new T_Material_DB();
+                lstModel.ForEach(item => {
+                    item.StoreCondition = db.Getstorecondition(item.MaterialNo);
+                });
 
                 if (lstModel == null || lstModel.Count == 0)
                 {

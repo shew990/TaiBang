@@ -268,6 +268,20 @@ namespace BILWeb.Material
             }
  
         }
+        public string Getstorecondition(string materialno)
+        {
+            try
+            {
+                string strSql = string.Format(" select top 1 storecondition from t_outbarcode where materialno='{0}' and storecondition!=''", materialno);
+                return  GetScalarBySql(strSql).ToString();
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+        }
+       
 
         public int GetCount(string  strsql)
         {

@@ -576,6 +576,7 @@ namespace BILWeb.Stock
 
         public string Spec { get; set; }
         public string CusCode { get; set; }//客户
-        
+
+        public string StoreCondition { get; set; }
     }
 }
