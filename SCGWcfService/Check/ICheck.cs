@@ -42,8 +42,8 @@ namespace SCGWcfService
         [OperationContract]
         bool GetCheckAnalyze2(CheckAnalyze taskmo, ref DividPage dividpage, ref List<CheckAnalyze> lsttask, ref string strErrMsg);
 
-        [OperationContract]
-        string GetScanInfo(string barcode);
+        //[OperationContract]
+        //string GetScanInfo(string barcode);
 
         [OperationContract]
         bool ReCheck(string checkno, string peo, ref string ErrMsg);
