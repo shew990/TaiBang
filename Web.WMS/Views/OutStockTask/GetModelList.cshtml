@@ -41,8 +41,8 @@
                         @Html.EditorFor(model => model.PickUserName, new { htmlAttributes = new { @class = "form-control", @placeholder = "拣货人" } })
                     </div>*@
 
-                <input type="hidden" name="TaskType" value="4" />
-                <input type="hidden" name="PcOrPda" value="1" />
+                <input type="hidden" id="TaskType" name="TaskType" value="4" />
+                <input type="hidden" id="PcOrPda" name="PcOrPda" value="1" />
                 @*<div class="layui-inline layui-show-xs-block">
                         @Html.DropDownList("VoucherType", Commom.GetList("cbxOutStockVoucherName") as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control" }, disabled = "disabled" })
                     </div>*@
@@ -313,7 +313,7 @@
 
     //导出
     $(".daochu").click(function () {
-        location.href = "/OutStockTask/Excel?VoucherType= " + $("VoucherType").val() + "&TaskNo=" + $("#TaskNo").val() + "&MaterialNo=" + $("#MaterialNo").val() + "&ErpVoucherNo=" + $("#ErpVoucherNo").val() + "&DateFrom=" + $("#DateFrom").val() + "&DateTo=" + $("#DateTo").val() + "&Status=" + $("#Status").val() + "&SupcusCode=" + $("#SupcusCode").val() + "";
+        location.href = "/OutStockTask/Excel?VoucherType= " + $("VoucherType").val() + "&TaskNo=" + $("#TaskNo").val() + "&MaterialNo=" + $("#MaterialNo").val() + "&ErpVoucherNo=" + $("#ErpVoucherNo").val() + "&DateFrom=" + $("#DateFrom").val() + "&DateTo=" + $("#DateTo").val() + "&Status=" + $("#Status").val() + "&SupcusCode=" + $("#SupcusCode").val() + "&TaskType=" + $("#TaskType").val() + "&PcOrPda=" + $("#PcOrPda").val() + "";
     });
 
     //弹出模态框
