@@ -349,7 +349,14 @@ namespace Web.WMS.Controllers
                 string StrongHoldCode = "";
                 string StrongHoldCodeName = "";
                 TWareHouseDB.GetStrongholdcode(model.WarehouseNo, ref StrongHoldCode, ref StrongHoldCodeName);
-  
+
+                Check_DB checkdb = new Check_DB();
+                string ErrorMsg = "";
+                if (!checkdb.CheckIsSvae(model.MaterialNo, model.WarehouseNo,ref ErrorMsg)) {
+                    return Json(new { state = false, ErrMsg = "待发或者待收库区有该物料不能生成盘点单！【" + ErrorMsg + "】" }, JsonRequestBehavior.AllowGet);
+                }
+
+
                 string strErrMsg = string.Empty;
                 List<T_StockInfoEX> lsttask = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
@@ -383,7 +390,6 @@ namespace Web.WMS.Controllers
                 cm.CREATER = currentUser.UserNo;
                 cm.CHECKDESC = "明盘";
                 string ErrMsg = "";
-                Check_DB checkdb = new Check_DB();
                 if (checkdb.SaveCheck2(cm, lsttask, ref ErrMsg))
                     return Json(new { state = true }, JsonRequestBehavior.AllowGet);
                 return Json(new { state = false }, JsonRequestBehavior.AllowGet);

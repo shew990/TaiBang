@@ -2712,6 +2712,45 @@ namespace BILWeb.Query
         }
 
 
+        public bool CheckIsSvae(string Materialno, string Warehouseno, ref string ErrorMsg)
+        {
+            try
+            {
+                string sql = "";
+                if (string.IsNullOrEmpty(Materialno))
+                {
+                    sql = "select materialno from(select houseid,WAREHOUSEID, materialno from  t_stock ) a left join t_house b on a.houseid = b.id left join t_warehouse c  on a.WAREHOUSEID=c.id  where (b.housename like '%待收%' or b.housename like '%待发%') and c.warehouseno='" + Warehouseno + "'";
+                }
+                else
+                {
+                    Query_Func.ChangeQuery(ref Materialno);
+                    sql = "select materialno from(select houseid,WAREHOUSEID, materialno from  t_stock where materialno in '" + Materialno + "') a left join t_house b on a.houseid = b.id left join t_warehouse c  on a.WAREHOUSEID=c.id  where (b.housename like '%待收%' or b.housename like '%待发%') and c.warehouseno='" + Warehouseno + "'";
+                }
+                DataTable dt = dbFactory.ExecuteDataSet(CommandType.Text, sql).Tables[0];
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        ErrorMsg = ErrorMsg + dt.Rows[i]["materialno"].ToString() + ",";
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMsg = ex.ToString();
+                return false;
+            }
+           
+
+        }
+
+
+
         public void dbTest()
         {
             List<string> sqls = new List<string>();
