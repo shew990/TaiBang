@@ -292,7 +292,7 @@
         var index = layer.load(1);
         $.ajax({
             type: "GET",
-            url: "/Instock/DeleteNo?ErpVoucherno=" + $("#ErpVoucherNo").val()+"&flag=出库",
+            url: "/Instock/DeleteNo?ErpVoucherno=" + $("#ErpVoucherNo").val() + "&flag=出库",
             dataType: "json",
             async: false,
             success: function (data) {
@@ -309,7 +309,12 @@
             }
 
         });
-    })
+    });
+
+    //导出
+    $(".daochu").click(function () {
+        location.href = "/OutStockTask/Excel?VoucherType= " + $("VoucherType").val() + "&TaskNo=" + $("#TaskNo").val() + "&MaterialNo=" + $("#MaterialNo").val() + "&ErpVoucherNo=" + $("#ErpVoucherNo").val() + "&DateFrom=" + $("#DateFrom").val() + "&DateTo=" + $("#DateTo").val() + "&Status=" + $("#Status").val() + "&SupcusCode=" + $("#SupcusCode").val() + "";
+    });
 
     //弹出模态框
     function printModel(index) {
