@@ -104,9 +104,9 @@ namespace Web.WMS.Controllers.Query
             NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
             //row1.CreateCell(0).SetCellValue("序号");
             //row1.CreateCell(1).SetCellValue("据点编号");
-            row1.CreateCell(0).SetCellValue("产品编号");
-            row1.CreateCell(1).SetCellValue("产品名称");
-            row1.CreateCell(2).SetCellValue("厂内批次");
+            row1.CreateCell(0).SetCellValue("物料号");
+            row1.CreateCell(1).SetCellValue("物料规格");
+            row1.CreateCell(2).SetCellValue("批次");
             row1.CreateCell(3).SetCellValue("到期日期");
             row1.CreateCell(4).SetCellValue("数量");
             //row1.CreateCell(9).SetCellValue("检验状态");
@@ -121,7 +121,7 @@ namespace Web.WMS.Controllers.Query
                 //rowtemp.CreateCell(0).SetCellValue(list[i].XH);
                 //rowtemp.CreateCell(1).SetCellValue(list[i].StrongHoldCode);
                 rowtemp.CreateCell(0).SetCellValue(list[i].MaterialNo);
-                rowtemp.CreateCell(1).SetCellValue(list[i].MaterialDesc);
+                rowtemp.CreateCell(1).SetCellValue(list[i].Spec);
                 rowtemp.CreateCell(2).SetCellValue(list[i].BatchNo);
                 rowtemp.CreateCell(3).SetCellValue(list[i].EDate.ToString());
                 rowtemp.CreateCell(4).SetCellValue(list[i].Qty.ToString());
@@ -135,15 +135,7 @@ namespace Web.WMS.Controllers.Query
             MemoryStream memoryStream = new MemoryStream();
             book.Write(memoryStream);
             memoryStream.Seek(0, SeekOrigin.Begin);
-
             return File(memoryStream, "application/vnd.ms-excel", fileName);
-
-            // 写入到客户端 
-            //System.IO.MemoryStream ms = new System.IO.MemoryStream();
-            //book.Write(ms);
-            //ms.Seek(0, SeekOrigin.Begin);
-            //return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
-
         }
     }
 }
