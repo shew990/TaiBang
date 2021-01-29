@@ -804,7 +804,7 @@ namespace BILWeb.Query
             TMM.MaterialNo = (dr["MaterialNo"] ?? "").ToString();
             TMM.EAN = (dr["EAN"] ?? "").ToString();
             TMM.MaterialDesc = (dr["MaterialDesc"] ?? "").ToString();
-            TMM.StoreCondition = (dr["storecondition"] ?? "").ToString();
+            TMM.StoreCondition = (dr["StoreCondition"] ?? "").ToString();
             TMM.WarehouseNo = (dr["WarehouseNAME"] ?? "").ToString();
             TMM.HouseNo = (dr["HouseNAME"] ?? "").ToString();
             TMM.AreaNo = (dr["AreaNAME"] ?? "").ToString();
