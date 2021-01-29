@@ -542,7 +542,8 @@ namespace BILWeb.Material
                             sqls.Add(sql);
                         }
                         //新条码
-                        T_StockInfo t_Stock = list[i].barcodeList[0];
+                        T_StockInfo t_Stock = DeepCopyByXml<T_StockInfo>(list[i].barcodeList[0]);
+               
                         t_Stock.MaterialNo = list[i].MaterialNo;
                         t_Stock.BatchNo = list[i].BatchNo;
                         t_Stock.MaterialDesc = list[i].MaterialDesc;
