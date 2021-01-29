@@ -256,12 +256,12 @@ namespace Web.WMS.Controllers
         public ActionResult CheckMingAnalyze(string CHECKNO)
         {
             ViewData["checkno"] = CHECKNO;
-            
+
             return View();
         }
 
         // 获取盘点库存信息
-        public JsonResult GetCheckStock(T_StockInfoEX model)
+        public JsonResult GetCheckStock(DividPage page, T_StockInfoEX model)
         {
             try
             {
@@ -273,7 +273,7 @@ namespace Web.WMS.Controllers
                 string StrongHoldCode = "";
                 string StrongHoldCodeName = "";
                 TWareHouseDB.GetStrongholdcode(model.WarehouseNo, ref StrongHoldCode, ref StrongHoldCodeName);
-          
+
                 string strErrMsg = string.Empty;
                 List<T_StockInfoEX> wms_stock = new List<T_StockInfoEX>();
                 Query_DB db = new Query_DB();
@@ -301,9 +301,7 @@ namespace Web.WMS.Controllers
                                 }
                             }
                         }
-
                     }
-
                     if (erp_stock != null && erp_stock.Count > 0)
                     {
                         //没匹配的u9数据
@@ -323,19 +321,14 @@ namespace Web.WMS.Controllers
                     }
                     return Json(new { Result = 1, Data = wms_stock }, JsonRequestBehavior.AllowGet);
                 }
-                else
-                {
-                    return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
-                }
-                //BaseModel<List<Tmodel>> returnmodel = new BaseModel<List<Tmodel>>() { Result = 1, ResultValue = strError, Data = modelList, PageData = new R_Pagedata() { totalCount = page.RecordCounts, pageSize = page.CurrentPageShowCounts, currentPage = page.CurrentPageNumber, totalPages = page.PagesCount } };
-
+                return Json(new { Result = 0, ResultValue = strErrMsg }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 return Json(new { Result = 0, ResultValue = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
         //保存盘点单
         public JsonResult SaveCheck(T_StockInfoEX model)
         {
@@ -365,13 +358,14 @@ namespace Web.WMS.Controllers
                 {
                     return Json(new { Result = 0, ErrMsg = strErrMsg }, JsonRequestBehavior.AllowGet);
                 }
-                if (model.Check=="0")
+                if (model.Check == "0")
                 {
                     //检验WMS库存和U9是否一致
                     T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
                     List<U9Stock> erp_stock = FUNC.GetStockInfo(model.WarehouseNo, StrongHoldCode, model.MaterialNo);
                     bool isOk = true;
-                    lsttask.ForEach(itemWMS => {
+                    lsttask.ForEach(itemWMS =>
+                    {
                         if (erp_stock.FindAll(itemerp => { return itemerp.MaterialNo == itemWMS.MaterialNo && itemerp.BatchNo == itemWMS.BatchNo && itemerp.Qty == itemWMS.Qty; }).Count != 1)
                         {
                             isOk = false;
@@ -384,7 +378,7 @@ namespace Web.WMS.Controllers
                 }
 
 
-                
+
                 Check_Model cm = new Check_Model();
                 //cm.REMARKS = strremark + txt_remarkD.Text + txt_remark.Text;
                 cm.CHECKSTATUS = "新建";
@@ -457,7 +451,7 @@ namespace Web.WMS.Controllers
                 return Json(new { Result = 0, ResultValue = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
         //提交U9盘点信息
         public JsonResult SaveCheckToU9(string CheckNo)
         {
@@ -505,12 +499,15 @@ namespace Web.WMS.Controllers
                 }
                 T_Material_Batch_Func FUNC = new T_Material_Batch_Func();
                 string strMsg = "";
-                if (FUNC.SaveCheckToU9(Checklist, CheckNo,  currentUser.UserNo, ref strMsg)) {
+                if (FUNC.SaveCheckToU9(Checklist, CheckNo, currentUser.UserNo, ref strMsg))
+                {
                     return Json(new { state = true }, JsonRequestBehavior.AllowGet);
-                } else {
+                }
+                else
+                {
                     return Json(new { state = false, ErrorMsg = strMsg }, JsonRequestBehavior.AllowGet);
                 }
-                    
+
             }
             catch (Exception ex)
             {

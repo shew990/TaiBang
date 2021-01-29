@@ -53,6 +53,7 @@
 <table class="layui-hide" id="checkTable" lay-filter="init"></table>
 
 <script>
+
     layui.use(['laypage', 'layer', 'table'], function () {
         table = layui.table,
             laypage = layui.laypage,
@@ -64,14 +65,14 @@
                 elem: '#checkTable'
                 , height: 520
                 , url: '/Check/GetCheckStock'
-                , method: 'get'
+                , method: 'post'
                 , contentType: 'application/json'
                 , where: {
-                   
+                    model: {
                         MaterialNo: $("#MaterialNo").val().trim(),
                         WarehouseNo: $("#WarehouseNo").val().trim(),
                         Check: $("#Check").val()
-                    
+                    }
                 }
                 , request: {
                     pageName: 'CurrentPageNumber'
@@ -104,18 +105,13 @@
                         //, { field: 'ScaMaterialNo', title: '扫描物料', width: 120 }
                         //, { field: 'ScaBatchNo', title: '扫描番号', width: 120 }
                         //, { field: 'ScanQty', title: '扫描数量', width: 120 }
-
                         //, { field: 'StrongHoldCode', title: '据点编号', width: 120, fixed: 'left' }
-
                         //, { field: 'MaterialName', title: '产品名称', width: 120 }
-
                         //, { field: '', title: '到期时间', width: 200 }
-
                         //, { field: '', title: '序列号数', width: 80 }
                         //, { field: '', title: '检验状态', width: 80 }
                         //, { field: 'AreaNo', title: '库位', width: 120 }
                         //, { field: 'HouseNo', title: '库区', width: 120 }
-
                     ]
                 ]
             });
@@ -138,6 +134,8 @@
                     layer.msg('第' + obj.curr + '页', { offset: 'b' });
             }
         });
+
+        $("#")
 
         //查询
         $('#query').click(function () {
