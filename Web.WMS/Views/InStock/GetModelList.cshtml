@@ -17,7 +17,7 @@
                 @Html.EditorFor(model => model.ErpVoucherNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "ERP单号" } })
             </div>
             <div class="layui-inline layui-show-xs-block">
-                @Html.DropDownList("VoucherType", Commom.GetList("cbxInStockVoucherName") as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control " }})
+                @Html.DropDownList("VoucherType", Commom.GetList("cbxInStockVoucherName") as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control " } })
             </div>
             <div class="layui-inline layui-show-xs-block">
                 @Html.DropDownList("Status", Commom.GetList("cbxInstockVoucherStatus") as IEnumerable<SelectListItem>, new { htmlAttributes = new { @class = "form-control" } })
@@ -31,10 +31,18 @@
             <div class="layui-inline layui-show-xs-block">
                 <button type="submit" class="btn btn-primary" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
             </div>
- 
+
             @Html.HiddenFor(model => model.VoucherType)
         </form>
-        @{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}
+        <div class="layui-row">
+            <div class="layui-col-xs1">
+                @{Html.RenderPartial("~/Views/Shared/_ViewButtom.cshtml");}
+            </div>
+            <div class="layui-col-xs2">
+                <a href="###" id="outExcel" class="btn btn-primary" style="margin:10px;">导出Excel</a>
+            </div>
+        </div>
+
         <table class="layui-table layui-form">
             <thead>
                 <tr>
@@ -70,7 +78,7 @@
                                 <td>@t_InStockInfo.StrVoucherType</td>
                                 <td>@t_InStockInfo.StrStatus</td>
                                 @*<td>@t_OutStockInfo.DepartmentName</td>*@
-                            <td>@t_InStockInfo.FromErpWareHouse</td>
+                                <td>@t_InStockInfo.FromErpWareHouse</td>
                                 <td>@t_InStockInfo.CreateTime</td>
                                 <td>@t_InStockInfo.SupplierName</td>
                                 <td>
@@ -223,7 +231,7 @@
         var index = layer.load(1);
         $.ajax({
             type: "GET",
-            url: "DeleteNo?ErpVoucherno=" + $("#ErpVoucherNo").val()+"&flag=入库",
+            url: "DeleteNo?ErpVoucherno=" + $("#ErpVoucherNo").val() + "&flag=入库",
             dataType: "json",
             async: false,
             success: function (data) {
@@ -240,8 +248,19 @@
             }
 
         });
+    });
+
+    //导出excel
+    $("#outExcel").click(function () {
+        let model = {
+            SupplierNo: $("#SupplierNo").val(),
+            ErpVoucherNo: $("#ErpVoucherNo").val(),
+            VoucherType: $("#VoucherType").val(),
+            Status: $("#Status").val(),
+            DateFrom: $("#DateFrom").val(),
+            DateTo: $("#DateTo").val()
+        };
+        location.href = "/InStock/OutExcel?jsonString=" + JSON.stringify(model) + "";
     })
-
-
 
 </script>

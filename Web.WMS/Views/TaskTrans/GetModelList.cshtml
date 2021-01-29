@@ -49,7 +49,17 @@
                 </button>
             </div>
         </div>
-        <table class="layui-table layui-form" id="transTable"></table>
+        <table class="layui-table layui-form" id="transTable" lay-filter="init"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <form asp-controller="StockDetailController" asp-action="StockDetail" id="formOutExcel">
+                    <a href="###" class="layui-btn layui-btn-sm" lay-event="outExcel">
+                        <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                        导出EXCEL
+                    </a>
+                </form>
+            </div>
+        </script>
     </div>
 </div>
 
@@ -84,8 +94,8 @@
                         FROMWAREHOUSENO: $("#FROMWAREHOUSENO").val().trim(),
                         FROMHOUSENO: $("#FROMHOUSENO").val().trim(),
                         FROMAREANO: $("#FROMAREANO").val().trim(),
-                        TASKTYPE: $("#TASKTYPE").val().trim()=="全部"?0:$("#TASKTYPE").val().trim(),
-                        VOUCHERTYPE:$("#VOUCHERTYPE").val().trim()=="全部"?0:$("#VOUCHERTYPE").val().trim(),
+                        TASKTYPE: $("#TASKTYPE").val().trim() == "全部" ? 0 : $("#TASKTYPE").val().trim(),
+                        VOUCHERTYPE: $("#VOUCHERTYPE").val().trim() == "全部" ? 0 : $("#VOUCHERTYPE").val().trim(),
                     }
                 }
                 , request: {
@@ -94,7 +104,7 @@
                 }
                 , title: '出入库明细'
                 , page: true
-                , toolbar: 'false'
+                , toolbar: '#toolbarDemo'
                 , cols: [
                     [
                         { type: 'numbers', title: '序号', width: 60, fixed: 'left' }
@@ -141,6 +151,26 @@
             , jump: function (obj, first) {
                 if (!first)
                     layer.msg('第' + obj.curr + '页', { offset: 'b' });
+            }
+        });
+
+        //监听头工具事件
+        table.on('toolbar(init)', function (obj) {
+            if (obj.event === 'outExcel') {
+                let model = {
+                    MATERIALNO: $("#MATERIALNO").val().trim(),
+                    ERPVOUCHERNO: $("#ERPVOUCHERNO").val().trim(),
+                    begintime: $("#begintime").val().trim(),
+                    BATCHNO: $("#BATCHNO").val().trim(),
+                    SERIALNO: $("#SERIALNO").val().trim(),
+                    StrongHoldCode: $("#StrongHoldCode").val().trim(),
+                    FROMWAREHOUSENO: $("#FROMWAREHOUSENO").val().trim(),
+                    FROMHOUSENO: $("#FROMHOUSENO").val().trim(),
+                    FROMAREANO: $("#FROMAREANO").val().trim(),
+                    TASKTYPE: $("#TASKTYPE").val().trim() == "全部" ? 0 : $("#TASKTYPE").val().trim(),
+                    VOUCHERTYPE: $("#VOUCHERTYPE").val().trim() == "全部" ? 0 : $("#VOUCHERTYPE").val().trim(),
+                }
+                location.href = "/TaskTrans/Excel?jsonString=" + JSON.stringify(model) + "";
             }
         });
 
