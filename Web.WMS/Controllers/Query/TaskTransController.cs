@@ -85,12 +85,14 @@ namespace Web.WMS.Controllers.Query
             return Json(returnmodel, JsonRequestBehavior.AllowGet);
         }
 
-        public FileResult Excel(TaskTrans_Model model)
+        public FileResult Excel(string jsonString)
         {
+            TaskTrans_Model model = JsonConvert.DeserializeObject<TaskTrans_Model>(jsonString);
+
             DividPage page = new DividPage();
             page.CurrentPageShowCounts = 1000000;
             List<TaskTrans_Model> list = new List<TaskTrans_Model>();
-            string str = "";
+            string str = string.Empty;
             queryDB.GetTaskTransInfo(model, ref page, ref list, ref str);
             //创建Excel文件的对象
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
@@ -153,12 +155,7 @@ namespace Web.WMS.Controllers.Query
             book.Write(ms);
             ms.Seek(0, SeekOrigin.Begin);
             return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
-
         }
-
-
-
-
 
     }
 }

@@ -13,7 +13,7 @@ using WMS.Web.Filter;
 namespace Web.WMS.Controllers.Query
 {
     [RoleActionFilter(Message = "Query/StockDetail")]
-    public class StockDetailController:Controller
+    public class StockDetailController : Controller
     {
         Query_DB queryDB = new Query_DB();
 
@@ -44,9 +44,9 @@ namespace Web.WMS.Controllers.Query
                 json = streamreader.ReadToEnd();
             }
             PageRequest<T_StockInfoEX> pageRequest = JsonConvert.DeserializeObject<PageRequest<T_StockInfoEX>>(json);
-            
+
             List<T_StockInfoEX> modelList = new List<T_StockInfoEX>();
-            DividPage page = new DividPage { CurrentPageRecordCounts = pageRequest.CurrentPageRecordCounts, CurrentPageShowCounts= pageRequest.CurrentPageShowCounts,PagesCount= pageRequest.PagesCount,RecordCounts= pageRequest.RecordCounts }; 
+            DividPage page = new DividPage { CurrentPageRecordCounts = pageRequest.CurrentPageRecordCounts, CurrentPageShowCounts = pageRequest.CurrentPageShowCounts, PagesCount = pageRequest.PagesCount, RecordCounts = pageRequest.RecordCounts };
             T_StockInfoEX model = pageRequest.model;
             string strError = "";
             queryDB.GetStockDetInfo(model, ref page, ref modelList, ref strError);
@@ -54,15 +54,22 @@ namespace Web.WMS.Controllers.Query
             return Json(returnmodel, JsonRequestBehavior.AllowGet);
         }
 
-        public FileResult Excel(T_StockInfoEX model)
+        /// <summary>
+        /// 导出excel
+        /// </summary>
+        /// <param name="jsonString"></param>
+        /// <returns></returns>
+        public FileResult Excel(string jsonString)
         {
+            T_StockInfoEX model = JsonConvert.DeserializeObject<T_StockInfoEX>(jsonString);
+
             string strErrMsg = string.Empty;
             List<T_StockInfoEX> lstExport = new List<T_StockInfoEX>();
             string strError = "";
             DividPage page = new DividPage
             {
                 CurrentPageShowCounts = 1000000
-        };
+            };
             queryDB.GetStockDetInfo(model, ref page, ref lstExport, ref strError);
             //创建Excel文件的对象
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
@@ -90,7 +97,7 @@ namespace Web.WMS.Controllers.Query
                 rowtemp.CreateCell(0).SetCellValue(lstExport[i].StrongHoldCode == null ? "" : lstExport[i].StrongHoldCode.ToString());
                 rowtemp.CreateCell(1).SetCellValue(lstExport[i].MaterialNo == null ? "" : lstExport[i].MaterialNo.ToString());
                 rowtemp.CreateCell(2).SetCellValue(lstExport[i].MaterialDesc == null ? "" : lstExport[i].MaterialDesc.ToString());
-                rowtemp.CreateCell(3).SetCellValue(lstExport[i].EAN==null?"":lstExport[i].EAN.ToString());
+                rowtemp.CreateCell(3).SetCellValue(lstExport[i].EAN == null ? "" : lstExport[i].EAN.ToString());
                 rowtemp.CreateCell(4).SetCellValue(lstExport[i].EDate == null ? "" : lstExport[i].EDate.ToString());
                 rowtemp.CreateCell(5).SetCellValue(lstExport[i].SerialNo == null ? "" : lstExport[i].SerialNo.ToString());
                 rowtemp.CreateCell(6).SetCellValue(lstExport[i].BatchNo == null ? "" : lstExport[i].BatchNo.ToString());

@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "库存明细";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
-        var printIP = System.Web.HttpContext.Current.Session["printIP"];
+    var printIP = System.Web.HttpContext.Current.Session["printIP"];
 }
 <style type="text/css">
     .layui-container {
@@ -51,6 +51,16 @@
             </div>
         </div>
         <table class="layui-hide" id="detailTable" lay-filter="init"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <form asp-controller="StockDetailController" asp-action="StockDetail" id="formOutExcel">
+                    <a href="###" class="layui-btn layui-btn-sm" lay-event="outExcel">
+                        <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                        导出EXCEL
+                    </a>
+                </form>
+            </div>
+        </script>
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="stamppallet">打印托盘</a>
             <a class="layui-btn layui-btn-xs" lay-event="stamp">打印外箱</a>
@@ -104,10 +114,10 @@
                 }
                 , title: '库位'
                 , page: true //开启分页
-                  , totalRow: true //开启合计行
-                , toolbar: 'false' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
-                 , limits: [100, 200, 500, 1000]
-                   , limit: 100 //每页默认显示的数量
+                , totalRow: true //开启合计行
+                , toolbar: '#toolbarDemo'
+                , limits: [100, 200, 500, 1000]
+                , limit: 100 //每页默认显示的数量
                 //, totalRow: true //开启合计行
                 , cols: [[ //表头
                     { type: 'numbers', title: '序号', width: 60, fixed: 'left' }//序号列
@@ -130,6 +140,24 @@
                 ]]
             });
         }
+
+        //监听头工具事件
+        table.on('toolbar(init)', function (obj) {
+            if (obj.event === 'outExcel') {
+                let model = {
+                    MaterialNo: $("#MaterialNo").val().trim(),
+                    MaterialDesc: $("#MaterialDesc").val().trim(),
+                    SerialNo: $("#SerialNo").val().trim(),
+                    StrongHoldCode: $("#StrongHoldCode").val().trim(),
+                    WarehouseNo: $("#WarehouseNo").val().trim(),
+                    HouseNo: $("#HouseNo").val().trim(),
+                    AreaNo: $("#AreaNo").val().trim(),
+                    BatchNo: $("#BatchNo").val().trim(),
+                    PalletNo: $("#PalletNo").val().trim()
+                }
+                location.href = "/StockDetail/Excel?jsonString=" + JSON.stringify(model) + "";
+            }
+        });
 
         //监听行工具事件
         table.on('tool(init)', function (obj) {
@@ -154,7 +182,7 @@
             , skin: '#1E9FFF' //自定义选中色值
             , jump: function (obj, first) {
                 if (!first)
-                    layer.msg('第' + obj.curr + '页', { offset: 'b' } );
+                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
             }
         });
 
