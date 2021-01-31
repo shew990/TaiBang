@@ -2733,10 +2733,11 @@ namespace BILWeb.Query
                 }
                 else
                 {
-                    for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        ErrorMsg = ErrorMsg + dt.Rows[i]["materialno"].ToString() + ",";
-                    }
+                    ErrorMsg = dt.Rows[0]["materialno"].ToString();
+                    //for (int i = 0; i < dt.Rows.Count; i++)
+                    //{
+
+                    //}
                     return false;
                 }
             }
