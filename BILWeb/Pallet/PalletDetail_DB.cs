@@ -438,34 +438,34 @@ namespace BILWeb.Pallet
 
         private string GetTaskTransSql_update(UserModel user, T_StockInfo model,decimal qty)
         {
-            int id = base.GetTableIDBySqlServer("T_TASKTRANSDETAIL");
-            string strSql = "insert into t_tasktrans( Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
+            int id = base.GetTableIDBySqlServer("t_tasktrans");
+            string strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
             "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
             "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,barcode,status,materialdoc,houseprop,ean)" +
-            " values ('" + model.SerialNo + "',0,0,0," +
+            " values ("+ id + ",'" + model.SerialNo + "',0,0,0," +
             " '" + model.MaterialNo + "','" + model.MaterialDesc + "','','','" + (model.Qty-qty) + "','200'," +
             " 0 ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
             "'" + model.Unit + "','" + model.UnitName + "','" + model.PartNo + "','" + model.MaterialNoID + "','" + model.ErpVoucherNo + "'," +
             "  '','" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
             "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.TaskNo + "'," +
-            " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + model.Barcode + "','" + model.Status + "','','','" + model.EAN + "') ";
+            " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + model.Barcode + "','" + model.Status + "','','','" + model.EAN + "');SET IDENTITY_INSERT t_tasktrans off ";
 
             return strSql;
         }
 
         private string GetTaskTransSql_update1(UserModel user, T_StockInfo model, decimal qty,string NewSerialNo, string NewBaecode)
         {
-            int id = base.GetTableIDBySqlServer("T_TASKTRANSDETAIL");
-            string strSql = "insert into t_tasktrans( Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
+            int id = base.GetTableIDBySqlServer("t_tasktrans");
+            string strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
             "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
             "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,barcode,status,materialdoc,houseprop,ean)" +
-            " values ('" + NewSerialNo + "',0,0,0," +
+            " values (" + id + ",'" + NewSerialNo + "',0,0,0," +
             " '" + model.MaterialNo + "','" + model.MaterialDesc + "','','','" + qty + "','207'," +
             " 0 ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
             "'" + model.Unit + "','" + model.UnitName + "','" + model.PartNo + "','" + model.MaterialNoID + "','" + model.ErpVoucherNo + "'," +
             "  '','" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
             "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.SerialNo + "'," +
-            " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + NewBaecode + "','" + model.Status + "','','','" + model.EAN + "') ";
+            " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + NewBaecode + "','" + model.Status + "','','','" + model.EAN + "');SET IDENTITY_INSERT t_tasktrans off ";
 
             return strSql;
         }

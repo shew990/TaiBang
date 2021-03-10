@@ -248,22 +248,22 @@ namespace BILWeb.OutStockTask
             return strSql;
         }
 
-        private string GetTaskTransSql(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel)
-        {
-            int id = base.GetTableIDBySqlServer("T_TASKTRANSDETAIL");
-            string strSql = "insert into t_tasktrans( Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
-            "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
-            "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,barcode,status,materialdoc,houseprop,ean)" +
-            " values ('" + model.SerialNo + "',(select id from t_Warehouse a  where  Warehouseno = '" + model.ToErpWarehouse + "'),(select  HOUSEID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "')," +
-            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty + "','2'," +
-            " (select vouchertype from t_task where id = '" + detailModel.HeaderID + "') ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
-            "'" + detailModel.Unit + "','" + detailModel.UnitName + "','" + detailModel.PartNo + "','" + detailModel.MaterialNoID + "','" + detailModel.ErpVoucherNo + "'," +
-            "  '" + detailModel.VoucherNo + "','" + detailModel.StrongHoldCode + "','" + detailModel.StrongHoldName + "','" + detailModel.CompanyCode + "'," +
-            "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + detailModel.TaskNo + "'," +
-            " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + model.Barcode + "','" + model.Status + "','" + detailModel.MaterialDoc + "','" + detailModel.HouseProp + "','" + model.EAN + "') ";
+        //private string GetTaskTransSql(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel)
+        //{
+        //    int id = base.GetTableIDBySqlServer("T_TASKTRANSDETAIL");
+        //    string strSql = "insert into t_tasktrans( Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
+        //    "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
+        //    "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,barcode,status,materialdoc,houseprop,ean)" +
+        //    " values ('" + model.SerialNo + "',(select id from t_Warehouse a  where  Warehouseno = '" + model.ToErpWarehouse + "'),(select  HOUSEID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "')," +
+        //    " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + detailModel.SupCusCode + "','" + detailModel.SupCusName + "','" + model.Qty + "','2'," +
+        //    " (select vouchertype from t_task where id = '" + detailModel.HeaderID + "') ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
+        //    "'" + detailModel.Unit + "','" + detailModel.UnitName + "','" + detailModel.PartNo + "','" + detailModel.MaterialNoID + "','" + detailModel.ErpVoucherNo + "'," +
+        //    "  '" + detailModel.VoucherNo + "','" + detailModel.StrongHoldCode + "','" + detailModel.StrongHoldName + "','" + detailModel.CompanyCode + "'," +
+        //    "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + detailModel.TaskNo + "'," +
+        //    " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + model.Barcode + "','" + model.Status + "','" + detailModel.MaterialDoc + "','" + detailModel.HouseProp + "','" + model.EAN + "') ";
 
-            return strSql;
-        }
+        //    return strSql;
+        //}
 
         private List<string> GetTaskTransSqlList(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel, int Tasktype)
         {
@@ -1003,7 +1003,8 @@ namespace BILWeb.OutStockTask
                 };
                 lstSql.AddRange(GetTaskTransSqlList(user, itemModel, detailModel, 212));
             }
-            lstSql.Add("update t_outbarcode set dimension='' where dimension = '" + ErpVoucherNo + "'");
+            LogNet.LogInfo("----------------------直发公司SQL："+"update t_outbarcode set dimension = '"+ ErpVoucherNoIn + "' where dimension = '" + ErpVoucherNo + "'");
+            lstSql.Add("update t_outbarcode set dimension='"+ ErpVoucherNoIn + "' where dimension = '" + ErpVoucherNo + "'");
 
             return base.SaveModelListBySqlToDB(lstSql, ref strError);
         }

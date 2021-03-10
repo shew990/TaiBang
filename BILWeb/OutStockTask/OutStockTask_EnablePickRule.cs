@@ -211,8 +211,9 @@ namespace BILWeb.OutStockTask
                                    MaterialNoID = m.Key.t1
                                };
 
-
-            return newModelList.ToList();
+            List<T_OutStockTaskDetailsInfo> newModelListret = newModelList.ToList();
+            newModelListret.ForEach(item => { item.StrongHoldCode = modelList[0].StrongHoldCode; });
+            return newModelListret;
 
         }
 

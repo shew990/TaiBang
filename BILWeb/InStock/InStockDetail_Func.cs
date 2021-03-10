@@ -100,7 +100,7 @@ namespace BILWeb.InStock
 
             }
 
-            if (modelList[0].VoucherType == 50)
+            if (modelList[0].VoucherType == 50|| modelList[0].VoucherType == 30)
             {
                 for (int i = 0; i < modelList.Count; i++)
                 {
