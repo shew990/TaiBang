@@ -1786,37 +1786,37 @@ namespace BILWeb.Query
 
         #region 代理商
         //插入出入库记录表 tasktype 13:收 14：发  EXCHNAME:标识符号
-        public T_OutBarCodeInfo InsetTaskTrans(string UserName, string barcode, string tasktype, string EXCHNAME, ref string StrMsg)
-        {
-            try
-            {
-                T_OutBarCodeInfo model = GetBarCode(barcode);
-                if (model == null)
-                {
-                    StrMsg = "未能获取条码信息！";
-                    return null;
-                }
-                else
-                {
-                    List<string> lstSql = new List<string>();
-                    string strSql = "insert into t_tasktrans(Serialno, Materialno, Materialdesc,Qty, Tasktype, Creater, Createtime,Unit,materialnoid,Strongholdcode,Strongholdname,Companycode,Edate,Batchno,Barcode,FromWarehouseNo,ToWarehouseName,EXCHNAME)" +
-                            " values ('" + model.SerialNo + "'Serialno,'" + model.MaterialNo + "','" + model.MaterialDesc + "'," + model.Qty + ", '" + tasktype + "','" + model.SerialNo +
-                            "' ,'" + UserName + "', GETDATE(),'" + model.Unit + "'," + model.MaterialNoID + ",'" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "','" + model.EDate + "','" + model.BatchNo + "','" + model.BarCode + "','','','" + EXCHNAME + "')";
-                    lstSql.Add(strSql);
-                    int count = dbFactory.ExecuteNonQueryList(lstSql, ref StrMsg);
-                    if (count <= 0)
-                        return null;
-                    else
-                        return model;
-                }
-            }
-            catch (Exception ex)
-            {
-                StrMsg = ex.ToString();
-                return null;
-            }
+        //public T_OutBarCodeInfo InsetTaskTrans(string UserName, string barcode, string tasktype, string EXCHNAME, ref string StrMsg)
+        //{
+        //    try
+        //    {
+        //        T_OutBarCodeInfo model = GetBarCode(barcode);
+        //        if (model == null)
+        //        {
+        //            StrMsg = "未能获取条码信息！";
+        //            return null;
+        //        }
+        //        else
+        //        {
+        //            List<string> lstSql = new List<string>();
+        //            string strSql = "insert into t_tasktrans(Serialno, Materialno, Materialdesc,Qty, Tasktype, Creater, Createtime,Unit,materialnoid,Strongholdcode,Strongholdname,Companycode,Edate,Batchno,Barcode,FromWarehouseNo,ToWarehouseName,EXCHNAME)" +
+        //                    " values ('" + model.SerialNo + "'Serialno,'" + model.MaterialNo + "','" + model.MaterialDesc + "'," + model.Qty + ", '" + tasktype + "','" + model.SerialNo +
+        //                    "' ,'" + UserName + "', GETDATE(),'" + model.Unit + "'," + model.MaterialNoID + ",'" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "','" + model.EDate + "','" + model.BatchNo + "','" + model.BarCode + "','','','" + EXCHNAME + "')";
+        //            lstSql.Add(strSql);
+        //            int count = dbFactory.ExecuteNonQueryList(lstSql, ref StrMsg);
+        //            if (count <= 0)
+        //                return null;
+        //            else
+        //                return model;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        StrMsg = ex.ToString();
+        //        return null;
+        //    }
 
-        }
+        //}
 
         //检查条码是否在本次扫描里面
         public bool CheckBarCode(string barcode, string EXCHNAME)

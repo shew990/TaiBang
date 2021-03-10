@@ -101,10 +101,11 @@ namespace BILWeb.Stock
                     lstSql.Add(strSql1);
                 }
 
+                int id = base.GetTableIDBySqlServer("t_tasktrans");
                 strSql2 = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno,towarehouseid,Tohouseid, Toareaid, Materialno, Materialdesc, Supcuscode, " +
                                 "Supcusname, Qty, Tasktype, Creater, Createtime,TaskdetailsId, Unit, Unitname,materialnoid," +
                                 "barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,SUPPRDBATCH,EDATE,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,STATUS,houseprop,ean,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo,IsPalletOrBox)" +
-                            " values ('"+taskTransID+"','" + item.SerialNo + "',(select id from t_Warehouse a  where a.Warehouseno = '" + item.ToErpWarehouse + "'),(select a.HOUSEID from v_Area a where a.warehouseno = '" + item.ToErpWarehouse + "' and a.AREANO = '" + item.ToErpAreaNo + "')," +
+                            " values ('"+id+"','" + item.SerialNo + "',(select id from t_Warehouse a  where a.Warehouseno = '" + item.ToErpWarehouse + "'),(select a.HOUSEID from v_Area a where a.warehouseno = '" + item.ToErpWarehouse + "' and a.AREANO = '" + item.ToErpAreaNo + "')," +
                             "(select a.ID from v_Area a where a.warehouseno = '" + item.ToErpWarehouse + "' and a.AREANO = '" + item.ToErpAreaNo + "'),'" + item.MaterialNo + "','" + item.MaterialDesc + "','" + item.SupCode + "','" + item.SupName + "'," +
                             " '" + item.Qty + "','3' ,'" + user.UserName + "',getdate(),'" + item.ID + "'," +
                             "'" + item.Unit + "','" + item.UnitName + "','" + item.MaterialNoID + "','" + item.Barcode + "'," +
@@ -312,15 +313,17 @@ namespace BILWeb.Stock
                 {
                     listSql.Add("update t_stock set Areaid =" + areaInfo.ID + ",houseid=" + areaInfo.HouseID + " where houseid =" + model.HouseID + " and Areaid =" + model.AreaID + "");
 
-                    strSql = "insert into t_tasktrans( Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
+                    int taskTransID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+
+                    strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id,Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
                                  "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno," +
                                  "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,Batchno,Barcode, fromwarehouseid,fromhouseid, fromareaid)" +
-                                 " values ('" + model.SerialNo + "','" + areaInfo.WarehouseID + "','" + areaInfo.HouseID + "','" + areaInfo.ID + "'," +
+                                 " values ("+ taskTransID + "，'" + model.SerialNo + "','" + areaInfo.WarehouseID + "','" + areaInfo.HouseID + "','" + areaInfo.ID + "'," +
                                  " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + model.SupCode + "','" + model.SupName + "','" + model.AmountQty + "','3'," +
                                  " 3 ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
                                  "'" + model.Unit + "','" + model.UnitName + "','" + model.PartNo + "','" + model.MaterialNoID + "','" + model.ErpVoucherNo + "'," +
                                  "'" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
-                                 "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.BatchNo + "','" + model.Barcode + "'," + model.WareHouseID + "," + model.HouseID + "," + model.AreaID + ") ";
+                                 "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.BatchNo + "','" + model.Barcode + "'," + model.WareHouseID + "," + model.HouseID + "," + model.AreaID + ") ;SET IDENTITY_INSERT t_tasktrans off";
 
                     listSql.Add(strSql);
                 }
@@ -336,15 +339,17 @@ namespace BILWeb.Stock
 
                     listSql = saveSplitBarCode(user, model, areaInfo, out NewSerialNo);
 
-                    strSql = "insert into t_tasktrans( Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
+                    int taskTransID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+
+                    strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id,Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
                                    "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno," +
                                    "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,Batchno,Barcode, fromwarehouseid,fromhouseid, fromareaid)" +
-                                   " values ('" + model.SerialNo + "','" + areaInfo.WarehouseID + "','" + areaInfo.HouseID + "','" + areaInfo.ID + "'," +
+                                   " values (" + taskTransID + "，'" + model.SerialNo + "','" + areaInfo.WarehouseID + "','" + areaInfo.HouseID + "','" + areaInfo.ID + "'," +
                                    " '" + model.MaterialNo + "','" + model.MaterialDesc + "','" + model.SupCode + "','" + model.SupName + "','" + model.AmountQty + "','3'," +
                                    " 3 ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
                                    "'" + model.Unit + "','" + model.UnitName + "','" + model.PartNo + "','" + model.MaterialNoID + "','" + model.ErpVoucherNo + "'," +
                                    "'" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
-                                   "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.BatchNo + "','" + model.Barcode + "'," + model.WareHouseID + "," + model.HouseID + "," + model.AreaID + ") ";
+                                   "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.BatchNo + "','" + model.Barcode + "'," + model.WareHouseID + "," + model.HouseID + "," + model.AreaID + ");SET IDENTITY_INSERT t_tasktrans off ";
 
                     listSql.Add(strSql);
                     for (int i = 0; i < listSql.Count; i++)
@@ -1450,15 +1455,17 @@ namespace BILWeb.Stock
 
         private string GetTaskTransSql(UserModel user, T_StockInfo model)
         {
-            string strSql = "insert into t_tasktrans( Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
+            int taskTransID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+
+            string strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id,Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
             "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
             "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,status,batchno,barcode)" +
-            " values ('" + model.SerialNo + "','" + model.WareHouseID + "','" + model.HouseID + "','" + model.AreaID + "'," +
+            " values (" + taskTransID + "，'" + model.SerialNo + "','" + model.WareHouseID + "','" + model.HouseID + "','" + model.AreaID + "'," +
             " '" + model.MaterialNo + "','" + model.MaterialDesc + "','','','" + model.Qty + "','12'," +
             " (select vouchertype from t_outstock where id = '') ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
             "'" + model.Unit + "','" + model.UnitName + "','','" + model.MaterialNoID + "',''," +
             "  '','" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
-            "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'','" + model.Status + "','" + model.FromBatchNo + "','" + model.Barcode + "') ";
+            "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'','" + model.Status + "','" + model.FromBatchNo + "','" + model.Barcode + "');SET IDENTITY_INSERT t_tasktrans off ";
 
             return strSql;
         }
@@ -1723,7 +1730,9 @@ namespace BILWeb.Stock
                 //        " a.AREATYPE,a.MATERIALCHANGEID,a.Expr1,a.Isretention,a.SPEC,b.ean,a.HOUSEPROP,a.ISAMOUNT,a.BARCODETYPE from v_stock a left join T_OUTBARCODE b on a.BARCODE = b.fserialno where a.BARCODETYPE = 5 "+
                 //        " ) as c";
 
-                strSql = "select * from v_stock where materialnoid in (" + materialID + ") ";
+                //strSql = "select * from v_stock where materialnoid in (" + materialID + ") ";
+                strSql = "select * from v_stock where materialno in (select MATERIALNO from t_material where id in (" + materialID + ")) and strongholdcode = '"+ baseModelList[0].StrongHoldCode + "'";
+                
 
                 stockList = base.GetModelListBySql(strSql);
 

@@ -233,41 +233,61 @@ namespace BILWeb.Material
                 modelList.ForEach(t => t.PostUser = user.UserNo);
                 modelList.ForEach(t => t.GUID = Guid);
 
-                modelList.ForEach(item=> {
+                modelList.ForEach(item =>
+                {
                     item.PostUser = user.UserNo;
                     item.GUID = Guid;
 
-                    if (item.Type == 0 && item.barcodeList.Count > 0)
-                    {
-                        item.BatchNo = item.barcodeList[0].BatchNo;
-                    }
-                    if (item.Type == 1 && item.barcodeList.Count == item.detail.Count)
-                    {
-                        //扫描的条码给明细行赋值
-                        for (int i = 0; i < item.detail.Count; i++)
+                    List<U9ZhDetail> detail = new List<U9ZhDetail>();
+                    //检验明细里面有没有重复的条码
+                    item.detail.ForEach(itemdetail=> {
+                        foreach (var barcode in itemdetail.barcodeList)
                         {
-                            for (int j = 0; j < item.barcodeList.Count; j++)
-                            {
-                                if (item.detail[i].MaterialNo == item.barcodeList[j].MaterialNo)
-                                {
-                                    item.detail[i].BatchNo = item.barcodeList[j].BatchNo;
-                                }
-                            }
+                            U9ZhDetail itemdetailLimk = T_Material_Batch_DB.DeepCopyByXml<U9ZhDetail>(itemdetail);
+                            itemdetailLimk.Qty = barcode.Qty;
+                            itemdetailLimk.BatchNo = barcode.BatchNo;
+                            detail.Add(itemdetailLimk);
                         }
-                    }
-
+                    });
+                    item.detail = detail;
                 });
+
+
+                //modelList.ForEach(item=> {
+                //    item.PostUser = user.UserNo;
+                //    item.GUID = Guid;
+
+                //    if (item.Type == 0 && item.barcodeList.Count > 0)
+                //    {
+                //        item.BatchNo = item.barcodeList[0].BatchNo;
+                //    }
+                //    if (item.Type == 1 && item.barcodeList.Count == item.detail.Count)
+                //    {
+                //        //扫描的条码给明细行赋值
+                //        for (int i = 0; i < item.detail.Count; i++)
+                //        {
+                //            for (int j = 0; j < item.barcodeList.Count; j++)
+                //            {
+                //                if (item.detail[i].MaterialNo == item.barcodeList[j].MaterialNo)
+                //                {
+                //                    item.detail[i].BatchNo = item.barcodeList[j].BatchNo;
+                //                }
+                //            }
+                //        }
+                //    }
+
+                //});
 
 
                 string ERPJson = BILBasic.JSONUtil.JSONHelper.ObjectToJson<List<U9Zh>>(modelList);
 
                 BILBasic.Interface.T_Interface_Func tfunc = new BILBasic.Interface.T_Interface_Func();
-                LogNet.LogInfo("ERPJsonBefore:" + ERPJson);
+                LogNet.LogInfo("---------------------------ERPJsonBefore:" + ERPJson);
                 string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
 
                 messageModel = BILBasic.JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<T_OutBarCodeInfo>>>(interfaceJson);
 
-                LogNet.LogInfo("ERPJsonAfter:" + messageModel);
+                LogNet.LogInfo("--------------------------ERPJsonAfter:" + messageModel);
 
                 //过账失败直接返回
                 if (messageModel.HeaderStatus == "E" && !string.IsNullOrEmpty(messageModel.Message))
@@ -278,7 +298,7 @@ namespace BILWeb.Material
                 {
                     modelList.ForEach(t => t.MaterialDoc = messageModel.MaterialDoc);
                 }
-
+                 
                 LogNet.LogInfo("ymh：ERPtoWMS-" + BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel));
                 string SerialNos = "";
                 if (db.PostZh(user,modelList,ref strError,ref SerialNos) == false)

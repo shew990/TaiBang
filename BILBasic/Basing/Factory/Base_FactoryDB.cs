@@ -629,7 +629,6 @@ namespace BILBasic.Basing.Factory
             {
                 string strSql = "SELECT IDENT_CURRENT('" + strSeq + "')";
 
-
                 int ID = dbFactory.ExecuteScalar(CommandType.Text, strSql).ToInt32();
                 // ID = ID + 1;
                 strSql = "DBCC   CHECKIDENT   ('" + strSeq + "',   RESEED, " + (ID + 1) + ")";

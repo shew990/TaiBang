@@ -308,7 +308,7 @@ namespace BILWeb.InStockTask
             List<T_InStockTaskInfo> modelList = base.GetModelListADF(user, model);
             if (modelList != null && modelList.Count > 0)
             {
-                modelList = modelList.Take(20).ToList();
+                modelList = modelList.Take(40).ToList();
             }
 
             return modelList;
