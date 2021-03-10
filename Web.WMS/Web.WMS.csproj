@@ -271,6 +271,7 @@
     <Compile Include="Controllers\ProductOrders\ProductOrdersController.cs" />
     <Compile Include="Controllers\QualityDetail\QualityDetailController.cs" />
     <Compile Include="Controllers\Print\PrintInstockController.cs" />
+    <Compile Include="Controllers\SeePalletTable\SeePalletTableController.cs" />
     <Compile Include="Controllers\SeePallet\SeePalletController.cs" />
     <Compile Include="Controllers\Setting\SettingController.cs" />
     <Compile Include="Controllers\Station\StationController.cs" />
@@ -1381,6 +1382,7 @@
     <Content Include="Views\Check\CheckMingAnalyze.cshtml" />
     <Content Include="Views\Setting\Index.cshtml" />
     <Content Include="Views\Setting\Form.cshtml" />
+    <Content Include="Views\SeePalletTable\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
