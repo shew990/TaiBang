@@ -65,6 +65,8 @@
     <Compile Include="remark\RemarkService.cs" />
     <Compile Include="seepalletinfo\SeePalletInfo.cs" />
     <Compile Include="seepalletinfo\SeePalletInfoService.cs" />
+    <Compile Include="setting\Setting.cs" />
+    <Compile Include="setting\SettingService.cs" />
     <Compile Include="station\Station.cs" />
     <Compile Include="station\StationService.cs" />
     <Compile Include="station\View_Station.cs" />
