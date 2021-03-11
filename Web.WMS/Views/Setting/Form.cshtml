@@ -1,8 +1,50 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Form";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
+<div style="padding:10px;">
+    <form class="layui-form" action="">
+        <input type="hidden" id="setting" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">看板地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="PalletUrl" id="PalletUrl" required lay-verify="required" placeholder="请输入看板地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+                <button type="reset" id="cancle" class="layui-btn layui-btn-primary">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
 
-<h2>Form</h2>
+<script type="text/javascript">
+    layui.use(['form'], function () {
+        var form = layui.form;
+
+        //提交
+        form.on('submit(formDemo)', function (data) {
+            let setting = data.field;
+            if ($("#setting").val() != "")
+                setting.Id = JSON.parse($("#setting").val()).Id;
+            $.post("/Setting/Submit", setting, function (res) {
+                layer.alert(res.Msg);
+                if (!res.Success)
+                    return false;
+                $("#cancle").click();
+                parent.$("#refresh").click();
+            });
+            return false;
+        });
+
+        //取消
+        $("#cancle").click(function () {
+            let index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+    });
+</script>
+
 

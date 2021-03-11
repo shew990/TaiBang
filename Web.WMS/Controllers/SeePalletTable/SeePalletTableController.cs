@@ -8,7 +8,10 @@ namespace Web.WMS.Controllers.SeePalletTable
 {
     public class SeePalletTableController : Controller
     {
-        // GET: SeePalletTable
+        /// <summary>
+        /// 跳转主视图
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View();

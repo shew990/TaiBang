@@ -2,7 +2,7 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
-
+<a id="refresh" href="###" class="hidden">刷新</a>
 <table class="layui-hide" id="settingTable" lay-filter="init"></table>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
@@ -48,7 +48,7 @@
                 , page: true
                 , cols: [
                     [
-                        { type: 'PalletUrl', title: '看板地址', width: 200, fixed: 'left' }
+                        { field: 'PalletUrl', title: '看板地址', width: 200, }
                         , { field: 'Creater', title: '创建人', width: 120, }
                         , { field: 'CreateTimeString', title: '创建时间', width: 150, }
                         , { field: 'Updater', title: '修改人', width: 120, }
@@ -83,16 +83,7 @@
                     success: function (layero, index) {
                         var body = layer.getChildFrame('body', index);
                         //初始化表单数据的值
-                        let keyArray = Object.keys(data);
-                        let valueArray = Object.values(data);
-                        $.each(body.find(".layui-input"), function (index, item) {
-                            for (let i = 0; i < keyArray.length; i++) {
-                                if ($(item).attr("name") == keyArray[i]) {
-                                    $(item).val(valueArray[i]);
-                                    break;
-                                }
-                            }
-                        });
+                        body.find("#PalletUrl").val(data.PalletUrl);
                         body.find("#setting").val(JSON.stringify(data));
                     }
                 });
@@ -121,6 +112,11 @@
                 if (!first)
                     layer.msg('第' + obj.curr + '页', { offset: 'b' });
             }
+        });
+
+        //刷新
+        $("#refresh").click(function () {
+            table.reload('settingTable', {});
         });
     });
 </script>

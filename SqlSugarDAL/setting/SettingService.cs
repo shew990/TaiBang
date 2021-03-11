@@ -62,9 +62,10 @@ namespace SqlSugarDAL.setting
                 }
                 else
                 {
-                    setting.Updater = userNo;
-                    setting.UpdateTime = DateTime.Now;
-                    Update(setting);//修改
+                    T_Setting objSetting = GetSugarQueryable(x => x.Id == setting.Id).First();
+                    objSetting.Updater = userNo;
+                    objSetting.UpdateTime = DateTime.Now;
+                    Update(objSetting);//修改
                 }
                 successResult.Msg = "保存成功!";
                 successResult.Success = true;
