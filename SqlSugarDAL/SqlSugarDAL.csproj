@@ -76,6 +76,8 @@
     <Compile Include="view_checkrecord\View_CheckRecordService.cs" />
     <Compile Include="view_product\View_Product.cs" />
     <Compile Include="view_product\View_ProductService.cs" />
+    <Compile Include="wareHouse\T_WAREHOUSE.cs" />
+    <Compile Include="wareHouse\WareHouseService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

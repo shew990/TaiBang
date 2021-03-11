@@ -1,8 +1,119 @@
-﻿
+﻿@using SqlSugarDAL.wareHouse
+@model List<T_WAREHOUSE>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
+<div class="box">
+    <div class="layui-card-body layui-table-body layui-table-main">
+        <div class="layui-card-body">
+            <div class="layui-inline layui-show-xs-block">
+                <select name="HouseNo" id="WAREHOUSENO" lay-verify="required" lay-search>
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.WAREHOUSENO">@item.WAREHOUSENO</option>
+                    }
+                </select>
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <select name="OrderType" id="OrderType" lay-verify="required" lay-search>
+                    <option value="0">出货单看板</option>
+                    <option value="1">形态转换看板</option>
+                    <option value="2">测试1</option>
+                    <option value="3">测试2</option>
+                </select>
+            </div>
+            <div class="layui-inline layui-show-xs-block">
+                <button id="Query" class="btn btn-primary">查询</button>
+            </div>
+        </div>
+        <table class="layui-hide" id="seePalletTable" lay-filter="init"></table>
+    </div>
+</div>
 
-<h2>Index</h2>
+<script type="text/javascript">
+
+    layui.use(['laypage', 'layer', 'table'], function () {
+        table = layui.table
+            , laypage = layui.laypage
+            , layer = layui.layer
+
+        tableInit();
+
+        //表格初始化
+        function tableInit() {
+            let orderType="@ViewBag.OrderType";
+            table.render({
+                elem: '#seePalletTable'
+                , height: 620
+                , url: '/SeePalletTable/List'
+                , method: 'post'
+                , contentType: 'application/json'
+                , where: {
+                    WAREHOUSENO: $("#WAREHOUSENO").val(),
+                    OrderType: $("#OrderType").val()
+                }
+                , toolbar: "#toolbarDemo"
+                , response: {
+                    statusCode: 1
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.Result,
+                        "msg": res.ResultValue,
+                        "count": res.PageData.totalCount,
+                        "data": res.Data
+                    };
+                }
+                , title: '看板报表'
+                , page: true
+                , cols: [
+                    [
+                        //出库单+形态转换看板
+                        { field: '', title: '单号', width: 200, hide: (orderType != "0" && orderType != "1") }
+                        , { field: '', title: '日期', width: 120, hide: (orderType != "0" && orderType != "1") }
+                        , { field: '', title: '客户', width: 150, hide: (orderType != "0" && orderType != "1") }
+
+                        //出库单看板
+                        , { field: '', title: '订单发货数量', width: 120, hide: orderType != "0" }
+                        , { field: '', title: '已备货数量', width: 150, hide: orderType != "0" }
+                        , { field: '', title: '备货人', width: 150, hide: orderType != "0" }
+                        , { field: '', title: '跟单员', width: 150, hide: orderType != "0" }
+                        , { field: '', title: '发货方式', width: 150, hide: orderType != "0" }
+
+                        //形态转换看板
+                        , { field: '', title: '完成状态', width: 150, hide: orderType != "1" }
+                        , { field: '', title: '转换类型', width: 150, hide: orderType != "1" }
+                        , { field: '', title: '跟单员', width: 150, hide: orderType != "1" }
+
+                         //出库单+形态转换看板
+                        , { field: '', title: '加急标识', width: 150, hide: (orderType != "0" && orderType != "1") }
+                    ]
+                ]
+            });
+        }
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo'
+            , count: 100
+            , skin: '#1E9FFF'
+            , jump: function (obj, first) {
+                if (!first)
+                    layer.msg('第' + obj.curr + '页', { offset: 'b' });
+            }
+        });
+
+        //查询
+        $('#Query').click(function () {
+            tableInit();
+        });
+
+        //定时器,固定时间刷新表格
+        setInterval(function () {
+            table.reload('seePalletTable', {});
+        }, @ViewBag.refreshTime);
+
+    });
+</script>
 
