@@ -54,6 +54,7 @@
     <Compile Include="checkrecord\CheckRecord.cs" />
     <Compile Include="checkrecord\CheckRecordService.cs" />
     <Compile Include="DBHelper\DbContext.cs" />
+    <Compile Include="KanBan.cs" />
     <Compile Include="line\Line.cs" />
     <Compile Include="line\LineService.cs" />
     <Compile Include="material\Material.cs" />

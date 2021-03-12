@@ -1,4 +1,7 @@
-﻿using SqlSugarDAL.wareHouse;
+﻿using BILBasic.Interface;
+using BILBasic.JSONUtil;
+using SqlSugarDAL;
+using SqlSugarDAL.wareHouse;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -29,9 +32,13 @@ namespace Web.WMS.Controllers.SeePalletTable
         /// 表格数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult List(int limit, int page,string WAREHOUSENO,string OrderType)
+        public ActionResult List(int limit, int page, string WAREHOUSENO, string OrderType)
         {
-            return Json("", JsonRequestBehavior.AllowGet);
+            T_Interface_Func TIF = new T_Interface_Func();
+            string json = "{\"wareHouseNo\":\"" + WAREHOUSENO + "\",\"VoucherType\":\"52\"}";
+            string ERPJson = TIF.GetModelListByInterface(json);
+            var result = JSONHelper.JsonToObject<List<Kanban>>(ERPJson);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }
