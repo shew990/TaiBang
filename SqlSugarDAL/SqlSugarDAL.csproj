@@ -54,6 +54,7 @@
     <Compile Include="checkrecord\CheckRecord.cs" />
     <Compile Include="checkrecord\CheckRecordService.cs" />
     <Compile Include="DBHelper\DbContext.cs" />
+    <Compile Include="KanBan.cs" />
     <Compile Include="line\Line.cs" />
     <Compile Include="line\LineService.cs" />
     <Compile Include="material\Material.cs" />
@@ -65,6 +66,8 @@
     <Compile Include="remark\RemarkService.cs" />
     <Compile Include="seepalletinfo\SeePalletInfo.cs" />
     <Compile Include="seepalletinfo\SeePalletInfoService.cs" />
+    <Compile Include="setting\Setting.cs" />
+    <Compile Include="setting\SettingService.cs" />
     <Compile Include="station\Station.cs" />
     <Compile Include="station\StationService.cs" />
     <Compile Include="station\View_Station.cs" />
@@ -74,6 +77,8 @@
     <Compile Include="view_checkrecord\View_CheckRecordService.cs" />
     <Compile Include="view_product\View_Product.cs" />
     <Compile Include="view_product\View_ProductService.cs" />
+    <Compile Include="wareHouse\T_WAREHOUSE.cs" />
+    <Compile Include="wareHouse\WareHouseService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
