@@ -24,10 +24,38 @@
             </div>
             <div class="layui-inline layui-show-xs-block">
                 <select name="OrderType" id="OrderType" lay-verify="required" lay-search>
-                    <option value="0">出货单看板</option>
-                    <option value="1">形态转换看板</option>
-                    <option value="2">测试1</option>
-                    <option value="3">测试2</option>
+                    @if (ViewBag.orderType == "0")
+                    {
+                        <option value="0" selected="selected">出货单看板</option>
+                    }
+                    else
+                    {
+                        <option value="0">出货单看板</option>
+                    }
+                    @if (ViewBag.orderType == "1")
+                    {
+                        <option value="1" selected="selected">形态转换看板</option>
+                    }
+                    else
+                    {
+                        <option value="1">形态转换看板</option>
+                    }
+                    @if (ViewBag.orderType == "2")
+                    {
+                        <option value="2" selected="selected">测试1</option>
+                    }
+                    else
+                    {
+                        <option value="2">测试1</option>
+                    }
+                    @if (ViewBag.orderType == "3")
+                    {
+                        <option value="3" selected="selected">测试2</option>
+                    }
+                    else
+                    {
+                        <option value="3">测试2</option>
+                    }
                 </select>
             </div>
             <div class="layui-inline layui-show-xs-block">
@@ -49,7 +77,10 @@
 
         //表格初始化
         function tableInit() {
-            let orderType="@ViewBag.OrderType";
+            let orderType = "@ViewBag.OrderType";
+            let is0And1 = orderType != "0" && orderType != "1";
+            let is0 = orderType != "0";
+            let is1= orderType != "1";
             table.render({
                 elem: '#seePalletTable'
                 , height: 620
@@ -77,23 +108,24 @@
                 , cols: [
                     [
                         //出库单+形态转换看板
-                        { field: 'DocNo', title: '单号', width: 200, hide: (orderType != "0" && orderType != "1") }
-                        , { field: 'BusinessDate', title: '日期', width: 120, hide: (orderType != "0" && orderType != "1") }
-                        , { field: 'Customer_Code', title: '客户', width: 150, hide: (orderType != "0" && orderType != "1") }
+                        { field: 'DocNo', title: '单号', width: 200, hide: is0And1 }
+                        , { field: 'BusinessDate', title: '日期', width: 120, hide: is0And1 }
+                        , { field: 'Customer_Code', title: '客户', width: 150, hide: is0And1 }
 
                         //出库单看板
-                        , { field: 'Qty', title: '订单发货数量', width: 120, hide: orderType != "0" }
-                        , { field: '', title: '已备货数量', width: 150, hide: orderType != "0" }
-                        , { field: '', title: '备货人', width: 150, hide: orderType != "0" }
-                        , { field: 'TransportModeName', title: '发货方式', width: 150, hide: orderType != "0" }
+                        , { field: 'Qty', title: '订单发货数量', width: 120, hide: is0 }
+                        , { field: 'SHELVEQTY', title: '已备货数量', width: 150, hide: is0 }
+                        , { field: 'CREATER', title: '备货人', width: 150, hide: is0 }
+                        , { field: 'TransportModeName', title: '发货方式', width: 150, hide: is0 }
+                        , { field: 'PreStocker', title: '预备货员', width: 150, hide: is0 }
 
                         //形态转换看板
-                        , { field: 'Status', title: '完成状态', width: 150, hide: orderType != "1" }
-                        , { field: 'TransferType', title: '转换类型', width: 150, hide: orderType != "1" }
+                        , { field: 'Status', title: '完成状态', width: 150, hide: is1 }
+                        , { field: 'TransferType', title: '转换类型', width: 150, is1 }
 
                          //出库单+形态转换看板
-                        , { field: 'BussinessMan', title: '跟单员', width: 150, hide: orderType != "0" }
-                        , { field: 'EmergencyFlag', title: '加急标识', width: 150, hide: (orderType != "0" && orderType != "1") }
+                        , { field: 'BussinessMan', title: '跟单员', width: 150, hide: is0And1 }
+                        , { field: 'EmergencyFlag', title: '加急标识', width: 150, hide: is0And1 }
                     ]
                 ]
             });
@@ -116,9 +148,9 @@
         });
 
         //定时器,固定时间刷新表格
-        @*setInterval(function () {
+        setInterval(function () {
             table.reload('seePalletTable', {});
-        }, @ViewBag.refreshTime);*@
+        }, @ViewBag.refreshTime);
 
     });
 </script>

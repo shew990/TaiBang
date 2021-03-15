@@ -25,5 +25,6 @@ namespace SqlSugarDAL.station
             var station = GetSugarQueryable(x => x.IpAddress == ipAddress && x.IsDel == 0).First();
             return station;
         }
+
     }
 }
