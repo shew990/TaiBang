@@ -32,13 +32,45 @@ namespace Web.WMS.Controllers.SeePalletTable
         /// 表格数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult List(int limit, int page, string WAREHOUSENO, string OrderType)
+        public ActionResult List(int limit, int page, string houseId, string OrderType)
         {
+            List<Kanban> kanbans = new List<Kanban>();
             T_Interface_Func TIF = new T_Interface_Func();
-            string json = "{\"wareHouseNo\":\"" + WAREHOUSENO + "\",\"VoucherType\":\"52\"}";
+            string json = "";
+            if (OrderType == "0")//发货看板
+            {
+                json = "{\"data_no\":\"" + houseId + "\",\"VoucherType\":\"6000\"}";
+            }
+            else if (OrderType == "1")//形态转换看板
+            {
+                json = "{\"data_no\":\"" + houseId + "\",\"VoucherType\":\"6001\"}";
+            }
+            else if (OrderType == "2")
+            {
+
+            }
+            else
+            {
+
+            }
             string ERPJson = TIF.GetModelListByInterface(json);
-            var result = JSONHelper.JsonToObject<List<Kanban>>(ERPJson);
-            return Json(result, JsonRequestBehavior.AllowGet);
+            kanbans = JSONHelper.JsonToObject<List<Kanban>>(ERPJson);
+            var jsonReturn = new
+            {
+                Result = 1,
+                ResultValue = (kanbans == null || kanbans.Count() == 0) ? "没有符合条件的数据" : "",
+                Data = kanbans.Skip(limit * (page - 1)).Take(limit).ToList(),
+                PageData = new
+                {
+                    totalCount = kanbans.Count(),
+                    pageSize = limit,
+                    currentPage = page,
+                    totalPages = kanbans.Count() % limit > 0
+                    ? (Math.Floor(Convert.ToDouble(kanbans.Count() / limit)) + 1)
+                    : (kanbans.Count() / limit)
+                }
+            };
+            return Json(jsonReturn, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -11,7 +11,14 @@
                 <select name="HouseNo" id="WAREHOUSENO" lay-verify="required" lay-search>
                     @foreach (var item in Model)
                     {
-                        <option value="@item.WAREHOUSENO">@item.WAREHOUSENO</option>
+                        if (ViewBag.houseNo == item.WAREHOUSENO)
+                        {
+                            <option value="@item.ID" selected="selected">@item.WAREHOUSENO</option>
+                        }
+                        else
+                        {
+                            <option value="@item.ID">@item.WAREHOUSENO</option>
+                        }
                     }
                 </select>
             </div>
@@ -50,7 +57,7 @@
                 , method: 'post'
                 , contentType: 'application/json'
                 , where: {
-                    WAREHOUSENO: $("#WAREHOUSENO").val(),
+                    houseId: $("#WAREHOUSENO").val(),
                     OrderType: $("#OrderType").val()
                 }
                 , toolbar: "#toolbarDemo"
@@ -70,24 +77,23 @@
                 , cols: [
                     [
                         //出库单+形态转换看板
-                        { field: '', title: '单号', width: 200, hide: (orderType != "0" && orderType != "1") }
-                        , { field: '', title: '日期', width: 120, hide: (orderType != "0" && orderType != "1") }
-                        , { field: '', title: '客户', width: 150, hide: (orderType != "0" && orderType != "1") }
+                        { field: 'DocNo', title: '单号', width: 200, hide: (orderType != "0" && orderType != "1") }
+                        , { field: 'BusinessDate', title: '日期', width: 120, hide: (orderType != "0" && orderType != "1") }
+                        , { field: 'Customer_Code', title: '客户', width: 150, hide: (orderType != "0" && orderType != "1") }
 
                         //出库单看板
-                        , { field: '', title: '订单发货数量', width: 120, hide: orderType != "0" }
+                        , { field: 'Qty', title: '订单发货数量', width: 120, hide: orderType != "0" }
                         , { field: '', title: '已备货数量', width: 150, hide: orderType != "0" }
                         , { field: '', title: '备货人', width: 150, hide: orderType != "0" }
-                        , { field: '', title: '跟单员', width: 150, hide: orderType != "0" }
-                        , { field: '', title: '发货方式', width: 150, hide: orderType != "0" }
+                        , { field: 'TransportModeName', title: '发货方式', width: 150, hide: orderType != "0" }
 
                         //形态转换看板
-                        , { field: '', title: '完成状态', width: 150, hide: orderType != "1" }
-                        , { field: '', title: '转换类型', width: 150, hide: orderType != "1" }
-                        , { field: '', title: '跟单员', width: 150, hide: orderType != "1" }
+                        , { field: 'Status', title: '完成状态', width: 150, hide: orderType != "1" }
+                        , { field: 'TransferType', title: '转换类型', width: 150, hide: orderType != "1" }
 
                          //出库单+形态转换看板
-                        , { field: '', title: '加急标识', width: 150, hide: (orderType != "0" && orderType != "1") }
+                        , { field: 'BussinessMan', title: '跟单员', width: 150, hide: orderType != "0" }
+                        , { field: 'EmergencyFlag', title: '加急标识', width: 150, hide: (orderType != "0" && orderType != "1") }
                     ]
                 ]
             });
@@ -110,9 +116,9 @@
         });
 
         //定时器,固定时间刷新表格
-        setInterval(function () {
+        @*setInterval(function () {
             table.reload('seePalletTable', {});
-        }, @ViewBag.refreshTime);
+        }, @ViewBag.refreshTime);*@
 
     });
 </script>
