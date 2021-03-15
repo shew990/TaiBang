@@ -13,11 +13,11 @@
                     {
                         if (ViewBag.houseNo == item.WAREHOUSENO)
                         {
-                            <option value="@item.ID" selected="selected">@item.WAREHOUSENO</option>
+                            <option value="@item.WAREHOUSENO" selected="selected">@item.WAREHOUSENO</option>
                         }
                         else
                         {
-                            <option value="@item.ID">@item.WAREHOUSENO</option>
+                            <option value="@item.WAREHOUSENO">@item.WAREHOUSENO</option>
                         }
                     }
                 </select>
@@ -73,12 +73,11 @@
             , laypage = layui.laypage
             , layer = layui.layer
 
-        tableInit();
-
         //表格初始化
         function tableInit() {
-            let orderType = "@ViewBag.OrderType";
-            let is0And1 = orderType != "0" && orderType != "1";
+            let houseNo= "@ViewBag.houseNo"== "" ? $("#WAREHOUSENO").val() : "@ViewBag.houseNo";
+            let orderType = "@ViewBag.OrderType" == "" ? $("#OrderType").val():"@ViewBag.OrderType";
+            let is0And1 = (orderType != "0" && orderType != "1");
             let is0 = orderType != "0";
             let is1= orderType != "1";
             table.render({
@@ -88,7 +87,7 @@
                 , method: 'post'
                 , contentType: 'application/json'
                 , where: {
-                    houseId: $("#WAREHOUSENO").val(),
+                    houseNo: houseNo,
                     OrderType: $("#OrderType").val()
                 }
                 , toolbar: "#toolbarDemo"
@@ -148,9 +147,9 @@
         });
 
         //定时器,固定时间刷新表格
-        setInterval(function () {
+        @*setInterval(function () {
             table.reload('seePalletTable', {});
-        }, @ViewBag.refreshTime);
+        }, @ViewBag.refreshTime);*@
 
     });
 </script>
