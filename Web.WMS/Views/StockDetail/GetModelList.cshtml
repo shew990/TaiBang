@@ -116,16 +116,19 @@
                 , page: true //开启分页
                 , totalRow: true //开启合计行
                 , toolbar: '#toolbarDemo'
-                , limits: [100, 200, 500, 1000]
-                , limit: 100 //每页默认显示的数量
+                , limits: [30,100, 200, 500, 1000]
+                , limit: 30 //每页默认显示的数量
                 //, totalRow: true //开启合计行
                 , cols: [[ //表头
                     { type: 'numbers', title: '序号', width: 60, fixed: 'left' }//序号列
                     , { field: 'SerialNo', title: '序列号', width: 120, fixed: 'left' }
                     , { field: 'Barcode', title: '条码', width: 300 }
                     , { field: 'MaterialNo', title: '物料号', width: 120, sort: true }
-                    , { field: 'MaterialDesc', title: '物料名称', width: 200 }
+                    //, { field: 'MaterialDesc', title: '物料名称', width: 200 }
                     , { field: 'BatchNo', title: '番号', width: 120, sort: true }
+                     , { field: 'StoreCondition', title: '合同型号', width: 120, sort: true }
+                      , { field: 'Spec', title: '规格', width: 120, sort: true }
+                       , { field: 'CusCode', title: '客户编码', width: 120, sort: true }
                     , { field: 'StrongHoldCode', title: '据点', width: 100 }
                     , { field: 'Unit', title: '单位', width: 80, totalRowText: '合计汇总:' }
                     , { field: 'Qty', title: '数量', width: 80, totalRow: true }
