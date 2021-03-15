@@ -515,8 +515,8 @@ namespace BILWeb.OutBarCode
         public string dimension { get; set; }
         public string erpwarehousename { get; set; }
         public string protectway { get; set; }
+        public string spec { get; set; }
         
-
     }
 }
 

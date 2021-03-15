@@ -454,78 +454,101 @@ namespace BILWeb.InStock
                     return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
                 }
 
-                //验证条码正确性
-                if (outBarCodeFunc.GetSerialNoByBarCode(BarCode, ref SerialNo, ref BarCodeType, ref strError) == false)
+                //调拨单单独处理
+                if (BarCode.Substring(0,2)== "DC")
                 {
-                    model.HeaderStatus = "E";
-                    model.Message = strError;
+                    T_OutBarcode_DB _db = new T_OutBarcode_DB();
+                    modelList = _db.GetOutBarCodeByDimension(BarCode);
+                    if (modelList==null|| modelList.Count==0)
+                    {
+                        model.HeaderStatus = "E";
+                        model.Message = "获取调拨单条码为空";
+                        return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                    }
+                    else
+                    {
+                        model.HeaderStatus = "S";
+                        model.ModelJson = modelList;
+                        return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                    }
+                }
+                else
+                {
+
+                    //验证条码正确性
+                    if (outBarCodeFunc.GetSerialNoByBarCode(BarCode, ref SerialNo, ref BarCodeType, ref strError) == false)
+                    {
+                        model.HeaderStatus = "E";
+                        model.Message = strError;
+                        return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                    }
+
+                    //验证外箱条码或者托盘条码是否已经收货
+                    if (outBarCodeFunc.CheckBaeCodeIsReciveForTB(userModel, SerialNo, ref strError, VoucherType) == false)
+                    {
+                        model.HeaderStatus = "E";
+                        model.Message = strError;
+                        return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                    }
+
+                    if (GetPalletDetailBySerialNo(ref modelList, SerialNo, ref strError, BarCodeType) == false)
+                    {
+                        model.HeaderStatus = "E";
+                        model.Message = strError;
+                        return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                    }
+
+
+
+                    ///如果物料，批次在DJ存在已经判定的质量状态。必须先移走
+                    //T_Stock_DB _db = new T_Stock_DB();
+                    //string strStatus = _db.GetMaterialBatchStatus(modelList[0].MaterialNo, modelList[0].BatchNo, userModel.ReceiveAreaID.ToString());
+                    //if (strStatus == "3")
+                    //{
+                    //    model.HeaderStatus = "E";
+                    //    model.ModelJson = null;
+                    //    model.Message = "物料：" + modelList[0].MaterialNo + "批次：" + modelList[0].BatchNo + "在收货库位检验合格，请先移至其他库位后再进行收货！";
+                    //    return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                    //}
+
+                    //if (strStatus == "4")
+                    //{
+                    //    model.HeaderStatus = "E";
+                    //    model.ModelJson = null;
+                    //    model.Message = "物料：" + modelList[0].MaterialNo + "批次：" + modelList[0].BatchNo + "在收货库位检验不合格，请先移至其他库位后再进行收货！";
+                    //    return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                    //}
+
+                    //截取物料第一位
+                    //string IsKeGong = modelList[0].MaterialNo.Substring(0, 1);
+                    //string UserWareHouse = userModel.ReceiveWareHouseNo;
+
+                    //if (IsKeGong.ToUpper().Equals("K")) //是客供料
+                    //{
+                    //    if (!"AD05,AD09,AD08,AD10,AD11".Contains(UserWareHouse))
+                    //    {
+                    //        model.HeaderStatus = "E";
+                    //        model.ModelJson = null;
+                    //        model.Message = "客供料收货仓库错误！应录入客供品仓库！当前登录仓库为：" + UserWareHouse;
+                    //        return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if ("AD05".Contains(UserWareHouse))
+                    //    {
+                    //        model.HeaderStatus = "E";
+                    //        model.ModelJson = null;
+                    //        model.Message = "非客供料不能录入客供品仓库！当前登录仓库为：" + UserWareHouse;
+                    //        return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
+                    //    }
+                    //}
+
+                    model.HeaderStatus = "S";
+                    model.ModelJson = modelList;
                     return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
                 }
 
-                //验证外箱条码或者托盘条码是否已经收货
-                if (outBarCodeFunc.CheckBaeCodeIsReciveForTB(userModel,SerialNo, ref strError, VoucherType) == false)
-                {
-                    model.HeaderStatus = "E";
-                    model.Message = strError;
-                    return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
-                }
-
-                if (GetPalletDetailBySerialNo(ref modelList, SerialNo, ref strError, BarCodeType) == false)
-                {
-                    model.HeaderStatus = "E";
-                    model.Message = strError;
-                    return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
-                }
-
-               
-
-                ///如果物料，批次在DJ存在已经判定的质量状态。必须先移走
-                //T_Stock_DB _db = new T_Stock_DB();
-                //string strStatus = _db.GetMaterialBatchStatus(modelList[0].MaterialNo, modelList[0].BatchNo, userModel.ReceiveAreaID.ToString());
-                //if (strStatus == "3")
-                //{
-                //    model.HeaderStatus = "E";
-                //    model.ModelJson = null;
-                //    model.Message = "物料：" + modelList[0].MaterialNo + "批次：" + modelList[0].BatchNo + "在收货库位检验合格，请先移至其他库位后再进行收货！";
-                //    return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
-                //}
-
-                //if (strStatus == "4")
-                //{
-                //    model.HeaderStatus = "E";
-                //    model.ModelJson = null;
-                //    model.Message = "物料：" + modelList[0].MaterialNo + "批次：" + modelList[0].BatchNo + "在收货库位检验不合格，请先移至其他库位后再进行收货！";
-                //    return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
-                //}
-
-                //截取物料第一位
-                //string IsKeGong = modelList[0].MaterialNo.Substring(0, 1);
-                //string UserWareHouse = userModel.ReceiveWareHouseNo;
-
-                //if (IsKeGong.ToUpper().Equals("K")) //是客供料
-                //{
-                //    if (!"AD05,AD09,AD08,AD10,AD11".Contains(UserWareHouse))
-                //    {
-                //        model.HeaderStatus = "E";
-                //        model.ModelJson = null;
-                //        model.Message = "客供料收货仓库错误！应录入客供品仓库！当前登录仓库为：" + UserWareHouse;
-                //        return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
-                //    }
-                //}
-                //else
-                //{
-                //    if ("AD05".Contains(UserWareHouse))
-                //    {
-                //        model.HeaderStatus = "E";
-                //        model.ModelJson = null;
-                //        model.Message = "非客供料不能录入客供品仓库！当前登录仓库为：" + UserWareHouse;
-                //        return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
-                //    }
-                //}
-
-                model.HeaderStatus = "S";
-                model.ModelJson = modelList;
-                return JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(model);
             }
             catch (Exception ex)
             {

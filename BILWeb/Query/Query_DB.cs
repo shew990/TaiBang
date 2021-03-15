@@ -719,7 +719,7 @@ namespace BILWeb.Query
                 sql += " and HouseNo like '%" + mo.HouseNo + "%'";
 
             if (!string.IsNullOrEmpty(mo.WarehouseNo) && mo.WarehouseNo != "")
-                sql += " and WAREHOUSENO like '%" + mo.WarehouseNo + "%'";
+                sql += " and WAREHOUSENO = '" + mo.WarehouseNo + "'";
 
 
 
