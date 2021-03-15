@@ -235,7 +235,7 @@ namespace BILWeb.Material
 
                 modelList.ForEach(item =>
                 {
-                    item.PostUser = user.UserNo;
+                    item.PostUser = user.UserName;
                     item.GUID = Guid;
 
                     List<U9ZhDetail> detail = new List<U9ZhDetail>();

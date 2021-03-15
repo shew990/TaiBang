@@ -142,9 +142,9 @@ namespace BILWeb.InStock
 
                     lstSql.Add(strSql8);
 
-                    TaskTransID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
-
-                    strSql10 = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno,towarehouseid,Tohouseid, Toareaid, Materialno, Materialdesc, Supcuscode, " +
+                    //TaskTransID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+                    TaskTransID = 999999;
+                    strSql10 = "insert into t_tasktrans(id, Serialno,towarehouseid,Tohouseid, Toareaid, Materialno, Materialdesc, Supcuscode, " +
                                 "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,materialnoid," +
                                 "erpvoucherno,voucherno,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,SUPPRDBATCH,EDATE,TASKNO,batchno,ToWarehouseNo,ToHouseNo,ToAreaNo,ToWarehouseName)" +
                             " values ('" + TaskTransID + "','" + itemBarCode.SerialNo + "','" + user.WarehouseID + "','" + user.ReceiveHouseID + "'," +
@@ -152,7 +152,7 @@ namespace BILWeb.InStock
                             " '" + itemBarCode.Qty + "','4',(select  top 1  vouchertype from t_Instock where voucherno = '" + item.VoucherNo + "') ,'" + user.UserName + "',getdate(),'" + item.ID + "'," +
                             "'" + item.Unit + "','" + item.UnitName + "','" + itemBarCode.MaterialNoID + "','" + item.ErpVoucherNo + "','" + item.VoucherNo + "','" + itemBarCode.BarCode + "'," +
                             "'" + StrongHoldCode + "','" + StrongHoldCodeName + "','" + item.CompanyCode + "','" + itemBarCode.SupPrdBatch + "'" +
-                            " ,'" + itemBarCode.EDate + "','" + TaskNo + "','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') SET IDENTITY_INSERT t_tasktrans off";
+                            " ,'" + itemBarCode.EDate + "','" + TaskNo + "','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') ";
                     lstSql.Add(strSql10);
 
                 }

@@ -124,6 +124,13 @@ namespace BILWeb.OutStockTask
                                 lstSql.Add("update t_outbarcode set dimension='" + item.ErpVoucherNo + "' where serialno='" + itemStock.SerialNo + "'");
 
                                 lstSql.Add("delete from t_stock  where Serialno = '" + itemStock.SerialNo + "'");
+
+                                if (!string.IsNullOrEmpty(itemStock.PalletNo))
+                                {
+                                    lstSql.Add("delete t_Palletdetail where BARCODE = '" + itemStock.Barcode + "'");
+                                    lstSql.Add("delete t_Pallet where palletno = '" + itemStock.PalletNo + "' and (select count(1) from t_Palletdetail where palletno = '" + itemStock.PalletNo + "')=0");
+                                }
+
                                 if (item.VoucherType == 53)
                                     lstSql.AddRange(GetTaskTransSqlList(user, itemStock, item, 211));
                                 else
@@ -267,9 +274,10 @@ namespace BILWeb.OutStockTask
 
         private List<string> GetTaskTransSqlList(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel, int Tasktype)
         {
-            int id = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+            //int id = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+            int id = 999999;
             List<string> lstSql = new List<string>();
-            string strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
+            string strSql = "insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
             "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
             "Strongholdcode,Strongholdname,Companycode,Supprdbatch,taskno,batchno,barcode,status,materialdoc,houseprop,ean,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo,IsPalletOrBox)" +
             " values ('" + id + "' , '" + model.SerialNo + "'," +
@@ -285,7 +293,7 @@ namespace BILWeb.OutStockTask
             " (select AREANO from T_AREA where id ='" + model.AreaID + "')," +
             " '',''," +
             " ''," +
-            " '','" + model.PalletNo + "','" + model.IsPalletOrBox + "' ) SET IDENTITY_INSERT t_tasktrans off ";//,(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),'" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "'
+            " '','" + model.PalletNo + "','" + model.IsPalletOrBox + "' )  ";//,(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),'" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "'
 
             lstSql.Add(strSql);
 

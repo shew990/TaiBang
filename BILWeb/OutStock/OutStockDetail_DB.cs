@@ -404,9 +404,9 @@ namespace BILWeb.OutStock
         private string GetTaskTransSql(UserModel user, T_StockInfo model, T_OutStockTaskDetailsInfo detailModel)
         {
             string strSql = string.Empty;
-           int id = base.GetTableIDBySqlServer("T_TASKTRANS");
-
-            strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id,Serialno, Materialno, Materialdesc, Supcuscode, " +
+           //int id = base.GetTableIDBySqlServer("T_TASKTRANS");
+            int id = 999999;
+            strSql = "insert into t_tasktrans(id,Serialno, Materialno, Materialdesc, Supcuscode, " +
                "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
                "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,status,batchno,barcode,houseprop,ean,Fromerpwarehouse,ISAMOUNT,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo)" +
                " values ("+ id + ",'" + model.SerialNo + "'," +
@@ -418,7 +418,7 @@ namespace BILWeb.OutStock
                " (select WAREHOUSENO from T_WAREHOUSE where id ='" + model.WareHouseID + "') ,"+
                " (select WAREHOUSENAME from T_WAREHOUSE where id ='" + model.WareHouseID + "'),"+
                " (select HOUSENO from T_HOUSE where id='" + model.HouseID + "'),"+
-               " (select AREANO from T_AREA where id ='" + model.AreaID + "'),'"+model.PalletNo+ "' ;SET IDENTITY_INSERT t_tasktrans off) ";
+               " (select AREANO from T_AREA where id ='" + model.AreaID + "'),'"+model.PalletNo+ "' ;) ";
 
             
             return strSql;

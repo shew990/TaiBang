@@ -110,8 +110,10 @@ namespace BILWeb.InStockTask
                         //}
 
                         //transID = base.GetTableID("seq_tasktrans_id");
-                        transID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
-                        strSql5 = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
+                        //transID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+                        transID = 999999;
+
+                        strSql5 = "insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
                                 "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
                                 "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,Batchno,Barcode,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo,IsPalletOrBox)" +
                                 " values ('" + transID + "','" + itemStock.SerialNo + "'," +
@@ -124,7 +126,7 @@ namespace BILWeb.InStockTask
                                 " (select WAREHOUSENAME from T_WAREHOUSE where id = (select WAREHOUSEID from T_STOCK where SERIALNO = '" + itemStock.SerialNo + "')),"+
                                 " (select HOUSENO from T_HOUSE where id = (select HOUSEID from T_STOCK where SERIALNO = '" + itemStock.SerialNo + "')),"+
                                 " (select AREANO from T_AREA where id = (select AREAID from T_STOCK where SERIALNO = '" + itemStock.SerialNo + "')),"+
-                                " '" + item.WareHouseNo + "',(select WAREHOUSENAME from T_WAREHOUSE where warehouseno = '" + item.WareHouseNo + "'),(SELECT HOUSENO from v_area where WAREHOUSENO = '" + item.WareHouseNo + "' AND AREANO = '" + item.AreaNo + "'),'" + item.AreaNo + "','" + itemStock.PalletNo + "','" + itemStock.IsPalletOrBox + "') SET IDENTITY_INSERT t_tasktrans off ";
+                                " '" + item.WareHouseNo + "',(select WAREHOUSENAME from T_WAREHOUSE where warehouseno = '" + item.WareHouseNo + "'),(SELECT HOUSENO from v_area where WAREHOUSENO = '" + item.WareHouseNo + "' AND AREANO = '" + item.AreaNo + "'),'" + item.AreaNo + "','" + itemStock.PalletNo + "','" + itemStock.IsPalletOrBox + "') ";
 
                         lstSql.Add(strSql5);
 

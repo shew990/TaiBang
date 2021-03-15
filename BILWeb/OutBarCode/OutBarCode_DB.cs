@@ -92,6 +92,7 @@ namespace BILWeb.OutBarCode
             t_outbarcode.EDate = dbFactory.ToModelValue(reader, "EDate").ToDateTime();
             t_outbarcode.StoreCondition = dbFactory.ToModelValue(reader, "StoreconDition").ToDBString();
             t_outbarcode.SpecialRequire = dbFactory.ToModelValue(reader, "SpecialRequire").ToDBString();
+            t_outbarcode.spec = dbFactory.ToModelValue(reader, "Spec").ToDBString();
             t_outbarcode.BarcodeMType = dbFactory.ToModelValue(reader, "BarcodeMType").ToDBString();
 
             t_outbarcode.RowNoDel = dbFactory.ToModelValue(reader, "RowNoDel").ToDBString();
@@ -263,7 +264,7 @@ namespace BILWeb.OutBarCode
 
         protected override string GetModelSql(T_OutBarCodeInfo model)
         {
-            return string.Format("select a.StoreCondition,a.SpecialRequire ,a.Strongholdcode,a.Strongholdname,a.Companycode,a.Supprdbatch, a.Supprddate,a.Productdate,a.Edate,a.Barcodemtype,a.Id, a.Voucherno, a.Rowno, a.Erpvoucherno, a.Vouchertype, a.Cuscode, a.Cusname," +
+            return string.Format("select a.spec,a.erpvoucherno, a.StoreCondition,a.SpecialRequire ,a.Strongholdcode,a.Strongholdname,a.Companycode,a.Supprdbatch, a.Supprddate,a.Productdate,a.Edate,a.Barcodemtype,a.Id, a.Voucherno, a.Rowno, a.Erpvoucherno, a.Vouchertype, a.Cuscode, a.Cusname," +
                                  "a.Supcode, a.Supname, a.Outpackqty, a.Innerpackqty, a.Voucherqty, a.Qty, a.Nopack, a.Printqty, a.Barcode, a.Barcodetype, " +
                                  "a.Serialno, a.Barcodeno, a.Outcount, a.Innercount, a.Mantissaqty, a.Isrohs, a.Outbox_Id, a.Inner_Id, a.PRODUCTBATCH, " +
                                  "a.Batchno, a.Isdel, a.Creater, a.Createtime, a.Modifyer, a.Modifytime, a.Materialnoid,a.rownodel,a.Unit,a.LABELMARK,a.EAN,a.receivetime,a.materialno,a.materialdesc  ,a.productclass,a.workno,a.status,a.fserialno,a.BarCodeType,a.originalCode,a.TracNo,a.dimension ,a.erpwarehousename  " +
@@ -330,6 +331,16 @@ namespace BILWeb.OutBarCode
         {
             string strSql = "select b.*,a.palletno from t_Palletdetail a left join t_Outbarcode b on a.barcode = b.barcode " +
                             "where a.Palletno = '" + PalletNo + "'";
+            return base.GetModelListBySql(strSql);
+        }
+
+
+        /// <summary>
+        /// 根据调拨单号查条码
+        /// <returns></returns>
+        public List<T_OutBarCodeInfo> GetOutBarCodeByDimension(string dimension)
+        {
+            string strSql = "select * from T_OUTBARCODE where dimension='" + dimension + "'";
             return base.GetModelListBySql(strSql);
         }
 

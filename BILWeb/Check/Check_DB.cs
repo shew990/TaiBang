@@ -1408,30 +1408,30 @@ namespace BILWeb.Query
         private static string OutTrans(string username, string sql, CheckAnalyze item, int vouchertype, string serialno,string checkno)
         {
             Check_DB db = new Check_DB();
-            int id = db.GetTableIDBySqlServer("T_TASKTRANS");
-
-            sql = "SET IDENTITY_INSERT t_tasktrans on ;insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
+            //int id = db.GetTableIDBySqlServer("T_TASKTRANS");
+            int id = 999999;
+            sql = "insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
                 " ,STRONGHOLDCODE,BATCHNO,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,SERIALNO" +
                 " ,TOWAREHOUSEID ,TOHOUSEID ,TOAREAID " +
                 "  , BARCODE ,TASKTYPE ,QTY ,EDATE ,FROMWAREHOUSEID , FROMHOUSEID ,FROMAREAID,status,taskno,FROMWAREHOUSEno,fromhouseno,FromAreaNo)" +
                 " select "+id+"," + vouchertype + ",f.materialno,f.materialdesc,getdate(),f.unit,'" + username + "',f.materialnoid,f.strongholdname,10, " +
                 "  f.strongholdcode,f.batchno,f.productdate,f.supprdbatch,f.supprddate,f.serialno" +
-                " ,'','','',f.barcode,204,f.qty,f.edate,f.warehouseid,f.houseid,f.areaid,f.status,'"+checkno+ "',f.warehouseno,f.houseno,f.areano from v_stock f where f.serialno = '" + serialno + "' ;SET IDENTITY_INSERT t_tasktrans off";
+                " ,'','','',f.barcode,204,f.qty,f.edate,f.warehouseid,f.houseid,f.areaid,f.status,'"+checkno+ "',f.warehouseno,f.houseno,f.areano from v_stock f where f.serialno = '" + serialno + "' ";
             return sql; 
         }
 
         private static string InTrans(string username, string sql, CheckAnalyze item, int vouchertype, string serialno,string checkno)
         {
             Check_DB db = new Check_DB();
-            int id = db.GetTableIDBySqlServer("T_TASKTRANS");
-
-            sql = "SET IDENTITY_INSERT t_tasktrans on ;insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
+            //int id = db.GetTableIDBySqlServer("T_TASKTRANS");
+            int id = 999999;
+            sql = "insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
                            " ,STRONGHOLDCODE,BATCHNO,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,SERIALNO" +
                             " ,TOWAREHOUSEID ,TOHOUSEID ,TOAREAID " +
                           "  , BARCODE ,TASKTYPE ,QTY ,EDATE ,FROMWAREHOUSEID ,FROMHOUSEID ,FROMAREAID,status,taskno,toWAREHOUSEno,tohouseno,toAreaNo)" +
                             "select " + id + "," + vouchertype + ",f.materialno,f.materialdesc,getdate(),f.unit,'" + username + "',f.materialnoid,f.strongholdname,10, " +
                           "  f.strongholdcode,f.batchno,f.productdate,f.supprdbatch,f.supprddate,f.serialno" +
-                           " ,f.warehouseid,f.houseid,f.areaid,f.barcode,203,f.qty,f.edate,'','','',f.status,'" + checkno + "',f.warehouseno,f.houseno,f.areano from v_stock f where  f.serialno = '" + serialno + "' ;SET IDENTITY_INSERT t_tasktrans off";
+                           " ,f.warehouseid,f.houseid,f.areaid,f.barcode,203,f.qty,f.edate,'','','',f.status,'" + checkno + "',f.warehouseno,f.houseno,f.areano from v_stock f where  f.serialno = '" + serialno + "' ;";
             return sql;
         }
 
@@ -1439,15 +1439,15 @@ namespace BILWeb.Query
         private static string OutTransCheck(string username, string sql, string QTY, int vouchertype, string serialno)
         {
             Check_DB db = new Check_DB();
-            int id = db.GetTableIDBySqlServer("T_TASKTRANS");
-
-            sql = "SET IDENTITY_INSERT t_tasktrans on ;insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
+            //int id = db.GetTableIDBySqlServer("T_TASKTRANS");
+            int id = 999999;
+            sql = "insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
                 " ,STRONGHOLDCODE,BATCHNO,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,SERIALNO" +
                 " ,TOWAREHOUSEID ,TOHOUSEID ,TOAREAID " +
                 "  , BARCODE ,TASKTYPE ,QTY ,EDATE ,FROMWAREHOUSEID , FROMHOUSEID ,FROMAREAID,status)" +
                 " select " + id + "," + vouchertype + ",f.materialno,f.materialdesc,getdate(),f.unit,'" + username + "',f.materialnoid,f.strongholdname,10, " +
                 "  f.strongholdcode,f.batchno,f.productdate,f.supprdbatch,f.supprddate,f.serialno" +
-                " ,'','','',f.barcode,22," + QTY + ",f.edate,f.warehouseid,f.houseid,f.areaid,f.status from t_stock f where f.serialno = '" + serialno + "';SET IDENTITY_INSERT t_tasktrans off";
+                " ,'','','',f.barcode,22," + QTY + ",f.edate,f.warehouseid,f.houseid,f.areaid,f.status from t_stock f where f.serialno = '" + serialno + "';";
             return sql;
         }
 
@@ -2542,29 +2542,29 @@ namespace BILWeb.Query
                         }
                     }
                     
-                    int id1 = db.GetTableIDBySqlServer("T_TASKTRANS");
-
-                    sql = "SET IDENTITY_INSERT t_tasktrans on ;insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
+                    //int id1 = db.GetTableIDBySqlServer("T_TASKTRANS");
+                    int id1 =999999;
+                    sql = "insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
                            " ,STRONGHOLDCODE,BATCHNO,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,SERIALNO" +
                             " ,TOWAREHOUSEID ,TOHOUSEID ,TOAREAID " +
                           "  , BARCODE ,TASKTYPE ,QTY ,FROMWAREHOUSEID , FROMHOUSEID ,FROMAREAID,status,EAN)" +
                             "select "+ id1 + ",100,f.materialno,f.materialdesc,GETDATE(),f.unit,'" + man + "',f.materialnoid,f.strongholdname,10, " +
                           "  f.strongholdcode,f.batchno,f.productdate,f.supprdbatch,f.supprddate,f.serialno" +
-                           " ,'','','',f.barcode,202,f.qty,f.warehouseid,f.houseid,f.areaid,f.status,f.EAN from t_stock f where f.barcode = '" + bar.BarCode + "';SET IDENTITY_INSERT t_tasktrans off";
+                           " ,'','','',f.barcode,202,f.qty,f.warehouseid,f.houseid,f.areaid,f.status,f.EAN from t_stock f where f.barcode = '" + bar.BarCode + "';";
                     sqls.Add(sql);
                     //修改库存表
                     sql = "update t_stock set materialnoid=" + mid + ",qty = " + bar.Qty + ",BatchNo ='" + bar.BatchNo + "',StrongHoldCode ='" + bar.StrongHoldCode + "',StrongHoldName ='" + bar.StrongHoldName + "',areaid = " + areaid + ",houseid = " + houseid + ",warehouseid = " + warehouseid + ",status=" + bar.STATUS + ",ean='" + bar.EAN + "',TracNo='" + bar.TracNo+"' where serialno = '" + bar.SerialNo + "'";
                     sqls.Add(sql);
                    
-                    int id2 = db.GetTableIDBySqlServer("T_TASKTRANS");
-
-                    sql = "SET IDENTITY_INSERT t_tasktrans on ;insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
+                    //int id2 = db.GetTableIDBySqlServer("T_TASKTRANS");
+                    int id2 = 999999;
+                    sql = "insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
                         " ,STRONGHOLDCODE,BATCHNO,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,SERIALNO" +
                          " ,TOWAREHOUSEID ,TOHOUSEID ,TOAREAID " +
                        "  , BARCODE ,TASKTYPE ,QTY  ,FROMWAREHOUSEID , FROMHOUSEID ,FROMAREAID,status,ean)" +
                          "select " + id2 + ",100,f.materialno,f.materialdesc,GETDATE(),f.unit,'" + man + "',(select id from t_material t where t.materialno = '" + bar.MaterialNo + "' and t.strongholdcode='" + bar.StrongHoldCode + "'),'" + bar.StrongHoldName + "',10, " +
                        " '" + bar.StrongHoldCode + "','" + bar.BatchNo + "',f.productdate,f.supprdbatch,f.supprddate,f.serialno" +
-                        " ," + warehouseid + "," + houseid + "," + areaid + ",f.barcode,201," + bar.Qty + ",'','','',f.status,f.ean from t_stock f where f.barcode = '" + bar.BarCode + "';SET IDENTITY_INSERT t_tasktrans off";
+                        " ," + warehouseid + "," + houseid + "," + areaid + ",f.barcode,201," + bar.Qty + ",'','','',f.status,f.ean from t_stock f where f.barcode = '" + bar.BarCode + "';";
                     sqls.Add(sql);
                     sql = "update t_outbarcode set materialnoid=(select id from t_material t where t.materialno = '" + bar.MaterialNo + "' and t.strongholdcode='" + bar.StrongHoldCode + "'),qty = " + bar.Qty + ",BatchNo ='" + bar.BatchNo + "',StrongHoldCode ='" + bar.StrongHoldCode + "',StrongHoldName ='" + bar.StrongHoldName + "' where serialno = '" + bar.SerialNo + "'";
                     sqls.Add(sql);
@@ -2611,15 +2611,15 @@ namespace BILWeb.Query
                                           ",'" + item.SupPrdBatch + "',2,2,'" + item.EAN + "',1,'"+item.TracNo + "')";
                     sqls.Add(sql);
                     //插入流水
-                    int id= db.GetTableIDBySqlServer("T_TASKTRANS");
-
-                    sql = "SET IDENTITY_INSERT t_tasktrans on ;insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
+                    //int id= db.GetTableIDBySqlServer("T_TASKTRANS");
+                    int id = 999999;
+                    sql = "insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
                           " ,STRONGHOLDCODE,BATCHNO,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,SERIALNO" +
                            " ,TOWAREHOUSEID ,TOHOUSEID ,TOAREAID " +
                          "  , BARCODE ,TASKTYPE ,QTY  ,FROMWAREHOUSEID ,FROMHOUSEID ,FROMAREAID,status,ean)" +
                            "select "+ id + ",100,f.materialno,f.materialdesc,GETDATE(),f.unit,'" + man + "',f.materialnoid,f.strongholdname,10, " +
                          "  f.strongholdcode,f.batchno,f.productdate,f.supprdbatch,f.supprddate,f.serialno" +
-                          " ,f.warehouseid,f.houseid,f.areaid,f.barcode,201,f.qty,'','','',f.status,f.ean from t_stock f where f.barcode = '" + bar.BarCode + "';SET IDENTITY_INSERT t_tasktrans off";
+                          " ,f.warehouseid,f.houseid,f.areaid,f.barcode,201,f.qty,'','','',f.status,f.ean from t_stock f where f.barcode = '" + bar.BarCode + "';";
                     sqls.Add(sql);
 
                 }
@@ -2639,15 +2639,15 @@ namespace BILWeb.Query
 
                     if (!string.IsNullOrEmpty(bar.areano))
                     {
-                        int id= db.GetTableIDBySqlServer("T_TASKTRANS");
-
-                        sql = "SET IDENTITY_INSERT t_tasktrans on ;insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
+                        //int id= db.GetTableIDBySqlServer("T_TASKTRANS");
+                        int id = 999999;
+                        sql = "insert into T_TASKTRANS (id,VOUCHERTYPE,MATERIALNO,MATERIALDESC,CREATETIME,UNIT,CREATER,MATERIALNOID,STRONGHOLDNAME,COMPANYCODE" +
                             " ,STRONGHOLDCODE,BATCHNO,PRODUCTDATE,SUPPRDBATCH,SUPPRDDATE,SERIALNO" +
                              " ,TOWAREHOUSEID ,TOHOUSEID ,TOAREAID " +
                            "  , BARCODE ,TASKTYPE ,QTY ,FROMWAREHOUSEID , FROMHOUSEID ,FROMAREAID,status,ean)" +
                              "select "+ id + ",100,f.materialno,f.materialdesc,GETDATE(),f.unit,'" + man + "',f.materialnoid,f.strongholdname,10, " +
                            "  f.strongholdcode,f.batchno,f.productdate,f.supprdbatch,f.supprddate,f.serialno" +
-                            " ,'','','',f.barcode,202,f.qty,f.warehouseid,f.houseid,f.areaid,f.status,f.ean from t_stock f where f.barcode = '" + bar.BarCode + "';SET IDENTITY_INSERT t_tasktrans off";
+                            " ,'','','',f.barcode,202,f.qty,f.warehouseid,f.houseid,f.areaid,f.status,f.ean from t_stock f where f.barcode = '" + bar.BarCode + "';";
                         sqls.Add(sql);
                         //插入放颖库存备份表
                         sql = "INSERT INTO t_Stocktrans (Barcode, Serialno, Materialno, Materialdesc, Warehouseid, Houseid, Areaid, Qty,  Status, Isdel, Creater, Createtime, " +

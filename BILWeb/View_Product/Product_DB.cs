@@ -90,8 +90,9 @@ namespace BILWeb.Product
 
                     lstSql.Add(strSql2);
 
-                    var TaskTransID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
-                    string strSql3 = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno,towarehouseid,Tohouseid, Toareaid, Materialno, Materialdesc, Supcuscode, " +
+                    //var TaskTransID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+                    var TaskTransID = 999999;
+                    string strSql3 = "insert into t_tasktrans(id, Serialno,towarehouseid,Tohouseid, Toareaid, Materialno, Materialdesc, Supcuscode, " +
                                 "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,materialnoid," +
                                 "erpvoucherno,voucherno,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,SUPPRDBATCH,EDATE,TASKNO,batchno,ToWarehouseNo,ToHouseNo,ToAreaNo,ToWarehouseName)" +
                             " values ('" + TaskTransID + "','" + itemBarCode.SerialNo + "','" + user.WarehouseID + "','" + user.ReceiveHouseID + "'," +
@@ -99,7 +100,7 @@ namespace BILWeb.Product
                             " '" + itemBarCode.Qty + "','5','','" + user.UserName + "',getdate(),'" + item.ID + "'," +
                             "'" + item.Unit + "','" + item.Unit + "','" + itemBarCode.MaterialNoID + "','" + item.ErpVoucherNo + "','','" + itemBarCode.BarCode + "'," +
                             "'" + item.StrongHoldCode + "','" + item.StrongHoldName + "','" + item.CompanyCode + "','" + itemBarCode.SupPrdBatch + "'" +
-                            " ,'" + GetStrDateTime(itemBarCode.EDate) + "','','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') SET IDENTITY_INSERT t_tasktrans off";
+                            " ,'" + GetStrDateTime(itemBarCode.EDate) + "','','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') ";
                     lstSql.Add(strSql3);
 
                     //插入托盘表

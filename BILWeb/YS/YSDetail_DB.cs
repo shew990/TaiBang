@@ -223,8 +223,10 @@ namespace BILWeb.YS
 
                             lstSql.Add(strSql1);
 
-                            int TaskTransID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
-                            string strSql2 = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno,towarehouseid,Tohouseid, Toareaid, Materialno, Materialdesc, Supcuscode, " +
+                            //int TaskTransID = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+                        int TaskTransID = 999999;
+
+                        string strSql2 = "insert into t_tasktrans(id, Serialno,towarehouseid,Tohouseid, Toareaid, Materialno, Materialdesc, Supcuscode, " +
                                         "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,materialnoid," +
                                         "erpvoucherno,voucherno,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,SUPPRDBATCH,EDATE,TASKNO,batchno,ToWarehouseNo,ToHouseNo,ToAreaNo,ToWarehouseName)" +
                                     " values ('" + TaskTransID + "','" + itemBarCode.SerialNo + "','" + user.WarehouseID + "','" + user.ReceiveHouseID + "'," +
@@ -232,7 +234,7 @@ namespace BILWeb.YS
                                     " '" + itemBarCode.Qty + "','205',45 ,'" + user.UserName + "',getdate(),'" + models[i].ID + "'," +
                                     "'" + itemBarCode.Unit + "','','" + itemBarCode.MaterialNoID + "','" + models[i].ErpVoucherNo + "','" + models[i].VoucherNo + "','" + itemBarCode.BarCode + "'," +
                                     "'" + itemBarCode.StrongHoldCode + "','" + itemBarCode.StrongHoldName + "','" + models[i].CompanyCode + "','" + itemBarCode.SupPrdBatch + "'" +
-                                    " ,null,'','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') SET IDENTITY_INSERT t_tasktrans off";
+                                    " ,null,'','" + itemBarCode.BatchNo + "','" + user.ReceiveWareHouseNo + "','" + user.ReceiveHouseNo + "','" + user.ReceiveAreaNo + "','" + user.ReceiveWareHouseName + "') ";
                             lstSql.Add(strSql2);
 
                         }
@@ -271,8 +273,9 @@ namespace BILWeb.YS
 
         private string GetTaskTransSqlList(UserModel user, T_OutBarCodeInfo model, T_YSDetailInfo detailModel)
         {
-            int id = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
-            string strSql = "SET IDENTITY_INSERT t_tasktrans on ;insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
+            //int id = base.GetTableIDBySqlServerTaskTrans("t_tasktrans");
+            int id = 999999;
+            string strSql = "insert into t_tasktrans(id, Serialno, Materialno, Materialdesc, Supcuscode, " +
             "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
             "Strongholdcode,Strongholdname,Companycode,Supprdbatch,taskno,batchno,barcode,status,materialdoc,houseprop,ean,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo)" +
             " values ('" + id + "' , '" + model.SerialNo + "'," +
@@ -288,7 +291,7 @@ namespace BILWeb.YS
             " (select AREANO from T_AREA where id ='" + model.AreaID + "')," +
             " '',''," +
             " ''," +
-            " '','" + model.PalletNo + "' ) SET IDENTITY_INSERT t_tasktrans off ";//,(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),'" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "'
+            " '','" + model.PalletNo + "' )  ";//,(select  ID from v_Area a where  warehouseno = '" + model.ToErpWarehouse + "' and  AREANO = '" + model.ToErpAreaNo + "'),'" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "'
             
             return strSql;
         }
