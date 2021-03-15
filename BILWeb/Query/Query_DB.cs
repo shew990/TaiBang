@@ -292,6 +292,11 @@ namespace BILWeb.Query
                 {
                     for (int i = 1; i <= lsttask.Count; i++)
                     {
+                        T_OutBarcode_DB OutBarcode_DB = new T_OutBarcode_DB();
+                        T_OutBarCodeInfo barcode =  OutBarcode_DB.GetModelListBySql("select * from t_outbarcode where serialno='"+ lsttask[i - 1].SerialNo + "'")[0];
+                        lsttask[i - 1].StoreCondition = barcode.StoreCondition;
+                        lsttask[i - 1].Spec = barcode.spec;
+                        lsttask[i - 1].CusCode = barcode.CusCode;
                         lsttask[i - 1].XH = i.ToString();
                         qtyall += lsttask[i - 1].Qty;
                         switch (lsttask[i - 1].Status)
