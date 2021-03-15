@@ -67,5 +67,20 @@ namespace SqlSugarDAL
         /// </summary>
         public string Status { get; set; }
 
+        /// <summary>
+        /// 预备货员--
+        /// </summary>
+        public string PreStocker { get; set; }
+
+        /// <summary>
+        /// 已备货数量
+        /// </summary>
+        public Decimal? SHELVEQTY { get; set; }
+
+        /// <summary>
+        /// 备货人
+        /// </summary>
+        public String CREATER { get; set; }
+
     }
 }
