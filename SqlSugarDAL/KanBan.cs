@@ -53,19 +53,39 @@ namespace SqlSugarDAL
         /// 转换类型--
         /// </summary>
         public string TransferType { get; set; }
+
         /// <summary>
         /// 跟单员--
         /// </summary>
         public string BussinessMan { get; set; }
+
         /// <summary>
         /// 加急标识--
         /// </summary>
         public string EmergencyFlag { get; set; }
 
+        public String EmergencyFlagShow
+        {
+            get
+            {
+                return (this.EmergencyFlag == "" || this.EmergencyFlag == null) ? "不加急"
+                    : this.EmergencyFlag == "True" ? "加急" : "不加急";
+            }
+        }
+
         /// <summary>
         /// 完成状态名称--
         /// </summary>
         public string Status { get; set; }
+
+        public String StatusShow
+        {
+            get
+            {
+                return (this.Status == "" || this.Status == null) ? "" :
+                    this.Status == "Open" ? "开立" : this.Status == "Approving" ? "核准中" : "已核准";
+            }
+        }
 
         /// <summary>
         /// 预备货员--

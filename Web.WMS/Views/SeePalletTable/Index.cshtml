@@ -78,9 +78,11 @@
         }
 
         //表格初始化
-        function tableInit() {
-            let houseNo= "@ViewBag.houseNo"== "" ? $("#WAREHOUSENO").val() : "@ViewBag.houseNo";
-            let orderType = "@ViewBag.OrderType" == "" ? $("#OrderType").val():"@ViewBag.OrderType";
+        function tableInit(type) {
+            let houseNo = type == "query" ? $("#WAREHOUSENO").val() :
+                "@ViewBag.houseNo" == "" ? $("#WAREHOUSENO").val() : "@ViewBag.houseNo";
+            let orderType = type == "query" ? $("#OrderType").val() :
+                "@ViewBag.OrderType" == "" ? $("#OrderType").val() : "@ViewBag.OrderType";
             let is0And1 = (orderType != "0" && orderType != "1");
             let is0 = orderType != "0";
             let is1= orderType != "1";
@@ -94,7 +96,6 @@
                     houseNo: houseNo,
                     OrderType: $("#OrderType").val()
                 }
-                , toolbar: "#toolbarDemo"
                 , response: {
                     statusCode: 1
                 }
@@ -111,8 +112,8 @@
                 , cols: [
                     [
                         //出库单+形态转换看板
-                        { field: 'DocNo', title: '单号', width: 200, hide: is0And1 }
-                        , { field: 'BusinessDate', title: '日期', width: 120, hide: is0And1 }
+                        { field: 'DocNo', title: '单号', width: 150, hide: is0And1 }
+                        , { field: 'BusinessDate', title: '日期', width: 180, hide: is0And1 }
                         , { field: 'Customer_Code', title: '客户', width: 150, hide: is0And1 }
 
                         //出库单看板
@@ -123,12 +124,12 @@
                         , { field: 'PreStocker', title: '预备货员', width: 150, hide: is0 }
 
                         //形态转换看板
-                        , { field: 'Status', title: '完成状态', width: 150, hide: is1 }
+                        , { field: 'StatusShow', title: '完成状态', width: 150, hide: is1 }
                         , { field: 'TransferType', title: '转换类型', width: 150, hide: is1 }
 
                          //出库单+形态转换看板
                         , { field: 'BussinessMan', title: '跟单员', width: 150, hide: is0And1 }
-                        , { field: 'EmergencyFlag', title: '加急标识', width: 150, hide: is0And1 }
+                        , { field: 'EmergencyFlagShow', title: '加急标识', width: 150, hide: is0And1 }
                     ]
                 ],
                 done: function (res, curr, count) {
@@ -136,7 +137,7 @@
                     res.data.forEach(function (item, index) {
                         var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']");
                         if (item.BackColor === "red") {
-                            tr.css("background-color", "red");
+                            tr.css("background-color", "pink");
                             return false;
                         }
                         if (item.BackColor === "yellow") {
@@ -164,7 +165,7 @@
 
         //查询
         $('#Query').click(function () {
-            tableInit();
+            tableInit("query");
         });
 
         //定时器,固定时间刷新表格

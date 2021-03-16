@@ -48,13 +48,14 @@ namespace Web.WMS.Controllers.SeePalletTable
                 var kanbans = returnKanban.data;
                 LogNet.LogInfo("---------------------调用ERP接口:返回看板参数1：" + kanbans);
 
-                var orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "true")
+                var orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
                     .OrderBy(x => x.BusinessDate).ThenBy(x => x.TransportModeCode).ToList();
                 orderByEmergencyFlag.ForEach(x => x.BackColor = "red");
-                var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate))
-                    .OrderBy(x => x.BusinessDate).ThenBy(x => x.TransportModeCode).ToList();
+                var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate)
+                    && x.EmergencyFlag != "True").OrderBy(x => x.BusinessDate)
+                    .ThenBy(x => x.TransportModeCode).ToList();
                 orderByBusinessDate.ForEach(x => x.BackColor = "yellow");
-                var others = kanbans.FindAll(x => x.EmergencyFlag != "true" && IsToday(x.BusinessDate))
+                var others = kanbans.FindAll(x => x.EmergencyFlag != "True" && IsToday(x.BusinessDate))
                     .OrderBy(x => x.BusinessDate).ThenBy(x => x.TransportModeCode);
                 kanbansOrder.AddRange(orderByEmergencyFlag);
                 kanbansOrder.AddRange(orderByBusinessDate);
@@ -67,16 +68,17 @@ namespace Web.WMS.Controllers.SeePalletTable
                 var returnKanban = JSONHelper.JsonToObject<ReturnKanban>(ERPJson);
                 var kanbans = returnKanban.data;
 
-                var orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "true")
+                var orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
                     .OrderBy(x => x.BusinessDate).ToList();
                 orderByEmergencyFlag.ForEach(x => x.BackColor = "red");
-                var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate))
-                    .OrderBy(x => x.BusinessDate).ToList();
-                orderByBusinessDate.ForEach(x=>x.BackColor="yellow");
-                var orderByStatus = kanbans.FindAll(x => x.Status == "Approved")
+                var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate)
+                    && x.EmergencyFlag != "True").OrderBy(x => x.BusinessDate).ToList();
+                orderByBusinessDate.ForEach(x => x.BackColor = "yellow");
+                var orderByStatus = kanbans.FindAll(x => x.Status == "Approved"
+                    && x.EmergencyFlag != "True" && IsToday(x.BusinessDate))
                     .OrderBy(x => x.BusinessDate).ToList();
                 orderByStatus.ForEach(x => x.BackColor = "blue");
-                var others = kanbans.FindAll(x => x.EmergencyFlag != "true" && IsToday(x.BusinessDate)
+                var others = kanbans.FindAll(x => x.EmergencyFlag != "True" && IsToday(x.BusinessDate)
                             && x.Status != "Approved").OrderBy(x => x.BusinessDate);
                 kanbansOrder.AddRange(orderByEmergencyFlag);
                 kanbansOrder.AddRange(orderByBusinessDate);
@@ -92,6 +94,7 @@ namespace Web.WMS.Controllers.SeePalletTable
 
             }
 
+            LogNet.LogInfo("---------------------调用ERP接口:返回看板参数2：" + "ceshi2");
             //发货看板赋值
             var datas = kanbansOrder.Skip(limit * (page - 1)).Take(limit).ToList();
             if (OrderType == "0")
@@ -101,10 +104,11 @@ namespace Web.WMS.Controllers.SeePalletTable
                     var details = new TaskDetailsService().GetList(y => y.ERPVOUCHERNO == x.DocNo);
                     var taskTran = new TasktransService()
                         .GetList(z => z.ERPVOUCHERNO == x.DocNo && z.TASKTYPE == 2).FirstOrDefault();
-                    x.SHELVEQTY = details.Sum(a => a.SHELVEQTY);
+                    x.SHELVEQTY = details.Sum(a => a.UNSHELVEQTY);
                     x.CREATER = taskTran == null ? "" : taskTran.CREATER;
                 });
             }
+            LogNet.LogInfo("---------------------调用ERP接口:返回看板参数3：" + "ceshi3");
 
             var jsonReturn = new
             {
@@ -121,6 +125,7 @@ namespace Web.WMS.Controllers.SeePalletTable
                     : (kanbansOrder.Count() / limit)
                 }
             };
+            LogNet.LogInfo("---------------------调用ERP接口:返回看板参数4：" + JsonConvert.SerializeObject(jsonReturn));
             return Json(jsonReturn, JsonRequestBehavior.AllowGet);
         }
 
