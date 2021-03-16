@@ -1,5 +1,6 @@
 ﻿using BILBasic.Interface;
 using BILBasic.JSONUtil;
+using Newtonsoft.Json;
 using SqlSugarDAL;
 using SqlSugarDAL.t_taskdetails;
 using SqlSugarDAL.t_tasktrans;
@@ -25,8 +26,8 @@ namespace Web.WMS.Controllers.SeePalletTable
             var refreshTime = Convert.ToInt32(ConfigurationManager.AppSettings["RefreshTime"]) * 1000;
 
             ViewBag.refreshTime = refreshTime;
-            ViewBag.houseNo = houseNo == null ? "" : houseNo;
-            ViewBag.orderType = orderType == null ? "" : orderType;
+            ViewBag.houseNo = houseNo == null ? "" : houseNo.ToString();
+            ViewBag.orderType = orderType == null ? "" : orderType.ToString();
             return View(houses);
         }
 
@@ -34,49 +35,52 @@ namespace Web.WMS.Controllers.SeePalletTable
         /// 表格数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult List(int limit, int page, string houseId, string OrderType)
+        public ActionResult List(int limit, int page, string houseNo, string OrderType)
         {
             T_Interface_Func TIF = new T_Interface_Func();
             string json = "";
             List<Kanban> kanbansOrder = new List<Kanban>();
+            var orderByEmergencyFlag = new List<Kanban>();
             if (OrderType == "0")//出货单看板
             {
-                json = "{\"data_no\":\"" + houseId + "\",\"VoucherType\":\"6000\"}";
+                json = "{\"data_no\":\"" + houseNo + "\",\"VoucherType\":\"6000\"}";
                 string ERPJson = TIF.GetModelListByInterface(json);
-                var kanbans = JSONHelper.JsonToObject<List<Kanban>>(ERPJson);
+                var returnKanban = JSONHelper.JsonToObject<ReturnKanban>(ERPJson);
+                var kanbans = returnKanban.data;
+                LogNet.LogInfo("---------------------调用ERP接口:返回看板参数1：" + kanbans);
 
-                var orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "true")
-                    .OrderByDescending(x => x.BusinessDate).ThenBy(x => x.TransportModeCode);
-                var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate))
-                    .OrderByDescending(x => x.BusinessDate).ThenBy(x => x.TransportModeCode);
-                var others = kanbans.FindAll(x => x.EmergencyFlag != "true" && IsToday(x.BusinessDate))
-                    .OrderByDescending(x => x.BusinessDate).ThenBy(x => x.TransportModeCode);
+                orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
+                    .OrderBy(x => x.BusinessDate).ThenBy(x => x.TransportModeCode).ToList();
+                orderByEmergencyFlag.ForEach(x => x.BackColor = "red");
+                var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate)
+                    && x.EmergencyFlag != "True").OrderBy(x => x.BusinessDate)
+                    .ThenBy(x => x.TransportModeCode).ToList();
+                orderByBusinessDate.ForEach(x => x.BackColor = "yellow");
+                var others = kanbans.FindAll(x => x.EmergencyFlag != "True" && IsToday(x.BusinessDate))
+                    .OrderBy(x => x.BusinessDate).ThenBy(x => x.TransportModeCode);
                 kanbansOrder.AddRange(orderByEmergencyFlag);
                 kanbansOrder.AddRange(orderByBusinessDate);
                 kanbansOrder.AddRange(others);
-                kanbansOrder.ForEach(x =>
-                {
-                    var details = new TaskDetailsService().GetList(y => y.ERPVOUCHERNO == x.DocNo);
-                    var taskTran = new TasktransService()
-                        .GetList(z => z.ERPVOUCHERNO == x.DocNo && z.TASKTYPE == 2).FirstOrDefault();
-                    x.SHELVEQTY = details.Sum(a => a.SHELVEQTY);
-                    x.CREATER = taskTran.CREATER;
-                });
             }
             else if (OrderType == "1")//形态转换看板
             {
-                json = "{\"data_no\":\"" + houseId + "\",\"VoucherType\":\"6001\"}";
+                json = "{\"data_no\":\"" + houseNo + "\",\"VoucherType\":\"6001\"}";
                 string ERPJson = TIF.GetModelListByInterface(json);
-                var kanbans = JSONHelper.JsonToObject<List<Kanban>>(ERPJson);
+                var returnKanban = JSONHelper.JsonToObject<ReturnKanban>(ERPJson);
+                var kanbans = returnKanban.data;
 
-                var orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "true")
-                    .OrderByDescending(x => x.BusinessDate);
-                var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate))
-                    .OrderByDescending(x => x.BusinessDate);
-                var orderByStatus = kanbans.FindAll(x => x.Status == "Approved")
-                    .OrderByDescending(x => x.BusinessDate);
-                var others = kanbans.FindAll(x => x.EmergencyFlag != "true" && IsToday(x.BusinessDate)
-                            && x.Status != "Approved").OrderByDescending(x => x.BusinessDate);
+                orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
+                    .OrderBy(x => x.BusinessDate).ToList();
+                orderByEmergencyFlag.ForEach(x => x.BackColor = "red");
+                var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate)
+                    && x.EmergencyFlag != "True").OrderBy(x => x.BusinessDate).ToList();
+                orderByBusinessDate.ForEach(x => x.BackColor = "yellow");
+                var orderByStatus = kanbans.FindAll(x => x.Status == "Approved"
+                    && x.EmergencyFlag != "True" && IsToday(x.BusinessDate))
+                    .OrderBy(x => x.BusinessDate).ToList();
+                orderByStatus.ForEach(x => x.BackColor = "blue");
+                var others = kanbans.FindAll(x => x.EmergencyFlag != "True" && IsToday(x.BusinessDate)
+                            && x.Status != "Approved").OrderBy(x => x.BusinessDate);
                 kanbansOrder.AddRange(orderByEmergencyFlag);
                 kanbansOrder.AddRange(orderByBusinessDate);
                 kanbansOrder.AddRange(orderByStatus);
@@ -90,11 +94,36 @@ namespace Web.WMS.Controllers.SeePalletTable
             {
 
             }
+
+            //发货看板赋值
+            var datas = new List<Kanban>();
+            if (orderByEmergencyFlag.Count() >= limit || page == 1)
+            {
+                datas = kanbansOrder.Take(limit).ToList();
+            }
+            else
+            {
+                var pageDatas = kanbansOrder.Skip(limit * (page - 1)).Take(limit).ToList();
+                datas.AddRange(orderByEmergencyFlag);
+                datas.AddRange(pageDatas.Take(limit - orderByEmergencyFlag.Count()));
+            }
+            if (OrderType == "0")
+            {
+                datas.ForEach(x =>
+                {
+                    var details = new TaskDetailsService().GetList(y => y.ERPVOUCHERNO == x.DocNo);
+                    var taskTran = new TasktransService()
+                        .GetList(z => z.ERPVOUCHERNO == x.DocNo && z.TASKTYPE == 2).FirstOrDefault();
+                    x.SHELVEQTY = details.Sum(a => a.UNSHELVEQTY);
+                    x.CREATER = taskTran == null ? "" : taskTran.CREATER;
+                });
+            }
+
             var jsonReturn = new
             {
                 Result = 1,
-                ResultValue = (kanbansOrder == null || kanbansOrder.Count() == 0) ? "没有符合条件的数据" : "",
-                Data = kanbansOrder.Skip(limit * (page - 1)).Take(limit).ToList(),
+                ResultValue = (datas == null || datas.Count() == 0) ? "没有符合条件的数据" : "",
+                Data = datas,
                 PageData = new
                 {
                     totalCount = kanbansOrder.Count(),

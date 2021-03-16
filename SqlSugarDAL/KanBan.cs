@@ -20,6 +20,15 @@ namespace SqlSugarDAL
         /// </summary>
         public string BusinessDate { get; set; }
 
+        public string BusinessDateShow
+        {
+            get
+            {
+                return (this.BusinessDate == null || this.BusinessDate == "") ? ""
+                    : Convert.ToDateTime(this.BusinessDate).ToString("yyyy-MM-dd");
+            }
+        }
+
         /// <summary>
         /// 单号--
         /// </summary>
@@ -53,19 +62,39 @@ namespace SqlSugarDAL
         /// 转换类型--
         /// </summary>
         public string TransferType { get; set; }
+
         /// <summary>
         /// 跟单员--
         /// </summary>
         public string BussinessMan { get; set; }
+
         /// <summary>
         /// 加急标识--
         /// </summary>
         public string EmergencyFlag { get; set; }
 
+        public String EmergencyFlagShow
+        {
+            get
+            {
+                return (this.EmergencyFlag == "" || this.EmergencyFlag == null) ? ""
+                    : this.EmergencyFlag == "True" ? "加急" : "";
+            }
+        }
+
         /// <summary>
         /// 完成状态名称--
         /// </summary>
         public string Status { get; set; }
+
+        public String StatusShow
+        {
+            get
+            {
+                return (this.Status == "" || this.Status == null) ? "" :
+                    this.Status == "Open" ? "开立" : this.Status == "Approving" ? "核准中" : "已核准";
+            }
+        }
 
         /// <summary>
         /// 预备货员--
@@ -81,6 +110,11 @@ namespace SqlSugarDAL
         /// 备货人
         /// </summary>
         public String CREATER { get; set; }
+
+        /// <summary>
+        /// 背景颜色
+        /// </summary>
+        public String BackColor { get; set; }
 
     }
 }

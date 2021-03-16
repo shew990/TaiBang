@@ -13,11 +13,11 @@
                     {
                         if (ViewBag.houseNo == item.WAREHOUSENO)
                         {
-                            <option value="@item.ID" selected="selected">@item.WAREHOUSENO</option>
+                            <option value="@item.WAREHOUSENO" selected="selected">@item.WAREHOUSENO</option>
                         }
                         else
                         {
-                            <option value="@item.ID">@item.WAREHOUSENO</option>
+                            <option value="@item.WAREHOUSENO">@item.WAREHOUSENO</option>
                         }
                     }
                 </select>
@@ -61,10 +61,36 @@
             <div class="layui-inline layui-show-xs-block">
                 <button id="Query" class="btn btn-primary">查询</button>
             </div>
+            <div class="pull-right">
+                @if (ViewBag.OrderType == "0" || ViewBag.OrderType == "")
+                {
+                    <span id="countText" style="font-size:20px;">未发货订单总数:</span>
+                    <span id="countAll" style="font-size:20px;"></span>
+                }
+                else if (ViewBag.OrderType == "1")
+                {
+                    <span id="countText" style="font-size:20px;">未转换订单总数:</span>
+                    <span id="countAll" style="font-size:20px;"></span>
+                }
+            </div>
         </div>
         <table class="layui-hide" id="seePalletTable" lay-filter="init"></table>
     </div>
 </div>
+
+<style type="text/css">
+    .x-admin-sm .layui-table td, .x-admin-sm .layui-table th {
+        font-size: 20px;
+    }
+    .layui-disabled, .layui-disabled:hover {
+        color: black !important;
+        background-color: black;
+    }
+    /*设置表格单元格线样式*/
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: black; /*#bbb*/
+    }
+</style>
 
 <script type="text/javascript">
 
@@ -73,12 +99,20 @@
             , laypage = layui.laypage
             , layer = layui.layer
 
-        tableInit();
+        if ("@ViewBag.houseNo"!= ""&&"@ViewBag.OrderType" != "") {
+            tableInit();
+        }
 
+        var houseNo;
+        var orderType;
+        var totalPage;
         //表格初始化
-        function tableInit() {
-            let orderType = "@ViewBag.OrderType";
-            let is0And1 = orderType != "0" && orderType != "1";
+        function tableInit(type) {
+            houseNo = type == "query" ? $("#WAREHOUSENO").val() :
+                "@ViewBag.houseNo" == "" ? $("#WAREHOUSENO").val() : "@ViewBag.houseNo";
+            orderType = type == "query" ? $("#OrderType").val() :
+                "@ViewBag.OrderType" == "" ? $("#OrderType").val() : "@ViewBag.OrderType";
+            let is0And1 = (orderType != "0" && orderType != "1");
             let is0 = orderType != "0";
             let is1= orderType != "1";
             table.render({
@@ -88,14 +122,15 @@
                 , method: 'post'
                 , contentType: 'application/json'
                 , where: {
-                    houseId: $("#WAREHOUSENO").val(),
-                    OrderType: $("#OrderType").val()
+                    houseNo: houseNo,
+                    OrderType: orderType
                 }
-                , toolbar: "#toolbarDemo"
                 , response: {
                     statusCode: 1
                 }
                 , parseData: function (res) {
+                    $("#countAll").text(res.PageData.totalCount);
+                    totalPage = res.PageData.totalPages;
                     return {
                         "code": res.Result,
                         "msg": res.ResultValue,
@@ -108,8 +143,8 @@
                 , cols: [
                     [
                         //出库单+形态转换看板
-                        { field: 'DocNo', title: '单号', width: 200, hide: is0And1 }
-                        , { field: 'BusinessDate', title: '日期', width: 120, hide: is0And1 }
+                        { field: 'DocNo', title: '单号', width: 180, hide: is0And1 }
+                        , { field: 'BusinessDateShow', title: '日期', width: 150, hide: is0And1 }
                         , { field: 'Customer_Code', title: '客户', width: 150, hide: is0And1 }
 
                         //出库单看板
@@ -120,14 +155,32 @@
                         , { field: 'PreStocker', title: '预备货员', width: 150, hide: is0 }
 
                         //形态转换看板
-                        , { field: 'Status', title: '完成状态', width: 150, hide: is1 }
-                        , { field: 'TransferType', title: '转换类型', width: 150, is1 }
+                        , { field: 'StatusShow', title: '完成状态', width: 150, hide: is1 }
+                        , { field: 'TransferType', title: '转换类型', width: 150, hide: is1 }
 
                          //出库单+形态转换看板
                         , { field: 'BussinessMan', title: '跟单员', width: 150, hide: is0And1 }
-                        , { field: 'EmergencyFlag', title: '加急标识', width: 150, hide: is0And1 }
+                        , { field: 'EmergencyFlagShow', title: '加急标识', width: 150, hide: is0And1 }
                     ]
-                ]
+                ],
+                done: function (res, curr, count) {
+                    $('th').css({'font-size': '25' });
+                    var that = this.elem.next();
+                    res.data.forEach(function (item, index) {
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']");
+                        if (item.BackColor === "red") {
+                            tr.css("background-color", "pink");
+                            return false;
+                        }
+                        if (item.BackColor === "yellow") {
+                            tr.css("background-color", "yellow");
+                            return false;
+                        }
+                        if (item.BackColor === "blue") {
+                            tr.css("background-color", "blue");
+                        }
+                    });
+                }
             });
         }
 
@@ -144,12 +197,26 @@
 
         //查询
         $('#Query').click(function () {
-            tableInit();
+            if ($("#OrderType").val() == "0") {
+                $("#countText").text("未发货订单总数:");
+            } else if ($("#OrderType").val() == "1") {
+                $("#countText").text("未转换订单总数:");
+            }
+            tableInit("query");
         });
 
         //定时器,固定时间刷新表格
         setInterval(function () {
-            table.reload('seePalletTable', {});
+            table.reload('seePalletTable', {
+                page: {
+                    curr: (Number($(".layui-laypage-em").next().html()) + 1)
+                        > Number(totalPage) ? 1 : (Number($(".layui-laypage-em").next().html()) + 1)
+                }
+                , where: {
+                    houseNo: houseNo,
+                    OrderType: orderType
+                }
+            }, 'data');
         }, @ViewBag.refreshTime);
 
     });
