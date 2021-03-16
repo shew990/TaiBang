@@ -73,6 +73,10 @@
             , laypage = layui.laypage
             , layer = layui.layer
 
+        if ("@ViewBag.houseNo"!= ""&&"@ViewBag.OrderType" != "") {
+            tableInit();
+        }
+
         //表格初始化
         function tableInit() {
             let houseNo= "@ViewBag.houseNo"== "" ? $("#WAREHOUSENO").val() : "@ViewBag.houseNo";
@@ -120,13 +124,30 @@
 
                         //形态转换看板
                         , { field: 'Status', title: '完成状态', width: 150, hide: is1 }
-                        , { field: 'TransferType', title: '转换类型', width: 150, is1 }
+                        , { field: 'TransferType', title: '转换类型', width: 150, hide: is1 }
 
                          //出库单+形态转换看板
                         , { field: 'BussinessMan', title: '跟单员', width: 150, hide: is0And1 }
                         , { field: 'EmergencyFlag', title: '加急标识', width: 150, hide: is0And1 }
                     ]
-                ]
+                ],
+                done: function (res, curr, count) {
+                    var that = this.elem.next();
+                    res.data.forEach(function (item, index) {
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']");
+                        if (item.BackColor === "red") {
+                            tr.css("background-color", "red");
+                            return false;
+                        }
+                        if (item.BackColor === "yellow") {
+                            tr.css("background-color", "yellow");
+                            return false;
+                        }
+                        if (item.BackColor === "blue") {
+                            tr.css("background-color", "blue");
+                        }
+                    });
+                }
             });
         }
 

@@ -82,5 +82,10 @@ namespace SqlSugarDAL
         /// </summary>
         public String CREATER { get; set; }
 
+        /// <summary>
+        /// 背景颜色
+        /// </summary>
+        public String BackColor { get; set; }
+
     }
 }
