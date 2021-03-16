@@ -20,6 +20,15 @@ namespace SqlSugarDAL
         /// </summary>
         public string BusinessDate { get; set; }
 
+        public string BusinessDateShow
+        {
+            get
+            {
+                return (this.BusinessDate == null || this.BusinessDate == "") ? ""
+                    : Convert.ToDateTime(this.BusinessDate).ToString("yyyy-MM-dd");
+            }
+        }
+
         /// <summary>
         /// 单号--
         /// </summary>
@@ -68,8 +77,8 @@ namespace SqlSugarDAL
         {
             get
             {
-                return (this.EmergencyFlag == "" || this.EmergencyFlag == null) ? "不加急"
-                    : this.EmergencyFlag == "True" ? "加急" : "不加急";
+                return (this.EmergencyFlag == "" || this.EmergencyFlag == null) ? ""
+                    : this.EmergencyFlag == "True" ? "加急" : "";
             }
         }
 

@@ -94,7 +94,6 @@ namespace Web.WMS.Controllers.SeePalletTable
 
             }
 
-            LogNet.LogInfo("---------------------调用ERP接口:返回看板参数2：" + "ceshi2");
             //发货看板赋值
             var datas = kanbansOrder.Skip(limit * (page - 1)).Take(limit).ToList();
             if (OrderType == "0")
@@ -108,7 +107,6 @@ namespace Web.WMS.Controllers.SeePalletTable
                     x.CREATER = taskTran == null ? "" : taskTran.CREATER;
                 });
             }
-            LogNet.LogInfo("---------------------调用ERP接口:返回看板参数3：" + "ceshi3");
 
             var jsonReturn = new
             {
@@ -125,7 +123,6 @@ namespace Web.WMS.Controllers.SeePalletTable
                     : (kanbansOrder.Count() / limit)
                 }
             };
-            LogNet.LogInfo("---------------------调用ERP接口:返回看板参数4：" + JsonConvert.SerializeObject(jsonReturn));
             return Json(jsonReturn, JsonRequestBehavior.AllowGet);
         }
 
