@@ -78,6 +78,20 @@
     </div>
 </div>
 
+<style type="text/css">
+    .x-admin-sm .layui-table td, .x-admin-sm .layui-table th {
+        font-size: 20px;
+    }
+    .layui-disabled, .layui-disabled:hover {
+        color: black !important;
+        background-color: black;
+    }
+    /*设置表格单元格线样式*/
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: black; /*#bbb*/
+    }
+</style>
+
 <script type="text/javascript">
 
     layui.use(['laypage', 'layer', 'table'], function () {
@@ -89,11 +103,14 @@
             tableInit();
         }
 
+        var houseNo;
+        var orderType;
+        var totalPage;
         //表格初始化
         function tableInit(type) {
-            let houseNo = type == "query" ? $("#WAREHOUSENO").val() :
+            houseNo = type == "query" ? $("#WAREHOUSENO").val() :
                 "@ViewBag.houseNo" == "" ? $("#WAREHOUSENO").val() : "@ViewBag.houseNo";
-            let orderType = type == "query" ? $("#OrderType").val() :
+            orderType = type == "query" ? $("#OrderType").val() :
                 "@ViewBag.OrderType" == "" ? $("#OrderType").val() : "@ViewBag.OrderType";
             let is0And1 = (orderType != "0" && orderType != "1");
             let is0 = orderType != "0";
@@ -106,13 +123,14 @@
                 , contentType: 'application/json'
                 , where: {
                     houseNo: houseNo,
-                    OrderType: $("#OrderType").val()
+                    OrderType: orderType
                 }
                 , response: {
                     statusCode: 1
                 }
                 , parseData: function (res) {
                     $("#countAll").text(res.PageData.totalCount);
+                    totalPage = res.PageData.totalPages;
                     return {
                         "code": res.Result,
                         "msg": res.ResultValue,
@@ -125,7 +143,7 @@
                 , cols: [
                     [
                         //出库单+形态转换看板
-                        { field: 'DocNo', title: '单号', width: 150, hide: is0And1 }
+                        { field: 'DocNo', title: '单号', width: 180, hide: is0And1 }
                         , { field: 'BusinessDateShow', title: '日期', width: 150, hide: is0And1 }
                         , { field: 'Customer_Code', title: '客户', width: 150, hide: is0And1 }
 
@@ -146,6 +164,7 @@
                     ]
                 ],
                 done: function (res, curr, count) {
+                    $('th').css({'font-size': '25' });
                     var that = this.elem.next();
                     res.data.forEach(function (item, index) {
                         var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']");
@@ -188,7 +207,16 @@
 
         //定时器,固定时间刷新表格
         setInterval(function () {
-            table.reload('seePalletTable', {});
+            table.reload('seePalletTable', {
+                page: {
+                    curr: (Number($(".layui-laypage-em").next().html()) + 1)
+                        > Number(totalPage) ? 1 : (Number($(".layui-laypage-em").next().html()) + 1)
+                }
+                , where: {
+                    houseNo: houseNo,
+                    OrderType: orderType
+                }
+            }, 'data');
         }, @ViewBag.refreshTime);
 
     });

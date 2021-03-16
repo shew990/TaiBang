@@ -40,6 +40,7 @@ namespace Web.WMS.Controllers.SeePalletTable
             T_Interface_Func TIF = new T_Interface_Func();
             string json = "";
             List<Kanban> kanbansOrder = new List<Kanban>();
+            var orderByEmergencyFlag = new List<Kanban>();
             if (OrderType == "0")//出货单看板
             {
                 json = "{\"data_no\":\"" + houseNo + "\",\"VoucherType\":\"6000\"}";
@@ -48,7 +49,7 @@ namespace Web.WMS.Controllers.SeePalletTable
                 var kanbans = returnKanban.data;
                 LogNet.LogInfo("---------------------调用ERP接口:返回看板参数1：" + kanbans);
 
-                var orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
+                orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
                     .OrderBy(x => x.BusinessDate).ThenBy(x => x.TransportModeCode).ToList();
                 orderByEmergencyFlag.ForEach(x => x.BackColor = "red");
                 var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate)
@@ -68,7 +69,7 @@ namespace Web.WMS.Controllers.SeePalletTable
                 var returnKanban = JSONHelper.JsonToObject<ReturnKanban>(ERPJson);
                 var kanbans = returnKanban.data;
 
-                var orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
+                orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
                     .OrderBy(x => x.BusinessDate).ToList();
                 orderByEmergencyFlag.ForEach(x => x.BackColor = "red");
                 var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate)
@@ -95,7 +96,17 @@ namespace Web.WMS.Controllers.SeePalletTable
             }
 
             //发货看板赋值
-            var datas = kanbansOrder.Skip(limit * (page - 1)).Take(limit).ToList();
+            var datas = new List<Kanban>();
+            if (orderByEmergencyFlag.Count() >= limit || page == 1)
+            {
+                datas = kanbansOrder.Take(limit).ToList();
+            }
+            else
+            {
+                var pageDatas = kanbansOrder.Skip(limit * (page - 1)).Take(limit).ToList();
+                datas.AddRange(orderByEmergencyFlag);
+                datas.AddRange(pageDatas.Take(limit - orderByEmergencyFlag.Count()));
+            }
             if (OrderType == "0")
             {
                 datas.ForEach(x =>
