@@ -10,6 +10,7 @@ using BILWeb.Query;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BILWeb.Material
 {
@@ -182,6 +183,11 @@ namespace BILWeb.Material
                 BaseInfo = _db.GetZhList(ErpVoucherNo);
                 BaseInfo.ForEach(item => item.VoucherType = 52);
                 LogNet.LogInfo("----------------------------------------------------转换单获取单据信息" + BaseInfo);
+
+
+                string  aaa = "[{\"detailBehind\":[{\"RowNo\":10,\"Type\":1,\"MaterialNo\":\"JMF2012-0487\",\"MaterialName\":\"齿轮减速电机\",\"MaterialDesc\":\"齿轮减速电机\",\"Spec\":\"YS90B5-1500S2/GWRV090UK-100-90B5\",\"ErpWareHouseNo\":\"G202\",\"ErpWareHouseName\":\"大电机成品仓库\",\"Qty\":2.0,\"Unit\":\"Pcs\",\"BatchNo\":\"TraY-21030019\",\"FanHao\":null,\"RandomCode\":\"8K3ARV5M\",\"Row\":10,\"subFlag\":0},{\"RowNo\":20,\"Type\":1,\"MaterialNo\":\"JMF2012-0488\",\"MaterialName\":\"减速电机\",\"MaterialDesc\":\"减速电机\",\"Spec\":\"YS90B5-1500S2/GWRV090UK-100-90B5\",\"ErpWareHouseNo\":\"G202\",\"ErpWareHouseName\":\"大电机成品仓库\",\"Qty\":2.0,\"Unit\":\"Pcs\",\"BatchNo\":\"TraY-21030019\",\"FanHao\":null,\"RandomCode\":\"8K3ARV5M\",\"Row\":10,\"subFlag\":0}],\"ErpVoucherNo\":\"TraY-21030019\",\"ErpVoucherType\":1001910300976711,\"ErpVoucherTypeName\":\"料品形态转换\",\"CreateTime\":\"2021-03-12\",\"StrongHoldCode\":\"0300\",\"StrongHoldName\":\"营销中心\",\"CustomerNo\":\"\",\"CustomerName\":\"\",\"RowNo\":0,\"Type\":0,\"MaterialNo\":null,\"MaterialName\":null,\"MaterialDesc\":null,\"Spec\":null,\"ErpWareHouseNo\":null,\"ErpWareHouseName\":null,\"Qty\":0.0,\"Unit\":null,\"detail\":[{\"RowNo\":10,\"Type\":0,\"MaterialNo\":\"JMF1902-1560\",\"MaterialName\":\"大电机减速电机\",\"MaterialDesc\":\"大电机减速电机\",\"Spec\":\"Y22-100S2-TG-C/CV22-200B·T1\",\"ErpWareHouseNo\":\"G202\",\"ErpWareHouseName\":\"大电机成品仓库\",\"Qty\":2.0,\"Unit\":\"Pcs\",\"BatchNo\":\"SO201127002\",\"FanHao\":null,\"RandomCode\":\"CLI7Q231\",\"Row\":10,\"subFlag\":0}],\"guid\":null,\"PostUser\":null,\"batchno\":null,\"FanHao\":null,\"RandomCode\":null,\"Row\":0}]";
+                BaseInfo = JsonConvert.DeserializeObject<List<U9Zh>>(aaa);
+
                 if (BaseInfo == null|| BaseInfo.Count == 0)
                 {
                     messageModel.HeaderStatus = "E";
@@ -190,6 +196,72 @@ namespace BILWeb.Material
                 }
                 else
                 {
+                    //获取生单物料库存
+                    Stock.T_Stock_DB stockDB = new Stock.T_Stock_DB();
+                    List<Stock.T_StockInfo> stockList = new List<Stock.T_StockInfo>();
+                    //汇总本次生单的物料
+                    var newModelList = from t in BaseInfo[0].detail
+                                       group t by new { t1 = t.MaterialNo } into m
+                                       select new T_OutStockTaskDetailsInfo
+                                       {
+                                           MaterialNo = m.Key.t1
+                                       };
+                    List<T_OutStockTaskDetailsInfo> newModelListret = newModelList.ToList();
+                    newModelListret.ForEach(item => { item.StrongHoldCode = BaseInfo[0].StrongHoldCode; });
+                    stockList = stockDB.GetCanStockListByMaterialNoIDToSql1(newModelListret);
+                    //所有物料都没有库存，不拆分，直接返回
+                    if (stockList != null && stockList.Count > 0)
+                    {
+                        List<T_OutStockTaskDetailsInfo> NewModelList = new List<T_OutStockTaskDetailsInfo>();
+                        List<T_StockInfo> stockModelList = new List<T_StockInfo>();
+                        List<T_StockInfo> stockModelListSum = new List<T_StockInfo>();
+                        string strAreaNo = string.Empty;
+
+                        foreach (var item in BaseInfo[0].detail)
+                        {
+                            //查找物料可分配库存
+                            if (stockModelList.Count == 0 || stockModelList == null)
+                            {
+                                stockModelList = stockList.FindAll(t => t.MaterialNo == item.MaterialNo && t.WarehouseNo == item.ErpWareHouseNo && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
+                            }
+                            var ModelListSum = from t in stockModelList
+                                               group t by new
+                                               {
+                                                   t1 = t.MaterialNoID,
+                                                   t2 = t.AreaNo,
+                                                   t3 = t.StrongHoldCode
+                                                   //t4 = t.StrongHoldName,
+                                                   //t5 = t.CompanyCode,
+                                                   //t6 = t.BatchNo,
+                                                   //t7 = t.EDate
+                                               } into m
+                                               select new T_StockInfo
+                                               {
+                                                   MaterialNoID = m.Key.t1,
+                                                   AreaNo = m.Key.t2,
+                                                   StrongHoldCode = m.Key.t3,
+                                                   //StrongHoldName = m.Key.t4,
+                                                   //CompanyCode = m.Key.t5,
+                                                   //BatchNo = m.Key.t6,
+                                                   //EDate = m.Key.t7,
+                                                   Qty = m.Sum(p => p.Qty),
+                                                   //FloorType = m.FirstOrDefault().FloorType,
+                                                   SortArea = m.FirstOrDefault().SortArea
+                                               };
+                            stockModelListSum = ModelListSum.ToList();
+                            if (stockModelListSum != null && stockModelListSum.Count > 0)
+                            {
+                                strAreaNo = string.Empty;
+                                foreach (var itemArea in stockModelListSum)
+                                {
+                                    strAreaNo += itemArea.AreaNo + "|";
+                                }
+                                item.AreaNo = strAreaNo.TrimEnd('|');
+                            }
+                        }
+                    }
+
+
                     messageModel.HeaderStatus = "S";
                     messageModel.ModelJson = BaseInfo;
                     return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<U9Zh>>>(messageModel);

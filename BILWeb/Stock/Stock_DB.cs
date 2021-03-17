@@ -1773,6 +1773,37 @@ namespace BILWeb.Stock
         }
         #endregion
 
+
+        public List<T_StockInfo> GetCanStockListByMaterialNoIDToSql1(List<T_OutStockTaskDetailsInfo> baseModelList)
+        {
+            try
+            {
+                string strSql = "";
+                string material = string.Empty;
+                List<T_StockInfo> stockList = new List<T_StockInfo>();
+                foreach (var item in baseModelList)
+                {
+                    material += "'"+item.MaterialNo + "',";
+                }
+                material = material.TrimEnd(',');
+                strSql = "select * from v_stock where materialno in (" + material + ") and strongholdcode = '" + baseModelList[0].StrongHoldCode + "'";
+                
+                stockList = base.GetModelListBySql(strSql);
+
+                if (stockList != null)
+                {
+                    stockList = stockList.Where(t => t.TaskDetailesID == 0 && t.TransferDetailsID == 0 && t.CheckID == 0 && t.Qty > 0).ToList();
+                }
+
+                return stockList;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         #region 玛莎盘点
         //ymh盘点 根据EAN，areaid获取batch
         public List<string> CheckGetBatchnoAndMaterialno(string EAN, string areaid)

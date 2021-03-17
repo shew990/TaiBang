@@ -90,11 +90,11 @@ namespace BILWeb.OutStockTask
             foreach (var item in modelList)
             {
                 //查找物料可分配库存
-                stockModelList = stockList.FindAll(t => t.CusCode == CUSTOMERCODE && t.MaterialNoID == item.MaterialNoID && t.StrongHoldCode == item.StrongHoldCode && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
+                stockModelList = stockList.FindAll(t => t.CusCode == CUSTOMERCODE && t.MaterialNoID == item.MaterialNoID && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
                 //stockModelList = stockList.FindAll(t => t.MaterialNoID == item.MaterialNoID && t.StrongHoldCode==item.StrongHoldCode && t.WarehouseNo==item.FromErpWarehouse && t.HouseProp==item.HouseProp && t.Qty>0 && t.BatchNo==item.FromBatchNo ).OrderBy(t=>t.EDate).OrderBy(t=>t.SortArea).ToList();
                 if (stockModelList.Count==0|| stockModelList==null)
                 {
-                    stockModelList = stockList.FindAll(t => t.MaterialNoID == item.MaterialNoID && t.StrongHoldCode == item.StrongHoldCode && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
+                    stockModelList = stockList.FindAll(t => t.MaterialNoID == item.MaterialNoID  && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
                 }
 
                 stockModelListSum = CreateNewStockInfoSum(stockModelList);

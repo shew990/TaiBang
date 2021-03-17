@@ -840,6 +840,9 @@ namespace BILWeb.Material
 
         public List<T_StockInfo> barcodeList { get; set; }
 
+        public string AreaNo { get; set; }
+        
+
     }
     public class MoReport
     {
