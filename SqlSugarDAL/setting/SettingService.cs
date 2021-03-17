@@ -1,6 +1,7 @@
 ﻿using SqlSugarDAL.Until;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,21 +54,21 @@ namespace SqlSugarDAL.setting
             successResult.Success = false;
             try
             {
-                if (setting.Id == null)
+                setting.PalletUrl = ConfigurationManager.AppSettings["PalletUrl"]
+                                    + setting.HouseNo + "&OrderType=" + setting.OrderType;
+                var settings = GetList();
+                if (settings.Find(x => x.PalletUrl == setting.PalletUrl) != null)
                 {
-                    setting.Id = Guid.NewGuid().ToString();
-                    setting.Creater = userNo;
-                    setting.CreateTime = DateTime.Now;
-                    Insert(setting);//新增
+                    successResult.Msg = "该仓库该看板类型地址已存在!";
+                    return successResult;
                 }
-                else
-                {
-                    T_Setting objSetting = GetSugarQueryable(x => x.Id == setting.Id).First();
-                    objSetting.Updater = userNo;
-                    objSetting.UpdateTime = DateTime.Now;
-                    Update(objSetting);//修改
-                }
-                successResult.Msg = "保存成功!";
+
+                setting.Id = Guid.NewGuid().ToString();
+                setting.Creater = userNo;
+                setting.CreateTime = DateTime.Now;
+                Insert(setting);//新增
+
+                successResult.Msg = "生成成功!";
                 successResult.Success = true;
             }
             catch (Exception ex)

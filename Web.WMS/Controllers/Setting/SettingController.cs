@@ -1,4 +1,5 @@
 ﻿using SqlSugarDAL.setting;
+using SqlSugarDAL.wareHouse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,11 +47,12 @@ namespace Web.WMS.Controllers.Setting
         /// <returns></returns>
         public ActionResult Form()
         {
-            return View();
+            var houses = new WareHouseService().GetList();
+            return View(houses);
         }
 
         /// <summary>
-        /// 提交（新增/编辑）
+        /// 新增
         /// </summary>
         /// <returns></returns>
         public ActionResult Submit(T_Setting setting)

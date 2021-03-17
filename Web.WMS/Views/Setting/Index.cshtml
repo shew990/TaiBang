@@ -6,11 +6,10 @@
 <table class="layui-hide" id="settingTable" lay-filter="init"></table>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">添加看板地址</button>
+        <button class="layui-btn layui-btn-sm" lay-event="add">生成看板地址</button>
     </div>
 </script>
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
     <a class="layui-btn layui-btn-xs" lay-event="delete">删除</a>
 </script>
 
@@ -48,11 +47,11 @@
                 , page: true
                 , cols: [
                     [
-                        { field: 'PalletUrl', title: '看板地址', width: 200, }
+                        { field: 'PalletUrl', title: '看板地址', width: 500, }
+                        , { field: 'HouseNo', title: '仓库号', width: 120, }
+                        , { field: 'OrderTypeShow', title: '单据类型', width: 120, }
                         , { field: 'Creater', title: '创建人', width: 120, }
                         , { field: 'CreateTimeString', title: '创建时间', width: 150, }
-                        , { field: 'Updater', title: '修改人', width: 120, }
-                        , { field: 'UpdateTimeString', title: '修改时间', width: 150, }
                         , { fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barDemo' }
                     ]
                 ]
@@ -74,23 +73,8 @@
         //监听行工具事件
         table.on('tool(init)', function (obj) {
             var data = obj.data, event = obj.event;
-            if (event === 'detail') {//查看
-                layer.open({
-                    type: 2,
-                    title: "设置信息编辑",
-                    area: ['45%', '50%'],
-                    content: "/Setting/Form",
-                    success: function (layero, index) {
-                        var body = layer.getChildFrame('body', index);
-                        //初始化表单数据的值
-                        body.find("#PalletUrl").val(data.PalletUrl);
-                        body.find("#setting").val(JSON.stringify(data));
-                    }
-                });
-                return false;
-            }
             if (event === 'delete') {
-                layer.confirm('确认删除该设置信息吗?', function (index) {
+                layer.confirm('确认删除该看板信息吗?', function (index) {
                     layer.close(index);
                     $.post("/Setting/DeleteSave", data, function (res) {
                         if (!res.Success) {

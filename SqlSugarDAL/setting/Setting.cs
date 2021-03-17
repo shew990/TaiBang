@@ -11,6 +11,29 @@ namespace SqlSugarDAL.setting
     {
         public String Id { get; set; }
 
+        /// <summary>
+        /// 仓库编号
+        /// </summary>
+        public String HouseNo { get; set; }
+
+        /// <summary>
+        /// 单据类型：(0:出货单看板，1:形体转换看板，2:待定，3：待定)
+        /// </summary>
+        public Int32? OrderType { get; set; }
+
+        [SugarColumn(IsIgnore = true)]
+        public String OrderTypeShow
+        {
+            get
+            {
+                return this.OrderType == 0 ? "出货单看板" :
+                    this.OrderType == 1 ? "形态转换看板" : this.OrderType == 2 ? "待定" : "待定";
+            }
+        }
+
+        /// <summary>
+        /// 看板地址
+        /// </summary>
         public String PalletUrl { get; set; }
 
         public String Creater { get; set; }
