@@ -7,7 +7,7 @@
 <div class="box">
     <div class="layui-card-body layui-table-body layui-table-main">
         <div class="layui-card-body">
-            <div class="layui-inline layui-show-xs-block">
+            <div class="layui-inline layui-show-xs-block hidden">
                 <select name="HouseNo" id="WAREHOUSENO" lay-verify="required" lay-search>
                     @foreach (var item in Model)
                     {
@@ -22,7 +22,7 @@
                     }
                 </select>
             </div>
-            <div class="layui-inline layui-show-xs-block">
+            <div class="layui-inline layui-show-xs-block hidden">
                 <select name="OrderType" id="OrderType" lay-verify="required" lay-search>
                     @if (ViewBag.orderType == "0")
                     {
@@ -58,8 +58,18 @@
                     }
                 </select>
             </div>
+            @*<div class="layui-inline layui-show-xs-block">
+                    <button id="Query" class="btn btn-primary">查询</button>
+                </div>*@
             <div class="layui-inline layui-show-xs-block">
-                <button id="Query" class="btn btn-primary">查询</button>
+                @if (ViewBag.OrderType == "0" || ViewBag.OrderType == "")
+                {
+                    <span style="font-size:20px;">出货单看板</span>
+                }
+                else if (ViewBag.OrderType == "1")
+                {
+                    <span style="font-size:20px;">形态转换看板</span>
+                }
             </div>
             <div class="pull-right">
                 @if (ViewBag.OrderType == "0" || ViewBag.OrderType == "")
@@ -82,13 +92,14 @@
     .x-admin-sm .layui-table td, .x-admin-sm .layui-table th {
         font-size: 20px;
     }
+
     .layui-disabled, .layui-disabled:hover {
         color: black !important;
         background-color: black;
     }
     /*设置表格单元格线样式*/
     .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
-        border-color: black; /*#bbb*/
+        border-color: black;
     }
 </style>
 
@@ -143,24 +154,24 @@
                 , cols: [
                     [
                         //出库单+形态转换看板
-                        { field: 'DocNo', title: '单号', width: 180, hide: is0And1 }
-                        , { field: 'BusinessDateShow', title: '日期', width: 150, hide: is0And1 }
-                        , { field: 'Customer_Code', title: '客户', width: 150, hide: is0And1 }
+                        { field: 'DocNo', title: '单号', width: '12%', hide: is0And1 }
+                        , { field: 'BusinessDateShow', title: '日期', width: '10%', hide: is0And1 }
+                        , { field: 'Customer_Code', title: '客户', width: '10%', hide: is0And1 }
 
                         //出库单看板
-                        , { field: 'Qty', title: '订单发货数量', width: 120, hide: is0 }
-                        , { field: 'SHELVEQTY', title: '已备货数量', width: 150, hide: is0 }
-                        , { field: 'CREATER', title: '备货人', width: 150, hide: is0 }
-                        , { field: 'TransportModeName', title: '发货方式', width: 150, hide: is0 }
-                        , { field: 'PreStocker', title: '预备货员', width: 150, hide: is0 }
+                        , { field: 'Qty', title: '订单发货数量', width: '11%', hide: is0 }
+                        , { field: 'SHELVEQTY', title: '已备货数量', width: '9%', hide: is0 }
+                        , { field: 'CREATER', title: '备货人', width: '13%', hide: is0 }
+                        , { field: 'TransportModeName', title: '发货方式', width: '12%', hide: is0 }
+                        , { field: 'PreStocker', title: '预备货员', width: '8%', hide: is0 }
 
                         //形态转换看板
-                        , { field: 'StatusShow', title: '完成状态', width: 150, hide: is1 }
-                        , { field: 'TransferType', title: '转换类型', width: 150, hide: is1 }
+                        , { field: 'StatusShow', title: '完成状态', width: '8%', hide: is1 }
+                        , { field: 'TransferType', title: '转换类型', width: '8%', hide: is1 }
 
                          //出库单+形态转换看板
-                        , { field: 'BussinessMan', title: '跟单员', width: 150, hide: is0And1 }
-                        , { field: 'EmergencyFlagShow', title: '加急标识', width: 150, hide: is0And1 }
+                        , { field: 'BussinessMan', title: '跟单员', width: '8%', hide: is0And1 }
+                        , { field: 'EmergencyFlagShow', title: '加急标识', width: '8%', hide: is0And1 }
                     ]
                 ],
                 done: function (res, curr, count) {
@@ -177,7 +188,7 @@
                             return false;
                         }
                         if (item.BackColor === "blue") {
-                            tr.css("background-color", "blue");
+                            tr.css("background-color", "#90EE90");
                         }
                     });
                 }
@@ -206,7 +217,7 @@
         });
 
         //定时器,固定时间刷新表格
-        setInterval(function () {
+        @*setInterval(function () {
             table.reload('seePalletTable', {
                 page: {
                     curr: (Number($(".layui-laypage-em").next().html()) + 1)
@@ -217,7 +228,7 @@
                     OrderType: orderType
                 }
             }, 'data');
-        }, @ViewBag.refreshTime);
+        }, @ViewBag.refreshTime);*@
 
     });
 </script>
