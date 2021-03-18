@@ -88,8 +88,8 @@ namespace Web.WMS.Controllers.SeePalletTable
                             && x.Status != "Approved").OrderBy(x => x.BusinessDate);
                 kanbansOrder.AddRange(orderByEmergencyFlag);
                 kanbansOrder.AddRange(orderByBusinessDate);
-                kanbansOrder.AddRange(orderByStatus);
                 kanbansOrder.AddRange(others);
+                kanbansOrder.AddRange(orderByStatus);
             }
             else if (OrderType == "2")
             {
