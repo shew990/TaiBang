@@ -1184,7 +1184,8 @@ namespace BILWeb.Query
             TMM.itemqty = dr["itemqty"].ToDecimal();
             TMM.SUPCUSCODE = (dr["SUPCUSCODE"] ?? "").ToString();
             TMM.strCreate = (dr["CREATETIME"]).ToString();
-            TMM.CREATETIME = Convert.ToDateTime(dr["CREATETIME"]).ToString("yyyyMMddHHmmss").ToDateTime();
+            TMM.CREATETIME = Convert.ToDateTime(dr["CREATETIME"]);
+            //TMM.CREATETIME = Convert.ToDateTime(dr["CREATETIME"]).ToString("yyyyMMddHHmmss").ToDateTime();
             TMM.ROWNO = (dr["ROWNO"] ?? "").ToString();
             TMM.ROWNODEL = dr["ROWNODEL"].ToDBString();
             TMM.BATCHNO = (dr["BATCHNO"] ?? "").ToString();

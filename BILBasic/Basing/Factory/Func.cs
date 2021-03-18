@@ -565,13 +565,12 @@ namespace BILBasic.Basing.Factory
                     T_Interface_Func tfunc = new T_Interface_Func();
                     string ERPJson = GetModelListByJsonToERP(user, modelList, strPost);//JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList);
 
-                    LogNet.LogInfo("-----------------------ERPJsonBefore:" + ERPJson);
+                    //LogNet.LogInfo("-----------------------ERPJsonBefore:" + ERPJson);
                     string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
 
                     model = JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<TBase_Model>>>(interfaceJson);
 
-                    LogNet.LogInfo("-----------------------ERPJsonAfter:" + JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model));
-
+                    //LogNet.LogInfo("-----------------------ERPJsonAfter:" + JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model));
                     //过账失败直接返回
                     if (model.HeaderStatus == "E" && !string.IsNullOrEmpty(model.Message))
                     {
@@ -585,14 +584,15 @@ namespace BILBasic.Basing.Factory
                 //modelList.ForEach(t => t.MaterialDoc = "Wgr0401210221054");
 
                 //LogNet.LogInfo("ERPJson:" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
-                LogNet.LogInfo("------------------------ymh：ERPtoWMS-" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
+                //LogNet.LogInfo("------------------------ymh：ERPtoWMS-" + JSONUtil.JSONHelper.ObjectToJson<List<TBase_Model>>(modelList));
                 bSucc = db.SaveModelListBySqlToDB(user, ref modelList, ref strError, strPost);
                 
                 if (bSucc == false)
                 {
                     model.HeaderStatus = "E";
                     model.Message = strError;
-                    LogNet.LogInfo("------------------ymh：WMS-失败"+ strError);
+                    LogInfo.ErrorLog("------------------WMS失败:单号：【"+ modelList[0].ErpVoucherNo==null?"":modelList[0].ErpVoucherNo + "】错误信息："+ strError);
+                    //LogNet.LogInfo("------------------ymh：WMS-失败"+ strError);
                 }
                 else
                 {
@@ -606,6 +606,7 @@ namespace BILBasic.Basing.Factory
             }
             catch (Exception ex)
             {
+                LogInfo.ErrorLog("------------------WMS失败:错误信息：" + ex.ToString());
                 model.HeaderStatus = "E";
                 model.Message = "保存" + GetModelChineseName() + "失败！" + ex.Message + ex.TargetSite;
                 return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model);

@@ -115,6 +115,7 @@
     <Compile Include="JSONUtil\JSONHelper.cs" />
     <Compile Include="Language\Language_CHS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TOOL\LogInfo.cs" />
     <Compile Include="TOOL\LogNet.cs" />
     <Compile Include="User\Model.cs" />
     <Compile Include="XMLUtil\XmlUtil.cs" />

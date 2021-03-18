@@ -12,6 +12,7 @@ using BILBasic.Common;
 using BILBasic.User;
 using Newtonsoft.Json;
 using BILWeb.BaseInfo;
+using BILBasic.Basing;
 
 namespace BILWeb.Login.User
 {
@@ -210,6 +211,7 @@ namespace BILWeb.Login.User
 
         public string UserLoginADF(string UserJson)
         {
+            LogInfo.ErrorLog("------------------WMS失败:错误信息：");
             BaseMessage_Model<UserInfo> messageModel = new BaseMessage_Model<UserInfo>();
 
             try
