@@ -1,14 +1,31 @@
-﻿@{
+﻿@using SqlSugarDAL.wareHouse
+@model List<T_WAREHOUSE>
+@{
     ViewBag.Title = "Form";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
 <div style="padding:10px;">
     <form class="layui-form" action="">
-        <input type="hidden" id="setting" />
         <div class="layui-form-item">
-            <label class="layui-form-label">看板地址</label>
+            <label class="layui-form-label">仓库</label>
             <div class="layui-input-block">
-                <input type="text" name="PalletUrl" id="PalletUrl" required lay-verify="required" placeholder="请输入看板地址" autocomplete="off" class="layui-input">
+                <select name="HouseNo" lay-verify="required" lay-search>
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.WAREHOUSENO">@item.WAREHOUSENO</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">看板类型</label>
+            <div class="layui-input-block">
+                <select name="OrderType" lay-verify="required" lay-search>
+                    <option value="0">出货单看板</option>
+                    <option value="1">形态转换看板</option>
+                    <option value="2">测试1</option>
+                    <option value="3">测试2</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
@@ -27,8 +44,6 @@
         //提交
         form.on('submit(formDemo)', function (data) {
             let setting = data.field;
-            if ($("#setting").val() != "")
-                setting.Id = JSON.parse($("#setting").val()).Id;
             $.post("/Setting/Submit", setting, function (res) {
                 layer.alert(res.Msg);
                 if (!res.Success)
