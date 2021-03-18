@@ -214,8 +214,9 @@ namespace BILWeb.Warehouse
         public int ISVWAREHOUSE { get; set; }
         [Display(Name = "默认库位")]
         public string DefaultAreaNo { get; set; }//默认上架库位
-        
 
+        [Display(Name = "转换库位")]
+        public string ZhAreaNo { get; set; }//默认转换库位
     }
 }
 

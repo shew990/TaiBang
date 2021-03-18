@@ -15,6 +15,7 @@ using BILWeb.T00L;
 using System.IO;
 using System.Xml.Serialization;
 using BILWeb.Warehouse;
+using BILWeb.Area;
 
 namespace BILWeb.Material
 {
@@ -420,6 +421,11 @@ namespace BILWeb.Material
         {
             try
             {
+                T_WareHouse_DB WDB = new T_WareHouse_DB();
+                T_WareHouseInfo WareHouseInfo = WDB.GetModelByFilter(" id="+user.WarehouseID);
+                T_Area_DB ADB = new T_Area_DB();
+                T_AreaInfo AreaInfo = ADB.GetModelByFilter(" areano='" + WareHouseInfo.ZhAreaNo+"'");
+
                 SerialNos = string.Empty;
                 if (list.Count == 0)
                 {
@@ -461,6 +467,11 @@ namespace BILWeb.Material
                     t_Stockd.Spec = U9ZhDetail.Spec;
                     t_Stockd.SerialNo = SerialnoHelp.GetSerialnos(1)[0];
                     t_Stockd.Barcode = "2@" + t_Stockd.MaterialNo + "@" + t_Stockd.Qty + "@" + t_Stockd.SerialNo;
+
+                    t_Stockd.WareHouseID = AreaInfo==null? t_Stockd.WareHouseID: AreaInfo.WarehouseID;
+                    t_Stockd.HouseID = AreaInfo == null ? t_Stockd.HouseID : AreaInfo.HouseID;
+                    t_Stockd.AreaID = AreaInfo == null ? t_Stockd.AreaID : AreaInfo.ID;
+            
 
 
                     int Materialnoid1 = MDB.GetMaterialNoid(U9ZhDetail.MaterialNo, list[0].StrongHoldCode);

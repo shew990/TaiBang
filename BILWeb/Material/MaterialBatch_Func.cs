@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using BILBasic.Basing;
 
 namespace BILWeb.Material
 {
@@ -278,6 +279,8 @@ namespace BILWeb.Material
 
         public string PostZh(string UserJson, string ModelJson, string Guid)
         {
+            LogInfo.ErrorLog("------------------WMS失败:错误信息：");
+
             BaseMessage_Model<List<T_OutBarCodeInfo>> messageModel = new BaseMessage_Model<List<T_OutBarCodeInfo>>();
             try
             {
@@ -351,25 +354,25 @@ namespace BILWeb.Material
                 //});
 
 
-                string ERPJson = BILBasic.JSONUtil.JSONHelper.ObjectToJson<List<U9Zh>>(modelList);
+                //string ERPJson = BILBasic.JSONUtil.JSONHelper.ObjectToJson<List<U9Zh>>(modelList);
 
-                BILBasic.Interface.T_Interface_Func tfunc = new BILBasic.Interface.T_Interface_Func();
-                LogNet.LogInfo("---------------------------ERPJsonBefore:" + ERPJson);
-                string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
+                //BILBasic.Interface.T_Interface_Func tfunc = new BILBasic.Interface.T_Interface_Func();
+                //LogNet.LogInfo("---------------------------ERPJsonBefore:" + ERPJson);
+                //string interfaceJson = tfunc.PostModelListToInterface(ERPJson);
 
-                messageModel = BILBasic.JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<T_OutBarCodeInfo>>>(interfaceJson);
+                //messageModel = BILBasic.JSONUtil.JSONHelper.JsonToObject<BaseMessage_Model<List<T_OutBarCodeInfo>>>(interfaceJson);
 
-                LogNet.LogInfo("--------------------------ERPJsonAfter:" + messageModel);
+                //LogNet.LogInfo("--------------------------ERPJsonAfter:" + messageModel);
 
-                //过账失败直接返回
-                if (messageModel.HeaderStatus == "E" && !string.IsNullOrEmpty(messageModel.Message))
-                {
-                    return interfaceJson;
-                }
-                else if (messageModel.HeaderStatus == "S" && !string.IsNullOrEmpty(messageModel.MaterialDoc)) //过账成功，并且生成了凭证要记录数据库
-                {
-                    modelList.ForEach(t => t.MaterialDoc = messageModel.MaterialDoc);
-                }
+                ////过账失败直接返回
+                //if (messageModel.HeaderStatus == "E" && !string.IsNullOrEmpty(messageModel.Message))
+                //{
+                //    return interfaceJson;
+                //}
+                //else if (messageModel.HeaderStatus == "S" && !string.IsNullOrEmpty(messageModel.MaterialDoc)) //过账成功，并且生成了凭证要记录数据库
+                //{
+                //    modelList.ForEach(t => t.MaterialDoc = messageModel.MaterialDoc);
+                //}
                  
                 LogNet.LogInfo("ymh：ERPtoWMS-" + BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<T_OutBarCodeInfo>>>(messageModel));
                 string SerialNos = "";
