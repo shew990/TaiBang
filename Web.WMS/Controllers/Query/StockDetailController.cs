@@ -83,7 +83,7 @@ namespace Web.WMS.Controllers.Query
 
             successResult.Data = time.ToString();
             successResult.Success = true;
-            return Json(time.ToString(), JsonRequestBehavior.AllowGet);
+            return Json(successResult, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
