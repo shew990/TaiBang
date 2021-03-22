@@ -2,9 +2,13 @@
 using BILBasic.Basing.Factory;
 using BILBasic.Common;
 using BILBasic.DBA;
+using BILBasic.User;
+using BILWeb.Login.User;
+using BILWeb.Material;
 using BILWeb.OutBarCode;
 using BILWeb.Print;
 using BILWeb.Stock;
+using BILWeb.T00L;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -336,6 +340,147 @@ namespace BILWeb.Query
                 return false;
             }
         }
+
+        //拆条码
+        public bool Chai(string serialno,decimal qty, UserModel user, ref string strErrMsg,ref DateTime time)
+        {
+            try
+            {
+                time = DateTime.Now;
+                //构造实体类
+                List<T_StockInfo> StockInfos = new List<T_StockInfo>();
+                T_Stock_DB DBStock = new T_Stock_DB();
+                T_StockInfo StockInfo = DBStock.GetModelBySql(new T_StockInfo() { SerialNo = serialno });
+
+                int outboxnum = 0;
+                decimal tailnum=0;
+                int inboxnum = 0;
+                GetBoxInfo(ref outboxnum, ref tailnum, ref inboxnum, StockInfo.Qty, qty);
+                for (int i = 0; i < outboxnum; i++)
+                {
+                    T_StockInfo t_Stockd = T_Material_Batch_DB.DeepCopyByXml<T_StockInfo>(StockInfo);
+                    t_Stockd.Qty = qty;
+                    t_Stockd.SerialNo = SerialnoHelp.GetSerialnos(1)[0];
+                    t_Stockd.Barcode = "2@" + t_Stockd.MaterialNo + "@" + t_Stockd.Qty + "@" + t_Stockd.SerialNo;
+                    StockInfos.Add(t_Stockd);
+
+                }
+                if (inboxnum==1)
+                {
+                    StockInfo.fserialno = StockInfo.SerialNo;
+                    T_StockInfo t_Stockd = T_Material_Batch_DB.DeepCopyByXml<T_StockInfo>(StockInfo);
+                    t_Stockd.Qty = tailnum;
+                    t_Stockd.SerialNo = SerialnoHelp.GetSerialnos(1)[0];
+                    t_Stockd.Barcode = "2@" + t_Stockd.MaterialNo + "@" + t_Stockd.Qty + "@" + t_Stockd.SerialNo;
+                    StockInfos.Add(t_Stockd);
+                }
+
+                //插表
+                List<string> sqls = new List<string>();
+                sqls.Add(GetTaskTransSql_update(user, StockInfo));
+                for (int i = 0; i < StockInfos.Count; i++)
+                {
+                    string strSql1 = "insert into t_stock(serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
+                          "islimitstock,materialnoid,warehouseid,houseid,areaid,Receivestatus,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,EDATE,SUPCODE,SUPNAME," +
+                         "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo)" +
+                         "values ('" + StockInfos[i].SerialNo + "','" + StockInfos[i].MaterialNo + "','" + StockInfos[i].MaterialDesc + "','" + StockInfos[i].Qty + "','" + StockInfos[i].IsQuality + "','1'" +
+                         ",'" + user.UserNo + "',getdate(),'" + StockInfos[i].BatchNo + "','" + StockInfos[i].Unit + "','" + StockInfos[i].UnitName + "'" +
+                         ",(select palletno from t_Palletdetail where serialno = '" + StockInfos[i].SerialNo + "'),'1','" + StockInfos[i].MaterialNoID + "'" +
+                         ", '" + StockInfos[i].WareHouseID + "','" + StockInfos[i].HouseID + "','" + StockInfos[i].AreaID + "','1','" + StockInfos[i].Barcode + "','" + StockInfos[i].StrongHoldCode + "', " +
+                         "  '" + StockInfos[i].StrongHoldName + "','" + StockInfos[i].CompanyCode + "',null,'" + StockInfos[i].SupCode + "','" + StockInfos[i].SupName + "'," +
+                         "'" + StockInfos[i].SupPrdBatch + "','3' ,'1','" + StockInfos[i].EAN + "','" + StockInfos[i].BarCodeType + "','" + (StockInfos[i].ProjectNo == null ? "" : StockInfos[i].ProjectNo) + "','" + (StockInfos[i].TracNo == null ? "" : StockInfos[i].TracNo) + "' )";
+                    sqls.Add(strSql1);
+
+                    string strSql2 = "INSERT INTO T_OUTBARCODE(voucherno,rowno,erpvoucherno,vouchertype,materialno,materialdesc,spec,cuscode,cusname,supcode,supname,outpackqty,innerpackqty," +
+                        "voucherqty,qty,nopack,printqty,barcode,barcodetype,serialno,barcodeno,outcount,innercount,mantissaqty,isrohs,outbox_id,abatchqty,isdel,creater,createtime,modifyer," +
+                        "modifytime, materialnoid,strongholdcode,strongholdname,companycode,productdate,supprdbatch,supprddate,productbatch,edate,storecondition,specialrequire,batchno,barcodemtype," +
+                        "rownodel, protectway,boxweight,unit,labelmark,boxdetail,matebatch,mixdate,relaweight,productclass,itemqty,workno,mtypef,prorowno,prorownodel,boxcount,dimension,ean,fserialno," +
+                        "standard, erpmateid,subiarrsid,originalCode,status,ReceiveTime,Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname,erpwarehousename) " +
+                        "select  voucherno,rowno,'" + StockInfos[i].ErpVoucherNo + "',vouchertype,'" + StockInfos[i].MaterialNo + "','" + StockInfos[i].MaterialDesc + "','" + StockInfos[i].Spec + "',cuscode,cusname,supcode,supname,outpackqty,innerpackqty,voucherqty,'" + StockInfos[i].Qty + "',nopack,printqty,'" + StockInfos[i].Barcode + "',barcodetype," +
+                        "'" + StockInfos[i].SerialNo + "',barcodeno,outcount,innercount,mantissaqty,isrohs,outbox_id,abatchqty,isdel,creater,createtime,modifyer,modifytime," + StockInfos[i].MaterialNoID + ",strongholdcode,strongholdname,companycode,productdate,supprdbatch," +
+                        "supprddate,productbatch,edate,storecondition,specialrequire,'" + StockInfos[i].BatchNo + "',barcodemtype,rownodel,protectway,boxweight,unit,labelmark,boxdetail,matebatch,mixdate,relaweight,productclass,itemqty," +
+                        "workno, mtypef,prorowno,prorownodel,boxcount,dimension,ean,fserialno,standard,erpmateid,subiarrsid,originalCode,status,'"+time+"',Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname," +
+                        "erpwarehousename from t_outbarcode where serialno= '" + StockInfos[i].fserialno + "'";
+                    sqls.Add(strSql2);
+
+                    sqls.Add(GetTaskTransSql_update1(user, StockInfos[i]));
+
+                }
+                int count = dbFactory.ExecuteNonQueryList(sqls, ref strErrMsg);
+
+                if (count>0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                strErrMsg = ex.Message;
+                return false;
+            }
+        }
+
+
+        private string GetTaskTransSql_update(UserModel user, T_StockInfo model)
+        {
+            int id = 999999;
+            string strSql = "insert into t_tasktrans(id, Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
+            "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
+            "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,barcode,status,materialdoc,houseprop,ean)" +
+            " values (" + id + ",'" + model.SerialNo + "',0,0,0," +
+            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','','','" + model.Qty  + "','200'," +
+            " 0 ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
+            "'" + model.Unit + "','" + model.UnitName + "','" + model.PartNo + "','" + model.MaterialNoID + "','" + model.ErpVoucherNo + "'," +
+            "  '','" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
+            "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.TaskNo + "'," +
+            " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + model.Barcode + "','" + model.Status + "','','','" + model.EAN + "'); ";
+
+            return strSql;
+        }
+
+        private string GetTaskTransSql_update1(UserModel user, T_StockInfo model)
+        {
+            int id = 999999;
+            string strSql = "insert into t_tasktrans(id, Serialno,towarehouseID,TohouseID, ToareaID, Materialno, Materialdesc, Supcuscode, " +
+            "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
+            "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,barcode,status,materialdoc,houseprop,ean)" +
+            " values (" + id + ",'" + model.SerialNo + "',0,0,0," +
+            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','','','" + model.Qty + "','207'," +
+            " 0 ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
+            "'" + model.Unit + "','" + model.UnitName + "','" + model.PartNo + "','" + model.MaterialNoID + "','" + model.ErpVoucherNo + "'," +
+            "  '','" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
+            "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.SerialNo + "'," +
+            " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + model.Barcode + "','" + model.Status + "','','','" + model.EAN + "'); ";
+
+            return strSql;
+        }
+
+
+        private void GetBoxInfo(ref int outboxnum, ref decimal tailnum, ref int inboxnum, decimal num, decimal everynum)
+        {
+            if (num % everynum == 0)
+            {
+                outboxnum = (int)(num / everynum);
+                tailnum = everynum;
+                inboxnum = 0;
+            }
+            else
+            {
+                outboxnum = (int)(num / everynum);
+                tailnum = num % everynum;
+                inboxnum = 1;
+            }
+
+        }
+
+
+
+
+
         private string StockD_GetFilterSql(T_StockInfoEX mo)
         {
             string sql = " ISDEL = 1 ";
