@@ -10,7 +10,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">拆分数量</label>
             <div class="layui-input-block">
-                <input type="text" name="splitCount" id="splitCount" required lay-verify="number" placeholder="请输入角色名" autocomplete="off" class="layui-input">
+                <input type="text" name="splitCount" id="splitCount" required lay-verify="number" placeholder="请输入拆分数量" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -28,7 +28,7 @@
 
         //表单提交
         form.on('submit(formDemo)', function (data) {
-            $.post("/StockDetail/Submit",
+            $.post("/StockDetail/SplitStamp",
                 { serialno: $("#serialNo").val(), qty: $("#splitCount").val() },
                 function (res) {
                     if (!res.Success) {
