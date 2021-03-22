@@ -198,7 +198,7 @@ namespace BILWeb.Stock
             t_stock.IsLimitStock = dbFactory.ToModelValue(reader, "IsLimitStock").ToInt32();
             t_stock.IsQuality = dbFactory.ToModelValue(reader, "IsQuality").ToInt32();
 
-            t_stock.CompanyCode = (string)dbFactory.ToModelValue(reader, "CompanyCode");
+            t_stock.CompanyCode =  (string)dbFactory.ToModelValue(reader, "CompanyCode");
             t_stock.StrongHoldCode = (string)dbFactory.ToModelValue(reader, "StrongHoldCode");
             t_stock.StrongHoldName = (string)dbFactory.ToModelValue(reader, "StrongHoldName");
             //t_stock.AreaType = dbFactory.ToModelValue(reader, "AreaType").ToInt32();
@@ -207,7 +207,7 @@ namespace BILWeb.Stock
             t_stock.EDate = dbFactory.ToModelValue(reader, "EDate").ToDateTime();
             t_stock.StrEDate = t_stock.EDate.ToString("yyyy/MM/dd");
             t_stock.BatchNo = dbFactory.ToModelValue(reader, "BatchNo").ToDBString();
-            t_stock.MaterialChangeID = dbFactory.ToModelValue(reader, "MaterialChangeID").ToInt32();
+            t_stock.MaterialChangeID = 0;// dbFactory.ToModelValue(reader, "MaterialChangeID").ToInt32();
 
             if (Common_Func.readerExists(reader, "WAREHOUSENO")) t_stock.FromErpWarehouse = reader["WAREHOUSENO"].ToDBString();
             if (Common_Func.readerExists(reader, "AREANO")) t_stock.FromErpAreaNo = reader["AREANO"].ToDBString();
@@ -553,7 +553,7 @@ namespace BILWeb.Stock
         /// <returns></returns>
         protected override string GetModelSql(T_StockInfo model)
         {
-            string strSql = string.Format("select  a.Id, Barcode, Serialno, Materialno, Materialdesc,a.warehouseid,a.houseid,  a.Areaid,b.warehouseno,b.houseno,b.AREANO, Qty, Tmaterialno, Tmaterialdesc, Pickareano, Celareano, Status, a.Isdel, a.Creater, " +
+            string strSql = string.Format("select a.TracNo, a.Spec, a.BarCodeType,a.IsAmount, a.EAN,a.HouseProp,a.ProductDate,a.SupPrdBatch,a.IsRetention,a.SupPrdDate,a.edate, a.IsQuality,a.CompanyCode,a.StrongHoldCode,a.STRONGHOLDNAME, a.Id, Barcode, Serialno, Materialno, Materialdesc,a.warehouseid,a.houseid,  a.Areaid,b.warehouseno,b.houseno,b.AREANO, Qty, Tmaterialno, Tmaterialdesc, Pickareano, Celareano, Status, a.Isdel, a.Creater, " +
                                 "a.Createtime, a.Modifyer, a.Modifytime, Batchno, Sn, Returnsupcode, Returnreson, Returnsupname, Oldstockid," +
                                 "Taskdetailesid, a.Checkid, Transferdetailsid, Returntype, Returntypedesc, Unit, Salename, Unitname," +
                                 "Palletno, Receivestatus, Salecode, Islimitstock, Partno, Materialnoid from t_stock a left join " +
