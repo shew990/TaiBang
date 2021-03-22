@@ -2,11 +2,13 @@
 using BILWeb.Query;
 using BILWeb.Stock;
 using Newtonsoft.Json;
+using SqlSugarDAL.Until;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Http;
 using System.Web.Mvc;
+using Web.WMS.Common;
 using Web.WMS.Models;
 using WMS.Web.Filter;
 
@@ -67,10 +69,21 @@ namespace Web.WMS.Controllers.Query
         /// 拆分打印
         /// </summary>
         /// <returns></returns>
-        //public ActionResult SplitStamp()
-        //{
-        //    queryDB
-        //}
+        public ActionResult SplitStamp(string serialno, decimal qty)
+        {
+            SuccessResult successResult = new SuccessResult();
+            string strErrMsg = "";
+            DateTime time = DateTime.Now;
+            if (!queryDB.Chai(serialno, qty, Commom.ReadUserInfo(), ref strErrMsg, ref time))
+            {
+                successResult.Msg = strErrMsg;
+                return Json(successResult,JsonRequestBehavior.AllowGet);
+            }
+
+            successResult.Data = time.ToString();
+            successResult.Success = true;
+            return Json(time.ToString(), JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
         /// 导出excel

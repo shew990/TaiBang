@@ -178,7 +178,12 @@
                 type: 2,
                 title: "拆分打印",
                 area: ['40%', '30%'],
-                content: "/StockDetail/Form"
+                content: "/StockDetail/Form",
+                success: function (layero, index) {
+                    var body = layer.getChildFrame('body', index);
+                    //初始化表单数据的值
+                    body.find("#serivalNo").val(obj.data.SerialNo);
+                }
             });
         });
 
