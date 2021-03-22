@@ -55,6 +55,24 @@ namespace Web.WMS.Controllers.Query
         }
 
         /// <summary>
+        /// 跳转表单页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Form()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 拆分打印
+        /// </summary>
+        /// <returns></returns>
+        //public ActionResult SplitStamp()
+        //{
+        //    queryDB
+        //}
+
+        /// <summary>
         /// 导出excel
         /// </summary>
         /// <param name="jsonString"></param>

@@ -64,6 +64,7 @@
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="stamppallet">打印托盘</a>
             <a class="layui-btn layui-btn-xs" lay-event="stamp">打印外箱</a>
+            <a class="layui-btn layui-btn-xs" lay-event="stampSplit">拆分打印</a>
         </script>
     </div>
 </div>
@@ -116,7 +117,7 @@
                 , page: true //开启分页
                 , totalRow: true //开启合计行
                 , toolbar: '#toolbarDemo'
-                , limits: [30,100, 200, 500, 1000]
+                , limits: [30, 100, 200, 500, 1000]
                 , limit: 30 //每页默认显示的数量
                 //, totalRow: true //开启合计行
                 , cols: [[ //表头
@@ -126,9 +127,9 @@
                     , { field: 'MaterialNo', title: '物料号', width: 120, sort: true }
                     //, { field: 'MaterialDesc', title: '物料名称', width: 200 }
                     , { field: 'BatchNo', title: '番号', width: 120, sort: true }
-                     , { field: 'StoreCondition', title: '合同型号', width: 120, sort: true }
-                      , { field: 'Spec', title: '规格', width: 120, sort: true }
-                       , { field: 'CusCode', title: '客户编码', width: 120, sort: true }
+                    , { field: 'StoreCondition', title: '合同型号', width: 120, sort: true }
+                    , { field: 'Spec', title: '规格', width: 120, sort: true }
+                    , { field: 'CusCode', title: '客户编码', width: 120, sort: true }
                     , { field: 'StrongHoldCode', title: '据点', width: 100 }
                     , { field: 'Unit', title: '单位', width: 80, totalRowText: '合计汇总:' }
                     , { field: 'Qty', title: '数量', width: 80, totalRow: true }
@@ -139,7 +140,7 @@
                     , { field: 'StatusName', title: '状态', width: 80 }
                     , { field: 'StrIsAmount', title: '标记', width: 100 }
                     //, { field: 'CreateTime', title: '时间', width: 150 }
-                    , { fixed: 'right', width: 200, align: 'center', toolbar: '#barDemo' }
+                    , { fixed: 'right', width: 300, align: 'center', toolbar: '#barDemo' }
                 ]]
             });
         }
@@ -164,11 +165,21 @@
 
         //监听行工具事件
         table.on('tool(init)', function (obj) {
-            if (obj.event === 'stamp') {
+            if (obj.event === 'stamp') {//外箱打印
                 openPostWindow($("#printIP").val() + "Main.aspx", "serialno", obj.data.SerialNo);
                 return false;
             }
-            openPostWindow($("#printIP").val() + "Main.aspx", "pallet", obj.data.PalletNo);
+            if (obj.event === 'stamppallet') {//托盘打印
+                openPostWindow($("#printIP").val() + "Main.aspx", "pallet", obj.data.PalletNo);
+                return false;
+            }
+            //拆分打印
+            layer.open({
+                type: 2,
+                title: "拆分打印",
+                area: ['40%', '30%'],
+                content: "/StockDetail/Form"
+            });
         });
 
         //单击行变色
