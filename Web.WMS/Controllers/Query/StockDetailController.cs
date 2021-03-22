@@ -72,6 +72,7 @@ namespace Web.WMS.Controllers.Query
         public ActionResult SplitStamp(string serialno, decimal qty)
         {
             SuccessResult successResult = new SuccessResult();
+            successResult.Success = false;
             string strErrMsg = "";
             DateTime time = DateTime.Now;
             if (!queryDB.Chai(serialno, qty, Commom.ReadUserInfo(), ref strErrMsg, ref time))
