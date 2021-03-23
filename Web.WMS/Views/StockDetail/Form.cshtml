@@ -36,7 +36,7 @@
                         return false;
                     }
                     $("#closeLayer").click();
-                    openPostWindow($("#printIP").val() + "Main.aspx", "stock", res.Data);
+                    parent.openPostWindow($("#printIP").val() + "Main.aspx", "stock", res.Data);
                 });
             return false;
         });
@@ -48,19 +48,19 @@
         });
     });
 
-    function openPostWindow(url, keys, values) {
-        var newWindow = top.window.open(url, name);
-        if (!newWindow)
-            return false;
-        var html = "";
-        html += "<html><head></head><body><form id='formid' method='post' action='" + url + "'>";
-        if (keys && values) {
-            html += "<input type='hidden' name='" + keys + "' value='" + values + "'/>";
-        }
-        html += "</form><script type='text/javascript'>document.getElementById('formid').submit();";
-        html += "<\/script></body></html>".toString().replace(/^.+?\*|\\(?=\/)|\*.+?$/gi, "");
-        newWindow.document.write(html);
-        return newWindow;
-    }
+    //function openPostWindow(url, keys, values) {
+    //    var newWindow = top.window.open(url, name);
+    //    if (!newWindow)
+    //        return false;
+    //    var html = "";
+    //    html += "<html><head></head><body><form id='formid' method='post' action='" + url + "'>";
+    //    if (keys && values) {
+    //        html += "<input type='hidden' name='" + keys + "' value='" + values + "'/>";
+    //    }
+    //    html += "</form><script type='text/javascript'>document.getElementById('formid').submit();";
+    //    html += "<\/script></body></html>".toString().replace(/^.+?\*|\\(?=\/)|\*.+?$/gi, "");
+    //    newWindow.document.write(html);
+    //    return newWindow;
+    //}
 </script>
 
