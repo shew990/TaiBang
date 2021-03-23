@@ -35,8 +35,8 @@
                         parent.layer.alert(res.Msg);
                         return false;
                     }
-                    openPostWindow($("#printIP").val() + "Main.aspx", "stock", res.Data);
                     $("#closeLayer").click();
+                    openPostWindow($("#printIP").val() + "Main.aspx", "stock", res.Data);
                 });
             return false;
         });
