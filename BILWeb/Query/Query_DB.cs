@@ -444,7 +444,7 @@ namespace BILWeb.Query
             " 0 ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
             "'" + model.Unit + "','" + model.UnitName + "','" + model.PartNo + "','" + model.MaterialNoID + "','" + model.ErpVoucherNo + "'," +
             "  '','" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
-            "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.TaskNo + "'," +
+            "  '" + model.SupPrdBatch + "',null ,'" + model.TaskNo + "'," +
             " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + model.Barcode + "','" + model.Status + "','','','" + model.EAN + "'); ";
 
             return strSql;
@@ -461,7 +461,7 @@ namespace BILWeb.Query
             " 0 ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
             "'" + model.Unit + "','" + model.UnitName + "','" + model.PartNo + "','" + model.MaterialNoID + "','" + model.ErpVoucherNo + "'," +
             "  '','" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
-            "  '" + model.SupPrdBatch + "','" + model.EDate + "' ,'" + model.SerialNo + "'," +
+            "  '" + model.SupPrdBatch + "',null ,'" + model.SerialNo + "'," +
             " '" + model.BatchNo + "', '" + model.AreaID + "','" + model.WareHouseID + "','" + model.HouseID + "' ,'" + model.Barcode + "','" + model.Status + "','','','" + model.EAN + "'); ";
 
             return strSql;
