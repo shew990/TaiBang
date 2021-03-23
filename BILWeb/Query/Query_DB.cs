@@ -352,6 +352,12 @@ namespace BILWeb.Query
                 T_Stock_DB DBStock = new T_Stock_DB();
                 T_StockInfo StockInfo = DBStock.GetModelBySql(new T_StockInfo() { SerialNo = serialno });
 
+                if (StockInfo.Qty<= qty)
+                {
+                    strErrMsg = "拆分数量不能大于等于当前库存数量！";
+                    return false;
+                }
+
                 int outboxnum = 0;
                 decimal tailnum=0;
                 int inboxnum = 0;
@@ -406,6 +412,8 @@ namespace BILWeb.Query
                     sqls.Add(GetTaskTransSql_update1(user, StockInfos[i]));
 
                 }
+
+                sqls.Add("delete from t_stock where serialno='"+ serialno + "';");
                 int count = dbFactory.ExecuteNonQueryList(sqls, ref strErrMsg);
 
                 if (count>0)
