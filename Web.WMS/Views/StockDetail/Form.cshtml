@@ -49,7 +49,7 @@
     });
 
     function openPostWindow(url, keys, values) {
-        var newWindow = window.open(url, name);
+        var newWindow = top.window.open(url, name);
         if (!newWindow)
             return false;
         var html = "";
