@@ -81,8 +81,7 @@ namespace Web.WMS.Controllers.SeePalletTable
                      && x.Status != "Approved" && Convert.ToDateTime(x.BusinessDate) < DateTime.Now
                     && x.EmergencyFlag != "True").OrderBy(x => x.BusinessDate).ToList();
                 orderByBusinessDate.ForEach(x => x.BackColor = "yellow");
-                var orderByStatus = kanbans.FindAll(x => x.Status == "Approved"
-                    && x.EmergencyFlag != "True" && IsToday(x.BusinessDate))
+                var orderByStatus = kanbans.FindAll(x => x.Status == "Approved")
                     .OrderBy(x => x.BusinessDate).ToList();
                 orderByStatus.ForEach(x => x.BackColor = "blue");
                 var others = kanbans.FindAll(x => x.EmergencyFlag != "True"
