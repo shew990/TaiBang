@@ -48,7 +48,7 @@ namespace Web.WMS.Controllers.SeePalletTable
                 var returnKanban = JSONHelper.JsonToObject<ReturnKanban>(ERPJson);
                 var kanbans = returnKanban.data == null ? new List<Kanban>() : returnKanban.data;
 
-                LogNet.LogInfo("---------------------调用ERP接口:返回看板参数1：" + kanbans);
+                LogNet.LogInfo("---------------------调用ERP接口:返回出货单看板参数：" + kanbans);
 
                 orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
                     .OrderBy(x => x.BusinessDate).ThenBy(x => x.TransportModeCode).ToList();
@@ -72,15 +72,16 @@ namespace Web.WMS.Controllers.SeePalletTable
                 var returnKanban = JSONHelper.JsonToObject<ReturnKanban>(ERPJson);
                 var kanbans = returnKanban.data;
 
-                orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True")
-                    .OrderBy(x => x.BusinessDate).ToList();
+                LogNet.LogInfo("---------------------调用ERP接口:返回形态看板参数：" + kanbans);
+
+                orderByEmergencyFlag = kanbans.FindAll(x => x.EmergencyFlag == "True"
+                    && x.Status != "Approved").OrderBy(x => x.BusinessDate).ToList();
                 orderByEmergencyFlag.ForEach(x => x.BackColor = "red");
                 var orderByBusinessDate = kanbans.FindAll(x => !IsToday(x.BusinessDate)
-                    && Convert.ToDateTime(x.BusinessDate) < DateTime.Now
+                     && x.Status != "Approved" && Convert.ToDateTime(x.BusinessDate) < DateTime.Now
                     && x.EmergencyFlag != "True").OrderBy(x => x.BusinessDate).ToList();
                 orderByBusinessDate.ForEach(x => x.BackColor = "yellow");
-                var orderByStatus = kanbans.FindAll(x => x.Status == "Approved"
-                    && x.EmergencyFlag != "True" && IsToday(x.BusinessDate))
+                var orderByStatus = kanbans.FindAll(x => x.Status == "Approved")
                     .OrderBy(x => x.BusinessDate).ToList();
                 orderByStatus.ForEach(x => x.BackColor = "blue");
                 var others = kanbans.FindAll(x => x.EmergencyFlag != "True"
