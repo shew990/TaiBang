@@ -204,6 +204,7 @@ namespace Web.WMS.Controllers.Print
                     model.CusName = objT_InStockDetailInfo.SUPPLIERSHORTNAME;
                     model.erpwarehousename = objT_InStockDetailInfo.ErpWarehouseName;
                     model.StoreCondition = objT_InStockDetailInfo.CustomerItemCode;
+                    model.spec = objT_InStockDetailInfo.spec;
                     if (erpvoucherno.Substring(0, 2) == "DC") {
                         model.dimension = erpvoucherno;
                     }
@@ -248,6 +249,7 @@ namespace Web.WMS.Controllers.Print
                     model.CusName = objT_InStockDetailInfo.SUPPLIERSHORTNAME;
                     model.erpwarehousename = objT_InStockDetailInfo.ErpWarehouseName;
                     model.StoreCondition = objT_InStockDetailInfo.CustomerItemCode;
+                    model.spec = objT_InStockDetailInfo.spec;
                     if (erpvoucherno.Substring(0, 2) == "DC")
                     {
                         model.dimension = erpvoucherno;

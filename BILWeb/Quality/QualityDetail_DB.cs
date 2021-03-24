@@ -332,11 +332,11 @@ namespace BILWeb.Quality
             //                    "Strongholdcode, Strongholdname, Companycode,Edate, Supcode, Supname, Productdate, Supprdbatch,Supprddate, '" + model.IsQuality + "',1,'" + model.TaskDetailesID + "','" + model.HouseProp + "',ean from t_Outbarcode where serialno = '" + NewSerialNo + "'";
                                
             //}
-            strSql = "insert into t_Stock( Barcode, Serialno, Materialno, Materialdesc, Warehouseid, Houseid, Areaid, Qty, Status, Isdel," +
+            strSql = "insert into t_Stock( spec,Barcode, Serialno, Materialno, Materialdesc, Warehouseid, Houseid, Areaid, Qty, Status, Isdel," +
                                 "Creater, Createtime, Batchno,  Oldstockid, Unit, Unitname,  " +
                                 "Receivestatus,  Islimitstock,  Materialnoid, Strongholdcode, Strongholdname, Companycode," +
                                 "Edate, Supcode, Supname, Productdate, Supprdbatch, Supprddate, Isquality,Stocktype,ean,BARCODETYPE,ProjectNo,TracNo,IsAmount)" +
-                                "select barcode,serialno,materialno,Materialdesc,'" + model.WareHouseID + "', '" + model.HouseID + "', '" + model.AreaID + "', Qty ,'" + model.Status + "','1'," +
+                                "select spec, barcode,serialno,materialno,Materialdesc,'" + model.WareHouseID + "', '" + model.HouseID + "', '" + model.AreaID + "', Qty ,'" + model.Status + "','1'," +
                                 "'" + user.UserNo + "',getdate(),batchno,'" + model.ID + "',unit,'" + model.UnitName + "','" + model.ReceiveStatus + "','" + model.IsLimitStock + "','"+model.MaterialNoID+"'," +
                                 "'"+model.StrongHoldCode+ "', '" + model.StrongHoldName + "', Companycode,Edate, Supcode, Supname, Productdate, Supprdbatch,Supprddate, '3',1,ean,BARCODETYPE,ProjectNo,TracNo,2 from t_Outbarcode where serialno = '" + NewSerialNo + "'";
 
