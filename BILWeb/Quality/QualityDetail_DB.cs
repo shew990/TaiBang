@@ -257,14 +257,14 @@ namespace BILWeb.Quality
             NewBaecode = BarCode;
             //string BarCode =""+model.BarCodeType+"" + model.MaterialNo.PadLeft(16, '0') + "" + model.BatchNo.PadLeft(11, '0') + ""+NewSerialNo+"";
 
-            string strSql = "insert into t_Outbarcode ( Voucherno, Rowno, Erpvoucherno, Vouchertype, Materialno, Materialdesc, Cuscode," +
+            string strSql = "insert into t_Outbarcode ( spec,Voucherno, Rowno, Erpvoucherno, Vouchertype, Materialno, Materialdesc, Cuscode," +
                             "Cusname, Supcode, Supname, Outpackqty, Innerpackqty, Voucherqty, Qty, Nopack, Printqty, Barcode, " +
                             "Barcodetype, Serialno, Barcodeno, Outcount, Innercount, Mantissaqty, Isrohs, Outbox_Id, " +
                             "Inner_Id, Abatchqty, Isdel, Creater, Createtime, Materialnoid, Strongholdcode, " +
                             "Strongholdname, Companycode, Productdate, Supprdbatch, Supprddate, Productbatch, Edate, Storecondition," +
                             "Specialrequire, Batchno, Barcodemtype, Rownodel, Protectway, Boxweight, Unit, Labelmark, Boxdetail, Matebatch," +
                             "Mixdate, Relaweight,Ean,ProjectNo,TracNo,erpwarehousename)" +
-                            "select voucherno,rowno,erpvoucherno,vouchertype, Materialno, Materialdesc, Cuscode," +
+                            "select spec,voucherno,rowno,erpvoucherno,vouchertype, Materialno, Materialdesc, Cuscode," +
                             "Cusname, Supcode, Supname, Outpackqty, Innerpackqty, Voucherqty, '" + model.AmountQty + "',Nopack, Printqty," +
                             "'" + BarCode + "'," +
                             "Barcodetype, '" + NewSerialNo + "', Barcodeno, Outcount, Innercount, Mantissaqty, Isrohs,'" + model.ID+ "',Inner_Id, " +

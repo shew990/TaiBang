@@ -14,6 +14,7 @@ using System.Data;
 using System.Reflection;
 using BILBasic.Basing.Factory;
 using BILWeb.OutStockCreate;
+using BILWeb.OutBarCode;
 
 namespace BILWeb.Stock
 {
@@ -246,7 +247,13 @@ namespace BILWeb.Stock
             //t_stock.SortArea = dbFactory.ToModelValue(reader, "SortArea").ToDBString();
             t_stock.IsAmount = dbFactory.ToModelValue(reader, "IsAmount").ToInt32();
             t_stock.BarCodeType = dbFactory.ToModelValue(reader, "BarCodeType").ToInt32();//GetBarCodeType(t_stock.Barcode);
-            t_stock.Spec = dbFactory.ToModelValue(reader, "Spec").ToDBString();
+
+            T_OutBarcode_DB OutBarcode_DB = new T_OutBarcode_DB();
+            T_OutBarCodeInfo barcode = OutBarcode_DB.GetModelListBySql("select * from t_outbarcode where serialno='" + t_stock.SerialNo + "'")[0];
+            t_stock.StoreCondition = barcode.StoreCondition;
+            t_stock.Spec = barcode.spec;
+
+            //t_stock.Spec = dbFactory.ToModelValue(reader, "Spec").ToDBString();
             t_stock.TracNo = dbFactory.ToModelValue(reader, "TracNo").ToDBString();
             
 
