@@ -116,5 +116,10 @@ namespace SqlSugarDAL
         /// </summary>
         public String BackColor { get; set; }
 
+        /// <summary>
+        /// 预备货人
+        /// </summary>
+        public String PrepareMan { get; set; }
+
     }
 }
