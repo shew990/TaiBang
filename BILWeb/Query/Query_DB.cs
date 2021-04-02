@@ -352,6 +352,15 @@ namespace BILWeb.Query
                 T_Stock_DB DBStock = new T_Stock_DB();
                 T_StockInfo StockInfo = DBStock.GetModelBySql(new T_StockInfo() { SerialNo = serialno });
 
+                T_OutBarcode_DB DBBarcode = new T_OutBarcode_DB();
+                T_OutBarCodeInfo OutBarCodeInfo = DBBarcode.GetModelBySql(new T_OutBarCodeInfo() { SerialNo = serialno });
+                if (OutBarCodeInfo==null)
+                {
+                    strErrMsg = "该库存没有条码实体类，无法拆分！";
+                    return false;
+                }
+
+
                 if (StockInfo.Qty<= qty)
                 {
                     strErrMsg = "拆分数量不能大于等于当前库存数量！";
@@ -402,11 +411,11 @@ namespace BILWeb.Query
                         "modifytime, materialnoid,strongholdcode,strongholdname,companycode,productdate,supprdbatch,supprddate,productbatch,edate,storecondition,specialrequire,batchno,barcodemtype," +
                         "rownodel, protectway,boxweight,unit,labelmark,boxdetail,matebatch,mixdate,relaweight,productclass,itemqty,workno,mtypef,prorowno,prorownodel,boxcount,dimension,ean,fserialno," +
                         "standard, erpmateid,subiarrsid,originalCode,status,ReceiveTime,Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname,erpwarehousename) " +
-                        "select  voucherno,rowno,'" + StockInfos[i].ErpVoucherNo + "',vouchertype,'" + StockInfos[i].MaterialNo + "','" + StockInfos[i].MaterialDesc + "','" + StockInfos[i].Spec + "',cuscode,cusname,supcode,supname,outpackqty,innerpackqty,voucherqty,'" + StockInfos[i].Qty + "',nopack,printqty,'" + StockInfos[i].Barcode + "',barcodetype," +
+                        "select  voucherno,rowno,'" + StockInfos[i].ErpVoucherNo + "',vouchertype,'" + StockInfos[i].MaterialNo + "','" + StockInfos[i].MaterialDesc + "',Spec,cuscode,cusname,supcode,supname,outpackqty,innerpackqty,voucherqty,'" + StockInfos[i].Qty + "',nopack,printqty,'" + StockInfos[i].Barcode + "',barcodetype," +
                         "'" + StockInfos[i].SerialNo + "',barcodeno,outcount,innercount,mantissaqty,isrohs,outbox_id,abatchqty,isdel,creater,createtime,modifyer,modifytime," + StockInfos[i].MaterialNoID + ",strongholdcode,strongholdname,companycode,productdate,supprdbatch," +
                         "supprddate,productbatch,edate,storecondition,specialrequire,'" + StockInfos[i].BatchNo + "',barcodemtype,rownodel,protectway,boxweight,unit,labelmark,boxdetail,matebatch,mixdate,relaweight,productclass,itemqty," +
                         "workno, mtypef,prorowno,prorownodel,boxcount,dimension,ean,fserialno,standard,erpmateid,subiarrsid,originalCode,status,'"+time+"',Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname," +
-                        "erpwarehousename from t_outbarcode where serialno= '" + StockInfos[i].fserialno + "'";
+                        "erpwarehousename from t_outbarcode where serialno= '" + serialno + "'";
                     sqls.Add(strSql2);
 
                     sqls.Add(GetTaskTransSql_update1(user, StockInfos[i]));

@@ -67,8 +67,10 @@ namespace Web.WMS.Controllers.Query
                 CurrentPageRecordCounts = pageRequest.CurrentPageRecordCounts,
                 CurrentPageShowCounts = pageRequest.CurrentPageShowCounts,
                 PagesCount = pageRequest.PagesCount,
-                RecordCounts = pageRequest.RecordCounts
+                RecordCounts = pageRequest.RecordCounts,
+                CurrentPageNumber = pageRequest.CurrentPageNumber
             };
+
             T_StockInfoEX model = pageRequest.model;
             string strError = "";
             queryDB.GetStockCombineInfo(model, ref page, ref modelList, ref strError);

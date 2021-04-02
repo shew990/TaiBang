@@ -64,7 +64,8 @@ namespace Web.WMS.Controllers.Query
                 CurrentPageRecordCounts = pageRequest.CurrentPageRecordCounts,
                 CurrentPageShowCounts = pageRequest.CurrentPageShowCounts,
                 PagesCount = pageRequest.PagesCount,
-                RecordCounts = pageRequest.RecordCounts
+                RecordCounts = pageRequest.RecordCounts,
+                CurrentPageNumber = pageRequest.CurrentPageNumber
             };
             TaskTrans_Model model = pageRequest.model;
             string strError = "";

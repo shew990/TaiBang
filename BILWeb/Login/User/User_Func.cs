@@ -332,6 +332,25 @@ namespace BILWeb.Login.User
                         user.ToSampAreaNo = areaInfo.AreaNo;
                     }
 
+                    //完工入库 入库到默认库位
+                    T_Area_DB TAreaDB = new T_Area_DB();
+                    T_AreaInfo area = TAreaDB.GetAreaModelForPro(user.ReceiveWareHouseNo);
+                    if (area != null&&area.ID!=0)
+                    {
+                        user.ProAreaID = area.ID;
+                        user.ProAreaNo = area.AreaNo;
+                        user.ProHouseID = area.HouseID;
+                        user.ProHouseNo = area.HouseNo;
+                        user.ProWareHouseNo = area.WarehouseNo;
+                        user.ProWareHouseName = area.WarehouseName;
+                    }
+                    else
+                    {
+                        messageModel.Message = "登陆仓库对应的完工入库默认货位没有设置，请先去PC端设置";
+                        messageModel.HeaderStatus = "E";
+                        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<UserInfo>>(messageModel);
+                    }
+
                 }
 
                 //T_WareHouse_Func twfun = new T_WareHouse_Func();

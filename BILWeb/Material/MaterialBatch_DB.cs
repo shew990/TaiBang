@@ -485,10 +485,10 @@ namespace BILWeb.Material
                         t_Stockd.MaterialNoID = Materialnoid1;
                     }
 
-                    string strSql8 = "insert into t_stock(serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
+                    string strSql8 = "insert into t_stock(spec,serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
                                   "islimitstock,materialnoid,warehouseid,houseid,areaid,Receivestatus,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,EDATE,SUPCODE,SUPNAME," +
                                  "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo)" +
-                                 "values ('" + t_Stockd.SerialNo + "','" + t_Stockd.MaterialNo + "','" + t_Stockd.MaterialDesc + "','" + t_Stockd.Qty + "','" + t_Stockd.IsQuality + "','1'" +
+                                 "values ('"+ t_Stockd.Spec + "','" + t_Stockd.SerialNo + "','" + t_Stockd.MaterialNo + "','" + t_Stockd.MaterialDesc + "','" + t_Stockd.Qty + "','" + t_Stockd.IsQuality + "','1'" +
                                  ",'" + user.UserNo + "',getdate(),'" + t_Stockd.BatchNo + "','" + t_Stockd.Unit + "','" + t_Stockd.UnitName + "'" +
                                  ",(select palletno from t_Palletdetail where serialno = '" + t_Stockd.SerialNo + "'),'1','" + t_Stockd.MaterialNoID + "'" +
                                  ", '" + t_Stockd.WareHouseID + "','" + t_Stockd.HouseID + "','" + t_Stockd.AreaID + "','1','" + t_Stockd.Barcode + "','" + t_Stockd.StrongHoldCode + "', " +
