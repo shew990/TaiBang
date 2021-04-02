@@ -36,20 +36,28 @@ namespace BILWeb.Product
             throw new NotImplementedException();
         }
 
-        protected override List<string> GetSaveModelListSql(UserModel user, List<T_Product> modelList, string strPost = "")
+        protected override List<string> GetSaveModelListSql(UserModel user, List<T_Product> modelList,string strpost="")
         {
             //完工入库 入库到默认库位
-            T_Area_DB TAreaDB = new T_Area_DB();
-            T_AreaInfo area = TAreaDB.GetAreaModelForPro(user.ReceiveWareHouseNo);
-            if (area != null)
-            {
-                user.ReceiveAreaID = area.ID;
-                user.ReceiveAreaNo = area.AreaNo;
-                user.ReceiveHouseID = area.HouseID;
-                user.ReceiveHouseNo = area.HouseNo;
-                user.ReceiveWareHouseNo = area.WarehouseNo;
-                user.ReceiveWareHouseName = area.WarehouseName;
-            }
+            //T_Area_DB TAreaDB = new T_Area_DB();
+            //T_AreaInfo area = TAreaDB.GetAreaModelForPro(user.ReceiveWareHouseNo);
+            //if (area != null)
+            //{
+            //    user.ReceiveAreaID = area.ID;
+            //    user.ReceiveAreaNo = area.AreaNo;
+            //    user.ReceiveHouseID = area.HouseID;
+            //    user.ReceiveHouseNo = area.HouseNo;
+            //    user.ReceiveWareHouseNo = area.WarehouseNo;
+            //    user.ReceiveWareHouseName = area.WarehouseName;
+            //}
+            user.ReceiveAreaID = user.ProAreaID;
+            user.ReceiveAreaNo = user.ProAreaNo;
+            user.ReceiveHouseID = user.ProHouseID;
+            user.ReceiveHouseNo = user.ProHouseNo;
+            user.ReceiveWareHouseNo = user.ProWareHouseNo;
+            user.ReceiveWareHouseName = user.ProWareHouseName;
+
+
 
             if (modelList == null || modelList.Count == 0)
             {
@@ -75,9 +83,6 @@ namespace BILWeb.Product
 
                 foreach (var itemBarCode in item.lstBarCode)
                 {
-
-                    lstSql.Add("update t_outbarcode set dimension='" + item.MaterialDoc + "' where serialno='" + itemBarCode.SerialNo + "'");
-
                     string strSql2 = "insert into t_stock(serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
                              "islimitstock,materialnoid,warehouseid,houseid,areaid,Receivestatus,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,EDATE,SUPCODE,SUPNAME," +
                             "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo)" +
@@ -115,6 +120,8 @@ namespace BILWeb.Product
                     itemBarCode.ProductDate, itemBarCode.SupPrdBatch, itemBarCode.SupPrdDate, itemBarCode.ProductBatch, GetStrDateTime(itemBarCode.EDate), itemBarCode.SupCode, itemBarCode.SupName, itemBarCode.Unit, item.MaterialDoc);
 
                     lstSql.Add(strSql5);
+
+                    lstSql.Add("update t_outbarcode set dimension='" + item.MaterialDoc + "' where serialno='" + itemBarCode.SerialNo + "'");
 
                 }
 

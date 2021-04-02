@@ -185,7 +185,7 @@ namespace BILWeb.Material
                 LogNet.LogInfo("----------------------------------------------------转换单获取单据信息" + BaseInfo);
 
 
-                //string  aaa = "[{\"detailBehind\":[{\"RowNo\":10,\"Type\":1,\"MaterialNo\":\"JMF2012-0487\",\"MaterialName\":\"齿轮减速电机\",\"MaterialDesc\":\"齿轮减速电机\",\"Spec\":\"YS90B5-1500S2/GWRV090UK-100-90B5\",\"ErpWareHouseNo\":\"G202\",\"ErpWareHouseName\":\"大电机成品仓库\",\"Qty\":2.0,\"Unit\":\"Pcs\",\"BatchNo\":\"TraY-21030019\",\"FanHao\":null,\"RandomCode\":\"8K3ARV5M\",\"Row\":10,\"subFlag\":0},{\"RowNo\":20,\"Type\":1,\"MaterialNo\":\"JMF2012-0488\",\"MaterialName\":\"减速电机\",\"MaterialDesc\":\"减速电机\",\"Spec\":\"YS90B5-1500S2/GWRV090UK-100-90B5\",\"ErpWareHouseNo\":\"G202\",\"ErpWareHouseName\":\"大电机成品仓库\",\"Qty\":2.0,\"Unit\":\"Pcs\",\"BatchNo\":\"TraY-21030019\",\"FanHao\":null,\"RandomCode\":\"8K3ARV5M\",\"Row\":10,\"subFlag\":0}],\"ErpVoucherNo\":\"TraY-21030019\",\"ErpVoucherType\":1001910300976711,\"ErpVoucherTypeName\":\"料品形态转换\",\"CreateTime\":\"2021-03-12\",\"StrongHoldCode\":\"0300\",\"StrongHoldName\":\"营销中心\",\"CustomerNo\":\"\",\"CustomerName\":\"\",\"RowNo\":0,\"Type\":0,\"MaterialNo\":null,\"MaterialName\":null,\"MaterialDesc\":null,\"Spec\":null,\"ErpWareHouseNo\":null,\"ErpWareHouseName\":null,\"Qty\":0.0,\"Unit\":null,\"detail\":[{\"RowNo\":10,\"Type\":0,\"MaterialNo\":\"JMF1902-1560\",\"MaterialName\":\"大电机减速电机\",\"MaterialDesc\":\"大电机减速电机\",\"Spec\":\"Y22-100S2-TG-C/CV22-200B·T1\",\"ErpWareHouseNo\":\"G202\",\"ErpWareHouseName\":\"大电机成品仓库\",\"Qty\":2.0,\"Unit\":\"Pcs\",\"BatchNo\":\"SO201127002\",\"FanHao\":null,\"RandomCode\":\"CLI7Q231\",\"Row\":10,\"subFlag\":0}],\"guid\":null,\"PostUser\":null,\"batchno\":null,\"FanHao\":null,\"RandomCode\":null,\"Row\":0}]";
+                //string aaa = "[{\"detailBehind\":[{\"RowNo\":10,\"Type\":1,\"MaterialNo\":\"MR03070F0001-372\",\"MaterialName\":\"交流小电机\",\"MaterialDesc\":\"交流小电机\",\"Spec\":\"3RK15CC\",\"ErpWareHouseNo\":\"G060\",\"ErpWareHouseName\":\"东莞成品仓库\",\"Qty\":1.0,\"Unit\":\"Pcs\",\"BatchNo\":\"TraY-21030078\",\"FanHao\":null,\"RandomCode\":\"5WM3GACM\",\"Row\":10,\"subFlag\":0},{\"RowNo\":20,\"Type\":1,\"MaterialNo\":\"JR20003070F0001-413\",\"MaterialName\":\"小电机减速箱\",\"MaterialDesc\":\"小电机减速箱\",\"Spec\":\"3GN20K-B·10-78\",\"ErpWareHouseNo\":\"G060\",\"ErpWareHouseName\":\"东莞成品仓库\",\"Qty\":1.0,\"Unit\":\"Pcs\",\"BatchNo\":\"TraY-21030078\",\"FanHao\":null,\"RandomCode\":\"5WM3GACM\",\"Row\":10,\"subFlag\":0},{\"RowNo\":10,\"Type\":1,\"MaterialNo\":\"MR04022-0020\",\"MaterialName\":\"交流大电机\",\"MaterialDesc\":\"交流大电机\",\"Spec\":\"Y22-100S2-TG-C\",\"ErpWareHouseNo\":\"G060\",\"ErpWareHouseName\":\"东莞成品仓库\",\"Qty\":1.0,\"Unit\":\"Pcs\",\"BatchNo\":\"TraY-21030078\",\"FanHao\":null,\"RandomCode\":\"5WM3GACM\",\"Row\":20,\"subFlag\":0},{\"RowNo\":30,\"Type\":1,\"MaterialNo\":\"JR21002022F0001-003\",\"MaterialName\":\"大电机减速箱\",\"MaterialDesc\":\"大电机减速箱\",\"Spec\":\"CV22-200B·T1\",\"ErpWareHouseNo\":\"G060\",\"ErpWareHouseName\":\"东莞成品仓库\",\"Qty\":1.0,\"Unit\":\"Pcs\",\"BatchNo\":\"TraY-21030078\",\"FanHao\":null,\"RandomCode\":\"5WM3GACM\",\"Row\":20,\"subFlag\":0}],\"ErpVoucherNo\":\"TraY-21030078\",\"ErpVoucherType\":1001910300976711,\"ErpVoucherTypeName\":\"料品形态转换\",\"CreateTime\":\"2021-03-26\",\"StrongHoldCode\":\"0300\",\"StrongHoldName\":\"营销中心\",\"CustomerNo\":\"\",\"CustomerName\":\"\",\"RowNo\":0,\"Type\":0,\"MaterialNo\":null,\"MaterialName\":null,\"MaterialDesc\":null,\"Spec\":null,\"ErpWareHouseNo\":null,\"ErpWareHouseName\":null,\"Qty\":0.0,\"Unit\":null,\"detail\":[{\"RowNo\":10,\"Type\":0,\"MaterialNo\":\"JMF1902-8684\",\"MaterialName\":\"小电机减速电机\",\"MaterialDesc\":\"小电机减速电机\",\"Spec\":\"3RK15CC/3GN20K-B·10-78\",\"ErpWareHouseNo\":\"G060\",\"ErpWareHouseName\":\"东莞成品仓库\",\"Qty\":1.0,\"Unit\":\"Pcs\",\"BatchNo\":null,\"FanHao\":null,\"RandomCode\":null,\"Row\":10,\"subFlag\":0},{\"RowNo\":20,\"Type\":0,\"MaterialNo\":\"JMF1902-1560\",\"MaterialName\":\"大电机减速电机\",\"MaterialDesc\":\"大电机减速电机\",\"Spec\":\"Y22-100S2-TG-C/CV22-200B·T1\",\"ErpWareHouseNo\":\"G060\",\"ErpWareHouseName\":\"东莞成品仓库\",\"Qty\":1.0,\"Unit\":\"Pcs\",\"BatchNo\":null,\"FanHao\":null,\"RandomCode\":null,\"Row\":20,\"subFlag\":0}],\"guid\":null,\"PostUser\":null,\"batchno\":null,\"FanHao\":null,\"RandomCode\":null,\"Row\":0}]";
                 //BaseInfo = JsonConvert.DeserializeObject<List<U9Zh>>(aaa);
 
                 if (BaseInfo == null|| BaseInfo.Count == 0)
@@ -213,12 +213,13 @@ namespace BILWeb.Material
                     if (stockList != null && stockList.Count > 0)
                     {
                         List<T_OutStockTaskDetailsInfo> NewModelList = new List<T_OutStockTaskDetailsInfo>();
-                        List<T_StockInfo> stockModelList = new List<T_StockInfo>();
+                        
                         List<T_StockInfo> stockModelListSum = new List<T_StockInfo>();
                         string strAreaNo = string.Empty;
 
                         foreach (var item in BaseInfo[0].detail)
                         {
+                            List<T_StockInfo> stockModelList = new List<T_StockInfo>();
                             //查找物料可分配库存
                             if (stockModelList.Count == 0 || stockModelList == null)
                             {
@@ -227,7 +228,7 @@ namespace BILWeb.Material
                             var ModelListSum = from t in stockModelList
                                                group t by new
                                                {
-                                                   t1 = t.MaterialNoID,
+                                                   t1 = t.MaterialNo,
                                                    t2 = t.AreaNo,
                                                    t3 = t.StrongHoldCode
                                                    //t4 = t.StrongHoldName,
@@ -237,7 +238,7 @@ namespace BILWeb.Material
                                                } into m
                                                select new T_StockInfo
                                                {
-                                                   MaterialNoID = m.Key.t1,
+                                                   MaterialNo = m.Key.t1,
                                                    AreaNo = m.Key.t2,
                                                    StrongHoldCode = m.Key.t3,
                                                    //StrongHoldName = m.Key.t4,

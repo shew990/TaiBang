@@ -48,7 +48,7 @@ namespace Web.WMS.Controllers.Query
             PageRequest<T_StockInfoEX> pageRequest = JsonConvert.DeserializeObject<PageRequest<T_StockInfoEX>>(json);
 
             List<T_StockInfoEX> modelList = new List<T_StockInfoEX>();
-            DividPage page = new DividPage { CurrentPageRecordCounts = pageRequest.CurrentPageRecordCounts, CurrentPageShowCounts = pageRequest.CurrentPageShowCounts, PagesCount = pageRequest.PagesCount, RecordCounts = pageRequest.RecordCounts };
+            DividPage page = new DividPage { CurrentPageRecordCounts = pageRequest.CurrentPageRecordCounts, CurrentPageShowCounts = pageRequest.CurrentPageShowCounts, PagesCount = pageRequest.PagesCount, RecordCounts = pageRequest.RecordCounts,CurrentPageNumber=pageRequest.CurrentPageNumber };
             T_StockInfoEX model = pageRequest.model;
             string strError = "";
             queryDB.GetStockDetInfo(model, ref page, ref modelList, ref strError);
@@ -148,3 +148,7 @@ namespace Web.WMS.Controllers.Query
 
     }
 }
+
+
+
+    

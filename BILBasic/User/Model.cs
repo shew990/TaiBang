@@ -401,6 +401,16 @@ namespace BILBasic.User
         /// 是否上架0：不上架 1：上架
         /// </summary>
         public int ISVWAREHOUSE { get; set; }
-     
+
+
+
+        public int ProAreaID { get; set; }
+        public string ProAreaNo { get; set; }
+        public int ProHouseID { get; set; }
+        public string ProHouseNo { get; set; }
+        public string ProWareHouseNo { get; set; }
+        public string ProWareHouseName { get; set; }
+
+
     }
 }

@@ -249,9 +249,18 @@ namespace BILWeb.Stock
             t_stock.BarCodeType = dbFactory.ToModelValue(reader, "BarCodeType").ToInt32();//GetBarCodeType(t_stock.Barcode);
 
             T_OutBarcode_DB OutBarcode_DB = new T_OutBarcode_DB();
-            T_OutBarCodeInfo barcode = OutBarcode_DB.GetModelListBySql("select * from t_outbarcode where serialno='" + t_stock.SerialNo + "'")[0];
-            t_stock.StoreCondition = barcode.StoreCondition;
-            t_stock.Spec = barcode.spec;
+            List<T_OutBarCodeInfo> Barcodes = OutBarcode_DB.GetModelListBySql("select * from t_outbarcode where serialno='" + t_stock.SerialNo + "'");
+            if (Barcodes==null|| Barcodes.Count==0)
+            {
+                t_stock.StoreCondition = "";
+                t_stock.Spec = "";
+            }
+            else
+            {
+                t_stock.StoreCondition = Barcodes[0].StoreCondition;
+                t_stock.Spec = Barcodes[0].spec;
+            }
+
 
             //t_stock.Spec = dbFactory.ToModelValue(reader, "Spec").ToDBString();
             t_stock.TracNo = dbFactory.ToModelValue(reader, "TracNo").ToDBString();

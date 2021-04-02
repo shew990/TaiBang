@@ -207,6 +207,7 @@ namespace Web.WMS.Controllers.Print
                     model.spec = objT_InStockDetailInfo.spec;
                     if (erpvoucherno.Substring(0, 2) == "DC") {
                         model.dimension = erpvoucherno;
+                        model.VoucherType = "30";
                     }
 
                     listbarcode.Add(model);
@@ -253,6 +254,7 @@ namespace Web.WMS.Controllers.Print
                     if (erpvoucherno.Substring(0, 2) == "DC")
                     {
                         model.dimension = erpvoucherno;
+                        model.VoucherType = "30";
                     }
                     listbarcode.Add(model);
                 }
