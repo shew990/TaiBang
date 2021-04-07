@@ -901,6 +901,13 @@ namespace BILWeb.OutStockTask
             return base.GetScalarBySql(strSql).ToDBString();
         }
 
+        public string GetPalletnoForU9(string ErpVoucherNo)
+        {
+            string strSql = "select top 1 PALLETNO from t_Palletdetail where serialno in (select serialno from  t_outbarcode  where dimension='"+ ErpVoucherNo + "')";
+            return base.GetScalarBySql(strSql).ToDBString();
+        }
+        
+
 
         #region 拣选小车操作
 

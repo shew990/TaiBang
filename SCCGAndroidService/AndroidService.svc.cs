@@ -1007,6 +1007,14 @@ namespace SCCGAndroidService
             return func.DelStockForU9(ErpVoucherNo, ErpVoucherNoIn, Guid);
         }
 
+        public string GetPalletnoForU9(string ErpVoucherNo)
+        {
+            T_OutTaskDetails_Func func = new T_OutTaskDetails_Func();
+            return func.GetPalletnoForU9(ErpVoucherNo);
+        }
+
+        
+
         public string PostForU9(string ErpVoucherNo, string Remark, string Guid,string Creater)
         {
             T_Material_Batch_Func func = new T_Material_Batch_Func();

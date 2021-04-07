@@ -1074,5 +1074,36 @@ namespace BILWeb.OutStockTask
         }
         #endregion
 
+
+        public string GetPalletnoForU9(string ErpVoucherNo)
+        {
+            BaseMessage_Model<string> messageModel = new BaseMessage_Model<string>();
+
+            try
+            {
+                T_OutTaskDetails_DB _db = new T_OutTaskDetails_DB();
+                string palletno = _db.GetPalletnoForU9(ErpVoucherNo);
+                if (palletno==""|| palletno==null)
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "没有找到对应的托盘号！";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+                else
+                {
+                    messageModel.HeaderStatus = "S";
+                    messageModel.ModelJson = palletno;
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.Message;
+                return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+            }
+        }
+
     }
 }

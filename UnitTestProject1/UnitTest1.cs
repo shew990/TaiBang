@@ -449,6 +449,8 @@ namespace UnitTestProject1
             string  aaa = func.DelStockForU9("Wgr0401201228001","", "sds55do");
         }
 
+
+
         [TestMethod]
         public void GetOutStockCreate()
         {
