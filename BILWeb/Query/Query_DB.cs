@@ -297,7 +297,7 @@ namespace BILWeb.Query
                     for (int i = 1; i <= lsttask.Count; i++)
                     {
                         T_OutBarcode_DB OutBarcode_DB = new T_OutBarcode_DB();
-                        T_OutBarCodeInfo barcode =  OutBarcode_DB.GetModelListBySql("select * from t_outbarcode where serialno='"+ lsttask[i - 1].SerialNo + "'")[0];
+                        T_OutBarCodeInfo barcode = OutBarcode_DB.GetModelListBySql("select * from t_outbarcode where serialno='" + lsttask[i - 1].SerialNo + "'")[0];
                         lsttask[i - 1].StoreCondition = barcode.StoreCondition;
                         lsttask[i - 1].Spec = barcode.spec;
                         lsttask[i - 1].CusCode = barcode.CusCode;
@@ -342,7 +342,7 @@ namespace BILWeb.Query
         }
 
         //拆条码
-        public bool Chai(string serialno,decimal qty, UserModel user, ref string strErrMsg,ref DateTime time)
+        public bool Chai(string serialno, decimal qty, UserModel user, ref string strErrMsg, ref DateTime time)
         {
             try
             {
@@ -354,21 +354,21 @@ namespace BILWeb.Query
 
                 T_OutBarcode_DB DBBarcode = new T_OutBarcode_DB();
                 T_OutBarCodeInfo OutBarCodeInfo = DBBarcode.GetModelBySql(new T_OutBarCodeInfo() { SerialNo = serialno });
-                if (OutBarCodeInfo==null)
+                if (OutBarCodeInfo == null)
                 {
                     strErrMsg = "该库存没有条码实体类，无法拆分！";
                     return false;
                 }
 
 
-                if (StockInfo.Qty<= qty)
+                if (StockInfo.Qty <= qty)
                 {
                     strErrMsg = "拆分数量不能大于等于当前库存数量！";
                     return false;
                 }
 
                 int outboxnum = 0;
-                decimal tailnum=0;
+                decimal tailnum = 0;
                 int inboxnum = 0;
                 GetBoxInfo(ref outboxnum, ref tailnum, ref inboxnum, StockInfo.Qty, qty);
                 for (int i = 0; i < outboxnum; i++)
@@ -380,7 +380,7 @@ namespace BILWeb.Query
                     StockInfos.Add(t_Stockd);
 
                 }
-                if (inboxnum==1)
+                if (inboxnum == 1)
                 {
                     StockInfo.fserialno = StockInfo.SerialNo;
                     T_StockInfo t_Stockd = T_Material_Batch_DB.DeepCopyByXml<T_StockInfo>(StockInfo);
@@ -414,7 +414,7 @@ namespace BILWeb.Query
                         "select  voucherno,rowno,'" + StockInfos[i].ErpVoucherNo + "',vouchertype,'" + StockInfos[i].MaterialNo + "','" + StockInfos[i].MaterialDesc + "',Spec,cuscode,cusname,supcode,supname,outpackqty,innerpackqty,voucherqty,'" + StockInfos[i].Qty + "',nopack,printqty,'" + StockInfos[i].Barcode + "',barcodetype," +
                         "'" + StockInfos[i].SerialNo + "',barcodeno,outcount,innercount,mantissaqty,isrohs,outbox_id,abatchqty,isdel,creater,createtime,modifyer,modifytime," + StockInfos[i].MaterialNoID + ",strongholdcode,strongholdname,companycode,productdate,supprdbatch," +
                         "supprddate,productbatch,edate,storecondition,specialrequire,'" + StockInfos[i].BatchNo + "',barcodemtype,rownodel,protectway,boxweight,unit,labelmark,boxdetail,matebatch,mixdate,relaweight,productclass,itemqty," +
-                        "workno, mtypef,prorowno,prorownodel,boxcount,dimension,ean,fserialno,standard,erpmateid,subiarrsid,originalCode,status,'"+time+"',Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname," +
+                        "workno, mtypef,prorowno,prorownodel,boxcount,dimension,ean,fserialno,standard,erpmateid,subiarrsid,originalCode,status,'" + time + "',Inner_Id,ProjectNo,TracNo,department,erpwarehouseno,departmentname," +
                         "erpwarehousename from t_outbarcode where serialno= '" + serialno + "'";
                     sqls.Add(strSql2);
 
@@ -422,10 +422,10 @@ namespace BILWeb.Query
 
                 }
 
-                sqls.Add("delete from t_stock where serialno='"+ serialno + "';");
+                sqls.Add("delete from t_stock where serialno='" + serialno + "';");
                 int count = dbFactory.ExecuteNonQueryList(sqls, ref strErrMsg);
 
-                if (count>0)
+                if (count > 0)
                 {
                     return true;
                 }
@@ -449,7 +449,7 @@ namespace BILWeb.Query
             "Supcusname, Qty, Tasktype, Vouchertype, Creater, Createtime,TaskdetailsId, Unit, Unitname,partno,materialnoid,erpvoucherno,voucherno," +
             "Strongholdcode,Strongholdname,Companycode,Supprdbatch,Edate,taskno,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,barcode,status,materialdoc,houseprop,ean)" +
             " values (" + id + ",'" + model.SerialNo + "',0,0,0," +
-            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','','','" + model.Qty  + "','200'," +
+            " '" + model.MaterialNo + "','" + model.MaterialDesc + "','','','" + model.Qty + "','200'," +
             " 0 ,'" + user.UserName + "',getdate(),'" + model.ID + "', " +
             "'" + model.Unit + "','" + model.UnitName + "','" + model.PartNo + "','" + model.MaterialNoID + "','" + model.ErpVoucherNo + "'," +
             "  '','" + model.StrongHoldCode + "','" + model.StrongHoldName + "','" + model.CompanyCode + "'," +
@@ -679,13 +679,13 @@ namespace BILWeb.Query
         //库存汇总查询
         private string getsqlinStockCombineForNew(T_StockInfoEX mo)
         {
-            string sql = " (select 1 as ID,  MaterialNo, MaterialDesc, WAREHOUSENAME,WAREHOUSENo, HouseNAME,HouseNo, AreaNAME,AreaNo, QTY, batchno, edate,storecondition, EAN from  ( ";
-            sql += " select max(s.ID) as ID,m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,sum(s.qty) as QTY,s.batchno, ";
+            string sql = " (select 1 as ID, Spec, CusCode, MaterialNo, MaterialDesc, WAREHOUSENAME,WAREHOUSENo, HouseNAME,HouseNo, AreaNAME,AreaNo, QTY, batchno, edate,storecondition, EAN from  ( ";
+            sql += " select max(s.ID) as ID,m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,s.SPEC,b.CusCode,sum(s.qty) as QTY,s.batchno, ";
             sql += " CONVERT(varchar(12), s.edate, 111) as edate,b.storecondition,s.EAN from T_STOCK s ";
             sql += " left join t_material m on s.materialnoid = m.id left join v_area a on s.areaid = a.id ";
             sql += " left join t_outbarcode b on b.serialno=s.SERIALNO ";
             sql += " where s.ISDEL = 1  and s.batchno != '' ";
-            sql += " group by  CONVERT(varchar(12), s.edate, 111),m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,s.batchno,b.storecondition,s.EAN ";
+            sql += " group by  CONVERT(varchar(12), s.edate, 111),m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,s.batchno,b.storecondition,s.EAN,s.SPEC,b.CusCode ";
             //sql += " union ";
             //sql += " select max(s.ID) as ID, MaterialNo, MaterialDesc, a.WAREHOUSENAME,a.WAREHOUSENo, a.HouseNAME,a.HouseNo, a.AreaNAME,a.AreaNo, sum(s.qty) as QTY, s.batchno, ";
             //sql += " CONVERT(varchar(12), s.edate, 111) as edate,b.Spec, s.EAN from( ";
@@ -694,7 +694,7 @@ namespace BILWeb.Query
             //sql += " where fserialno in (select barcode from T_STOCK where ISDEL = 1  and batchno = ''))  s ";
             //sql += "   left join v_area a on s.areaid = a.id ";
             //sql += " group by  CONVERT(varchar(12), s.edate, 111),MaterialNo,MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,s.batchno,s.EAN ";
-            sql += " ) a group by MaterialNo, MaterialDesc, WAREHOUSENAME,WAREHOUSENo, HouseNAME,HouseNo, AreaNAME,AreaNo, QTY, batchno, edate,storecondition, EAN)N";
+            sql += " ) a group by Spec,CusCode, MaterialNo, MaterialDesc, WAREHOUSENAME,WAREHOUSENo, HouseNAME,HouseNo, AreaNAME,AreaNo, QTY, batchno, edate,storecondition, EAN)N";
 
 
 
@@ -978,6 +978,8 @@ namespace BILWeb.Query
             //TMM.StrongHoldCode = dr["StrongHoldCode"].ToDBString();
             TMM.Qty = (decimal)dr["Qty"];
             TMM.EDate = dr["EDate"].ToDateTime();
+            TMM.CusCode = dr["CusCode"].ToString();
+            TMM.Spec = dr["Spec"].ToString();
             //TMM.Status = dr["Status"].ToInt32();
             //switch (TMM.Status)
             //{

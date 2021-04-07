@@ -71,6 +71,8 @@ namespace Web.WMS.Controllers.SeePalletTable
                 string ERPJson = TIF.GetModelListByInterface(json);
                 var returnKanban = JSONHelper.JsonToObject<ReturnKanban>(ERPJson);
                 var kanbans = returnKanban.data;
+                if (kanbans == null)
+                    kanbans = new List<Kanban>();
 
                 LogNet.LogInfo("---------------------调用ERP接口:返回形态看板参数：" + kanbans);
 
