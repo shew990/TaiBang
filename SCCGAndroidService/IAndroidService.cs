@@ -493,6 +493,11 @@ namespace SCCGAndroidService
         string DelStockForU9(string ErpVoucherNo, string ErpVoucherNoIn, string Guid);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetPalletnoForU9", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string GetPalletnoForU9(string ErpVoucherNo);
+        
+
+        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "PostForU9", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string PostForU9(string ErpVoucherNo, string Remark, string Guid, string Creater);
         #endregion
