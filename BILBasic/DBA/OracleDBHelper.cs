@@ -18,8 +18,8 @@ namespace BILBasic.DBA
 
         //获取数据库连接字符串，其属于静态变量且只读，项目中所有文档可以直接使用，但不能修改
 
-         public static readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=192.168.250.37;Initial Catalog=WMSDB;Persist Security Info=True;User ID=sa;Password=chinetek;Persist Security Info=True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ConnectionString;//
-         //public static readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source = 192.168.250.71; Initial Catalog = WMSDB; Persist Security Info = True; User ID = sa; Password = GPGsec2020; Persist Security Info = True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ConnectionString;//
+        //public static readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=192.168.250.37;Initial Catalog=WMSDB;Persist Security Info=True;User ID=sa;Password=chinetek;Persist Security Info=True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ConnectionString;//
+        public static readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source = 192.168.250.71; Initial Catalog = WMSDB; Persist Security Info = True; User ID = sa; Password = GPGsec2020; Persist Security Info = True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ConnectionString;//
 
         // 哈希表用来存储缓存的参数信息，哈希表可以存储任意类型的参数。
         private static Hashtable parmCache = Hashtable.Synchronized(new Hashtable());

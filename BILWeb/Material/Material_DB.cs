@@ -281,7 +281,21 @@ namespace BILWeb.Material
             }
 
         }
-       
+
+        public string Getspec(string id)
+        {
+            try
+            {
+                string strSql = string.Format(" select spec from T_MATERIAL where id='{0}'", id);
+                return GetScalarBySql(strSql).ToString();
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+        }
+
 
         public int GetCount(string  strsql)
         {

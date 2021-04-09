@@ -2012,9 +2012,24 @@ namespace BILWeb.Query
         public string GetCheckDetail(string checkno)
         {
             List<Barcode_Model> list = new List<Barcode_Model>();
-            string sql = "select max(c.inserttime) as inserttime,c.areaid,c.materialid,a.AREANO,m.MATERIALNO,m.MATERIALDESC,m.StrongHoldCode,sum(QTY) as QTY from T_CHECKDETAILS c" +
-            " left join t_area a on c.areaid = a.id left join T_MATERIAL m on m.id = c.MATERIALID" +
-            " where CHECKNO = '" + checkno + "'  group by c.areaid,c.materialid,a.AREANO,m.MATERIALNO,m.MATERIALDESC,m.StrongHoldCode order by inserttime desc";
+            //string sql = "select max(c.inserttime) as inserttime,c.areaid,c.materialid,a.AREANO,m.MATERIALNO,m.MATERIALDESC,m.StrongHoldCode,sum(QTY) as QTY from T_CHECKDETAILS c" +
+            //" left join t_area a on c.areaid = a.id left join T_MATERIAL m on m.id = c.MATERIALID " +
+            //" where CHECKNO = '" + checkno + "'  group by c.areaid,c.materialid,a.AREANO,m.MATERIALNO,m.MATERIALDESC,m.StrongHoldCode order by inserttime desc";
+
+            string sql = "select aa.*,bb.qty abatchqty,case when isnull(aa.QTY,0)<isnull(bb.QTY,0) then '亏' when isnull(aa.QTY,0)>isnull(bb.QTY,0)  then '赢' else '平' end as voucherno from  " +
+            " (select  top 100 percent max(c.inserttime) as inserttime,c.areaid,c.materialid,ab.AREANO,m.MATERIALNO,m.MATERIALDESC,m.StrongHoldCode,sum(QTY) as QTY from T_CHECKDETAILS c " +
+            " left join t_area ab on c.areaid = ab.id left join T_MATERIAL m on m.id = c.MATERIALID " +
+            "  where CHECKNO = '" + checkno + "'  group by c.areaid,c.materialid,ab.AREANO,m.MATERIALNO,m.MATERIALDESC,m.StrongHoldCode order by inserttime desc) aa  " +
+            "  left join  " +
+            " (select  top 100 percent sum(qty) qty,areaid,materialid,AREANO,MATERIALNO,MATERIALDESC,StrongHoldCode from ( " +
+            " select s.areaid,a.AREANO,bm.MATERIALNO,bm.MATERIALDESC,s.SERIALNO,s.QTY,s.STRONGHOLDCODE,s.MATERIALNOID materialid " +
+            " from T_STOCK s left join t_area a on s.areaid = a.id  " +
+            " left join t_material bm on bm.id = s.MATERIALNOID   " +
+            " where s.AREAID in(select AREAID from t_checkref where checkno = '" + checkno + "')) a  " +
+            " group by areaid,materialid,AREANO,MATERIALNO,MATERIALDESC,StrongHoldCode,materialid) bb  " +
+            " on  aa.areaid=bb.areaid and aa.materialid=bb.materialid and aa.STRONGHOLDCODE=bb.STRONGHOLDCODE ";
+
+
             using (IDataReader dr = dbFactory.ExecuteReader(sql))
             {
                 while (dr.Read())
@@ -2022,11 +2037,16 @@ namespace BILWeb.Query
                     Barcode_Model m = new Barcode_Model();
                     m.AREAID = dr["areaid"].ToInt32();
                     m.MaterialNoID = dr["materialid"].ToInt32();
+                    T_Material_DB md = new T_Material_DB();
+                    m.spec = md.Getspec(m.MaterialNoID.ToString());
+
                     m.areano = dr["AREANO"].ToString();
                     m.MaterialNo = dr["MATERIALNO"].ToString();
                     m.MaterialDesc = dr["MATERIALDESC"].ToString();
                     m.Qty = Convert.ToDecimal(dr["QTY"]);
                     m.StrongHoldCode = dr["StrongHoldCode"].ToString();
+                    m.ABatchQty = Convert.ToDecimal(dr["abatchqty"]);
+                    m.VoucherNo = dr["voucherno"].ToString();
                     list.Add(m);
                 }
             }
