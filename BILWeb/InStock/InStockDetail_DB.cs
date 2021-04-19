@@ -120,23 +120,23 @@ namespace BILWeb.InStock
                     //成品入库单做一个调拨的操作
                     if (modelList[0].VoucherType == 50)
                     {
-                        T_Material_DB MaterialDB = new T_Material_DB();
-                        int intMaterialnoid = MaterialDB.GetMaterialNoid(itemBarCode.MaterialNo, "0300");
+                        //T_Material_DB MaterialDB = new T_Material_DB();
+                        //int intMaterialnoid = MaterialDB.GetMaterialNoid(itemBarCode.MaterialNo, "0300");
 
-                        strSql8 = "update t_stock set status='" + item.IsQuality + "', warehouseid= '" + user.WarehouseID + "',houseid='" + user.ReceiveHouseID + "',areaid='" + user.ReceiveAreaID + "',STRONGHOLDCODE='0300',STRONGHOLDNAME='营销中心',MATERIALNOID=" + intMaterialnoid + " where serialno='" + itemBarCode.SerialNo + "'";
+                        strSql8 = "update t_stock set status='" + item.IsQuality + "', warehouseid= '" + user.WarehouseID + "',houseid='" + user.ReceiveHouseID + "',areaid='" + user.ReceiveAreaID + "',STRONGHOLDCODE='0300',STRONGHOLDNAME='营销中心',MATERIALNOID=" + itemBarCode.MaterialNoID + " where serialno='" + itemBarCode.SerialNo + "'";
                     }
                     else
                     {
 
-                        T_Material_DB MaterialDB = new T_Material_DB();
-                        int intMaterialnoid = MaterialDB.GetMaterialNoid(itemBarCode.MaterialNo, StrongHoldCode);
+                        //T_Material_DB MaterialDB = new T_Material_DB();
+                        //int intMaterialnoid = MaterialDB.GetMaterialNoid(itemBarCode.MaterialNo, StrongHoldCode);
 
                         strSql8 = "insert into t_stock(spec,serialno,Materialno,materialdesc,qty,status,isdel,Creater,Createtime,batchno,unit,unitname,Palletno," +
                          "islimitstock,materialnoid,warehouseid,houseid,areaid,Receivestatus,barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,EDATE,SUPCODE,SUPNAME," +
                         "SUPPRDBATCH,Isquality,Stocktype,ean,BARCODETYPE,projectNo,TracNo,MaterialDoc)" +
                         "values ('"+ itemBarCode.spec + "','" + itemBarCode.SerialNo + "','" + itemBarCode.MaterialNo + "','" + itemBarCode.MaterialDesc + "','" + itemBarCode.Qty + "','" + item.IsQuality + "','1'" +
                         ",'" + user.UserNo + "',getdate(),'" + itemBarCode.BatchNo + "','" + item.Unit + "','" + item.UnitName + "'" +
-                        ",(select palletno from t_Palletdetail where serialno = '" + itemBarCode.SerialNo + "'),'1','" + intMaterialnoid + "'" +
+                        ",(select palletno from t_Palletdetail where serialno = '" + itemBarCode.SerialNo + "'),'1','" + itemBarCode.MaterialNoID + "'" +
                         ", '" + user.WarehouseID + "','" + user.ReceiveHouseID + "','" + user.ReceiveAreaID + "','1','" + itemBarCode.BarCode + "','" + StrongHoldCode + "', " +
                         "  '" + StrongHoldCodeName + "','" + itemBarCode.CompanyCode + "','" + itemBarCode.EDate + "','" + item.SupplierNo + "','" + item.SupplierName + "'," +
                         "'" + itemBarCode.SupPrdBatch + "','3' ,'1','" + itemBarCode.EAN + "','" + itemBarCode.BarcodeType + "','" + (itemBarCode.ProjectNo == null ? "" : itemBarCode.ProjectNo) + "','" + (itemBarCode.TracNo == null ? "" : itemBarCode.TracNo) + "','"+ modelList[0].MaterialDoc + "' )";
@@ -174,14 +174,15 @@ namespace BILWeb.InStock
 
             //List<T_InStockDetailInfo> NewModelList = GroupInstockDetailList(modelList); 合并相同物料行
             List<T_InStockDetailInfo> NewModelList = modelList;//不合并相同物料行
-            //ymh 查询单据类型
-            T_InStock_Func func = new T_InStock_Func();
-            T_InStockInfo InStockInfoModel = new T_InStockInfo() { ID = modelList[0].HeaderID };
-            string strmsg = "";
-            func.GetModelByID(ref InStockInfoModel, ref strmsg);
+            ////ymh 查询单据类型
+            //T_InStock_Func func = new T_InStock_Func();
+            //T_InStockInfo InStockInfoModel = new T_InStockInfo() { ID = modelList[0].HeaderID };
+            //string strmsg = "";
+            //func.GetModelByID(ref InStockInfoModel, ref strmsg);
 
             //是否生成上架任务的配置
-            if (!(user.ISVWAREHOUSE == 0 && InStockInfoModel.VoucherType != 39))
+            //if (!(user.ISVWAREHOUSE == 0 && InStockInfoModel.VoucherType != 39))
+            if (!(user.ISVWAREHOUSE == 0 && modelList[0].VoucherType != 39))
             {
                 //汇总生成上架任务不汇总收货数据
                 foreach (var item in NewModelList)

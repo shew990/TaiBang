@@ -13,6 +13,9 @@ using BILWeb.Stock;
 
 using BILBasic.User;
 using BILWeb.Login.User;
+using BILWeb.Material;
+using BILWeb.Warehouse;
+
 namespace BILWeb.InStock
 {
     public partial class T_InStockDetail_Func : TBase_Func<T_InStockDetail_DB, T_InStockDetailInfo>, IInStockDetailService
@@ -297,7 +300,33 @@ namespace BILWeb.InStock
             modelList = modelList.Where(t => t.ReceiveQty > 0).ToList();
             //IsQuality =  GetIsQuality(modelList[0]);
             IsQuality = GetIsQualityByVoucherType(modelList[0]);
-            modelList.ForEach(t => t.IsQuality = IsQuality);
+
+            string StrongHoldCode = "";
+            string StrongHoldCodeName = "";
+            T_WareHouse_DB TWareHouseDB = new T_WareHouse_DB();
+            TWareHouseDB.GetStrongholdcode(user.ReceiveWareHouseNo, ref StrongHoldCode, ref StrongHoldCodeName);
+
+            modelList.ForEach(t => {
+                t.IsQuality = IsQuality;
+
+                foreach (var itemBarCode in t.lstBarCode)
+                {
+                    //成品入库单做一个调拨的操作
+                    if (t.VoucherType == 50)
+                    {
+                        T_Material_DB MaterialDB = new T_Material_DB();
+                        itemBarCode.MaterialNoID = MaterialDB.GetMaterialNoid(itemBarCode.MaterialNo, "0300");
+                    }
+                    else
+                    {
+
+                        T_Material_DB MaterialDB = new T_Material_DB();
+                        itemBarCode.MaterialNoID = MaterialDB.GetMaterialNoid(itemBarCode.MaterialNo, StrongHoldCode);
+                    }
+                }
+
+            } );
+
 
             //if (TOOL.RegexMatch.isExists(user.UserNo) == true)
             //{

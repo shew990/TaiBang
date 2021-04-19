@@ -591,22 +591,23 @@ namespace BILBasic.Basing.Factory
                 {
                     model.HeaderStatus = "E";
                     model.Message = strError;
-                    LogInfo.ErrorLog("------------------WMS失败:单号：【"+ modelList[0].ErpVoucherNo==null?"":modelList[0].ErpVoucherNo + "】错误信息："+ strError);
-                    //LogNet.LogInfo("------------------ymh：WMS-失败"+ strError);
+                    //LogInfo.ErrorLog("------------------WMS失败:单号：【"+ modelList[0].ErpVoucherNo==null?"":modelList[0].ErpVoucherNo + "】错误信息："+ strError);
+                    LogNet.LogInfo("------------------ymh：WMS-失败:单号：【" + modelList[0].ErpVoucherNo == null ? "" : modelList[0].ErpVoucherNo + "】错误信息：" + strError);
                 }
                 else
                 {
                     model.HeaderStatus = "S";
                     model.TaskNo = modelList[0].TaskNo;
                     model.Message = GetSuccessMessage(model.MaterialDoc, modelList[0].TaskNo);
-                    LogNet.LogInfo("-----------------ymh：WMS-成功");
+                    LogNet.LogInfo("-----------------ymh：WMS-成功:单号：【" + modelList[0].ErpVoucherNo == null ? "" : modelList[0].ErpVoucherNo + "】");
                 }
 
                 return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model);
             }
             catch (Exception ex)
             {
-                LogInfo.ErrorLog("------------------WMS失败:错误信息：" + ex.ToString());
+                //LogInfo.ErrorLog("------------------WMS失败:错误信息：" + ex.ToString());
+                LogNet.LogInfo("------------------ymh：WMS-失败:错误信息：" + ex.ToString());
                 model.HeaderStatus = "E";
                 model.Message = "保存" + GetModelChineseName() + "失败！" + ex.Message + ex.TargetSite;
                 return JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<List<TBase_Model>>>(model);

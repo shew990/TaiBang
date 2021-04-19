@@ -680,12 +680,12 @@ namespace BILWeb.Query
         private string getsqlinStockCombineForNew(T_StockInfoEX mo)
         {
             string sql = " (select 1 as ID, Spec, CusCode, MaterialNo, MaterialDesc, WAREHOUSENAME,WAREHOUSENo, HouseNAME,HouseNo, AreaNAME,AreaNo, QTY, batchno, edate,storecondition, EAN from  ( ";
-            sql += " select max(s.ID) as ID,m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,s.SPEC,b.CusCode,sum(s.qty) as QTY,s.batchno, ";
+            sql += " select max(s.ID) as ID,m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,m.SPEC,b.CusCode,sum(s.qty) as QTY,s.batchno, ";
             sql += " CONVERT(varchar(12), s.edate, 111) as edate,b.storecondition,s.EAN from T_STOCK s ";
             sql += " left join t_material m on s.materialnoid = m.id left join v_area a on s.areaid = a.id ";
             sql += " left join t_outbarcode b on b.serialno=s.SERIALNO ";
             sql += " where s.ISDEL = 1  and s.batchno != '' ";
-            sql += " group by  CONVERT(varchar(12), s.edate, 111),m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,s.batchno,b.storecondition,s.EAN,s.SPEC,b.CusCode ";
+            sql += " group by  CONVERT(varchar(12), s.edate, 111),m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,s.batchno,b.storecondition,s.EAN,m.SPEC,b.CusCode ";
             //sql += " union ";
             //sql += " select max(s.ID) as ID, MaterialNo, MaterialDesc, a.WAREHOUSENAME,a.WAREHOUSENo, a.HouseNAME,a.HouseNo, a.AreaNAME,a.AreaNo, sum(s.qty) as QTY, s.batchno, ";
             //sql += " CONVERT(varchar(12), s.edate, 111) as edate,b.Spec, s.EAN from( ";

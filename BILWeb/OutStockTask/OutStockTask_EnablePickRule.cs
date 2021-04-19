@@ -231,9 +231,9 @@ namespace BILWeb.OutStockTask
                                    t2 = t.AreaNo,
                                    t3 = t.StrongHoldCode,
                                    t4 = t.StrongHoldName,
-                                   t5 = t.CompanyCode,
-                                   t6 = t.BatchNo,
-                                   t7 = t.EDate
+                                   //t5 = t.CompanyCode,
+                                   //t6 = t.BatchNo,
+                                   //t7 = t.EDate
                                } into m
                                select new T_StockInfo
                                {
@@ -241,9 +241,9 @@ namespace BILWeb.OutStockTask
                                    AreaNo = m.Key.t2,
                                    StrongHoldCode = m.Key.t3,
                                    StrongHoldName = m.Key.t4,
-                                   CompanyCode = m.Key.t5,
-                                   BatchNo = m.Key.t6,
-                                   EDate = m.Key.t7,
+                                   //CompanyCode = m.Key.t5,
+                                   //BatchNo = m.Key.t6,
+                                   //EDate = m.Key.t7,
                                    Qty = m.Sum(p => p.Qty),
                                    FloorType = m.FirstOrDefault().FloorType,
                                    SortArea = m.FirstOrDefault().SortArea
