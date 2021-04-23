@@ -116,5 +116,15 @@ namespace SqlSugarDAL
         /// </summary>
         public String BackColor { get; set; }
 
+        /// <summary>
+        /// 备货数量
+        /// </summary>
+        public Decimal? PrepareQty { get; set; }
+
+        /// <summary>
+        /// 实际备货人
+        /// </summary>
+        public String Wms_user { get; set; }
+
     }
 }
