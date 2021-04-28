@@ -685,6 +685,52 @@ namespace BILWeb.Query
             sql += " left join t_material m on s.materialnoid = m.id left join v_area a on s.areaid = a.id ";
             sql += " left join t_outbarcode b on b.serialno=s.SERIALNO ";
             sql += " where s.ISDEL = 1  and s.batchno != '' ";
+
+
+
+            if (!string.IsNullOrEmpty(mo.MaterialNo) && !mo.MaterialNo.Contains(','))
+            {
+                mo.MaterialNo = mo.MaterialNo.Trim();
+                sql += " and m.MaterialNo like '%" + mo.MaterialNo + "%'";
+            }
+            else if (!string.IsNullOrEmpty(mo.MaterialNo) && mo.MaterialNo.Contains(','))
+            {
+                mo.MaterialNo = mo.MaterialNo.Trim();
+                string MaterialNo = mo.MaterialNo;
+                Query_Func.ChangeQuery(ref MaterialNo);
+                sql += " and m.MaterialNo in(" + MaterialNo + ")";
+            }
+
+            if (!string.IsNullOrEmpty(mo.AreaNo) && !mo.AreaNo.Contains(','))
+                sql += " and a.AreaNo like '" + mo.AreaNo + "%'";
+            else if (!string.IsNullOrEmpty(mo.AreaNo) && mo.AreaNo.Contains(','))
+            {
+                string AreaNo = mo.AreaNo;
+                Query_Func.ChangeQuery(ref AreaNo);
+                sql += " and a.AreaNo in(" + AreaNo + ")";
+            }
+
+            if (!string.IsNullOrEmpty(mo.BatchNo) && !mo.BatchNo.Contains(','))
+                sql += " and m.BatchNo like '" + mo.BatchNo + "%'";
+            else if (!string.IsNullOrEmpty(mo.BatchNo) && mo.BatchNo.Contains(','))
+            {
+                string BatchNo = mo.BatchNo;
+                Query_Func.ChangeQuery(ref BatchNo);
+                sql += " and m.BatchNo in(" + BatchNo + ")";
+            }
+  
+            if (!string.IsNullOrEmpty(mo.MaterialDesc) && mo.MaterialDesc != "")
+                sql += " and m.MaterialDesc like '%" + mo.MaterialDesc + "%'";
+
+
+            if (!string.IsNullOrEmpty(mo.HouseNo) && mo.HouseNo != "")
+                sql += " and a.HouseNo like '%" + mo.HouseNo + "%'";
+
+            if (!string.IsNullOrEmpty(mo.WarehouseNo) && mo.WarehouseNo != "")
+                sql += " and a.WAREHOUSENO = '" + mo.WarehouseNo + "'";
+            
+
+
             sql += " group by  CONVERT(varchar(12), s.edate, 111),m.MaterialNo,m.MaterialDesc,a.WAREHOUSENAME,a.WAREHOUSENo,a.HouseNAME,a.HouseNo,a.AreaNAME,a.AreaNo,s.batchno,b.storecondition,s.EAN,m.SPEC,b.CusCode ";
             //sql += " union ";
             //sql += " select max(s.ID) as ID, MaterialNo, MaterialDesc, a.WAREHOUSENAME,a.WAREHOUSENo, a.HouseNAME,a.HouseNo, a.AreaNAME,a.AreaNo, sum(s.qty) as QTY, s.batchno, ";
@@ -766,7 +812,7 @@ namespace BILWeb.Query
             try
             {
                 Common_FactoryDB funcDB = new Common_FactoryDB();
-                using (IDataReader dr = funcDB.QueryByDividPage(ref dividpage, getsqlinStockCombineForNew(taskmo), StockC_GetFilterSql(taskmo), " * ", "Order by ID Desc"))
+                using (IDataReader dr = funcDB.QueryByDividPageForStockbom(ref dividpage, getsqlinStockCombineForNew(taskmo), "", " * ", "Order by ID Desc"))//StockC_GetFilterSql(taskmo)
                 {
                     while (dr.Read())
                     {

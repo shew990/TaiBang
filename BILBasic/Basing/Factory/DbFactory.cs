@@ -31,8 +31,8 @@ namespace BILBasic.Basing
        public   IDBFactory dbF;
 
 
-       //public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=192.168.250.71; Initial Catalog = WMSDB; Persist Security Info = True; User ID = sa; Password = GPGsec2020; Persist Security Info = True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ToString();
-       public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"]==null? "Data Source=192.168.250.37;Initial Catalog=WMSDB;Persist Security Info=True;User ID=sa;Password=chinetek;Persist Security Info=True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ToString();
+        public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"] == null ? "Data Source=192.168.250.71; Initial Catalog = WMSDB; Persist Security Info = True; User ID = sa; Password = GPGsec2020; Persist Security Info = True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ToString();
+        //public readonly string ConnectionStringLocalTransaction = ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"]==null? "Data Source=192.168.250.37;Initial Catalog=WMSDB;Persist Security Info=True;User ID=sa;Password=chinetek;Persist Security Info=True;" : ConfigurationManager.ConnectionStrings["ConnOracleWithAddress"].ToString();
 
         /// <summary>
         /// 数据库工厂构造函数
@@ -361,12 +361,48 @@ namespace BILBasic.Basing
 
         }
 
-        /// <summary>
-        /// 执行查询语句，返回SqlDataReader ( 注意：调用该方法后，一定要对SqlDataReader进行Close )
-        /// </summary>
-        /// <param name="strSQL">查询语句</param>
-        /// <returns>SqlDataReader</returns>
-        public  IDataReader ExecuteReader(string strSQL, string connectString)
+
+        public int ExecuteReaderForRow(string strSQL)
+        {
+            int count = 0;
+            IDbConnection connection = dbF.CreateConnection();
+            IDbCommand cmd = dbF.CreateCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = strSQL;
+            cmd.CommandTimeout = 200;
+            //Log.WriteLog(cmd.CommandText);
+            try
+            {
+                connection.Open();
+                IDataReader myReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                
+                while(myReader.Read())
+                {
+                    count++; //每循环一次，count值就会加1.
+                }
+
+                // myReader.Close();
+                return count;
+
+            }
+            catch (System.Data.SqlClient.SqlException e)
+            {
+                throw e;
+            }
+
+
+        }
+
+
+
+
+
+    /// <summary>
+    /// 执行查询语句，返回SqlDataReader ( 注意：调用该方法后，一定要对SqlDataReader进行Close )
+    /// </summary>
+    /// <param name="strSQL">查询语句</param>
+    /// <returns>SqlDataReader</returns>
+    public  IDataReader ExecuteReader(string strSQL, string connectString)
         {
             if (string.IsNullOrEmpty(connectString))
                 connectString = ConnectionStringLocalTransaction;

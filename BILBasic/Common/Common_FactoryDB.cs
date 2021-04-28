@@ -13,18 +13,85 @@ namespace BILBasic.Common
     public class Common_FactoryDB
     {
         DbFactory dbFactory = new DbFactory(DbFactory.DbFactoryType.SQLSERVER);
-            /// <summary>
-            /// 分页查询
-            /// </summary>
-            /// <param name="RecordCounts"></param>
-            /// <param name="Tables"></param>
-            /// <param name="Filter"></param>
-            /// <param name="PageSize"></param>
-            /// <param name="PageNumber"></param>
-            /// <param name="Fields"></param>
-            /// <param name="Sort"></param>
-            /// <returns></returns>
-            public  IDataReader QueryByDividPage(ref Common.DividPage page, string Tables, string Filter = "", string Fields = "*", string Sort="", string condition="")// string Sort = "Order by ID Desc")
+
+
+        public IDataReader QueryByDividPageForStockbom(ref Common.DividPage page, string Tables, string Filter = "", string Fields = "*", string Sort = "", string condition = "")// string Sort = "Order by ID Desc")
+        {
+            int RecordCounts = 0;
+            string strSqlRecordCounts = Tables;
+            RecordCounts = dbFactory.ExecuteReaderForRow(strSqlRecordCounts.Substring(2, strSqlRecordCounts.Length - 4));
+      
+
+            if (Fields.Trim() == "*")
+            {
+                if (Tables.Contains(")N"))
+                {
+                    string temtable = Tables.Substring(Tables.Length - 1, 1);
+                    if (Fields.Trim() == "*") Fields = temtable + '.' + Fields;
+                }
+                else
+                    Fields = Tables + '.' + Fields;
+            }
+
+
+            if (page == null) page = new Common.DividPage();
+            if (page.CurrentPageNumber == 0) page.CurrentPageNumber = 1;
+ 
+
+            int TopNumber = page.CurrentPageShowCounts * page.CurrentPageNumber;
+            int WhereNumber = (page.CurrentPageNumber - 1) * page.CurrentPageShowCounts;
+
+
+
+
+
+            //  string strSql = "Select * From (Select ROW_NUMBER() OVER(@Sort) AS PageRowNumber , @Fields  From  @Tables  @Filter ) Where PageRowNumber <= @TopNumber And PageRowNumber > @WhereNumber ";
+
+            //string strSql = "select   *   from  (select top @TopNumber ROW_NUMBER()   OVER   (@Sort)   AS   ROWNUM , @Fields  from  @Tables @Filter @Condition  ) t  ";
+            string strSql = "select   *   from  (select top @TopNumber ROW_NUMBER()   OVER   (@Sort)   AS   ROWNUM , @Fields  from  @Tables @Filter ) t  ";
+
+            strSql += " where  ROWNUM > @WhereNumber";
+            strSql = strSql.Replace("@TopNumber", TopNumber.ToString());
+            strSql = strSql.Replace("@Sort", Sort.ToString());
+            strSql = strSql.Replace("@Fields", Fields.ToString());
+            strSql = strSql.Replace("@Tables", Tables.ToString());
+            strSql = strSql.Replace("@Filter", Filter.ToString());
+            strSql = strSql.Replace("@Condition", condition.ToString());
+            strSql = strSql.Replace("@WhereNumber", WhereNumber.ToString());
+
+            IDataReader dR = dbFactory.ExecuteReader(strSql);
+
+            page.RecordCounts = RecordCounts;
+            if (page.RecordCounts > 0)
+            {
+                page.PagesCount = (RecordCounts + page.CurrentPageShowCounts - 1) / page.CurrentPageShowCounts;
+
+            }
+            else
+            {
+                page.PagesCount = 0;
+                page.CurrentPageRecordCounts = 0;
+            }
+
+            return dR;
+        }
+
+
+
+
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="RecordCounts"></param>
+        /// <param name="Tables"></param>
+        /// <param name="Filter"></param>
+        /// <param name="PageSize"></param>
+        /// <param name="PageNumber"></param>
+        /// <param name="Fields"></param>
+        /// <param name="Sort"></param>
+        /// <returns></returns>
+        public IDataReader QueryByDividPage(ref Common.DividPage page, string Tables, string Filter = "", string Fields = "*", string Sort="", string condition="")// string Sort = "Order by ID Desc")
             {
 
 

@@ -379,6 +379,9 @@ namespace BILWeb.Pallet
             strSql = "update t_stock  set Qty = Qty - '" + model.AmountQty + "'  where serialno = '" + model.SerialNo + "'";
             lstSql.Add(strSql);
 
+            strSql = "update t_outbarcode  set Qty = Qty - '" + model.AmountQty + "'  where serialno = '" + model.SerialNo + "'";
+            lstSql.Add(strSql);
+
             //被拆零的记录在出入库记录表
             strSql = GetTaskTransSql_update(userModel, model, model.AmountQty);
             lstSql.Add(strSql);
