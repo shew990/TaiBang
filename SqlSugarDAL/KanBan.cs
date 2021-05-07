@@ -126,5 +126,10 @@ namespace SqlSugarDAL
         /// </summary>
         public String Wms_user { get; set; }
 
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public String Memo { get; set; }
+
     }
 }

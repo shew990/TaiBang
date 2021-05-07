@@ -36,6 +36,7 @@ namespace Web.WMS.Controllers.SeePalletTable
         /// </summary>
         /// <returns></returns>
         public ActionResult List(int limit, int page, string houseNo, string OrderType)
+        
         {
             T_Interface_Func TIF = new T_Interface_Func();
             string json = "";
