@@ -364,7 +364,7 @@ namespace BILWeb.OutStockCreate
         //}
 
 
-        public override List<T_OutStockCreateInfo> GetModelListByHeaderID(int headerID)
+        public override List<T_OutStockCreateInfo> GetModelListByHeaderID(int headerID, string PromotionWareHouseNo = "")
         {
             List<T_OutStockCreateInfo> list = base.GetModelListByHeaderID(headerID);
             if (list.Count > 0)

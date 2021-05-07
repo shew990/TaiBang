@@ -941,7 +941,7 @@ namespace BILBasic.Basing.Factory
         /// <summary>
         /// 获取根据头表ID获取detail表的所有记录
         /// </summary>
-        public virtual List<TBase_Model> GetModelListByHeaderID(int headerID)
+        public virtual List<TBase_Model> GetModelListByHeaderID(int headerID,string PromotionWareHouseNo="")
         {
             try
             {

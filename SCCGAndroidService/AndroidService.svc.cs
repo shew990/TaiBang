@@ -389,6 +389,7 @@ namespace SCCGAndroidService
         public string GetT_InTaskDetailListByHeaderIDADF(string ModelDetailJson)
         {
             T_InTaskDetails_Func tfunc = new T_InTaskDetails_Func();
+            LogNet.LogInfo("上架获取明细:" + ModelDetailJson);
             return tfunc.GetModelListByHeaderIDADF(ModelDetailJson);
         }
 

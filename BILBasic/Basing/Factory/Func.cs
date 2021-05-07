@@ -460,7 +460,18 @@ namespace BILBasic.Basing.Factory
                 }
 
                 TBase_Model model = GetModelByJson(ModelDetailJson);
-                List<TBase_Model> modelList = db.GetModelListByHeaderID(model.HeaderID);
+                List<TBase_Model> modelList = null;
+                //ymh 20210506
+                if ((!string.IsNullOrEmpty(model.PromotionWareHouseNo)) && model.IsPromotion=="1")
+                {
+                    //推介当前登陆仓库的库位
+                    modelList = db.GetModelListByHeaderID(model.HeaderID, model.PromotionWareHouseNo);
+                }
+                else
+                {
+                    modelList = db.GetModelListByHeaderID(model.HeaderID);
+                }
+
                 if (modelList == null || modelList.Count == 0)
                 {
                     messageModel.HeaderStatus = "E";

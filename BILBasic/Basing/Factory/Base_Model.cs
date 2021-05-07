@@ -210,7 +210,9 @@ namespace BILBasic.Basing.Factory
         public string GUID { get; set; }
 
         public string PcOrPda { get; set; }
-        
+
+        public string IsPromotion { get; set; }
+        public string PromotionWareHouseNo { get; set; }
 
     }
 

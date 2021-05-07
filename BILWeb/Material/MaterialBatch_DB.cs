@@ -156,7 +156,7 @@ namespace BILWeb.Material
         }
 
 
-        public override List<T_Material_BatchInfo> GetModelListByHeaderID(int headerID)
+        public override List<T_Material_BatchInfo> GetModelListByHeaderID(int headerID, string PromotionWareHouseNo = "")
         {
             List<T_Material_BatchInfo> list = base.GetModelListByHeaderID(headerID);
             List<T_Material_BatchInfo> groupList = null;

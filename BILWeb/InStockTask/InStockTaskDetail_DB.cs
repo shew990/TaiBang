@@ -512,7 +512,7 @@ namespace BILWeb.InStockTask
         /// </summary>
         /// <param name="headerID"></param>
         /// <returns></returns>
-        public override List<T_InStockTaskDetailsInfo> GetModelListByHeaderID(int headerID)
+        public override List<T_InStockTaskDetailsInfo> GetModelListByHeaderID(int headerID,string PromotionWareHouseNo="")
         {
             string strErrMsg = string.Empty;
             List<T_AreaInfo> areaList = new List<T_AreaInfo>();
@@ -522,6 +522,7 @@ namespace BILWeb.InStockTask
 
             foreach (T_InStockTaskDetailsInfo item in list)
             {
+                item.WareHouseNo = PromotionWareHouseNo;
                 item.RemainQty = item.TaskQty1;
                 if (item.VoucherType==39) {
                     item.VoucherType = 390;

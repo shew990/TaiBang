@@ -90,24 +90,38 @@ namespace BILWeb.OutStockTask
             foreach (var item in modelList)
             {
                 //查找物料可分配库存
-                stockModelList = stockList.FindAll(t => t.CusCode == CUSTOMERCODE && t.MaterialNoID == item.MaterialNoID && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
+                List<T_StockInfo> stockModelListForCusCode = stockList.FindAll(t => t.CusCode == CUSTOMERCODE && t.MaterialNoID == item.MaterialNoID && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
                 //stockModelList = stockList.FindAll(t => t.MaterialNoID == item.MaterialNoID && t.StrongHoldCode==item.StrongHoldCode && t.WarehouseNo==item.FromErpWarehouse && t.HouseProp==item.HouseProp && t.Qty>0 && t.BatchNo==item.FromBatchNo ).OrderBy(t=>t.EDate).OrderBy(t=>t.SortArea).ToList();
-                if (stockModelList.Count==0|| stockModelList==null)
-                {
+                //if (stockModelList.Count==0|| stockModelList==null)
+                //{
                     stockModelList = stockList.FindAll(t => t.MaterialNoID == item.MaterialNoID  && t.WarehouseNo == item.FromErpWarehouse && t.Qty > 0).OrderBy(t => t.BatchNo).OrderBy(t => t.SortArea).ToList();
-                }
-
+                //}
+                List<T_StockInfo> stockModelListSumForCusCode = CreateNewStockInfoSum(stockModelListForCusCode);
                 stockModelListSum = CreateNewStockInfoSum(stockModelList);
+
+                //优先匹配客户
+                if (stockModelListSumForCusCode != null && stockModelListSumForCusCode.Count > 0)
+                {
+                    strAreaNo = string.Empty;
+                    foreach (var itemArea in stockModelListSumForCusCode)
+                    {
+                        strAreaNo += itemArea.AreaNo + "|";
+                    }
+                    item.AreaNo = strAreaNo;
+                }
 
                 if (stockModelListSum != null && stockModelListSum.Count > 0) 
                 {
                     strAreaNo = string.Empty;
                     foreach (var itemArea in stockModelListSum) 
                     {
-                        strAreaNo += itemArea.AreaNo + "|";
+                        if (stockModelListSumForCusCode.FindAll(t => t.AreaNo == itemArea.AreaNo).ToList().Count == 0) {
+                            strAreaNo += itemArea.AreaNo + "|";
+                        }
                     }
-                    item.AreaNo = strAreaNo.TrimEnd('|');
+                    item.AreaNo += strAreaNo;
                 }
+                item.AreaNo = item.AreaNo.TrimEnd('|');
                 //暂时屏蔽，拆分推荐库位
                 //foreach (var stockModel in stockModelListSum)
                 //{
