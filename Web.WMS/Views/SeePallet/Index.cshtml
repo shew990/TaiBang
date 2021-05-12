@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
@@ -46,8 +45,8 @@
                         layer.alert(res.Msg);
                         return false;
                     }
-                    $("#materialNo").val(res.productOrder.HeadMaterialNo);
-                    $("#line").val(res.productOrder.LineName);
+                    $("#materialNo").val(res.Data.productOrder.HeadMaterialNo);
+                    $("#line").val(res.Data.productOrder.LineName);
 
                     //显示pdf文件
                     $('#handout_wrap_inner').media({

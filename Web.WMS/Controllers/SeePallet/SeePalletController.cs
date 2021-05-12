@@ -76,6 +76,11 @@ namespace Web.WMS.Controllers.SeePallet
                     return Json(successResult, JsonRequestBehavior.AllowGet);
                 }
                 var index = stationService.GetStationIndex(ipAddress);
+                if (index == -1)
+                {
+                    successResult.Msg = "该电脑不能使用该功能,请联系管理员添加!";
+                    return Json(successResult, JsonRequestBehavior.AllowGet);
+                }
                 var stations = stationService.GetStations();
                 string pdfAddress = index == 0 ? moReport.Sop1 : index == 1
                         ? moReport.Sop2 : index == 2 ? moReport.Sop3 : index == 3
