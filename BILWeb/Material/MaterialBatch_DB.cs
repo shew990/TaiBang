@@ -319,7 +319,8 @@ namespace BILWeb.Material
                 string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"9996\"}";
                 string ERPJson = TIF.GetModelListByInterface(json);
                 LogNet.LogInfo("SOP列表:" + ERPJson);
-                return BILBasic.JSONUtil.JSONHelper.JsonToObject<List<MoReport>>(ERPJson);
+                returns strret = BILBasic.JSONUtil.JSONHelper.JsonToObject<returns>(ERPJson);
+                return strret.data;
             }
             catch (Exception ex)
             {
@@ -855,7 +856,15 @@ namespace BILWeb.Material
         
 
     }
-    public class MoReport
+
+    public class returns
+    {
+        public int result { get; set; }
+        public string resultValue { get; set; }
+        public List<MoReport> data { get; set; }
+    }
+
+        public class MoReport
     {
         /// <summary>
         /// 生产订单号

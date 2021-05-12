@@ -288,6 +288,24 @@ namespace UnitTestProject1
         [TestMethod]
         public void 下架拆零()
         {
+
+            //Console.WriteLine("最基本使用反射调用类方法");
+            //// 1、动态加载
+            //Assembly assembly = Assembly.Load("类库");// dll名称  默认到当前目录下查找
+            //                                        //2、获取类型
+            //Type type = assembly.GetType("类库.类");
+            ////3、创建对象
+            //object oDbHelper = Activator.CreateInstance(type);
+
+            //dynamic dDbHelper = Activator.CreateInstance(type);
+            //dDbHelper.Query(); //dynamic 是一个动态类型，可以避开编译器的检查，运行时检查  存在安全问题 因为c#是强类型语言,一般在编译时就会检测
+            //                   //4、类型转换
+            //IDBHelper iDBHelper = oDbHelper as IDBHelper;
+            ////5、调用方法
+            //iDBHelper.Query();
+
+
+
             string UserJson = "{\"BIsAdmin\":true,\"BIsOnline\":false,\"IsOnline\":1,\"PickAreaNo\":\"DFA01\",\"PickHouseNo\":\"DFA\",\"PickWareHouseName\":\"SHJC\",\"PickWareHouseNo\":\"SHJC\",\"QuanUserName\":\"\",\"QuanUserNo\":\"\",\"ReceiveAreaNo\":\"SHA01\",\"ReceiveHouseNo\":\"SHA\",\"ReceiveWareHouseName\":\"SHJC\",\"ReceiveWareHouseNo\":\"SHJC\",\"StrIsAdmin\":\"管理员\",\"StrSex\":\"男\",\"StrUserStatus\":\"正常\",\"StrUserType\":\"管理员\",\"WarehouseName\":\"SHJC\",\"lstMenu\":[{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"SH\",\"MenuStatus\":1,\"MenuStyle\":2.0,\"MenuType\":4,\"NodeUrl\":\"base\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"SH\",\"MenuStatus\":1,\"MenuStyle\":2.0,\"MenuType\":4,\"NodeUrl\":\"2\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"SH\",\"MenuStatus\":1,\"MenuStyle\":2.0,\"MenuType\":4,\"NodeUrl\":\"3\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"XJ\",\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"4\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"FHFH\",\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"5\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"7\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"14\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"8\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MemuAbbName\":\"YK\",\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"6\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"9\",\"SafeLevel\":1.0},{\"BHaveParameter\":false,\"BIsChecked\":false,\"BIsDefault\":false,\"IsDefault\":0.0,\"IsDel\":1.0,\"MenuStatus\":1,\"MenuStyle\":0.0,\"MenuType\":4,\"NodeUrl\":\"10\",\"SafeLevel\":1.0}],\"lstUserGroup\":[{\"BIsChecked\":true,\"Description\":\"华南收货组\",\"IsDel\":1.0,\"UserGroupAbbname\":\"华南收货组\",\"UserGroupName\":\"华南收货组\",\"UserGroupNo\":\"801\",\"UserGroupStatus\":1,\"UserGroupType\":2},{\"BIsChecked\":true,\"IsDel\":1.0,\"UserGroupName\":\"测试用户组\",\"UserGroupNo\":\"ceshi\",\"UserGroupStatus\":1,\"UserGroupType\":2}],\"lstWarehouse\":[{\"AreaCount\":0,\"AreaRate\":0.0,\"AreaUsingCount\":0,\"BIsChecked\":true,\"BIsLock\":false,\"HouseCount\":0,\"HouseRate\":0.0,\"HouseUsingCount\":0,\"ID\":19,\"IsDel\":1.0,\"LocationDesc\":\"上海嘉成\",\"PickRule\":0,\"WareHouseName\":\"SHJC\",\"WareHouseNo\":\"SHJC\",\"WareHouseStatus\":1,\"WareHouseType\":0}],\"GroupCode\":\"2,1\",\"GroupName\":\"华南收货组,测试用户组\",\"ID\":1216941,\"IsDel\":1.0,\"IsPick\":0,\"IsPickLeader\":0,\"IsQuality\":0,\"IsReceive\":0,\"PDAPrintIP\":\"1.1.1.1\",\"PassWord\":\"123\",\"PickAreaID\":642,\"PickHouseID\":15,\"PickLeader\":false,\"PickWareHouseID\":19,\"ReceiveAreaID\":641,\"ReceiveHouseID\":14,\"Sex\":1,\"StrIsPick\":\"不拣货\",\"StrIsPickLeader\":\"否\",\"StrIsReceive\":\"不收货\",\"UserName\":\"test\",\"UserNo\":\"test\",\"UserStatus\":1,\"UserType\":1,\"WarehouseCode\":\"SHJC\",\"WarehouseID\":19}";
 
             T_PalletDetail_Func tfunc = new T_PalletDetail_Func();
