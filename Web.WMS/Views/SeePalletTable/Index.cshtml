@@ -140,6 +140,7 @@
                     statusCode: 1
                 }
                 , limit: 100
+                , limits: [100]
                 , parseData: function (res) {
                     $("#countAll").text(res.PageData.totalCount);
                     totalPage = res.PageData.totalPages;
