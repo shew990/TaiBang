@@ -315,11 +315,11 @@ namespace BILWeb.Material
         {
             try
             {
-                //BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
-                //string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"9996\"}";
-                //string ERPJson = TIF.GetModelListByInterface(json);
-                //LogNet.LogInfo("SOP列表:" + ERPJson);
-                string ERPJson = "{\"result\":1,\"resultValue\":\"\",\"data\":[{\"ErpVoucherNo\":\"MO04012011220079\",\"Sop1\":\"http://192.168.250.31:8088/1/GFS05-01.pdf\",\"Sop2\":\"http://192.168.250.31:8088/1/GZ05-01.pdf\",\"Sop3\":\"http://192.168.250.31:8088/1/GZ05-02.pdf\",\"Sop4\":\"\",\"Sop5\":\"\",\"Sop6\":\"\"}]}";
+                BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
+                string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"9996\"}";
+                string ERPJson = TIF.GetModelListByInterface(json);
+                LogNet.LogInfo("SOP列表:" + ERPJson);
+                //string ERPJson = "{\"result\":1,\"resultValue\":\"\",\"data\":[{\"ErpVoucherNo\":\"MO04012011220079\",\"Sop1\":\"http://192.168.250.31:8088/1/GFS05-01.pdf\",\"Sop2\":\"http://192.168.250.31:8088/1/GZ05-01.pdf\",\"Sop3\":\"http://192.168.250.31:8088/1/GZ05-02.pdf\",\"Sop4\":\"\",\"Sop5\":\"\",\"Sop6\":\"\"}]}";
                 returns strret = BILBasic.JSONUtil.JSONHelper.JsonToObject<returns>(ERPJson);
                 return strret.data;
             }

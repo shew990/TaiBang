@@ -17,13 +17,12 @@
 </div>
 <div id="handout_wrap_inner"></div>
 
-<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
 <script src="~/Content/jquery.media.js"></script>
 <script type="text/javascript">
     $(function () {
 
         //是否存在pdf地址,如存在显示
-        $.post("/SeePallet/IsHaveAddress", { ipAddress: returnCitySN.cip }, function (res) {
+        $.post("/SeePallet/IsHaveAddress", { ipAddress: '@ViewBag.ipAddress' }, function (res) {
             if (!res.Success)
                 return false;
 
@@ -39,7 +38,7 @@
         //生产单号回车监听事件
         $("#ErpVoucherNo").keypress(function (even) {
             if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
-                let sendJson = { ErpVoucherNo: $("#ErpVoucherNo").val(), ipAddress: returnCitySN.cip };
+                let sendJson = { ErpVoucherNo: $("#ErpVoucherNo").val(), ipAddress: '@ViewBag.ipAddress' };
                 $.post("/SeePallet/PdfInit", sendJson, function (res) {
                     if (!res.Success) {
                         layer.alert(res.Msg);

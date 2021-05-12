@@ -19,6 +19,12 @@ namespace Web.WMS.Controllers.SeePallet
         /// <returns></returns>
         public ActionResult Index()
         {
+            string result = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (string.IsNullOrEmpty(result))
+                result = Request.ServerVariables["REMOTE_ADDR"];
+            if (string.IsNullOrEmpty(result))
+                result = Request.UserHostAddress;
+            ViewBag.ipAddress = result;
             return View();
         }
 
