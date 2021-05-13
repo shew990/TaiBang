@@ -85,7 +85,7 @@ namespace Web.WMS.Controllers.SeePallet
                 //    stationService.Update(station);
                 //}
 
-                successResult.Data = new { productOrder = productOrder, pdfAddress = pdfAddress };
+                //successResult.Data = new { productOrder = productOrder, pdfAddress = pdfAddress };
                 successResult.Success = true;
             }
             catch (Exception ex)
