@@ -59,6 +59,8 @@
     <Compile Include="line\LineService.cs" />
     <Compile Include="material\Material.cs" />
     <Compile Include="material\MaterialService.cs" />
+    <Compile Include="compter\Compter.cs" />
+    <Compile Include="compter\CompterService.cs" />
     <Compile Include="product\Product.cs" />
     <Compile Include="product\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,6 +72,8 @@
     <Compile Include="setting\SettingService.cs" />
     <Compile Include="station\Station.cs" />
     <Compile Include="station\StationService.cs" />
+    <Compile Include="compter\View_Compter.cs" />
+    <Compile Include="compter\View_CompterService.cs" />
     <Compile Include="station\View_Station.cs" />
     <Compile Include="station\View_StationService.cs" />
     <Compile Include="t_taskdetails\TaskDetailsService.cs" />
