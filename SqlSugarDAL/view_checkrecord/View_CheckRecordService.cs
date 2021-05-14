@@ -65,5 +65,15 @@ namespace SqlSugarDAL.view_checkrecord
             return GetSugarQueryable(x => x.Id == checkRecordId).First();
         }
 
+        public decimal GetOrderNoQualityQty(string orderNo)
+        {
+            var records = GetSugarQueryable(x => x.ErpVoucherNo == orderNo);
+            if (records.Count() == 0)
+                return 0;
+            var sumNoQualituQty = records.Sum(x => x.RecordNoQualityQty);
+            var sumBackQualityQty = records.Sum(x => x.BackQualityQty);
+            return sumNoQualituQty - sumBackQualityQty;
+        }
+
     }
 }

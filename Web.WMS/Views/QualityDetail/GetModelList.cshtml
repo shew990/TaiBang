@@ -91,6 +91,12 @@
                         <input type="text" id="BackProQulaityQty" readonly class="layui-input">
                     </div>
                 </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单不合格数</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="OrderNoQualityQty" readonly class="layui-input">
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -510,6 +516,7 @@
                 $("#alreadyQulaityQty").val(objOrder.QulityQty);
                 $("#noQulaityQty").val(objOrder.NoQualityQty);
                 $("#BackProQulaityQty").val(objOrder.BackQualityQty);
+                $("#OrderNoQualityQty").val(objOrder.OrderNoQualityQty);
                 $("#remark").val(objOrder.Remark);
             });
         });

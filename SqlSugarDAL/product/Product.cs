@@ -157,5 +157,11 @@ namespace SqlSugarDAL.product
         /// </summary>
         [SugarColumn(IsIgnore = true)]
         public Decimal BackQualityQty { get; set; }
+
+        /// <summary>
+        /// 订单不合格数量
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public Decimal OrderNoQualityQty { get; set; }
     }
 }

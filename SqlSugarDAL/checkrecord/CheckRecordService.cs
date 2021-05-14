@@ -62,7 +62,7 @@ namespace SqlSugarDAL.checkrecord
                 if (checkRecord.BackQualityQty + sumBackQualityQty > sumNoQualituQty)
                 {
                     var shenyu = sumNoQualituQty - sumBackQualityQty;
-                    successResult.Msg = "复检合格数量 不能大于 未复检不合格数量" + shenyu + "";
+                    successResult.Msg = "复检合格数量 不能大于 订单不合格数量" + shenyu + "";
                     return successResult;
                 }
                 var shengyu = product.ProductQty - (sumQualityQty + sumNoQualituQty);
