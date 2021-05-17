@@ -27,11 +27,6 @@ namespace SqlSugarDAL.station
         public String PdfAddress { get; set; }
 
         /// <summary>
-        /// 电脑ip地址
-        /// </summary>
-        public String IpAddress { get; set; }
-
-        /// <summary>
         /// 是否删除(0：未删除，1：已删除)
         /// </summary>
         public Int32 IsDel { get; set; }
@@ -68,5 +63,10 @@ namespace SqlSugarDAL.station
         /// 产线id
         /// </summary>
         public int LineId { get; set; }
+
+        /// <summary>
+        /// erp单号
+        /// </summary>
+        public String OrderNo { get; set; }
     }
 }

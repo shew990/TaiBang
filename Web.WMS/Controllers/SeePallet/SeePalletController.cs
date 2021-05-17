@@ -52,39 +52,29 @@ namespace Web.WMS.Controllers.SeePallet
                 var moReport = new T_Material_Batch_DB().GetSopList(ErpVoucherNo).FirstOrDefault();
                 if (moReport == null)
                 {
-                    successResult.Msg = "没有pdf地址数据,请联系管理员!";
+                    successResult.Msg = "该erp单号没有pdf地址数据,请核实!";
                     return Json(successResult, JsonRequestBehavior.AllowGet);
                 }
 
                 View_CompterService compterService = new View_CompterService();
-                var index = compterService.GetStationIndex(ipAddress);
-                if (index == -1)
+                var compter = compterService.GetCompter(ipAddress);
+                if (compter == null)
                 {
                     successResult.Msg = "该电脑不能使用该功能,请联系管理员添加!";
                     return Json(successResult, JsonRequestBehavior.AllowGet);
                 }
-                //var stations = new StationService().GetStations();
-                //string pdfAddress = index == 0 ? moReport.Sop1 : index == 1
-                //        ? moReport.Sop2 : index == 2 ? moReport.Sop3 : index == 3
-                //        ? moReport.Sop4 : index == 4 ? moReport.Sop5 : moReport.Sop6;
-                //if (index == 0)//工位1
-                //{
-                //    stations[0].PDFAddress = moReport.Sop1;
-                //    stations[1].PDFAddress = moReport.Sop2;
-                //    stations[2].PDFAddress = moReport.Sop3;
-                //    stations[3].PDFAddress = moReport.Sop4;
-                //    stations[4].PDFAddress = moReport.Sop5;
-                //    stations[5].PDFAddress = moReport.Sop6;
-                //    stationService.UpdateRange(stations);
-                //}
-                //else//其他工位
-                //{
-                //    var station = stations.Find(x => x.Id == stations[index].Id);
-                //    station.PDFAddress = pdfAddress;
-                //    stationService.Update(station);
-                //}
+                var stations = new View_StationService().GetList(x => x.LineId == compter.LineId);
+                var count = stations.FindAll(x => x.OrderNo == ErpVoucherNo).Count();
+                var pdfAddress = count == 0 ? moReport.Sop1 : count == 1 ? moReport.Sop2
+                    : count == 2 ? moReport.Sop3 : count == 3 ? moReport.Sop4 : count == 4
+                    ? moReport.Sop5 : moReport.Sop6;
+                var station = new StationService()
+                    .GetList(x => x.Id == compter.StationId).FirstOrDefault();
+                station.OrderNo = ErpVoucherNo;
+                station.PdfAddress = pdfAddress;
+                new StationService().Update(station);
 
-                //successResult.Data = new { productOrder = productOrder, pdfAddress = pdfAddress };
+                successResult.Data = new { productOrder = productOrder, pdfAddress = pdfAddress };
                 successResult.Success = true;
             }
             catch (Exception ex)
