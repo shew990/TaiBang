@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">未检合格数</label>
+                    <label class="layui-form-label">待检数量</label>
                     <div class="layui-input-block">
                         <input type="text" id="noQulaityQty" readonly class="layui-input">
                     </div>
@@ -234,26 +234,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">合格数量</label>
-                        <div class="layui-input-block">
-                            <input type="number" id="RecordQualityQty" name="QualityQty" placeholder="请输入合格数量" class="layui-input record">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">不合格数量</label>
-                        <div class="layui-input-block">
-                            <input type="number" id="RecordNoQualityQty" name="NoQualityQty" placeholder="请输入不合格数量" class="layui-input record">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">复检合格数</label>
-                        <div class="layui-input-block">
-                            <input type="number" id="BackQualityQty" name="BackQualityQty" placeholder="请输入复检合格数" class="layui-input record">
-                        </div>
-                    </div>
-                </div>
             }
             else if (ViewBag.StrongHoldCode == "0401" || ViewBag.StrongHoldCode == "0402")
             {
@@ -400,44 +380,44 @@
                             <input type="text" name="Contour" placeholder="请输入外型" class="layui-input record">
                         </div>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">合格数量</label>
-                        <div class="layui-input-block">
-                            <input type="number" id="RecordQualityQty" name="QualityQty" placeholder="请输入合格数量" class="layui-input record">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">不合格数量</label>
-                        <div class="layui-input-block">
-                            <input type="number" id="RecordNoQualityQty" name="NoQualityQty" placeholder="请输入不合格数量" class="layui-input record">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">复检合格数</label>
-                        <div class="layui-input-block">
-                            <input type="number" id="BackQualityQty" name="BackQualityQty" placeholder="请输入复检合格数" class="layui-input record">
-                        </div>
-                    </div>
                 </div>
             }
         </form>
     </div>
     <div style="padding:20px;">
-        <div class="layui-row">
-            <div class="layui-col-md4">
-                <div div class="layui-row">
-                    <div class="layui-col-md2" style="padding-top:6px;">备注</div>
-                    <div class="layui-col-md10">
-                        <input type="text" id="remark" class="layui-input">
+        <form class="layui-form">
+            <div class="layui-form-item" style="font-size:13px">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><strong>本次合格数</strong></label>
+                    <div class="layui-input-block">
+                        <input type="number" id="RecordQualityQty" name="QualityQty" placeholder="请输入合格数量" class="layui-input record">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label"><strong>本次不合格数</strong></label>
+                    <div class="layui-input-block">
+                        <input type="number" id="RecordNoQualityQty" name="NoQualityQty" placeholder="请输入不合格数量" class="layui-input record">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label"><strong>本次复检合格数</strong></label>
+                    <div class="layui-input-block">
+                        <input type="number" id="BackQualityQty" name="BackQualityQty" placeholder="请输入复检合格数" class="layui-input record">
                     </div>
                 </div>
             </div>
-            <div class="layui-col-md4" style="padding-left:45px;">
-                <button class="btn btn-primary" id="ok">确定</button>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="remark" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline" style="padding-bottom:15px;">
+                    <button class="btn btn-primary" id="ok">确定</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <input type="hidden" id="checkRecordId" value="@ViewBag.checkRecordId" />

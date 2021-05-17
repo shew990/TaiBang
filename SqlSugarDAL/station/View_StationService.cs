@@ -36,8 +36,8 @@ namespace SqlSugarDAL.station
                 records = records.Where(x => x.LineName.Contains(lineName));
             if (!string.IsNullOrEmpty(stationName))
                 records = records.Where(x => x.StationName.Contains(stationName));
-            if (!string.IsNullOrEmpty(ipAddress))
-                records = records.Where(x => x.IpAddress.Contains(ipAddress));
+            //if (!string.IsNullOrEmpty(ipAddress))
+            //    records = records.Where(x => x.IpAddress.Contains(ipAddress));
             return records.ToList();
         }
 
