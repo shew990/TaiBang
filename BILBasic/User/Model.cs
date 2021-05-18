@@ -411,6 +411,23 @@ namespace BILBasic.User
         public string ProWareHouseNo { get; set; }
         public string ProWareHouseName { get; set; }
 
+        #region 维修仓库位
+        public int FixAreaID { get; set; }
+        public string FixAreaNo { get; set; }
+        public int FixHouseID { get; set; }
+        public string FixHouseNo { get; set; }
+        public string FixWareHouseNo { get; set; }
+        public int FixWareHouseid { get; set; }
+        #endregion
 
+
+        #region 原始库位
+        public int ZCAreaID { get; set; }
+        public string ZCAreaNo { get; set; }
+        public int ZCHouseID { get; set; }
+        public string ZCHouseNo { get; set; }
+        public string ZCWareHouseNo { get; set; }
+        public int ZCWareHouseid { get; set; }
+        #endregion
     }
 }

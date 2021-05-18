@@ -999,6 +999,20 @@ namespace SCCGAndroidService
             T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
             return tfunc.PostZh(UserJson,  ModelJson, Guid);
         }
+
+        public string PostZhMove(string UserJson, string List, string Order, string Type, string Guid)
+        {
+            LogNet.LogInfo("提交转换单移库UserJson:" + UserJson);
+            LogNet.LogInfo("提交转换单移库List:" + List);
+            LogNet.LogInfo("提交转换单移库Order:" + Order);
+            LogNet.LogInfo("提交转换单移库Type:" + Type);
+            LogNet.LogInfo("-----------------------------------------------------");
+            T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
+            return tfunc.PostZhMove(UserJson,List,Order,Type, Guid);
+        }
+
+        
+
         #endregion
 
         //根据成品入库单删除库存=>U9生成调入和调出单

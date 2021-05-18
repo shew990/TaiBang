@@ -351,6 +351,42 @@ namespace BILWeb.Login.User
                         return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<UserInfo>>(messageModel);
                     }
 
+                    T_AreaInfo Fixarea = TAreaDB.GetAreaModelForFix(user.ReceiveWareHouseNo);
+                    if (area != null && area.ID != 0)
+                    {
+                        user.FixAreaID = area.ID;
+                        user.FixAreaNo = area.AreaNo;
+                        user.FixHouseID = area.HouseID;
+                        user.FixHouseNo = area.HouseNo;
+                        user.FixWareHouseNo = area.WarehouseNo;
+                        user.FixWareHouseid = area.WarehouseID;
+                    }
+                    else
+                    {
+                        messageModel.Message = "登陆仓库对应的维修货位没有设置，请先去PC端设置";
+                        messageModel.HeaderStatus = "E";
+                        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<UserInfo>>(messageModel);
+                    }
+
+
+                    T_AreaInfo ZCarea = TAreaDB.GetAreaModelForZC(user.ReceiveWareHouseNo);
+                    if (area != null && area.ID != 0)
+                    {
+                        user.ZCAreaID = area.ID;
+                        user.ZCAreaNo = area.AreaNo;
+                        user.ZCHouseID = area.HouseID;
+                        user.ZCHouseNo = area.HouseNo;
+                        user.ZCWareHouseNo = area.WarehouseNo;
+                        user.FixWareHouseid = area.WarehouseID;
+                    }
+                    else
+                    {
+                        messageModel.Message = "登陆仓库对应的原始货位没有设置，请先去PC端设置";
+                        messageModel.HeaderStatus = "E";
+                        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<UserInfo>>(messageModel);
+                    }
+
+
                 }
 
                 //T_WareHouse_Func twfun = new T_WareHouse_Func();

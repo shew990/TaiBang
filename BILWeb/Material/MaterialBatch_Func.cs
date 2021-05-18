@@ -536,8 +536,58 @@ namespace BILWeb.Material
                 return false;
             }
         }
-        
 
+
+        public string PostZhMove(string UserJson, string List, string Order, string Type, string Guid)
+        {
+            BaseMessage_Model<string> messageModel = new BaseMessage_Model<string>();
+            string strMsg = "";
+            try
+            {
+                if (Guid != "")
+                {
+                    if (!CheckGuid(Guid, ref strMsg))
+                    {
+                        messageModel.HeaderStatus = "E";
+                        messageModel.Message = "GUID已经存在，不能重复提交-" + strMsg;
+                        return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                    }
+                }
+
+                if (string.IsNullOrEmpty(UserJson) || string.IsNullOrEmpty(List) || string.IsNullOrEmpty(Order) || string.IsNullOrEmpty(Type))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = "参数不能为空";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+
+                List<T_StockInfo> modelList = JSONHelper.JsonToObject<List<T_StockInfo>>(List);
+                UserModel user = JSONHelper.JsonToObject<UserModel>(UserJson);
+
+
+                T_Material_Batch_DB _db = new T_Material_Batch_DB();
+               
+                if (!_db.PostZhMove(user,modelList,Order,Type,ref strMsg))
+                {
+                    messageModel.HeaderStatus = "E";
+                    messageModel.Message = strMsg;
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+                else
+                {
+                    messageModel.HeaderStatus = "S";
+                    messageModel.Message = "操作成功！";
+                    return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+                }
+ 
+            }
+            catch (Exception ex)
+            {
+                messageModel.HeaderStatus = "E";
+                messageModel.Message = ex.Message;
+                return BILBasic.JSONUtil.JSONHelper.ObjectToJson<BaseMessage_Model<string>>(messageModel);
+            }
+        }
 
 
     }

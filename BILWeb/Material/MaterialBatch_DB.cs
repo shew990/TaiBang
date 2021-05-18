@@ -741,6 +741,92 @@ namespace BILWeb.Material
             return lstSql;
         }
 
+        //提交转换单移库数据
+        public bool PostZhMove(UserModel user, List<T_StockInfo> modelList,string Order, string Type,ref string errMsg) {
+
+            //校验条码是否属于该转换单：维修仓，正式库
+
+            string ToErpWarehouse = "";
+            string ToErphouse  = "";
+            string ToErpArea  = "";
+            int ToErpWarehouseid = 0;
+            int ToErphouseid = 0;
+            int ToErpAreaid = 0;
+
+            int tasktype = 0;
+            if (Type == "下架")
+            {
+                ToErpWarehouse = user.PickWareHouseNo;
+                ToErphouse = user.PickHouseNo;
+                ToErpArea = user.PickAreaNo;
+                ToErpWarehouseid = user.PickWareHouseID;
+                ToErphouseid = user.PickHouseID;
+                ToErpAreaid = user.PickAreaID;
+
+                tasktype = 300;
+            }
+            if (Type == "维修仓")
+            {
+                ToErpWarehouse = user.FixWareHouseNo;
+                ToErphouse = user.FixHouseNo;
+                ToErpArea = user.FixAreaNo;
+                ToErpWarehouseid = user.FixWareHouseid;
+                ToErphouseid = user.FixHouseID;
+                ToErpAreaid = user.FixAreaID;
+                tasktype = 301;
+            }
+            if (Type == "正式库")
+            {
+                ToErpWarehouse = user.ZCWareHouseNo;
+                ToErphouse = user.ZCHouseNo;
+                ToErpArea = user.ZCAreaNo;
+                ToErpWarehouseid = user.ZCWareHouseid;
+                ToErphouseid = user.ZCHouseID;
+                ToErpAreaid = user.ZCAreaID;
+                tasktype = 302;
+            }
+
+            List<string> lstSql = new List<string>();
+            foreach (T_StockInfo item in modelList)
+            {
+                lstSql.Add(string.Format("update t_stock  set warehouseid = {0},houseid = {1},areaid = {2},palletno = '' where serialno ='{3}'",
+                                ToErpWarehouseid, ToErphouseid, ToErpAreaid, item.SerialNo));
+
+                if (!string.IsNullOrEmpty(item.PalletNo))
+                {
+                    lstSql.Add("delete t_Palletdetail where BARCODE = '" + item.Barcode + "'");
+                    lstSql.Add("delete t_Pallet where palletno = '" + item.PalletNo + "' and (select count(1) from t_Palletdetail where palletno = '" + item.PalletNo + "')=0");
+                }
+
+
+                int id = 999999;
+                string strSql1 = "insert into t_tasktrans(id, Serialno,towarehouseid,Tohouseid, Toareaid, Materialno, Materialdesc, Supcuscode, " +
+                                "Supcusname, Qty, Tasktype, Creater, Createtime,TaskdetailsId, Unit, Unitname,materialnoid," +
+                                "barcode,STRONGHOLDCODE,STRONGHOLDNAME,COMPANYCODE,SUPPRDBATCH,EDATE,batchno,Fromareaid,Fromwarehouseid,Fromhouseid,STATUS,houseprop,ean,FromWarehouseNo,FromWarehouseName,FromHouseNo,FromAreaNo,ToWarehouseNo,ToWarehouseName,ToHouseNo,ToAreaNo,PalletNo,IsPalletOrBox,erpvoucherno)" +
+                            " values ('" + id + "','" + item.SerialNo + "','"+ToErpWarehouseid+"','"+ToErphouseid+"'," +
+                            "'"+ToErpAreaid+"','" + item.MaterialNo + "','" + item.MaterialDesc + "','" + item.SupCode + "','" + item.SupName + "'," +
+                            " '" + item.Qty + "','"+tasktype+"' ,'" + user.UserName + "',getdate(),'" + item.ID + "'," +
+                            "'" + item.Unit + "','" + item.UnitName + "','" + item.MaterialNoID + "','" + item.Barcode + "'," +
+                            "'" + item.StrongHoldCode + "','" + item.StrongHoldName + "','" + item.CompanyCode + "','" + item.SupPrdBatch + "'" +
+                            " ,'" + item.EDate + "','" + item.BatchNo + "','" + item.AreaID + "','" + item.WareHouseID + "','" + item.HouseID + "','" + item.Status + "'," +
+                            " '" + item.HouseProp + "','" + item.EAN + "'," +
+                            " '" + item.WarehouseNo + "', " +
+                            " (select WAREHOUSENAME from T_WAREHOUSE where warehouseno = '" + item.WarehouseNo + "')," +
+                            " '" + item.HouseNo + "'," +
+                            " '" + item.AreaNo + "'," +
+                            " '" + ToErpWarehouse + "'," +
+                            " (select WAREHOUSENAME from T_WAREHOUSE where id = '" + ToErpWarehouseid + "')," +
+                            " '"+ ToErphouse + "'," +
+                            " '" + ToErpArea + "','" + item.PalletNo + "','" + item.IsPalletOrBox + "','"+ Order + "' ) ";
+
+                lstSql.Add(strSql1);
+            }
+
+            return SaveModelListBySqlToDB(lstSql, ref errMsg);
+
+
+        }
+
 
 
 
