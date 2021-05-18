@@ -274,6 +274,8 @@ namespace Web.WMS.Controllers
                 var records = new CheckRecordService().GetList(x => x.ProductOrderId == product.id);
                 product.BackQualityQty = (records == null || records.Count() == 0)
                                          ? 0 : records.Sum(x => x.BackQualityQty);
+                var orderNoQualityQty = new View_CheckRecordService().GetOrderNoQualityQty(orderNo);
+                product.OrderNoQualityQty = orderNoQualityQty;
 
                 successResult.Data = product;
                 successResult.Success = true;

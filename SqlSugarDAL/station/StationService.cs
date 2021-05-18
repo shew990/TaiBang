@@ -14,17 +14,11 @@ namespace SqlSugarDAL.station
             return stations;
         }
 
-        public int GetStationIndex(string ipAddress)
-        {
-            var index = GetList(x => x.IsDel == 0).FindIndex(x => x.IpAddress == ipAddress);
-            return index;
-        }
-
-        public T_Station GetStation(string ipAddress)
-        {
-            var station = GetSugarQueryable(x => x.IpAddress == ipAddress && x.IsDel == 0).First();
-            return station;
-        }
+        //public T_Station GetStation(string ipAddress)
+        //{
+        //    var station = GetSugarQueryable(x => x.IpAddress == ipAddress && x.IsDel == 0).First();
+        //    return station;
+        //}
 
     }
 }

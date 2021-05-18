@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SqlSugarDAL.station
+namespace SqlSugarDAL.compter
 {
-    public class View_Station
+    public class View_Compter
     {
-        public Int32? Id { get; set; }
+        public Int32 Id { get; set; }
 
         /// <summary>
         /// 产线名称
@@ -27,37 +27,18 @@ namespace SqlSugarDAL.station
         public String PdfAddress { get; set; }
 
         /// <summary>
+        /// 电脑ip地址
+        /// </summary>
+        public String IpAddress { get; set; }
+
+        /// <summary>
         /// 是否删除(0：未删除，1：已删除)
         /// </summary>
         public Int32 IsDel { get; set; }
 
         public DateTime? CreateTime { get; set; }
 
-        /// <summary>
-        /// 创建时间显示
-        /// </summary>
-        [SugarColumn(IsIgnore = true)]
-        public string CreateTimeString
-        {
-            get
-            {
-                return this.CreateTime == null ? "" : ((DateTime)this.CreateTime).ToString("yyyy/MM/dd");
-            }
-        }
-
         public DateTime? UpdateTime { get; set; }
-
-        /// <summary>
-        /// 修改时间显示
-        /// </summary>
-        [SugarColumn(IsIgnore = true)]
-        public string UpdateTimeString
-        {
-            get
-            {
-                return this.UpdateTime == null ? "" : ((DateTime)this.UpdateTime).ToString("yyyy/MM/dd");
-            }
-        }
 
         /// <summary>
         /// 产线id
@@ -68,5 +49,10 @@ namespace SqlSugarDAL.station
         /// erp单号
         /// </summary>
         public String OrderNo { get; set; }
+
+        /// <summary>
+        /// 工位id
+        /// </summary>
+        public int StationId { get; set; }
     }
 }

@@ -27,7 +27,6 @@
             </div>
             <div class="layui-inline layui-show-xs-block">
                 <button id="Query" class="btn btn-primary">查询</button>
-                <a href="/QualityDetail/GetModelList" class="btn btn-primary">新增</a>
             </div>
         </div>
         <table class="layui-hide" id="checkRecordTable" lay-filter="init"></table>
@@ -90,6 +89,7 @@
                 , title: '库位'
                 , page: true //开启分页
                 , toolbar: '#toolbarDemo'
+                , defaultToolbar: ['filter', 'print']
                 //, totalRow: true //开启合计行
                 , cols: [[ //表头
                     { type: 'numbers', title: '序号', width: 60, fixed: 'left' }//序号列

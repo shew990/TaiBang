@@ -1,30 +1,29 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutLayui.cshtml";
 }
-<div style="margin:20px auto 10px 10px;">
-    生产订单<input type="text" id="ErpVoucherNo" />
-</div>
-<div style="margin:0px auto 10px 10px;">
-    <div class="layui-row">
-        <div class="layui-col-md4">
-            物料编号<input type="text" id="materialNo" readonly />
-        </div>
-        <div class="layui-col-md4">
-            产线<input type="text" id="line" readonly />
-        </div>
+<div style="margin:20px auto 10px 10px;font-size:16px;">
+    生产订单
+    <div class="layui-inline">
+        <input type="text" id="ErpVoucherNo" />
+    </div>
+    物料编号
+    <div class="layui-inline">
+        <input type="text" id="materialNo" readonly />
+    </div>
+    产线
+    <div class="layui-inline">
+        <input type="text" id="line" readonly />
     </div>
 </div>
 <div id="handout_wrap_inner"></div>
 
-<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
 <script src="~/Content/jquery.media.js"></script>
 <script type="text/javascript">
     $(function () {
 
         //是否存在pdf地址,如存在显示
-        $.post("/SeePallet/IsHaveAddress", { ipAddress: returnCitySN.cip }, function (res) {
+        @*$.post("/SeePallet/IsHaveAddress", { ipAddress: '@ViewBag.ipAddress' }, function (res) {
             if (!res.Success)
                 return false;
 
@@ -35,24 +34,25 @@
                 autoplay: true,
                 src: res.Data
             });
-        });
+        });*@
 
         //生产单号回车监听事件
         $("#ErpVoucherNo").keypress(function (even) {
             if (even.which == 13 && $("#ErpVoucherNo").val() != "") {
-                let sendJson = { ErpVoucherNo: $("#ErpVoucherNo").val(), ipAddress: returnCitySN.cip };
+                let sendJson = { ErpVoucherNo: $("#ErpVoucherNo").val(), ipAddress: '@ViewBag.ipAddress' };
                 $.post("/SeePallet/PdfInit", sendJson, function (res) {
                     if (!res.Success) {
                         layer.alert(res.Msg);
                         return false;
                     }
-                    $("#materialNo").val(res.productOrder.HeadMaterialNo);
-                    $("#line").val(res.productOrder.LineName);
+                    $("#materialNo").val(res.Data.productOrder.HeadMaterialNo);
+                    $("#line").val(res.Data.productOrder.LineName);
 
+                    let height = window.screen.availHeight - 200;
                     //显示pdf文件
                     $('#handout_wrap_inner').media({
                         width: '100%',
-                        height: '550',
+                        height: height,
                         autoplay: true,
                         src: res.Data.pdfAddress
                     });
