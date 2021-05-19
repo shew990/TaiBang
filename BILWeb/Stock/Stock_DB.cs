@@ -375,9 +375,7 @@ namespace BILWeb.Stock
                         LogNet.LogInfo("MoveSQL:" + listSql[i].ToString());
                     }
                 }
-
-
-
+                
                 if (SaveModelListBySqlToDB(listSql, ref errMsg))
                 {
 

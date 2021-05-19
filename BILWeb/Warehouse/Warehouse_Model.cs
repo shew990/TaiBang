@@ -217,6 +217,12 @@ namespace BILWeb.Warehouse
 
         [Display(Name = "转换库位")]
         public string ZhAreaNo { get; set; }//默认转换库位
+
+        [Display(Name = "维修库位")]
+        public string FixAreaNo { get; set; }//维修库位
+
+        [Display(Name = "起始库位")]
+        public string ZCAreaNo { get; set; }//正常库位
     }
 }
 

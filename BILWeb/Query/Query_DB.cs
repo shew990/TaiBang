@@ -1510,6 +1510,18 @@ namespace BILWeb.Query
                 {
                     TMM.tasktypename = "直发分公司";
                 }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 300)
+                {
+                    TMM.tasktypename = "转换单下架";
+                }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 301)
+                {
+                    TMM.tasktypename = "转换到维修库";
+                }
+                else if (Convert.ToInt32(dr["TASKTYPE"]) == 302)
+                {
+                    TMM.tasktypename = "转换到正式库";
+                }
             }
             qtyall += (decimal)TMM.QTY;
             return TMM;

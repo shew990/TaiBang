@@ -489,6 +489,10 @@ namespace SCCGAndroidService
         string PostZh(string UserJson, string ModelJson, string Guid);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "PostZhMove", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        string PostZhMove(string UserJson, string List, string Order, string Type, string Guid);
+        
+        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "DelStockForU9", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string DelStockForU9(string ErpVoucherNo, string ErpVoucherNoIn, string Guid);
 
