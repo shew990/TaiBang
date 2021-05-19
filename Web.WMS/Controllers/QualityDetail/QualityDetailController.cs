@@ -3,6 +3,7 @@ using BILWeb.InStock;
 using BILWeb.Login.User;
 using BILWeb.Product;
 using BILWeb.Quality;
+using BILWeb.SyncService;
 using BILWeb.View_Product;
 using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
@@ -265,6 +266,11 @@ namespace Web.WMS.Controllers
             successResult.Success = false;
             try
             {
+                //同步单据
+                string strMsg = "";
+                ParamaterFiled_DB PDB = new ParamaterFiled_DB();
+                PDB.GetVoucherNo(orderNo, ref strMsg, "1");
+
                 var product = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
                 if (product == null)
                 {
