@@ -270,6 +270,11 @@ namespace Web.WMS.Controllers
                 string strMsg = "";
                 ParamaterFiled_DB PDB = new ParamaterFiled_DB();
                 PDB.GetVoucherNo(orderNo, ref strMsg, "1");
+                if (!string.IsNullOrEmpty(strMsg))
+                {
+                    successResult.Msg = strMsg;
+                    return Json(successResult, JsonRequestBehavior.AllowGet);
+                }
 
                 var product = new ProductService().GetList(x => x.ErpVoucherNo == orderNo).FirstOrDefault();
                 if (product == null)
