@@ -121,7 +121,7 @@ namespace BILWeb.OutStockTask
                     }
                     item.AreaNo += strAreaNo;
                 }
-                item.AreaNo = item.AreaNo.TrimEnd('|');
+                item.AreaNo = item.AreaNo==null?"": item.AreaNo.TrimEnd('|');
                 //暂时屏蔽，拆分推荐库位
                 //foreach (var stockModel in stockModelListSum)
                 //{
