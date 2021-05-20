@@ -549,6 +549,9 @@
         $.each(t, function () {
             formData[this.name] = this.value;
         });
+        formData["BackQualityQty"] = $("#BackQualityQty").val();
+        formData["QualityQty"] = $("#RecordQualityQty").val();
+        formData["NoQualityQty"] = $("#RecordNoQualityQty").val();
         return JSON.stringify(formData);
     }
 </script>

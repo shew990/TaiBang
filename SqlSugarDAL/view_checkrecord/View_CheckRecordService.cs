@@ -17,7 +17,8 @@ namespace SqlSugarDAL.view_checkrecord
                 recordsItem = records.FindAll(y => y.ErpVoucherNo == y.ErpVoucherNo);
                 var sumQualityQty = recordsItem.Sum(z => z.RecordQualityQty);
                 var sumCheckQty = recordsItem.Sum(a => a.CheckQty);
-                x.PassRateAll = (sumQualityQty / sumCheckQty * 100).ToString("0.00");
+                x.PassRateAll = sumCheckQty == 0 ? "0.00" 
+                : (sumQualityQty / sumCheckQty * 100).ToString("0.00");
             });
             return new
             {
