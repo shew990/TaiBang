@@ -252,5 +252,10 @@ namespace SqlSugarDAL.checkrecord
         /// 转速
         /// </summary>
         public String Speed { get; set; }
+
+        /// <summary>
+        /// 旋转方向
+        /// </summary>
+        public String Rotation { get; set; }
     }
 }

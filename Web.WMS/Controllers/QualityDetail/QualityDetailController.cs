@@ -101,8 +101,9 @@ namespace Web.WMS.Controllers
                 row1.CreateCell(24).SetCellValue("其他原因");
                 row1.CreateCell(25).SetCellValue("精度弧分");
                 row1.CreateCell(26).SetCellValue("转速");
-                row1.CreateCell(27).SetCellValue("不合格数");
-                row1.CreateCell(28).SetCellValue("备注");
+                row1.CreateCell(27).SetCellValue("旋转方向");
+                row1.CreateCell(28).SetCellValue("不合格数");
+                row1.CreateCell(29).SetCellValue("备注");
             }
             else
             {
@@ -137,7 +138,8 @@ namespace Web.WMS.Controllers
                 row1.CreateCell(29).SetCellValue("外型");
                 row1.CreateCell(30).SetCellValue("处置");
                 row1.CreateCell(31).SetCellValue("转速");
-                row1.CreateCell(32).SetCellValue("备注");
+                row1.CreateCell(32).SetCellValue("旋转方向");
+                row1.CreateCell(33).SetCellValue("备注");
             }
             var orders = view_CheckRecordService
                 .GetRecords(orderNo, LineName, Teams, Checker, startDate, endDate, strongHoldCode);
@@ -173,8 +175,9 @@ namespace Web.WMS.Controllers
                     row.CreateCell(24).SetCellValue(orders[i].Others);
                     row.CreateCell(25).SetCellValue(orders[i].Minute);
                     row.CreateCell(26).SetCellValue(orders[i].Speed);
-                    row.CreateCell(27).SetCellValue(orders[i].TotalUnqualifiedNumber);
-                    row.CreateCell(28).SetCellValue(orders[i].Decription);
+                    row.CreateCell(27).SetCellValue(orders[i].Rotation);
+                    row.CreateCell(28).SetCellValue(orders[i].TotalUnqualifiedNumber);
+                    row.CreateCell(29).SetCellValue(orders[i].Decription);
                 }
                 else
                 {
@@ -209,7 +212,8 @@ namespace Web.WMS.Controllers
                     row.CreateCell(29).SetCellValue(orders[i].Contour);
                     row.CreateCell(30).SetCellValue("");//处置
                     row.CreateCell(31).SetCellValue(orders[i].Speed);
-                    row.CreateCell(32).SetCellValue(orders[i].Decription);
+                    row.CreateCell(32).SetCellValue(orders[i].Rotation);
+                    row.CreateCell(33).SetCellValue(orders[i].Decription);
                 }
             }
             string fileName = "质检明细列表" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls";
