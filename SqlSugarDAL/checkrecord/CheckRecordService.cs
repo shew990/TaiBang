@@ -118,6 +118,9 @@ namespace SqlSugarDAL.checkrecord
                 queryData.Minute = checkRecord.Minute;
                 queryData.Checker = userNo;
 
+                queryData.Speed = checkRecord.Speed;
+                queryData.Teams = checkRecord.Teams;
+
                 queryData.BackQualityQty = checkRecord.BackQualityQty;
                 queryData.QualityQty = checkRecord.QualityQty;
                 queryData.NoQualityQty = checkRecord.NoQualityQty;

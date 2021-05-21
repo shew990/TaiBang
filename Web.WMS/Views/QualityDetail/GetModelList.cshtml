@@ -231,6 +231,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">转速</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Speed" placeholder="请输入转速" class="layui-input record">
+                        </div>
+                    </div>
+                </div>
             }
             else if (ViewBag.StrongHoldCode == "0401" || ViewBag.StrongHoldCode == "0402")
             {
@@ -377,6 +385,12 @@
                             <input type="text" name="Contour" placeholder="请输入外型" class="layui-input record">
                         </div>
                     </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">转速</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Speed" placeholder="请输入转速" class="layui-input record">
+                        </div>
+                    </div>
                 </div>
             }
         </form>
@@ -403,6 +417,12 @@
             </div>
         </div>
         <div class="layui-row" style="padding-bottom:10px;">
+            <div class="layui-col-md1 text-center">
+                检验班组
+            </div>
+            <div class="layui-col-md2">
+                <input type="number" id="teams" class="layui-input">
+            </div>
             <div class="layui-col-md1 text-center">
                 备注
             </div>
@@ -522,6 +542,14 @@
                 layer.alert("复检合格数量不能为空!");
                 return false;
             }
+            if ($("#teams").val() == "") {
+                layer.alert("检验班组不能为空!");
+                return false;
+            }
+            if ($("#teams").val().length > 4) {
+                layer.alert("检验班组长度不能大于4!");
+                return false;
+            }
             if (objOrder == null || objOrder == "") {
                 layer.alert("请先输入查询订单获取订单数据,再提交!");
                 return false;
@@ -552,6 +580,7 @@
         formData["BackQualityQty"] = $("#BackQualityQty").val();
         formData["QualityQty"] = $("#RecordQualityQty").val();
         formData["NoQualityQty"] = $("#RecordNoQualityQty").val();
+        formData["Teams"] = $("#teams").val();
         return JSON.stringify(formData);
     }
 </script>

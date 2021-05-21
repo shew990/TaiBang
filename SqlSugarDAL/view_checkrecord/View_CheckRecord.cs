@@ -428,5 +428,15 @@ namespace SqlSugarDAL.view_checkrecord
         /// </summary>
         public Decimal BackQualityQty { get; set; }
 
+        /// <summary>
+        /// 检验班组
+        /// </summary>
+        public String Teams { get; set; }
+
+        /// <summary>
+        /// 转速
+        /// </summary>
+        public String Speed { get; set; }
+
     }
 }
