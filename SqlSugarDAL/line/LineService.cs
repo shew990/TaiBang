@@ -36,6 +36,11 @@ namespace SqlSugarDAL.line
             try
             {
                 var lineQ = GetById((int)line.Id);
+                if (lineQ == null) 
+                {
+                    successResult.Msg = "该数据不存在,请刷新页面!";
+                    return successResult;
+                }
                 lineQ.IsDel = 1;
                 Update(lineQ);
 
