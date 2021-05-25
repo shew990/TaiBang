@@ -52,6 +52,7 @@ namespace SqlSugarDAL.station
                 station.IsDel = 1;
                 stationService.Update(station);
 
+                successResult.Msg = "删除成功!";
                 successResult.Success = true;
             }
             catch (Exception ex)

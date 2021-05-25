@@ -268,6 +268,7 @@
     <Compile Include="Controllers\DepInterface\DepInterfaceController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\Fastmail\FastmailController.cs" />
+    <Compile Include="Controllers\Line\LineController.cs" />
     <Compile Include="Controllers\ProductOrders\ProductOrdersController.cs" />
     <Compile Include="Controllers\QualityDetail\QualityDetailController.cs" />
     <Compile Include="Controllers\Print\PrintInstockController.cs" />
@@ -1384,6 +1385,8 @@
     <Content Include="Views\Setting\Form.cshtml" />
     <Content Include="Views\SeePalletTable\Index.cshtml" />
     <Content Include="Views\StockDetail\Form.cshtml" />
+    <Content Include="Views\Line\Index.cshtml" />
+    <Content Include="Views\Line\Form.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
