@@ -8,16 +8,17 @@ namespace SqlSugarDAL.view_checkrecord
 {
     public class View_CheckRecordService : DbContext<View_CheckRecord>
     {
-        public object GetOrderList(int limit, int page, string OrderNo, string StartDate, string EndDate, string strongHoldCode)
+        public object GetOrderList(int limit, int page, string OrderNo, string LineName,
+            string Teams, string Checker, string StartDate, string EndDate, string strongHoldCode)
         {
-            var records = GetRecords(OrderNo, StartDate, EndDate, strongHoldCode);
+            var records = GetRecords(OrderNo, LineName, Teams, Checker, StartDate, EndDate, strongHoldCode);
             var recordsItem = new List<View_CheckRecord>();
             records.ForEach(x =>
             {
                 recordsItem = records.FindAll(y => y.ErpVoucherNo == y.ErpVoucherNo);
                 var sumQualityQty = recordsItem.Sum(z => z.RecordQualityQty);
                 var sumCheckQty = recordsItem.Sum(a => a.CheckQty);
-                x.PassRateAll = sumCheckQty == 0 ? "0.00" 
+                x.PassRateAll = sumCheckQty == 0 ? "0.00"
                 : (sumQualityQty / sumCheckQty * 100).ToString("0.00");
             });
             return new
@@ -44,11 +45,18 @@ namespace SqlSugarDAL.view_checkrecord
         /// <param name="StartDate"></param>
         /// <param name="EndDate"></param>
         /// <returns></returns>
-        public List<View_CheckRecord> GetRecords(string OrderNo, string StartDate, string EndDate, string strongHoldCode)
+        public List<View_CheckRecord> GetRecords(string OrderNo, string LineName, string Teams
+            , string Checker, string StartDate, string EndDate, string strongHoldCode)
         {
             var records = GetSugarQueryable(x => x.StrongHoldCode == strongHoldCode);
             if (!string.IsNullOrEmpty(OrderNo))
                 records = records.Where(x => x.ErpVoucherNo.Contains(OrderNo));
+            if (!string.IsNullOrEmpty(LineName))
+                records = records.Where(x => x.LineName.Contains(LineName));
+            if (!string.IsNullOrEmpty(Teams))
+                records = records.Where(x => x.Teams.Contains(Teams));
+            if (!string.IsNullOrEmpty(Checker))
+                records = records.Where(x => x.Checker.Contains(Checker));
             if (!string.IsNullOrEmpty(StartDate))
                 records = records.Where(x => x.SaveTime >= Convert.ToDateTime(StartDate));
             if (!string.IsNullOrEmpty(EndDate))

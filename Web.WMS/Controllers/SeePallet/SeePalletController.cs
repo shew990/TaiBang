@@ -64,16 +64,27 @@ namespace Web.WMS.Controllers.SeePallet
                     return Json(successResult, JsonRequestBehavior.AllowGet);
                 }
                 var stations = new View_StationService().GetList(x => x.LineId == compter.LineId);
-                var count = stations.FindAll(x => x.OrderNo == ErpVoucherNo).Count();
-                var pdfAddress = count == 0 ? moReport.Sop1 : count == 1 ? moReport.Sop2
-                    : count == 2 ? moReport.Sop3 : count == 3 ? moReport.Sop4 : count == 4
-                    ? moReport.Sop5 : moReport.Sop6;
-                var station = new StationService()
-                    .GetList(x => x.Id == compter.StationId).FirstOrDefault();
-                station.OrderNo = ErpVoucherNo;
-                station.PdfAddress = pdfAddress;
-                new StationService().Update(station);
-
+                var objStation = stations
+                    .Find(x => x.Id == compter.StationId && x.OrderNo == ErpVoucherNo);
+                string pdfAddress = "";
+                //该工位&&该订单号&&pdf地址 不为空=>不做更新
+                if (objStation != null && !string.IsNullOrEmpty(objStation.PdfAddress))
+                {
+                    pdfAddress = objStation.PdfAddress;
+                }
+                else//做更新
+                {
+                    var count = stations.FindAll(x => x.OrderNo == ErpVoucherNo
+                    && !string.IsNullOrEmpty(x.PdfAddress) && x.Id != compter.StationId).Count();
+                    pdfAddress = count == 0 ? moReport.Sop1 : count == 1 ? moReport.Sop2
+                        : count == 2 ? moReport.Sop3 : count == 3 ? moReport.Sop4 : count == 4
+                        ? moReport.Sop5 : moReport.Sop6;
+                    var station = new StationService()
+                        .GetList(x => x.Id == compter.StationId).FirstOrDefault();
+                    station.OrderNo = ErpVoucherNo;
+                    station.PdfAddress = pdfAddress;
+                    new StationService().Update(station);
+                }
                 successResult.Data = new { productOrder = productOrder, pdfAddress = pdfAddress };
                 successResult.Success = true;
             }
