@@ -71,7 +71,7 @@
             if (event === 'detail') {//查看
                 layer.open({
                     type: 2,
-                    title: "产线信息编辑",
+                    title: "产线编辑",
                     area: ['45%', '50%'],
                     content: "/Line/Form",
                     success: function (layero, index) {
@@ -87,7 +87,7 @@
                                 }
                             }
                         });
-                        body.find("#station").val(JSON.stringify(data));
+                        body.find("#line").val(JSON.stringify(data));
                     }
                 });
                 return false;
@@ -126,7 +126,7 @@
         $('#add').click(function () {
             layer.open({
                 type: 2,
-                title: "产线信息新增",
+                title: "产线新增",
                 area: ['45%', '50%'],
                 content: "/Line/Form"
             });
