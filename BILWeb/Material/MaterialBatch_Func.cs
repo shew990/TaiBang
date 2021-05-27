@@ -166,7 +166,7 @@ namespace BILWeb.Material
             }
         }
         
-        public string GetZhList(string ErpVoucherNo)
+        public string GetZhList(string ErpVoucherNo, string Type)
         {
             BaseMessage_Model<List<U9Zh>> messageModel = new BaseMessage_Model<List<U9Zh>>();
             try
@@ -180,7 +180,7 @@ namespace BILWeb.Material
 
                 T_Material_Batch_DB _db = new T_Material_Batch_DB();
                 List<U9Zh> BaseInfo = new List<U9Zh>();
-                BaseInfo = _db.GetZhList(ErpVoucherNo);
+                BaseInfo = _db.GetZhList(ErpVoucherNo, Type);
                 BaseInfo.ForEach(item => item.VoucherType = 52);
                 LogNet.LogInfo("----------------------------------------------------转换单获取单据信息" + BaseInfo);
 

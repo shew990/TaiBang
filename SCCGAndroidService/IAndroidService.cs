@@ -483,7 +483,7 @@ namespace SCCGAndroidService
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetZh", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string GetZh(string ErpVoucherNo);
+        string GetZh(string ErpVoucherNo,string Type);
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "PostZh", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         string PostZh(string UserJson, string ModelJson, string Guid);

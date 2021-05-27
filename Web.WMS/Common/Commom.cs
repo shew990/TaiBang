@@ -65,9 +65,15 @@ namespace Web.WMS.Common
                 new SelectListItem(){Value="209",Text="转换入"},
                 new SelectListItem(){Value="210",Text="转换出"},
                 new SelectListItem(){Value="5",Text="完工入库"},
-                new SelectListItem(){Value="212",Text="直发分公司"}
+                new SelectListItem(){Value="212",Text="直发分公司"},
+                new SelectListItem(){Value="300",Text="转换单下架"},
+                new SelectListItem(){Value="301",Text="转换到维修库"},
+                new SelectListItem(){Value="302",Text="转换到正式库"}
 
         };
+
+
+
 
         public static List<SelectListItem> WarehouseStateList = new List<SelectListItem>
         {
