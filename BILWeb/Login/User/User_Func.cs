@@ -352,14 +352,14 @@ namespace BILWeb.Login.User
                     }
 
                     T_AreaInfo Fixarea = TAreaDB.GetAreaModelForFix(user.ReceiveWareHouseNo);
-                    if (area != null && area.ID != 0)
+                    if (Fixarea != null && Fixarea.ID != 0)
                     {
-                        user.FixAreaID = area.ID;
-                        user.FixAreaNo = area.AreaNo;
-                        user.FixHouseID = area.HouseID;
-                        user.FixHouseNo = area.HouseNo;
-                        user.FixWareHouseNo = area.WarehouseNo;
-                        user.FixWareHouseid = area.WarehouseID;
+                        user.FixAreaID = Fixarea.ID;
+                        user.FixAreaNo = Fixarea.AreaNo;
+                        user.FixHouseID = Fixarea.HouseID;
+                        user.FixHouseNo = Fixarea.HouseNo;
+                        user.FixWareHouseNo = Fixarea.WarehouseNo;
+                        user.FixWareHouseid = Fixarea.WarehouseID;
                     }
                     else
                     {
@@ -370,14 +370,14 @@ namespace BILWeb.Login.User
 
 
                     T_AreaInfo ZCarea = TAreaDB.GetAreaModelForZC(user.ReceiveWareHouseNo);
-                    if (area != null && area.ID != 0)
+                    if (ZCarea != null && ZCarea.ID != 0)
                     {
-                        user.ZCAreaID = area.ID;
-                        user.ZCAreaNo = area.AreaNo;
-                        user.ZCHouseID = area.HouseID;
-                        user.ZCHouseNo = area.HouseNo;
-                        user.ZCWareHouseNo = area.WarehouseNo;
-                        user.FixWareHouseid = area.WarehouseID;
+                        user.ZCAreaID = ZCarea.ID;
+                        user.ZCAreaNo = ZCarea.AreaNo;
+                        user.ZCHouseID = ZCarea.HouseID;
+                        user.ZCHouseNo = ZCarea.HouseNo;
+                        user.ZCWareHouseNo = ZCarea.WarehouseNo;
+                        user.FixWareHouseid = ZCarea.WarehouseID;
                     }
                     else
                     {

@@ -331,12 +331,12 @@ namespace BILWeb.Material
 
 
         //获取转换单
-        public List<U9Zh> GetZhList(string ErpVoucherNo)
+        public List<U9Zh> GetZhList(string ErpVoucherNo, string Type)
         {
             try
             {
                 BILBasic.Interface.T_Interface_Func TIF = new BILBasic.Interface.T_Interface_Func();
-                string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"52\"}";
+                string json = "{\"data_no\":\"" + ErpVoucherNo + "\",\"VoucherType\":\"52\",\"erp_vourcher_type\":\"" + Type + "\"}";
                 string ERPJson = TIF.GetModelListByInterface(json);
                 LogNet.LogInfo("-------------------------------------------转换单ERP返回：" + ERPJson);
                 return BILBasic.JSONUtil.JSONHelper.JsonToObject<List<U9Zh>>(ERPJson);

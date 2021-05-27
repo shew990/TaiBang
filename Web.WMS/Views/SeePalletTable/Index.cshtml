@@ -223,7 +223,7 @@
         });
 
         //定时器,固定时间刷新表格
-        @*setInterval(function () {
+        setInterval(function () {
             table.reload('seePalletTable', {
                 page: {
                     //curr: (Number($(".layui-laypage-em").next().html()) + 1)
@@ -235,7 +235,7 @@
                     OrderType: orderType
                 }
             }, 'data');
-        }, @ViewBag.refreshTime);*@
+        }, @ViewBag.refreshTime);
 
     });
 </script>

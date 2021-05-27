@@ -984,10 +984,10 @@ namespace SCCGAndroidService
         #endregion
 
         #region 转换单
-        public string GetZh(string ErpVoucherNo)
+        public string GetZh(string ErpVoucherNo, string Type)
         {
             T_Material_Batch_Func tfunc = new T_Material_Batch_Func();
-            return tfunc.GetZhList(ErpVoucherNo);
+            return tfunc.GetZhList(ErpVoucherNo, Type);
         }
 
         public string PostZh(string UserJson, string ModelJson,string Guid)
